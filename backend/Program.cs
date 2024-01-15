@@ -60,7 +60,6 @@ public class MyDbContext : DbContext
     {
     }
 
-// here should be a name of my tables.. so all characters in lowercase
     public DbSet<User> Users { get; set; }
     public DbSet<Blog> Blogs { get; set; }
     public DbSet<ExpenseGroup> Expense_groups { get; set; }
@@ -70,12 +69,7 @@ public class MyDbContext : DbContext
     public DbSet<Reminder> Reminders { get; set; }
 }
 
-public class User
-{
-    public int id { get; set; }
-    public string username { get; set; }
-    public string email { get; set; }
-}
+
 record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
 {
     public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);

@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace backend.Migrations
 {
     /// <inheritdoc />
-    public partial class i : Migration
+    public partial class initial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -15,7 +15,7 @@ namespace backend.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "blogs",
+                name: "Blogs",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -25,29 +25,12 @@ namespace backend.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_blogs", x => x.Id);
+                    table.PrimaryKey("PK_Blogs", x => x.Id);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "expense_groups",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    Name = table.Column<string>(type: "longtext", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    Description = table.Column<string>(type: "longtext", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4")
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_expense_groups", x => x.Id);
-                })
-                .Annotation("MySql:CharSet", "utf8mb4");
-
-            migrationBuilder.CreateTable(
-                name: "income_groups",
+                name: "Expense_groups",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -59,12 +42,29 @@ namespace backend.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_income_groups", x => x.Id);
+                    table.PrimaryKey("PK_Expense_groups", x => x.Id);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "reminders",
+                name: "Income_groups",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    Name = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Description = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Income_groups", x => x.Id);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "Reminders",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -77,12 +77,12 @@ namespace backend.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_reminders", x => x.Id);
+                    table.PrimaryKey("PK_Reminders", x => x.Id);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "users",
+                name: "Users",
                 columns: table => new
                 {
                     id = table.Column<int>(type: "int", nullable: false)
@@ -94,12 +94,12 @@ namespace backend.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_users", x => x.id);
+                    table.PrimaryKey("PK_Users", x => x.id);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "expenses",
+                name: "Expenses",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -111,18 +111,18 @@ namespace backend.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_expenses", x => x.Id);
+                    table.PrimaryKey("PK_Expenses", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_expenses_expense_groups_ExpenseGroupId",
+                        name: "FK_Expenses_Expense_groups_ExpenseGroupId",
                         column: x => x.ExpenseGroupId,
-                        principalTable: "expense_groups",
+                        principalTable: "Expense_groups",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "incomes",
+                name: "Incomes",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -134,24 +134,24 @@ namespace backend.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_incomes", x => x.Id);
+                    table.PrimaryKey("PK_Incomes", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_incomes_income_groups_IncomeGroupId",
+                        name: "FK_Incomes_Income_groups_IncomeGroupId",
                         column: x => x.IncomeGroupId,
-                        principalTable: "income_groups",
+                        principalTable: "Income_groups",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateIndex(
-                name: "IX_expenses_ExpenseGroupId",
-                table: "expenses",
+                name: "IX_Expenses_ExpenseGroupId",
+                table: "Expenses",
                 column: "ExpenseGroupId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_incomes_IncomeGroupId",
-                table: "incomes",
+                name: "IX_Incomes_IncomeGroupId",
+                table: "Incomes",
                 column: "IncomeGroupId");
         }
 
@@ -159,25 +159,25 @@ namespace backend.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "blogs");
+                name: "Blogs");
 
             migrationBuilder.DropTable(
-                name: "expenses");
+                name: "Expenses");
 
             migrationBuilder.DropTable(
-                name: "incomes");
+                name: "Incomes");
 
             migrationBuilder.DropTable(
-                name: "reminders");
+                name: "Reminders");
 
             migrationBuilder.DropTable(
-                name: "users");
+                name: "Users");
 
             migrationBuilder.DropTable(
-                name: "expense_groups");
+                name: "Expense_groups");
 
             migrationBuilder.DropTable(
-                name: "income_groups");
+                name: "Income_groups");
         }
     }
 }

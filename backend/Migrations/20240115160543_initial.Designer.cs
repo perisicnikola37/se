@@ -9,8 +9,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace backend.Migrations
 {
     [DbContext(typeof(MyDbContext))]
-    [Migration("20240115155010_i")]
-    partial class i
+    [Migration("20240115160543_initial")]
+    partial class initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -32,7 +32,7 @@ namespace backend.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("blogs");
+                    b.ToTable("Blogs");
                 });
 
             modelBuilder.Entity("Expense", b =>
@@ -55,7 +55,7 @@ namespace backend.Migrations
 
                     b.HasIndex("ExpenseGroupId");
 
-                    b.ToTable("expenses");
+                    b.ToTable("Expenses");
                 });
 
             modelBuilder.Entity("ExpenseGroup", b =>
@@ -74,7 +74,7 @@ namespace backend.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("expense_groups");
+                    b.ToTable("Expense_groups");
                 });
 
             modelBuilder.Entity("Income", b =>
@@ -97,7 +97,7 @@ namespace backend.Migrations
 
                     b.HasIndex("IncomeGroupId");
 
-                    b.ToTable("incomes");
+                    b.ToTable("Incomes");
                 });
 
             modelBuilder.Entity("IncomeGroup", b =>
@@ -116,7 +116,7 @@ namespace backend.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("income_groups");
+                    b.ToTable("Income_groups");
                 });
 
             modelBuilder.Entity("Reminder", b =>
@@ -138,7 +138,7 @@ namespace backend.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("reminders");
+                    b.ToTable("Reminders");
                 });
 
             modelBuilder.Entity("User", b =>
@@ -157,7 +157,7 @@ namespace backend.Migrations
 
                     b.HasKey("id");
 
-                    b.ToTable("users");
+                    b.ToTable("Users");
                 });
 
             modelBuilder.Entity("Expense", b =>
