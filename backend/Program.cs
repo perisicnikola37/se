@@ -46,7 +46,7 @@ app.MapGet("/weatherforecast", () =>
 
 app.MapGet("/users", async (MyDbContext dbContext) =>
 {
-    var users = await dbContext.users.ToListAsync();
+    var users = await dbContext.Users.ToListAsync();
     return users;
 })
 .WithName("GetAllUsers")
@@ -61,13 +61,13 @@ public class MyDbContext : DbContext
     }
 
 // here should be a name of my tables.. so all characters in lowercase
-    public DbSet<User> users { get; set; }
-    public DbSet<Blog> blogs { get; set; }
-    public DbSet<ExpenseGroup> expense_groups { get; set; }
-    public DbSet<Expense> expenses { get; set; }
-    public DbSet<IncomeGroup> income_groups { get; set; }
-    public DbSet<Income> incomes { get; set; }
-    public DbSet<Reminder> reminders { get; set; }
+    public DbSet<User> Users { get; set; }
+    public DbSet<Blog> Blogs { get; set; }
+    public DbSet<ExpenseGroup> Expense_groups { get; set; }
+    public DbSet<Expense> Expenses { get; set; }
+    public DbSet<IncomeGroup> Income_groups { get; set; }
+    public DbSet<Income> Incomes { get; set; }
+    public DbSet<Reminder> Reminders { get; set; }
 }
 
 public class User
