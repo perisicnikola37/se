@@ -63,6 +63,11 @@ public class MyDbContext : DbContext
 // here should be a name of my tables.. so all characters in lowercase
     public DbSet<User> users { get; set; }
     public DbSet<Blog> blogs { get; set; }
+    public DbSet<ExpenseGroup> expense_groups { get; set; }
+    public DbSet<Expense> expenses { get; set; }
+    public DbSet<IncomeGroup> income_groups { get; set; }
+    public DbSet<Income> incomes { get; set; }
+    public DbSet<Reminder> reminders { get; set; }
 }
 
 public class User
