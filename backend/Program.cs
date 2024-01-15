@@ -1,11 +1,4 @@
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Linq;
-using System.Threading.Tasks;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -53,7 +46,7 @@ app.MapGet("/weatherforecast", () =>
 
 app.MapGet("/users", async (MyDbContext dbContext) =>
 {
-    var users = await dbContext.Users.ToListAsync();
+    var users = await dbContext.users.ToListAsync();
     return users;
 })
 .WithName("GetAllUsers")
@@ -67,7 +60,9 @@ public class MyDbContext : DbContext
     {
     }
 
-    public DbSet<User> Users { get; set; }
+// here should be a name of my tables.. so all characters in lowercase
+    public DbSet<User> users { get; set; }
+    public DbSet<Blog> blogs { get; set; }
 }
 
 public class User
