@@ -1,8 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Vega.classes;
@@ -25,6 +20,18 @@ namespace backend.Controllers
         public async Task<ActionResult<IEnumerable<Income>>> GetIncomes()
         {
             return await _context.Incomes.ToListAsync();
+        }
+
+        // GET: api/Income/latest/5
+        [HttpGet("latest/5")]
+        public async Task<ActionResult<IEnumerable<Expense>>> GetLatestIncomes()
+        {
+            var latestIncomes = await _context.Expenses
+                                               .OrderByDescending(e => e.Created_at)
+                                               .Take(5)
+                                               .ToListAsync();
+
+            return latestIncomes;
         }
 
         // GET: api/Income/5

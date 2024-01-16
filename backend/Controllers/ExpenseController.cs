@@ -15,7 +15,7 @@ namespace backend.Controllers
             _context = context;
         }
 
-        // GET: api/Expense/latest/5
+        // GET: api/Expense
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Expense>>> GetExpenses()
         {
@@ -33,7 +33,6 @@ namespace backend.Controllers
 
             return latestExpenses;
         }
-
 
         // GET: api/Expense/5
         [HttpGet("{id}")]
