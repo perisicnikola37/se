@@ -1,15 +1,30 @@
 using Microsoft.EntityFrameworkCore;
 using Vega.classes;
+using Microsoft.Extensions.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Load configuration
+var configuration = new ConfigurationBuilder()
+    .SetBasePath(builder.Environment.ContentRootPath)
+    .AddJsonFile("appsettings.json")
+    .Build();
+
+string connectionString = configuration.GetConnectionString("MyDbConnection");
+
 
 // add DB context
 builder.Services.AddDbContext<MyDBContext>(options =>
 {
-     options.UseMySql(
-            "server=localhost;user=root;port=3306;Connect Timeout=5;database=first_database;password=06032004",
-            new MySqlServerVersion(new Version(8, 0, 35))
-        );
+    options.UseMySql(
+        connectionString,
+        new MySqlServerVersion(new Version(8, 0, 35)),
+        options => options.EnableRetryOnFailure(
+            maxRetryCount: 5,
+            maxRetryDelay: TimeSpan.FromSeconds(30),
+            errorNumbersToAdd: null
+        )
+    );
 });
 
 // important for adding routes based on controllers
@@ -23,7 +38,10 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwaggerUI(c =>
+    {
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "Expense Tracker API v1");
+    });
 }
 
 app.UseHttpsRedirection();
