@@ -106,6 +106,13 @@ namespace backend.Controllers
         [HttpPost]
         public async Task<ActionResult<Expense>> PostExpense(Expense expense)
         {
+
+            var expense_group = await _context.Expense_groups.FindAsync(expense.ExpenseGroupId);
+
+            if (expense_group == null)
+            {
+                return NotFound();
+            }
             _context.Expenses.Add(expense);
             await _context.SaveChangesAsync();
 

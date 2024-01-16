@@ -254,3 +254,6 @@
 /home/nikolaperisic/Desktop/vega-internship-project/backend/bin/Debug/net8.0/runtimes/win-x86/native/Microsoft.Data.SqlClient.SNI.dll
 /home/nikolaperisic/Desktop/vega-internship-project/backend/bin/Debug/net8.0/runtimes/win/lib/net6.0/System.Runtime.Caching.dll
 /home/nikolaperisic/Desktop/vega-internship-project/backend/bin/Debug/net8.0/Microsoft.AspNetCore.Authentication.JwtBearer.dll
+/home/nikolaperisic/Desktop/vega-internship-project/backend/bin/Debug/net8.0/Microsoft.AspNetCore.JsonPatch.dll
+/home/nikolaperisic/Desktop/vega-internship-project/backend/bin/Debug/net8.0/Microsoft.AspNetCore.Mvc.NewtonsoftJson.dll
+/home/nikolaperisic/Desktop/vega-internship-project/backend/bin/Debug/net8.0/Newtonsoft.Json.Bson.dll
