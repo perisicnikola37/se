@@ -5,6 +5,8 @@ using System.Threading.RateLimiting;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddHttpLogging(o => { });
+
 builder.Services.AddCors(options =>
 {
     options.AddDefaultPolicy(
@@ -26,6 +28,7 @@ builder.Services.AddDbContext<MyDBContext>(options =>
 
 builder.Services.AddAuthentication();
 
+
 // important for adding routes based on controllers
 builder.Services.AddControllers().AddNewtonsoftJson(options =>
     options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
@@ -44,7 +47,7 @@ builder.Services.AddRateLimiter(_ => _
     }));
 
 var app = builder.Build();
-
+app.UseHttpLogging();
 app.UseRateLimiter();
 
 static string GetTicks() => (DateTime.Now.Ticks & 0x11111).ToString("00000");
