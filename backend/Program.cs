@@ -10,6 +10,9 @@ builder.Services.AddDbContext<MyDbContext>(options =>
         );
 });
 
+// maybe important
+builder.Services.AddControllers();
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
@@ -22,38 +25,41 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
-
 var summaries = new[]
 {
     "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
 };
 
-app.MapGet("/weatherforecast", () =>
-{
-    var forecast = Enumerable.Range(1, 5).Select(index =>
-        new WeatherForecast
-        (
-            DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-            Random.Shared.Next(-20, 55),
-            summaries[Random.Shared.Next(summaries.Length)]
-        ))
-        .ToArray();
-    return forecast;
-})
-.WithName("GetWeatherForecast")
-.WithOpenApi();
+// app.MapGet("/weatherforecast", () =>
+// {
+//     var forecast = Enumerable.Range(1, 5).Select(index =>
+//         new WeatherForecast
+//         (
+//             DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
+//             Random.Shared.Next(-20, 55),
+//             summaries[Random.Shared.Next(summaries.Length)]
+//         ))
+//         .ToArray();
+//     return forecast;
+// })
+// .WithName("GetWeatherForecast")
+// .WithOpenApi();
 
-app.MapGet("/users", async (MyDbContext dbContext) =>
-{
-    var users = await dbContext.Users.ToListAsync();
-    return users;
-})
-.WithName("GetAllUsers")
-.WithOpenApi();
+// app.MapGet("/users", async (MyDbContext dbContext) =>
+// {
+//     var users = await dbContext.Users.ToListAsync();
+//     return users;
+// })
+// .WithName("GetAllUsers")
+// .WithOpenApi();
+
+app.UseHttpsRedirection();
+
+// app.UseAuthorization();
+
+app.MapControllers();
 
 app.Run();
-
 
 public class MyDbContext : DbContext
 {
