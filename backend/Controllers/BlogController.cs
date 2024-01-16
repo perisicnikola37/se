@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Vega.classes;
 
 namespace backend.Controllers
 {
@@ -12,9 +13,9 @@ namespace backend.Controllers
     [ApiController]
     public class BlogController : ControllerBase
     {
-        private readonly MyDbContext _context;
+        private readonly MyDBContext _context;
 
-        public BlogController(MyDbContext context)
+        public BlogController(MyDBContext context)
         {
             _context = context;
         }

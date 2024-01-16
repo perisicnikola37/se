@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Vega.classes;
 
 namespace backend.Controllers
 {
@@ -7,9 +8,9 @@ namespace backend.Controllers
     [ApiController]
     public class ExpenseController : ControllerBase
     {
-        private readonly MyDbContext _context;
+        private readonly MyDBContext _context;
 
-        public ExpenseController(MyDbContext context)
+        public ExpenseController(MyDBContext context)
         {
             _context = context;
         }

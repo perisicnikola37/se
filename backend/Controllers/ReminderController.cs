@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Vega.classes;
 
 namespace backend.Controllers
 {
@@ -12,9 +13,9 @@ namespace backend.Controllers
     [ApiController]
     public class ReminderController : ControllerBase
     {
-        private readonly MyDbContext _context;
+        private readonly MyDBContext _context;
 
-        public ReminderController(MyDbContext context)
+        public ReminderController(MyDBContext context)
         {
             _context = context;
         }

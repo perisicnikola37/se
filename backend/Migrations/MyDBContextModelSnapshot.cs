@@ -2,13 +2,14 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using Vega.classes;
 
 #nullable disable
 
 namespace backend.Migrations
 {
-    [DbContext(typeof(MyDbContext))]
-    partial class MyDbContextModelSnapshot : ModelSnapshot
+    [DbContext(typeof(MyDBContext))]
+    partial class MyDBContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
@@ -140,19 +141,19 @@ namespace backend.Migrations
 
             modelBuilder.Entity("User", b =>
                 {
-                    b.Property<int>("id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<string>("email")
+                    b.Property<string>("Email")
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<string>("username")
+                    b.Property<string>("Username")
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.HasKey("id");
+                    b.HasKey("Id");
 
                     b.ToTable("Users");
                 });

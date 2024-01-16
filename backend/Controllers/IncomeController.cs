@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Vega.classes;
 
 namespace backend.Controllers
 {
@@ -12,9 +13,9 @@ namespace backend.Controllers
     [ApiController]
     public class IncomeController : ControllerBase
     {
-        private readonly MyDbContext _context;
+        private readonly MyDBContext _context;
 
-        public IncomeController(MyDbContext context)
+        public IncomeController(MyDBContext context)
         {
             _context = context;
         }
