@@ -93,6 +93,12 @@ namespace backend.Controllers
         [HttpPost]
         public async Task<ActionResult<Income>> PostIncome(Income income)
         {
+            var income_group = await _context.Income_groups.FindAsync(income.IncomeGroupId);
+
+            if (income_group == null)
+            {
+                return NotFound();
+            }
             _context.Incomes.Add(income);
             await _context.SaveChangesAsync();
 
