@@ -120,7 +120,7 @@ namespace backend.Migrations
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     Description = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Amount = table.Column<int>(type: "int", nullable: false),
+                    Amount = table.Column<float>(type: "float", nullable: false),
                     Created_at = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     ExpenseGroupId = table.Column<int>(type: "int", nullable: false)
                 },
@@ -144,7 +144,7 @@ namespace backend.Migrations
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     Description = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Amount = table.Column<int>(type: "int", nullable: false),
+                    Amount = table.Column<float>(type: "float", nullable: false),
                     Created_at = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     IncomeGroupId = table.Column<int>(type: "int", nullable: false)
                 },

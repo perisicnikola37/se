@@ -51,8 +51,8 @@ namespace backend.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<int>("Amount")
-                        .HasColumnType("int");
+                    b.Property<float>("Amount")
+                        .HasColumnType("float");
 
                     b.Property<DateTime>("Created_at")
                         .HasColumnType("datetime(6)");
@@ -99,8 +99,8 @@ namespace backend.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<int>("Amount")
-                        .HasColumnType("int");
+                    b.Property<float>("Amount")
+                        .HasColumnType("float");
 
                     b.Property<DateTime>("Created_at")
                         .HasColumnType("datetime(6)");

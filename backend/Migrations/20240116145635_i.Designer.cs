@@ -11,7 +11,7 @@ using Vega.classes;
 namespace backend.Migrations
 {
     [DbContext(typeof(MyDBContext))]
-    [Migration("20240116144825_i")]
+    [Migration("20240116145635_i")]
     partial class i
     {
         /// <inheritdoc />
@@ -54,8 +54,8 @@ namespace backend.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<int>("Amount")
-                        .HasColumnType("int");
+                    b.Property<float>("Amount")
+                        .HasColumnType("float");
 
                     b.Property<DateTime>("Created_at")
                         .HasColumnType("datetime(6)");
@@ -102,8 +102,8 @@ namespace backend.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<int>("Amount")
-                        .HasColumnType("int");
+                    b.Property<float>("Amount")
+                        .HasColumnType("float");
 
                     b.Property<DateTime>("Created_at")
                         .HasColumnType("datetime(6)");
