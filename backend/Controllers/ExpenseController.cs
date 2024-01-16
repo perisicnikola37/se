@@ -26,21 +26,18 @@ namespace backend.Controllers
         [HttpGet("latest/5")]
         public async Task<ActionResult<IEnumerable<Expense>>> GetLatestExpenses()
         {
-            var latestExpenses = await _context.Expenses
+            return await _context.Expenses
                                                .OrderByDescending(e => e.Created_at)
                                                .Take(5)
                                                .ToListAsync();
 
-            return latestExpenses;
         }
 
         // GET: api/Expense/total-amount
         [HttpGet("total-amount")]
         public async Task<ActionResult<int>> GetTotalAmountOfExpenses()
         {
-            var expenseCount = await _context.Expenses.CountAsync();
-
-            return expenseCount;
+            return await _context.Expenses.CountAsync();
         }
 
         public class FinancialSummary
