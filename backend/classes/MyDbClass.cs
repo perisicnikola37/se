@@ -17,6 +17,21 @@ public class MyDBContext : DbContext, IMyDBContext
     public DbSet<Income> Incomes { get; set; }
     public DbSet<Reminder> Reminders { get; set; }
 
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<Expense>()
+            .HasOne(e => e.ExpenseGroup)
+            .WithMany(g => g.Expenses)
+            .HasForeignKey(e => e.ExpenseGroupId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<Income>()
+     .HasOne(i => i.IncomeGroup)
+     .WithMany(g => g.Incomes)
+     .HasForeignKey(i => i.IncomeGroupId)
+     .OnDelete(DeleteBehavior.Cascade);
+    }
+
     public async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {
         return await base.SaveChangesAsync(cancellationToken);

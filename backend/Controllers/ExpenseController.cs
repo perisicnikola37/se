@@ -19,7 +19,7 @@ namespace backend.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Expense>>> GetExpenses()
         {
-            return await _context.Expenses.ToListAsync();
+            return await _context.Expenses.OrderByDescending(e => e.Created_at).ToListAsync();
         }
 
         // GET: api/Expense/latest/5

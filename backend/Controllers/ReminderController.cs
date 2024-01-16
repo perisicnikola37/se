@@ -24,7 +24,7 @@ namespace backend.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Reminder>>> GetReminders()
         {
-            return await _context.Reminders.ToListAsync();
+            return await _context.Reminders.OrderByDescending(e => e.Created_at).ToListAsync();
         }
 
         // GET: api/Reminder/5

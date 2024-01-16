@@ -1,6 +1,3 @@
-using System;
-using NuGet.Packaging.Signing;
-
 public class Expense
 {
     public int Id { get; set; }

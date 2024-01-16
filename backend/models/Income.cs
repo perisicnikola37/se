@@ -4,5 +4,8 @@ public class Income
     public string Description { get; set; }
     public int Amount { get; set; }
     public DateTime Created_at { get; set; } = DateTime.Now;
-    public IncomeGroup IncomeGroup { get; set; }
+
+    public int IncomeGroupId { get; set; }
+
+    public IncomeGroup? IncomeGroup { get; set; }
 }
