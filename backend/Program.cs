@@ -4,12 +4,12 @@ using Vega.classes;
 var builder = WebApplication.CreateBuilder(args);
 
 // Load configuration
-var configuration = new ConfigurationBuilder()
-    .SetBasePath(builder.Environment.ContentRootPath)
-    .AddJsonFile("appsettings.json")
-    .Build();
+// var configuration = new ConfigurationBuilder()
+//     .SetBasePath(builder.Environment.ContentRootPath)
+//     .AddJsonFile("appsettings.json")
+//     .Build();
 
-string connectionString = configuration.GetConnectionString("MyDbConnection");
+// string connectionString = configuration.GetConnectionString("MyDbConnection");
 
 // add DB context
 builder.Services.AddDbContext<MyDBContext>(options =>
