@@ -6,7 +6,8 @@ public class User
     public int Id { get; set; }
     public string Username { get; set; }
     public string Email { get; set; }
-    private string hashedPassword; 
+    public string AccountType { get; set; } = "regular";
+    private string hashedPassword;
 
     public string Password
     {
