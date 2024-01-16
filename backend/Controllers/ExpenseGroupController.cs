@@ -24,7 +24,16 @@ namespace backend.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ExpenseGroup>>> GetExpense_groups()
         {
-            return await _context.Expense_groups.OrderByDescending(e => e.Created_at).ToListAsync();
+            var expense_groups = await _context.Expense_groups.OrderByDescending(e => e.Created_at).ToListAsync();
+
+            if (expense_groups.Count != 0)
+            {
+                return expense_groups;
+            }
+            else
+            {
+                return NotFound();
+            }
         }
 
         // GET: api/ExpenseGroup/5

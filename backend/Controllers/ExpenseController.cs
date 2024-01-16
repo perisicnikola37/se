@@ -19,7 +19,16 @@ namespace backend.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Expense>>> GetExpenses()
         {
-            return await _context.Expenses.OrderByDescending(e => e.Created_at).ToListAsync();
+            var expenses = await _context.Expenses.OrderByDescending(e => e.Created_at).ToListAsync();
+
+            if (expenses.Count != 0)
+            {
+                return expenses;
+            }
+            else
+            {
+                return NotFound();
+            }
         }
 
         // GET: api/Expense/latest/5

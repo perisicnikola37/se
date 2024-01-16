@@ -20,6 +20,8 @@ builder.Services.AddDbContext<MyDBContext>(options =>
     );
 });
 
+builder.Services.AddAuthentication();
+
 // important for adding routes based on controllers
 builder.Services.AddControllers();
 
@@ -36,6 +38,10 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.MapControllers();
+
+// auth
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.Run();
 

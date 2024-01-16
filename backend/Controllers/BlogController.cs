@@ -24,7 +24,16 @@ namespace backend.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Blog>>> GetBlogs()
         {
-            return await _context.Blogs.OrderByDescending(e => e.Created_at).ToListAsync();
+            var blogs = await _context.Blogs.OrderByDescending(e => e.Created_at).ToListAsync();
+
+            if (blogs.Count != 0)
+            {
+                return blogs;
+            }
+            else
+            {
+                return NotFound();
+            }
         }
 
         // GET: api/Blog/5
