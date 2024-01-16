@@ -54,6 +54,7 @@ app.MapGet("/users", async (MyDbContext dbContext) =>
 
 app.Run();
 
+
 public class MyDbContext : DbContext
 {
     public MyDbContext(DbContextOptions<MyDbContext> options) : base(options)
