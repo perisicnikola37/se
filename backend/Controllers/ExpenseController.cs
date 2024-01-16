@@ -16,23 +16,23 @@ namespace backend.Controllers
         }
 
         // GET: api/Expense/latest/5
-        [HttpGet("latest/5")]
+        [HttpGet]
         public async Task<ActionResult<IEnumerable<Expense>>> GetExpenses()
         {
             return await _context.Expenses.ToListAsync();
         }
 
-        // GET: api/Expense/latest
-        // [HttpGet]
-        // public async Task<ActionResult<IEnumerable<Expense>>> GetLatestExpenses()
-        // {
-        //     var latestExpenses = await _context.Expenses
-        //                                        .OrderByDescending(e => e.Created_at) 
-        //                                        .Take(5)
-        //                                        .ToListAsync();
+        // GET: api/Expense/latest/5
+           [HttpGet("latest/5")]
+        public async Task<ActionResult<IEnumerable<Expense>>> GetLatestExpenses()
+        {
+            var latestExpenses = await _context.Expenses
+                                               .OrderByDescending(e => e.Created_at) 
+                                               .Take(5)
+                                               .ToListAsync();
 
-        //     return latestExpenses;
-        // }
+            return latestExpenses;
+        }
 
 
         // GET: api/Expense/5

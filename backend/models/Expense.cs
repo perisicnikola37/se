@@ -9,5 +9,8 @@ public class Expense
     // this is unnecessary
     // public int ExpenseGroupId { get; set; }
     public DateTime Created_at { get; set; } = DateTime.Now;
-    public ExpenseGroup ExpenseGroup { get; set; }
+
+    public int ExpenseGroupId { get; set; }
+
+    public ExpenseGroup? ExpenseGroup { get; set; }
 }
