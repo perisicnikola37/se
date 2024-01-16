@@ -1,9 +1,8 @@
 namespace Vega.classes;
 
 using Microsoft.EntityFrameworkCore;
-using Vega.interfaces;
 
-public class MyDBContext : DbContext, IMyDBContext
+public class MyDBContext : DbContext
 {
     public MyDBContext(DbContextOptions<MyDBContext> options) : base(options)
     {

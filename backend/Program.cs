@@ -47,6 +47,7 @@ builder.Services.AddRateLimiter(_ => _
     }));
 
 var app = builder.Build();
+
 app.UseHttpLogging();
 app.UseRateLimiter();
 
