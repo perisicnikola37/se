@@ -1,8 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Vega.classes;
@@ -24,7 +19,19 @@ namespace backend.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<IncomeGroup>>> GetIncome_groups()
         {
-            return await _context.Income_groups.ToListAsync();
+            var income_groups = await _context.Income_groups
+                .Include(e => e.Incomes)
+                .OrderByDescending(e => e.Created_at)
+                .ToListAsync();
+
+            if (income_groups.Count != 0)
+            {
+                return income_groups;
+            }
+            else
+            {
+                return NotFound();
+            }
         }
 
         // GET: api/IncomeGroup/5
