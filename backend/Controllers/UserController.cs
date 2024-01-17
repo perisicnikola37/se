@@ -6,7 +6,6 @@ using System.Security.Claims;
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
-using Microsoft.AspNetCore.Authorization;
 
 namespace backend.Controllers
 {
@@ -15,10 +14,12 @@ namespace backend.Controllers
     public class UserController : ControllerBase
     {
         private readonly MyDBContext _context;
+        private readonly IConfiguration _configuration;
 
-        public UserController(MyDBContext context)
+        public UserController(MyDBContext context, IConfiguration configuration)
         {
             _context = context;
+            _configuration = configuration;
         }
 
         // GET: api/User
@@ -99,7 +100,7 @@ namespace backend.Controllers
 
             return NoContent();
         }
-      
+
         // POST: api/User/Login
         [HttpPost("Login")]
         public async Task<ActionResult<User>> LogInUser(LogInUser user)
@@ -112,9 +113,10 @@ namespace backend.Controllers
                 return NotFound(new { message = "Invalid email or password" });
             }
 
-            var issuer = "https://joydipkanjilal.com/";
-            var audience = "https://joydipkanjilal.com/";
-            var key = Encoding.ASCII.GetBytes("ddsadhasbd asdadsad sdas dasd asdasdasd as dasd sad sadas dadssndn asdnasjdnas jd asdas dasjdnas jn dsjan dasjn djasn djasndasjndjasndajsn djnasjnd");
+            var issuer = _configuration["Jwt:Issuer"];
+            var audience = _configuration["Jwt:Audience"];
+            var key = Encoding.ASCII.GetBytes(_configuration["Jwt:Key"]);
+          
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(new[]
@@ -167,10 +169,10 @@ namespace backend.Controllers
             _context.Users.Add(newUser);
             await _context.SaveChangesAsync();
 
-            // Generate JWT token
-            var issuer = "https://joydipkanjilal.com/";
-            var audience = "https://joydipkanjilal.com/";
-            var key = Encoding.ASCII.GetBytes("ddsadhasbd asdasndn asdnasjdnas jd asdas dasjdnas jn dsjan dasjn djasn djasndasjndjasndajsn djnasjnd");
+            var issuer = _configuration["Jwt:Issuer"];
+            var audience = _configuration["Jwt:Audience"];
+            var key = Encoding.ASCII.GetBytes(_configuration["Jwt:Key"]);
+
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(new[]
@@ -193,29 +195,29 @@ namespace backend.Controllers
             return CreatedAtAction("GetUser", new { id = newUser.Id }, new { message = "User registered successfully", user = newUser, token = jwtToken });
         }
 
-       [HttpGet("CurrentUser")]
-public ActionResult<LoggedInUser> GetCurrentUser()
-{
-    foreach (var claim in User.Claims)
-    {
-        Console.WriteLine($"Claim Type: {claim.Type}, Claim Value: {claim.Value}");
-    }
+        [HttpGet("CurrentUser")]
+        public ActionResult<LoggedInUser> GetCurrentUser()
+        {
+            foreach (var claim in User.Claims)
+            {
+                Console.WriteLine($"Claim Type: {claim.Type}, Claim Value: {claim.Value}");
+            }
 
-    var userIdClaim = User.Claims.FirstOrDefault(c => c.Type == "Id");
-    if (userIdClaim == null || !int.TryParse(userIdClaim.Value, out int userId))
-    {
-        return BadRequest(new { message = "Invalid user claims" });
-    }
+            var userIdClaim = User.Claims.FirstOrDefault(c => c.Type == "Id");
+            if (userIdClaim == null || !int.TryParse(userIdClaim.Value, out int userId))
+            {
+                return BadRequest(new { message = "Invalid user claims" });
+            }
 
-    var user = _context.Users.Find(userId);
+            var user = _context.Users.Find(userId);
 
-    if (user == null)
-    {
-        return NotFound(new { message = "User not found" });
-    }
+            if (user == null)
+            {
+                return NotFound(new { message = "User not found" });
+            }
 
-    return Ok(user);
-}
+            return Ok(user);
+        }
 
         private bool UserExists(int id)
         {
