@@ -40,20 +40,25 @@ builder.Services.AddControllers().AddNewtonsoftJson(options =>
     options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
 );
 
+var configuration = builder.Services.BuildServiceProvider().GetService<IConfiguration>();
+
 builder.Services.AddAuthentication(options =>
-    {
+{
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
     options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
     options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
 }).AddJwtBearer(o =>
 {
+    string validIssuer = configuration["Jwt:Issuer"];
+    string validAudience = configuration["Jwt:Audience"];
+    string issuerSigningKey = configuration["Jwt:Key"];
+
     o.TokenValidationParameters = new TokenValidationParameters
     {
-        ValidIssuer = "https://joydipkanjilal.com/",
-        ValidAudience = "https://joydipkanjilal.com/",
+        ValidIssuer = validIssuer,
+        ValidAudience = validAudience,
 
-        IssuerSigningKey = new SymmetricSecurityKey
-        (Encoding.UTF8.GetBytes("ddsadhasbd asdadsad sdas dasd asdasdasd as dasd sad sadas dadssndn asdnasjdnas jd asdas dasjdnas jn dsjan dasjn djasn djasndasjndjasndajsn djnasjnd")),
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(issuerSigningKey)),
         ValidateIssuer = true,
         ValidateAudience = true,
         ValidateLifetime = false,
@@ -80,6 +85,7 @@ var app = builder.Build();
 // disabled
 // app.UseHttpLogging();
 app.UseRateLimiter();
+app.UseMiddleware<UserMiddleware>();
 
 static string GetTicks() => (DateTime.Now.Ticks & 0x11111).ToString("00000");
 
@@ -88,42 +94,6 @@ app.MapGet("/", () => Results.Ok($"Hello {GetTicks()}"))
 
 app.MapGet("/security/getMessage",
 () => "Hello World!").RequireAuthorization();
-
-// app.MapPost("/security/createToken",
-// [AllowAnonymous] (User user) =>
-// {
-//     if (user.username == "nikolaperisic@gmail.com" && user.password == "06032004")
-//     {
-//         var issuer = builder.Configuration["Jwt:Issuer"];
-//         var audience = builder.Configuration["Jwt:Audience"];
-//         var key = Encoding.ASCII.GetBytes
-//         (builder.Configuration["Jwt:Key"]);
-//         var tokenDescriptor = new SecurityTokenDescriptor
-//         {
-//             Subject = new ClaimsIdentity(new[]
-//             {
-//                 new Claim("Id", Guid.NewGuid().ToString()),
-//                 new Claim(JwtRegisteredClaimNames.Sub, user.username),
-//                 new Claim(JwtRegisteredClaimNames.Email, user.username),
-//                 new Claim(JwtRegisteredClaimNames.Jti,
-//                 Guid.NewGuid().ToString())
-//             }),
-//             Expires = DateTime.UtcNow.AddMinutes(5),
-//             Issuer = issuer,
-//             Audience = audience,
-//             SigningCredentials = new SigningCredentials
-//             (new SymmetricSecurityKey(key),
-//             SecurityAlgorithms.HmacSha512Signature)
-//         };
-//         var tokenHandler = new JwtSecurityTokenHandler();
-//         var token = tokenHandler.CreateToken(tokenDescriptor);
-//         var jwtToken = tokenHandler.WriteToken(token);
-//         var stringToken = tokenHandler.WriteToken(token);
-//         return Results.Ok(stringToken);
-//     }
-//     return Results.Unauthorized();
-// });
-
 
 if (app.Environment.IsDevelopment())
 {

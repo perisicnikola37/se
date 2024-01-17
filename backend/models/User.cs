@@ -6,4 +6,5 @@ public class User
     public string AccountType { get; set; }
     public string Password { get; set; }
     public DateTime Created_at { get; set; } = DateTime.Now;
+    public List<Expense>? Expenses { get; set; } 
 }

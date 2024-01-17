@@ -10,4 +10,8 @@ public class Expense
     public int ExpenseGroupId { get; set; }
 
     public ExpenseGroup? ExpenseGroup { get; set; }
+
+    public int UserId { get; set; }
+
+    public User? User { get; set; }
 }

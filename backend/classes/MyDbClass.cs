@@ -19,13 +19,19 @@ public class MyDBContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Expense>()
+       .HasOne(e => e.User)
+       .WithMany(u => u.Expenses)
+       .HasForeignKey(e => e.UserId)
+       .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<Expense>()
             .HasOne(e => e.ExpenseGroup)
             .WithMany(g => g.Expenses)
             .HasForeignKey(e => e.ExpenseGroupId)
             .OnDelete(DeleteBehavior.Cascade);
 
         modelBuilder.Entity<Income>()
-     .HasOne(i => i.IncomeGroup)
+      .HasOne(i => i.IncomeGroup)
      .WithMany(g => g.Incomes)
      .HasForeignKey(i => i.IncomeGroupId)
      .OnDelete(DeleteBehavior.Cascade);

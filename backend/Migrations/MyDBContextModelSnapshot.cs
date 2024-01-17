@@ -64,9 +64,14 @@ namespace backend.Migrations
                     b.Property<int>("ExpenseGroupId")
                         .HasColumnType("int");
 
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("ExpenseGroupId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Expenses");
                 });
@@ -204,7 +209,15 @@ namespace backend.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("User", "User")
+                        .WithMany("Expenses")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("ExpenseGroup");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Income", b =>
@@ -226,6 +239,11 @@ namespace backend.Migrations
             modelBuilder.Entity("IncomeGroup", b =>
                 {
                     b.Navigation("Incomes");
+                });
+
+            modelBuilder.Entity("User", b =>
+                {
+                    b.Navigation("Expenses");
                 });
 #pragma warning restore 612, 618
         }
