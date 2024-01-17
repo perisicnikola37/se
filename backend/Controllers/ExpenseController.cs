@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Vega.Classes;
@@ -18,18 +19,15 @@ namespace Vega.Controllers
 
         // GET: api/Expense
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Expense>>> GetExpenses()
+        public async Task<IActionResult> GetExpenses([FromQuery] PaginationFilter filter)
         {
-            var expenses = await _context.Expenses.OrderByDescending(e => e.Created_at).ToListAsync();
-
-            if (expenses.Count != 0)
-            {
-                return expenses;
-            }
-            else
-            {
-                return NotFound();
-            }
+            var validFilter = new PaginationFilter(filter.PageNumber, filter.PageSize);
+            var pagedData = await _context.Expenses
+                .Skip((validFilter.PageNumber - 1) * validFilter.PageSize)
+                .Take(validFilter.PageSize)
+                .ToListAsync();
+            // var totalRecords = await _context.Expenses.CountAsync();
+            return Ok(new PagedResponse<List<Expense>>(pagedData, validFilter.PageNumber, validFilter.PageSize));
         }
 
         // GET: api/Expense/latest/5
@@ -40,7 +38,6 @@ namespace Vega.Controllers
                                                .OrderByDescending(e => e.Created_at)
                                                .Take(5)
                                                .ToListAsync();
-
         }
 
         // GET: api/Expense/total-amount
@@ -50,25 +47,23 @@ namespace Vega.Controllers
             return await _context.Expenses.CountAsync();
         }
 
-        public class FinancialSummary
-        {
-            public int ExpenseCount { get; set; }
-            public int IncomeCount { get; set; }
-        }
-
-
         // GET: api/Expense/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Expense>> GetExpense(int id)
         {
+            // TRYING CUSTOM TEMPLATE 
+            // var expense = await _context.Expenses.FindAsync(id);
+
             var expense = await _context.Expenses.FindAsync(id);
+            return Ok(new Response<Expense>(expense));
 
-            if (expense == null)
-            {
-                return NotFound();
-            }
 
-            return expense;
+            // if (expense == null)
+            // {
+            //     return NotFound();
+            // }
+
+            // return expense;
         }
 
         // PUT: api/Expense/5
@@ -127,6 +122,7 @@ namespace Vega.Controllers
         }
 
         // DELETE: api/Expense/5
+        // [Authorize(Roles = "admin")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteExpense(int id)
         {
