@@ -1,5 +1,5 @@
 using Microsoft.EntityFrameworkCore;
-using Vega.classes;
+using Vega.Classes;
 using Microsoft.AspNetCore.RateLimiting;
 using System.Threading.RateLimiting;
 using Microsoft.IdentityModel.Tokens;
@@ -10,7 +10,7 @@ using System.Security.Claims;
 using System.IdentityModel.Tokens.Jwt;
 
 var builder = WebApplication.CreateBuilder(args);
-
+var configuration = builder.Services.BuildServiceProvider().GetService<IConfiguration>();
 // disabled
 // builder.Services.AddHttpLogging(o => { });
 
@@ -25,10 +25,12 @@ builder.Services.AddCors(options =>
 });
 
 // add DB context
+string connectionString = configuration["DefaultConnection"];
+
 builder.Services.AddDbContext<MyDBContext>(options =>
 {
     options.UseMySql(
-       "server=localhost;user=root;port=3306;Connect Timeout=5;database=first_database;password=06032004",
+      connectionString,
         new MySqlServerVersion(new Version(8, 0, 35))
     );
 });
@@ -39,8 +41,6 @@ builder.Services.AddAuthentication();
 builder.Services.AddControllers().AddNewtonsoftJson(options =>
     options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
 );
-
-var configuration = builder.Services.BuildServiceProvider().GetService<IConfiguration>();
 
 builder.Services.AddAuthentication(options =>
 {

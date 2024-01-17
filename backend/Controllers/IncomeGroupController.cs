@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Vega.classes;
+using Vega.Classes;
+using Vega.Models;
 
 namespace backend.Controllers
 {

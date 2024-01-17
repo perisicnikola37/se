@@ -1,3 +1,4 @@
+namespace Vega.Models;
 public class Reminder
 {
     public int Id { get; set; }

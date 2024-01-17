@@ -1,3 +1,4 @@
+namespace Vega.Models;
 public class ExpenseGroup
 {
     public int Id { get; set; }

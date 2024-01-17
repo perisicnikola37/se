@@ -1,11 +1,7 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Vega.classes;
+using Vega.Classes;
+using Vega.Models;
 
 namespace backend.Controllers
 {
@@ -26,7 +22,7 @@ namespace backend.Controllers
         {
             var blogs = await _context.Blogs.OrderByDescending(e => e.Created_at).ToListAsync();
 
-            if (blogs.Count != 0)
+            if (blogs.Count() != 0)
             {
                 return blogs;
             }

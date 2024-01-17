@@ -1,6 +1,7 @@
-namespace Vega.classes;
+namespace Vega.Classes;
 
 using Microsoft.EntityFrameworkCore;
+using Vega.Models;
 
 public class MyDBContext : DbContext
 {

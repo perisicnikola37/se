@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Vega.Models;
 
 namespace Vega.interfaces;
 

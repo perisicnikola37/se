@@ -1,3 +1,4 @@
+namespace Vega.Models;
 public class Income
 {
     public int Id { get; set; }
