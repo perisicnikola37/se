@@ -2,10 +2,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Vega.Classes;
 using Vega.Models;
-using System.Security.Claims;
-using System.IdentityModel.Tokens.Jwt;
-using System.Text;
-using Microsoft.IdentityModel.Tokens;
 
 namespace Vega.Controllers
 {
@@ -14,12 +10,10 @@ namespace Vega.Controllers
     public class UserController : ControllerBase
     {
         private readonly MainDatabaseContext _context;
-        private readonly IConfiguration _configuration;
 
-        public UserController(MainDatabaseContext context, IConfiguration configuration)
+        public UserController(MainDatabaseContext context)
         {
             _context = context;
-            _configuration = configuration;
         }
 
         // GET: api/User

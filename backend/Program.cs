@@ -5,13 +5,13 @@ using System.Threading.RateLimiting;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using System.Text;
+using Vega.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
 var configuration = builder.Services.BuildServiceProvider().GetService<IConfiguration>();
 // disabled
 // builder.Services.AddHttpLogging(o => { });
-
 builder.Services.AddCors(options =>
 {
     options.AddDefaultPolicy(
@@ -38,6 +38,9 @@ builder.Services.AddAuthentication();
 builder.Services.AddControllers().AddNewtonsoftJson(options =>
     options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
 );
+
+// services
+builder.Services.AddScoped<IAuthService, AuthService>();
 
 builder.Services.AddAuthentication(options =>
 {
