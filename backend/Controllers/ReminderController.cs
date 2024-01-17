@@ -9,9 +9,9 @@ namespace backend.Controllers
     [ApiController]
     public class ReminderController : ControllerBase
     {
-        private readonly MyDBContext _context;
+        private readonly MainDatabaseContext _context;
 
-        public ReminderController(MyDBContext context)
+        public ReminderController(MainDatabaseContext context)
         {
             _context = context;
         }

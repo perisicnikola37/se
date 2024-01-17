@@ -9,9 +9,9 @@ namespace backend.Controllers
     [ApiController]
     public class IncomeController : ControllerBase
     {
-        private readonly MyDBContext _context;
+        private readonly MainDatabaseContext _context;
 
-        public IncomeController(MyDBContext context)
+        public IncomeController(MainDatabaseContext context)
         {
             _context = context;
         }

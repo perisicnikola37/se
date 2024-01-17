@@ -9,9 +9,9 @@ namespace backend.Controllers
     [ApiController]
     public class ExpenseController : ControllerBase
     {
-        private readonly MyDBContext _context;
+        private readonly MainDatabaseContext _context;
 
-        public ExpenseController(MyDBContext context)
+        public ExpenseController(MainDatabaseContext context)
         {
             _context = context;
         }

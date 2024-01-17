@@ -1,9 +1,9 @@
 using Microsoft.EntityFrameworkCore;
 using Vega.Models;
 
-namespace Vega.interfaces;
+namespace Vega.Interfaces;
 
-public interface IMyDBContext
+public interface IMainDatabaseContext
 {
     DbSet<User> Users { get; set; }
     DbSet<Blog> Blogs { get; set; }

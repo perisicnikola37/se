@@ -24,7 +24,7 @@ builder.Services.AddCors(options =>
 // add DB context
 string connectionString = configuration["DefaultConnection"];
 
-builder.Services.AddDbContext<MyDBContext>(options =>
+builder.Services.AddDbContext<MainDatabaseContext>(options =>
 {
     options.UseMySql(
       connectionString,

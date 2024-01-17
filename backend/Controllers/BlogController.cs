@@ -9,9 +9,9 @@ namespace backend.Controllers
     [ApiController]
     public class BlogController : ControllerBase
     {
-        private readonly MyDBContext _context;
+        private readonly MainDatabaseContext _context;
 
-        public BlogController(MyDBContext context)
+        public BlogController(MainDatabaseContext context)
         {
             _context = context;
         }
