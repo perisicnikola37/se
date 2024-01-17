@@ -1,8 +1,6 @@
-using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Net;
 using System.Net.Mail;
-using System.Threading.Tasks;
 
 public class EmailService
 {
@@ -10,6 +8,7 @@ public class EmailService
     {
         try
         {
+            // TO DO: Make these credentials in appsettings.json
             var smtpClient = new SmtpClient("smtp.gmail.com")
             {
                 Port = 587,

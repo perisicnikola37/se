@@ -108,27 +108,26 @@ namespace Vega.Controllers
 
         // POST: api/User/SendEmail
         [HttpPost("SendEmail")]
-         public async Task<IActionResult> SendEmail([FromBody] EmailRequest emailRequest)
-    {
-        try
+        public async Task<IActionResult> SendEmail([FromBody] EmailRequest emailRequest)
         {
-            bool isEmailSent = await _emailservice.SendEmail(emailRequest);
+            try
+            {
+                bool isEmailSent = await _emailservice.SendEmail(emailRequest);
 
-            if (isEmailSent)
-            {
-                return Ok("Email sent successfully");
+                if (isEmailSent)
+                {
+                    return Ok("Email sent successfully");
+                }
+                else
+                {
+                    return BadRequest("Failed to send email");
+                }
             }
-            else
+            catch (Exception ex)
             {
-                return BadRequest("Failed to send email");
+                return StatusCode(500, "Internal Server Error");
             }
         }
-        catch (Exception ex)
-        {
-            // Log the exception if needed
-            return StatusCode(500, "Internal Server Error");
-        }
-    }
         private bool UserExists(int id)
         {
             return _context.Users.Any(e => e.Id == id);
