@@ -33,6 +33,12 @@ public class MainDatabaseContext : DbContext, IMainDatabaseContext
             .OnDelete(DeleteBehavior.Cascade);
 
         modelBuilder.Entity<Income>()
+            .HasOne(e => e.User)
+            .WithMany(u => u.Incomes)
+            .HasForeignKey(e => e.UserId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<Income>()
             .HasOne(i => i.IncomeGroup)
             .WithMany(g => g.Incomes)
             .HasForeignKey(i => i.IncomeGroupId)

@@ -100,6 +100,13 @@ namespace Vega.Controllers
             {
                 return NotFound();
             }
+
+            var userIdClaim = User.Claims.FirstOrDefault(c => c.Type == "Id");
+            if (userIdClaim == null || !int.TryParse(userIdClaim.Value, out int userId))
+            {
+                return Unauthorized(new { message = "Invalid user claims" });
+            }
+            income.UserId = userId;
             _context.Incomes.Add(income);
             await _context.SaveChangesAsync();
 

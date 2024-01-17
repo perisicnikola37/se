@@ -9,4 +9,8 @@ public class Income
     public int IncomeGroupId { get; set; }
 
     public IncomeGroup? IncomeGroup { get; set; }
+
+    public int UserId { get; set; }
+
+    public User? User { get; set; }
 }
