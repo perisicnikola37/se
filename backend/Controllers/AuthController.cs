@@ -14,13 +14,11 @@ namespace Vega.Controllers;
 public class AuthController : ControllerBase
 {
     private readonly MainDatabaseContext _context;
-    private readonly IConfiguration _configuration;
     private readonly IAuthService _authService;
 
-    public AuthController(MainDatabaseContext context, IConfiguration configuration, IAuthService authService)
+    public AuthController(MainDatabaseContext context, IAuthService authService)
     {
         _context = context;
-        _configuration = configuration;
         _authService = authService;
     }
 
@@ -42,9 +40,8 @@ public class AuthController : ControllerBase
     [HttpPost("Register")]
     public async Task<ActionResult<User>> RegisterUser(User userRegistration)
     {
-        var result = await _authService.RegisterUserAsync(userRegistration);
-
-        return result;
+        // AuthService
+        return await _authService.RegisterUserAsync(userRegistration);
     }
 
     /// POST: api/Auth/CurrentUser

@@ -18,9 +18,18 @@ namespace Vega.Controllers
 
         // GET: api/User
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<User>>> GetUsers()
+         public async Task<ActionResult<IEnumerable<User>>> GetUsers()
         {
-            return await _context.Users.ToListAsync();
+            var users = await _context.Users.OrderByDescending(e => e.Created_at).ToListAsync();
+
+             if (users.Count != 0)
+            {
+                return users;
+            }
+            else
+            {
+                return NotFound();
+            }
         }
 
         // GET: api/User/5
