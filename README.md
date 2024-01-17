@@ -1,4 +1,7 @@
-## Expense Tracker Project 
+<div>
+<h1> Expense Tracker Project </h2>
+<img src="https://assets.materialup.com/uploads/1eae3002-ea83-4b83-bb8c-e844400e7f83/preview.jpg" width="128"/>
+</div>
 
 ### Overview
 
