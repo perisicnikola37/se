@@ -18,7 +18,7 @@ public class UserMiddleware
             var userIdClaim = context.User.Claims.FirstOrDefault(c => c.Type == "Id");
             if (userIdClaim != null && int.TryParse(userIdClaim.Value, out int userId))
             {
-                context.Items["UserId"] = userId; 
+                context.Items["UserId"] = userId;
             }
         }
         else

@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Vega.Classes;
 using Vega.Models;
 
-namespace backend.Controllers
+namespace Vega.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
