@@ -11,7 +11,8 @@ using System.IdentityModel.Tokens.Jwt;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddHttpLogging(o => { });
+// disabled
+// builder.Services.AddHttpLogging(o => { });
 
 builder.Services.AddCors(options =>
 {
@@ -48,11 +49,11 @@ builder.Services.AddAuthentication(options =>
 {
     o.TokenValidationParameters = new TokenValidationParameters
     {
-        ValidIssuer = builder.Configuration["Jwt:Issuer"],
-        ValidAudience = builder.Configuration["Jwt:Audience"],
+        ValidIssuer = "https://joydipkanjilal.com/",
+        ValidAudience = "https://joydipkanjilal.com/",
 
         IssuerSigningKey = new SymmetricSecurityKey
-        (Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"])),
+        (Encoding.UTF8.GetBytes("ddsadhasbd asdadsad sdas dasd asdasdasd as dasd sad sadas dadssndn asdnasjdnas jd asdas dasjdnas jn dsjan dasjn djasn djasndasjndjasndajsn djnasjnd")),
         ValidateIssuer = true,
         ValidateAudience = true,
         ValidateLifetime = false,
@@ -76,7 +77,8 @@ builder.Services.AddRateLimiter(_ => _
 
 var app = builder.Build();
 
-app.UseHttpLogging();
+// disabled
+// app.UseHttpLogging();
 app.UseRateLimiter();
 
 static string GetTicks() => (DateTime.Now.Ticks & 0x11111).ToString("00000");

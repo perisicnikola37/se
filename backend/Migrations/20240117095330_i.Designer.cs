@@ -11,7 +11,7 @@ using Vega.classes;
 namespace backend.Migrations
 {
     [DbContext(typeof(MyDBContext))]
-    [Migration("20240117093516_i")]
+    [Migration("20240117095330_i")]
     partial class i
     {
         /// <inheritdoc />

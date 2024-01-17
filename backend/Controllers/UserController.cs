@@ -5,6 +5,7 @@ using System.Security.Claims;
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.AspNetCore.Authorization;
 
 namespace backend.Controllers
 {
@@ -99,8 +100,23 @@ namespace backend.Controllers
         }
 
         // POST: api/User/Login
+        // [HttpPost("Login")]
+        // public async Task<ActionResult<User>> LogInUser(UserLogIn user)
+        // {
+        //     var authenticatedUser = await _context.Users
+        //         .FirstOrDefaultAsync(u => u.Email == user.Email && u.Password == user.Password);
+
+        //     if (authenticatedUser == null)
+        //     {
+        //         return NotFound(new { message = "Invalid email or password" });
+        //     }
+
+        //     return Ok(new { message = "User logged in successfully", user = authenticatedUser });
+        // }
+
+        // POST: api/User/Login
         [HttpPost("Login")]
-        public async Task<ActionResult<User>> LogInUser(UserLogIn user)
+        public async Task<ActionResult<User>> LogInUser(LogInUser user)
         {
             var authenticatedUser = await _context.Users
                 .FirstOrDefaultAsync(u => u.Email == user.Email && u.Password == user.Password);
@@ -110,8 +126,40 @@ namespace backend.Controllers
                 return NotFound(new { message = "Invalid email or password" });
             }
 
-            return Ok(new { message = "User logged in successfully", user = authenticatedUser });
+            var issuer = "https://joydipkanjilal.com/";
+            var audience = "https://joydipkanjilal.com/";
+            var key = Encoding.ASCII.GetBytes("ddsadhasbd asdadsad sdas dasd asdasdasd as dasd sad sadas dadssndn asdnasjdnas jd asdas dasjdnas jn dsjan dasjn djasn djasndasjndjasndajsn djnasjnd");
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Subject = new ClaimsIdentity(new[]
+                {
+            new Claim("Id", authenticatedUser.Id.ToString()),
+            new Claim(JwtRegisteredClaimNames.Sub, authenticatedUser.Username),
+            new Claim(JwtRegisteredClaimNames.Email, authenticatedUser.Email),
+            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+        }),
+                Expires = DateTime.UtcNow.AddMinutes(5),
+                Issuer = issuer,
+                Audience = audience,
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha512Signature)
+            };
+
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var token = tokenHandler.CreateToken(tokenDescriptor);
+            var jwtToken = tokenHandler.WriteToken(token);
+
+            var userWithToken = new LoggedInUser
+            {
+                Id = authenticatedUser.Id,
+                Username = authenticatedUser.Username,
+                Email = authenticatedUser.Email,
+                AccountType = authenticatedUser.AccountType,
+                Token = jwtToken
+            };
+
+            return Ok(new { message = "User logged in successfully", user = userWithToken });
         }
+
 
         // POST: api/User/Register
         [HttpPost("Register")]
@@ -158,6 +206,30 @@ namespace backend.Controllers
 
             return CreatedAtAction("GetUser", new { id = newUser.Id }, new { message = "User registered successfully", user = newUser, token = jwtToken });
         }
+
+       [HttpGet("CurrentUser")]
+public ActionResult<LoggedInUser> GetCurrentUser()
+{
+    foreach (var claim in User.Claims)
+    {
+        Console.WriteLine($"Claim Type: {claim.Type}, Claim Value: {claim.Value}");
+    }
+
+    var userIdClaim = User.Claims.FirstOrDefault(c => c.Type == "Id");
+    if (userIdClaim == null || !int.TryParse(userIdClaim.Value, out int userId))
+    {
+        return BadRequest(new { message = "Invalid user claims" });
+    }
+
+    var user = _context.Users.Find(userId);
+
+    if (user == null)
+    {
+        return NotFound(new { message = "User not found" });
+    }
+
+    return Ok(user);
+}
 
         private bool UserExists(int id)
         {
