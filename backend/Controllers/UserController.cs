@@ -98,22 +98,7 @@ namespace backend.Controllers
 
             return NoContent();
         }
-
-        // POST: api/User/Login
-        // [HttpPost("Login")]
-        // public async Task<ActionResult<User>> LogInUser(UserLogIn user)
-        // {
-        //     var authenticatedUser = await _context.Users
-        //         .FirstOrDefaultAsync(u => u.Email == user.Email && u.Password == user.Password);
-
-        //     if (authenticatedUser == null)
-        //     {
-        //         return NotFound(new { message = "Invalid email or password" });
-        //     }
-
-        //     return Ok(new { message = "User logged in successfully", user = authenticatedUser });
-        // }
-
+      
         // POST: api/User/Login
         [HttpPost("Login")]
         public async Task<ActionResult<User>> LogInUser(LogInUser user)
