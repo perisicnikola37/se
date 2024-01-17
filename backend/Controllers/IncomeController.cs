@@ -18,25 +18,22 @@ namespace Vega.Controllers
 
         // GET: api/Income
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Income>>> GetIncomes()
+         public async Task<IActionResult> GetIncomes([FromQuery] PaginationFilter filter)
         {
-            var incomes = await _context.Incomes.OrderByDescending(e => e.Created_at).ToListAsync();
-
-            if (incomes.Count != 0)
-            {
-                return incomes;
-            }
-            else
-            {
-                return NotFound();
-            }
+            var validFilter = new PaginationFilter(filter.PageNumber, filter.PageSize);
+            var pagedData = await _context.Incomes
+                .Skip((validFilter.PageNumber - 1) * validFilter.PageSize)
+                .Take(validFilter.PageSize)
+                .ToListAsync();
+            // var totalRecords = await _context.Incomes.CountAsync();
+            return Ok(new PagedResponse<List<Income>>(pagedData, validFilter.PageNumber, validFilter.PageSize));
         }
 
         // GET: api/Income/latest/5
         [HttpGet("latest/5")]
-        public async Task<ActionResult<IEnumerable<Expense>>> GetLatestIncomes()
+        public async Task<ActionResult<IEnumerable<Income>>> GetLatestIncomes()
         {
-            var latestIncomes = await _context.Expenses
+            var latestIncomes = await _context.Incomes
                                                .OrderByDescending(e => e.Created_at)
                                                .Take(5)
                                                .ToListAsync();
