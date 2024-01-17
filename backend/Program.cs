@@ -5,11 +5,9 @@ using System.Threading.RateLimiting;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using System.Text;
-using Microsoft.AspNetCore.Authorization;
-using System.Security.Claims;
-using System.IdentityModel.Tokens.Jwt;
 
 var builder = WebApplication.CreateBuilder(args);
+
 var configuration = builder.Services.BuildServiceProvider().GetService<IConfiguration>();
 // disabled
 // builder.Services.AddHttpLogging(o => { });
@@ -19,8 +17,7 @@ builder.Services.AddCors(options =>
     options.AddDefaultPolicy(
         policy =>
         {
-            policy.WithOrigins("http://example.com",
-                                "http://www.contoso.com");
+            policy.WithOrigins("http://example.com");
         });
 });
 
@@ -82,18 +79,9 @@ builder.Services.AddRateLimiter(_ => _
 
 var app = builder.Build();
 
-// disabled
 // app.UseHttpLogging();
 app.UseRateLimiter();
 app.UseMiddleware<UserMiddleware>();
-
-static string GetTicks() => (DateTime.Now.Ticks & 0x11111).ToString("00000");
-
-app.MapGet("/", () => Results.Ok($"Hello {GetTicks()}"))
-                           .RequireRateLimiting("fixed");
-
-app.MapGet("/security/getMessage",
-() => "Hello World!").RequireAuthorization();
 
 if (app.Environment.IsDevelopment())
 {
