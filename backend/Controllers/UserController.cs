@@ -10,19 +10,21 @@ namespace Vega.Controllers
     public class UserController : ControllerBase
     {
         private readonly MainDatabaseContext _context;
+        private readonly EmailService _emailservice;
 
-        public UserController(MainDatabaseContext context)
+        public UserController(MainDatabaseContext context, EmailService emailservice)
         {
             _context = context;
+            _emailservice = emailservice;
         }
 
         // GET: api/User
         [HttpGet]
-         public async Task<ActionResult<IEnumerable<User>>> GetUsers()
+        public async Task<ActionResult<IEnumerable<User>>> GetUsers()
         {
             var users = await _context.Users.OrderByDescending(e => e.Created_at).ToListAsync();
 
-             if (users.Count != 0)
+            if (users.Count != 0)
             {
                 return users;
             }
@@ -104,6 +106,29 @@ namespace Vega.Controllers
             return NoContent();
         }
 
+        // POST: api/User/SendEmail
+        [HttpPost("SendEmail")]
+         public async Task<IActionResult> SendEmail([FromBody] EmailRequest emailRequest)
+    {
+        try
+        {
+            bool isEmailSent = await _emailservice.SendEmail(emailRequest);
+
+            if (isEmailSent)
+            {
+                return Ok("Email sent successfully");
+            }
+            else
+            {
+                return BadRequest("Failed to send email");
+            }
+        }
+        catch (Exception ex)
+        {
+            // Log the exception if needed
+            return StatusCode(500, "Internal Server Error");
+        }
+    }
         private bool UserExists(int id)
         {
             return _context.Users.Any(e => e.Id == id);
