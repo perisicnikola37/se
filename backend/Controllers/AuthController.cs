@@ -42,46 +42,9 @@ public class AuthController : ControllerBase
     [HttpPost("Register")]
     public async Task<ActionResult<User>> RegisterUser(User userRegistration)
     {
-        if (await _context.Users.AnyAsync(u => u.Email == userRegistration.Email))
-        {
-            return Conflict(new { message = "Email is already registered" });
-        }
+        var result = await _authService.RegisterUserAsync(userRegistration);
 
-        var newUser = new User
-        {
-            Username = userRegistration.Username,
-            Email = userRegistration.Email,
-            AccountType = userRegistration.AccountType,
-            Password = userRegistration.Password,
-        };
-
-        _context.Users.Add(newUser);
-        await _context.SaveChangesAsync();
-
-        var issuer = _configuration["Jwt:Issuer"];
-        var audience = _configuration["Jwt:Audience"];
-        var key = Encoding.ASCII.GetBytes(_configuration["Jwt:Key"]);
-
-        var tokenDescriptor = new SecurityTokenDescriptor
-        {
-            Subject = new ClaimsIdentity(new[]
-            {
-            new Claim("Id", newUser.Id.ToString()),
-            new Claim(JwtRegisteredClaimNames.Sub, newUser.Username),
-            new Claim(JwtRegisteredClaimNames.Email, newUser.Email),
-            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
-        }),
-            Expires = DateTime.UtcNow.AddMinutes(5),
-            Issuer = issuer,
-            Audience = audience,
-            SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha512Signature)
-        };
-
-        var tokenHandler = new JwtSecurityTokenHandler();
-        var token = tokenHandler.CreateToken(tokenDescriptor);
-        var jwtToken = tokenHandler.WriteToken(token);
-
-        return CreatedAtAction("GetUser", new { id = newUser.Id }, new { message = "User registered successfully", user = newUser, token = jwtToken });
+        return result;
     }
 
     /// POST: api/Auth/CurrentUser

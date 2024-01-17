@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System;
@@ -19,6 +20,31 @@ public class AuthService : IAuthService
         _configuration = configuration;
     }
 
+    private string GenerateJwtToken(User user)
+    {
+        var issuer = _configuration["Jwt:Issuer"];
+        var audience = _configuration["Jwt:Audience"];
+        var key = Encoding.ASCII.GetBytes(_configuration["Jwt:Key"]);
+
+        var tokenDescriptor = new SecurityTokenDescriptor
+        {
+            Subject = new ClaimsIdentity(new[]
+            {
+                new Claim("Id", user.Id.ToString()),
+                new Claim(JwtRegisteredClaimNames.Sub, user.Username),
+                new Claim(JwtRegisteredClaimNames.Email, user.Email),
+                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+            }),
+            Expires = DateTime.UtcNow.AddMinutes(5),
+            Issuer = issuer,
+            Audience = audience,
+            SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha512Signature)
+        };
+
+        var tokenHandler = new JwtSecurityTokenHandler();
+        return tokenHandler.WriteToken(tokenHandler.CreateToken(tokenDescriptor));
+    }
+
     public async Task<LoggedInUser> LogInUserAsync(LogInUser user)
     {
         var authenticatedUser = await _context.Users
@@ -29,28 +55,7 @@ public class AuthService : IAuthService
             return null;
         }
 
-        var issuer = _configuration["Jwt:Issuer"];
-        var audience = _configuration["Jwt:Audience"];
-        var key = Encoding.ASCII.GetBytes(_configuration["Jwt:Key"]);
-
-        var tokenDescriptor = new SecurityTokenDescriptor
-        {
-            Subject = new ClaimsIdentity(new[]
-            {
-                new Claim("Id", authenticatedUser.Id.ToString()),
-                new Claim(JwtRegisteredClaimNames.Sub, authenticatedUser.Username),
-                new Claim(JwtRegisteredClaimNames.Email, authenticatedUser.Email),
-                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
-            }),
-            Expires = DateTime.UtcNow.AddMinutes(5),
-            Issuer = issuer,
-            Audience = audience,
-            SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha512Signature)
-        };
-
-        var tokenHandler = new JwtSecurityTokenHandler();
-        var token = tokenHandler.CreateToken(tokenDescriptor);
-        var jwtToken = tokenHandler.WriteToken(token);
+        var jwtToken = GenerateJwtToken(authenticatedUser);
 
         var userWithToken = new LoggedInUser
         {
@@ -62,5 +67,28 @@ public class AuthService : IAuthService
         };
 
         return userWithToken;
+    }
+
+    public async Task<ActionResult<User>> RegisterUserAsync(User userRegistration)
+    {
+        if (await _context.Users.AnyAsync(u => u.Email == userRegistration.Email))
+        {
+            return new ConflictObjectResult(new { message = "Email is already registered" });
+        }
+
+        var newUser = new User
+        {
+            Username = userRegistration.Username,
+            Email = userRegistration.Email,
+            AccountType = userRegistration.AccountType,
+            Password = userRegistration.Password,
+        };
+
+        _context.Users.Add(newUser);
+        await _context.SaveChangesAsync();
+
+        var jwtToken = GenerateJwtToken(newUser);
+
+        return newUser;
     }
 }
