@@ -14,7 +14,7 @@ public class ClaimsMiddleware
 
         var excludedEndpoints = AuthenticationEndpointExclusions.ExcludedEndpoints;
 
-        if ((httpMethod == "PUT" || httpMethod == "POST" || httpMethod == "PATCH" || httpMethod == "DELETE") && excludedEndpoints.Contains(httpPath))
+        if (httpMethod == "GET" || excludedEndpoints.Contains(httpPath))
         {
             await _next(context);
         }
