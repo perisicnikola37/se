@@ -12,11 +12,7 @@ public class ClaimsMiddleware
         var httpMethod = context.Request.Method;
         var httpPath = context.Request.Path;
 
-        var excludedEndpoints = new List<string>
-        {
-            "/api/Auth/Login",
-            "/api/Auth/Register"
-        };
+        var excludedEndpoints = AuthenticationEndpointExclusions.ExcludedEndpoints;
 
         if ((httpMethod == "PUT" || httpMethod == "POST" || httpMethod == "PATCH" || httpMethod == "DELETE") && excludedEndpoints.Contains(httpPath))
         {
