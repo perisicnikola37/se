@@ -61,7 +61,7 @@ Password: password
   - Type
   - Active(boolean)
 
-  - **Blog** (Premium Feature)
+- **Blog** (Premium Feature)
   - Description
   - Text
   - User ID
