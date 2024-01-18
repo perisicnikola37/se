@@ -86,7 +86,6 @@ var app = builder.Build();
 
 // app.UseHttpLogging();
 app.UseRateLimiter();
-app.UseMiddleware<UserMiddleware>();
 
 if (app.Environment.IsDevelopment())
 {
@@ -100,6 +99,9 @@ app.MapControllers();
 // auth
 app.UseAuthentication();
 app.UseAuthorization();
+
+// this middleware needs to be after .net auth middlewares!
+app.UseMiddleware<ClaimsMiddleware>();
 
 // cors
 app.UseCors();

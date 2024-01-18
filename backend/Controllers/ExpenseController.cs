@@ -104,19 +104,21 @@ namespace Vega.Controllers
 		{
 			var expense_group = await _context.Expense_groups.FindAsync(expense.ExpenseGroupId);
 
-			if (expense_group == null)
-			{
-			    throw NotFoundException.Create("ExpenseGroupId", "Expense group not found.");
-			}
+			// if (expense_group == null)
+			// {
+			//     throw NotFoundException.Create("ExpenseGroupId", "Expense group not found.");
+			// }
 
-			var userIdClaim = User.Claims.FirstOrDefault(c => c.Type == "Id");
-			if (userIdClaim == null || !int.TryParse(userIdClaim.Value, out int userId))
-			{
-				return Unauthorized(new { message = "Invalid user claims" });
-			}
-			expense.UserId = userId;
-			_context.Expenses.Add(expense);
-			await _context.SaveChangesAsync();
+			// var userIdClaim = User.Claims.FirstOrDefault(c => c.Type == "Id");
+			// if (userIdClaim == null || !int.TryParse(userIdClaim.Value, out int userId))
+			// {
+			// 	return Unauthorized(new { message = "Invalid user claims" });
+			// } else {
+			// 	Console.WriteLine("authorized");
+			// }
+			// expense.UserId = userId;
+			// _context.Expenses.Add(expense);
+			// await _context.SaveChangesAsync();
 
 			return CreatedAtAction("GetExpense", new { id = expense.Id }, expense);
 		}
