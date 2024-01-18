@@ -42,6 +42,7 @@ builder.Services.AddControllers().AddNewtonsoftJson(options =>
 // services
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<EmailService>();
+builder.Services.AddScoped<GetAuthenticatedUserIdService>();
 
 
 builder.Services.AddAuthentication(options =>

@@ -11,10 +11,12 @@ namespace Vega.Controllers
 	public class ExpenseController : ControllerBase
 	{
 		private readonly MainDatabaseContext _context;
+		private readonly GetAuthenticatedUserIdService _getAuthenticatedUserIdService;
 
-		public ExpenseController(MainDatabaseContext context)
+		public ExpenseController(MainDatabaseContext context, GetAuthenticatedUserIdService getAuthenticatedUserIdService)
 		{
 			_context = context;
+			_getAuthenticatedUserIdService = getAuthenticatedUserIdService;
 		}
 
 		// GET: api/Expense
@@ -106,17 +108,10 @@ namespace Vega.Controllers
 
 			if (expense_group == null)
 			{
-			    throw NotFoundException.Create("ExpenseGroupId", "Expense group not found.");
+				throw NotFoundException.Create("ExpenseGroupId", "Expense group not found.");
 			}
-
-			var userIdClaim = User.Claims.FirstOrDefault(c => c.Type == "Id");
-			if (userIdClaim == null || !int.TryParse(userIdClaim.Value, out int userId))
-			{
-				return Unauthorized(new { message = "Invalid user claims" });
-			} else {
-				Console.WriteLine("authorized");
-			}
-			expense.UserId = userId;
+			var userId = _getAuthenticatedUserIdService.GetUserId(User);
+			expense.UserId = (int)userId;
 			_context.Expenses.Add(expense);
 			await _context.SaveChangesAsync();
 

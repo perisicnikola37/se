@@ -11,7 +11,7 @@ public class AuthController : ControllerBase
     private readonly MainDatabaseContext _context;
     private readonly IAuthService _authService;
 
-    public AuthController(MainDatabaseContext context, IAuthService authService)
+    public AuthController(MainDatabaseContext context, AuthService authService)
     {
         _context = context;
         _authService = authService;

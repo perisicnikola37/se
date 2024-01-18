@@ -11,10 +11,12 @@ namespace Vega.Controllers
     public class IncomeController : ControllerBase
     {
         private readonly MainDatabaseContext _context;
+        private readonly GetAuthenticatedUserIdService _getAuthenticatedUserIdService;
 
-        public IncomeController(MainDatabaseContext context)
+        public IncomeController(MainDatabaseContext context, GetAuthenticatedUserIdService getAuthenticatedUserIdService)
         {
             _context = context;
+            _getAuthenticatedUserIdService = getAuthenticatedUserIdService;
         }
 
         // GET: api/Income
