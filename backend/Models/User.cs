@@ -56,5 +56,6 @@ namespace Vega.Models
 		public DateTime Created_at { get; set; } = DateTime.Now;
 		public List<Expense>? Expenses { get; set; }
 		public List<Income>? Incomes { get; set; }
+		public List<Blog>? Blogs { get; set; }
 	}
 }

@@ -20,16 +20,17 @@ public class MainDatabaseContext : DbContext, IMainDatabaseContext
 
 	protected override void OnModelCreating(ModelBuilder modelBuilder)
 	{
-		for (int i = 1; i <= 100; i++)
-		{
-			modelBuilder.Entity<Blog>().HasData(new Blog
-			{
-				Id = i,
-				Description = $"Blog Description {i}",
-				Author = $"http://author{i}.com",
-				Text = $"Blog Text {i}"
-			});
-		}
+		// seed blogs
+		// for (int i = 1; i <= 100; i++)
+		// {
+		// 	modelBuilder.Entity<Blog>().HasData(new Blog
+		// 	{
+		// 		Id = i,
+		// 		Description = $"Blog Description {i}",
+		// 		Author = $"http://author{i}.com",
+		// 		Text = $"Blog Text {i}"
+		// 	});
+		// }
 
 		modelBuilder.Entity<User>().HasData(new User
 		{
@@ -39,6 +40,12 @@ public class MainDatabaseContext : DbContext, IMainDatabaseContext
 			Password = "06032004",
 			AccountType = "Regular"
 		});
+
+		modelBuilder.Entity<User>()
+	  	 	.HasMany(e => e.Blogs)
+	   		.WithOne(e => e.User)
+	   		.HasForeignKey(e => e.UserId)
+	  		.IsRequired();
 
 		modelBuilder.Entity<Expense>()
 			.HasOne(e => e.User)
