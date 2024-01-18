@@ -11,7 +11,7 @@ using Vega.Classes;
 namespace backend.Migrations
 {
     [DbContext(typeof(MainDatabaseContext))]
-    [Migration("20240117151719_i")]
+    [Migration("20240118083310_i")]
     partial class i
     {
         /// <inheritdoc />
@@ -169,6 +169,9 @@ namespace backend.Migrations
                     b.Property<string>("Reminder_day")
                         .IsRequired()
                         .HasColumnType("longtext");
+
+                    b.Property<int>("Reminder_dayEnum")
+                        .HasColumnType("int");
 
                     b.Property<string>("Type")
                         .IsRequired()

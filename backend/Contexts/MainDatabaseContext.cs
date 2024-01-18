@@ -45,7 +45,6 @@ public class MainDatabaseContext : DbContext, IMainDatabaseContext
             .OnDelete(DeleteBehavior.Cascade);
     }
 
-
     public async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {
         return await base.SaveChangesAsync(cancellationToken);

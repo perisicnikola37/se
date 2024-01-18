@@ -77,6 +77,7 @@ namespace backend.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    Reminder_dayEnum = table.Column<int>(type: "int", nullable: false),
                     Reminder_day = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Type = table.Column<string>(type: "longtext", nullable: false)

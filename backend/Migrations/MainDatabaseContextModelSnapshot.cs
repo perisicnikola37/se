@@ -167,6 +167,9 @@ namespace backend.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
+                    b.Property<int>("Reminder_dayEnum")
+                        .HasColumnType("int");
+
                     b.Property<string>("Type")
                         .IsRequired()
                         .HasColumnType("longtext");
