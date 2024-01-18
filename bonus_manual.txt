@@ -1,0 +1,13 @@
+Bonus Manual
+
+1. Database Seeding:
+To seed the database, navigate to line 24 in the file "MainDatabaseContext.cs". Note: Currently, only the seeding option for the "Blogs" model is available. Please be aware of this limitation.
+
+2. Environment Variable Configuration:
+Modify connection strings, JWT (JSON Web Token), or email environment variable values by accessing the "appsettings.json" file.
+
+3. Authentication Endpoint Exclusions:
+To exclude certain API endpoints from the authentication middleware, refer to the file "AuthenticationEndpointExclusions.cs".
+
+4. Resource Pagination:
+Adjust the number of resources displayed per page by using the query parameter "pageSize". Note: This feature is only available on GET all expenses and GET all incomes endpoints.
