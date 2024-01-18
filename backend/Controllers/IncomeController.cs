@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Vega.Classes;
+using Vega.Exceptions;
 using Vega.Models;
 
 namespace Vega.Controllers
@@ -95,7 +96,7 @@ namespace Vega.Controllers
 
             if (income_group == null)
             {
-                return NotFound();
+               throw NotFoundException.Create("IncomeGroupId", "Income group not found.");
             }
 
             var userIdClaim = User.Claims.FirstOrDefault(c => c.Type == "Id");

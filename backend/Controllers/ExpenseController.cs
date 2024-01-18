@@ -106,7 +106,7 @@ namespace Vega.Controllers
 
 			if (expense_group == null)
 			{
-			   throw NotFoundException.Create("Expense group not found");
+			    throw NotFoundException.Create("ExpenseGroupId", "Expense group not found.");
 			}
 
 			var userIdClaim = User.Claims.FirstOrDefault(c => c.Type == "Id");
