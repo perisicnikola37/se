@@ -59,9 +59,11 @@ namespace backend.Migrations
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasMaxLength(255)
+                        .HasColumnType("varchar(255)");
 
-                    b.Property<int>("ExpenseGroupId")
+                    b.Property<int?>("ExpenseGroupId")
+                        .IsRequired()
                         .HasColumnType("int");
 
                     b.Property<int>("UserId")

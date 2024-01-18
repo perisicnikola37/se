@@ -19,7 +19,8 @@ public class Expense
 	// public int ExpenseGroupId { get; set; }
 	public DateTime Created_at { get; set; } = DateTime.Now;
 
-	public int ExpenseGroupId { get; set; }
+	[Required(ErrorMessage = "ExpenseGroupId is required")]
+	public int? ExpenseGroupId { get; set; }
 
 	public ExpenseGroup? ExpenseGroup { get; set; }
 
