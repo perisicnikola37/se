@@ -11,7 +11,7 @@ using Vega.Classes;
 namespace backend.Migrations
 {
     [DbContext(typeof(MainDatabaseContext))]
-    [Migration("20240118083310_i")]
+    [Migration("20240118084707_i")]
     partial class i
     {
         /// <inheritdoc />
@@ -191,6 +191,9 @@ namespace backend.Migrations
                     b.Property<string>("AccountType")
                         .IsRequired()
                         .HasColumnType("longtext");
+
+                    b.Property<int>("AccountTypeEnum")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("Created_at")
                         .HasColumnType("datetime(6)");

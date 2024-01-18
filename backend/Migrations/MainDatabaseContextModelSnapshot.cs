@@ -189,6 +189,9 @@ namespace backend.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
+                    b.Property<int>("AccountTypeEnum")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("Created_at")
                         .HasColumnType("datetime(6)");
 
