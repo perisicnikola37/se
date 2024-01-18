@@ -5,6 +5,8 @@ public interface IGetAuthenticatedUserIdService
 	int? GetUserId(ClaimsPrincipal user);
 }
 
+// return Unauthorized(new { message = "Invalid user claims" });
+
 public class GetAuthenticatedUserIdService : IGetAuthenticatedUserIdService
 {
 	public int? GetUserId(ClaimsPrincipal user)

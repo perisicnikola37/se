@@ -112,6 +112,7 @@ namespace Vega.Controllers
 			}
 			var userId = _getAuthenticatedUserIdService.GetUserId(User);
 			expense.UserId = (int)userId;
+			
 			_context.Expenses.Add(expense);
 			await _context.SaveChangesAsync();
 
