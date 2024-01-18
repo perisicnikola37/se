@@ -101,7 +101,13 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 // this middleware needs to be after .net auth middlewares!
-app.UseMiddleware<ClaimsMiddleware>();
+// app.UseMiddleware<ClaimsMiddleware>();
+
+
+app.MapWhen(ctx => ctx.Request.Method is "PUT" or "POST", appBuilder =>
+{
+	app.UseMiddleware<ClaimsMiddleware>();
+});
 
 // cors
 app.UseCors();
