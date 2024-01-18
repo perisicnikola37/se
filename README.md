@@ -10,6 +10,13 @@ This .NET-based application is designed to help users manage and track their exp
 ## Postman API documentation
 <a href="https://documenter.getpostman.com/view/21619259/2s9YsRd9TF#757dd6bd-9a08-40fd-b5f9-7b19dfaf9b81" target="_blank">Click here</a>
 
+## Default Administrator user
+
+### Credentials:
+Email address: admin@gmail.com
+<br />
+Password: password
+
 ## Functionalities
 
 1. **Dashboard**
@@ -30,27 +37,36 @@ This .NET-based application is designed to help users manage and track their exp
 - **Expense Group**
   - Name
   - Description
+  - [expenses]
 
 - **Expense**
   - Description
   - Amount
-  - Expense group
+  - Expense group ID
+  - User ID
 
 - **Income Group**
   - Name
   - Description
+  - [incomes]
 
 - **Income**
   - Description
   - Amount
-  - Income group
+  - Income group ID
+  - User ID
 
 - **Reminder** (Premium Feature)
   - Reminder day
   - Type
-  - Active
+  - Active(boolean)
 
-## User Interface
+  - **Blog** (Premium Feature)
+  - Description
+  - Text
+  - User ID
+
+## User Interface - UI
 
 1. **Dashboard**
    - Total amount widget

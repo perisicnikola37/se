@@ -35,10 +35,10 @@ public class MainDatabaseContext : DbContext, IMainDatabaseContext
 		modelBuilder.Entity<User>().HasData(new User
 		{
 			Id = 1,
-			Username = "admin",
+			Username = "Administrator",
 			Email = "admin@gmail.com",
-			Password = "06032004",
-			AccountType = "Regular"
+			Password = "password",
+			AccountType = "Administrator"
 		});
 
 		modelBuilder.Entity<User>()
