@@ -22,11 +22,11 @@ public class ClaimsMiddleware
 					context.Response.StatusCode = 401;
 					await context.Response.WriteAsync("Unauthorized: Invalid user claims");
 				}
-				else
-				{
-					Console.WriteLine("Unauthorized: Invalid user claims");
-				}
 				return;
+			}
+			else
+			{
+				await _next(context);
 			}
 		}
 		else
