@@ -37,10 +37,10 @@ namespace Vega.Controllers
 		public async Task<ActionResult<IEnumerable<Expense>>> GetLatestExpenses()
 		{
 			return await _context.Expenses
-			.Include(e => e.User)
-			.OrderByDescending(e => e.Created_at)
-			.Take(5)
-			.ToListAsync();
+				.Include(e => e.User)
+				.OrderByDescending(e => e.Created_at)
+				.Take(5)
+			.	ToListAsync();
 		}
 
 		// GET: api/Expense/total-amount

@@ -36,12 +36,11 @@ namespace Vega.Controllers
 		[HttpGet("latest/5")]
 		public async Task<ActionResult<IEnumerable<Income>>> GetLatestIncomes()
 		{
-			var latestIncomes = await _context.Incomes
-											   .OrderByDescending(e => e.Created_at)
-											   .Take(5)
-											   .ToListAsync();
-
-			return latestIncomes;
+			return await _context.Incomes
+				.Include(e => e.User)
+				.OrderByDescending(e => e.Created_at)
+				.Take(5)
+				.ToListAsync();
 		}
 
 		// GET: api/Income/5
