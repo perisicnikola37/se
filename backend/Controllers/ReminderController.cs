@@ -1,21 +1,17 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Vega.classes;
+using Vega.Classes;
+using Vega.Models;
 
-namespace backend.Controllers
+namespace Vega.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
     public class ReminderController : ControllerBase
     {
-        private readonly MyDBContext _context;
+        private readonly MainDatabaseContext _context;
 
-        public ReminderController(MyDBContext context)
+        public ReminderController(MainDatabaseContext context)
         {
             _context = context;
         }
@@ -24,7 +20,16 @@ namespace backend.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Reminder>>> GetReminders()
         {
-            return await _context.Reminders.ToListAsync();
+            var reminders = await _context.Reminders.OrderByDescending(e => e.Created_at).ToListAsync();
+
+             if (reminders.Count != 0)
+            {
+                return reminders;
+            }
+            else
+            {
+                return NotFound();
+            }
         }
 
         // GET: api/Reminder/5

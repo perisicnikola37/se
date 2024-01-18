@@ -1,30 +1,44 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Vega.classes;
+using Vega.Classes;
+using Vega.Models;
 
-namespace backend.Controllers
+namespace Vega.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
     public class IncomeController : ControllerBase
     {
-        private readonly MyDBContext _context;
+        private readonly MainDatabaseContext _context;
 
-        public IncomeController(MyDBContext context)
+        public IncomeController(MainDatabaseContext context)
         {
             _context = context;
         }
 
         // GET: api/Income
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Income>>> GetIncomes()
+         public async Task<IActionResult> GetIncomes([FromQuery] PaginationFilter filter)
         {
-            return await _context.Incomes.ToListAsync();
+            var validFilter = new PaginationFilter(filter.PageNumber, filter.PageSize);
+            var pagedData = await _context.Incomes
+                .Skip((validFilter.PageNumber - 1) * validFilter.PageSize)
+                .Take(validFilter.PageSize)
+                .ToListAsync();
+            // var totalRecords = await _context.Incomes.CountAsync();
+            return Ok(new PagedResponse<List<Income>>(pagedData, validFilter.PageNumber, validFilter.PageSize));
+        }
+
+        // GET: api/Income/latest/5
+        [HttpGet("latest/5")]
+        public async Task<ActionResult<IEnumerable<Income>>> GetLatestIncomes()
+        {
+            var latestIncomes = await _context.Incomes
+                                               .OrderByDescending(e => e.Created_at)
+                                               .Take(5)
+                                               .ToListAsync();
+
+            return latestIncomes;
         }
 
         // GET: api/Income/5
@@ -77,6 +91,19 @@ namespace backend.Controllers
         [HttpPost]
         public async Task<ActionResult<Income>> PostIncome(Income income)
         {
+            var income_group = await _context.Income_groups.FindAsync(income.IncomeGroupId);
+
+            if (income_group == null)
+            {
+                return NotFound();
+            }
+
+            var userIdClaim = User.Claims.FirstOrDefault(c => c.Type == "Id");
+            if (userIdClaim == null || !int.TryParse(userIdClaim.Value, out int userId))
+            {
+                return Unauthorized(new { message = "Invalid user claims" });
+            }
+            income.UserId = userId;
             _context.Incomes.Add(income);
             await _context.SaveChangesAsync();
 

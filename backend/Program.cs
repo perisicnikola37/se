@@ -1,51 +1,108 @@
 using Microsoft.EntityFrameworkCore;
-using Vega.classes;
-using Microsoft.Extensions.Configuration;
+using Vega.Classes;
+using Microsoft.AspNetCore.RateLimiting;
+using System.Threading.RateLimiting;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using System.Text;
+using Vega.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Load configuration
-var configuration = new ConfigurationBuilder()
-    .SetBasePath(builder.Environment.ContentRootPath)
-    .AddJsonFile("appsettings.json")
-    .Build();
-
-string connectionString = configuration.GetConnectionString("MyDbConnection");
-
+var configuration = builder.Services.BuildServiceProvider().GetService<IConfiguration>();
+// disabled
+// builder.Services.AddHttpLogging(o => { });
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(
+        policy =>
+        {
+            policy.WithOrigins("http://example.com");
+        });
+});
 
 // add DB context
-builder.Services.AddDbContext<MyDBContext>(options =>
+string connectionString = configuration["DefaultConnection"];
+
+builder.Services.AddDbContext<MainDatabaseContext>(options =>
 {
     options.UseMySql(
-        connectionString,
-        new MySqlServerVersion(new Version(8, 0, 35)),
-        options => options.EnableRetryOnFailure(
-            maxRetryCount: 5,
-            maxRetryDelay: TimeSpan.FromSeconds(30),
-            errorNumbersToAdd: null
-        )
+      connectionString,
+        new MySqlServerVersion(new Version(8, 0, 35))
     );
 });
 
+builder.Services.AddAuthentication();
+
 // important for adding routes based on controllers
-builder.Services.AddControllers();
+builder.Services.AddControllers().AddNewtonsoftJson(options =>
+    options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+);
+
+// services
+builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<EmailService>();
+
+
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+}).AddJwtBearer(o =>
+{
+    string validIssuer = configuration["Jwt:Issuer"];
+    string validAudience = configuration["Jwt:Audience"];
+    string issuerSigningKey = configuration["Jwt:Key"];
+
+    o.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidIssuer = validIssuer,
+        ValidAudience = validAudience,
+
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(issuerSigningKey)),
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = false,
+        ValidateIssuerSigningKey = true
+    };
+});
+
+builder.Services.AddAuthorization();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddRateLimiter(_ => _
+    .AddFixedWindowLimiter(policyName: "fixed", options =>
+    {
+        options.PermitLimit = 4;
+        options.Window = TimeSpan.FromSeconds(12);
+        options.QueueProcessingOrder = QueueProcessingOrder.OldestFirst;
+        options.QueueLimit = 2;
+    }));
+
 var app = builder.Build();
+
+// app.UseHttpLogging();
+app.UseRateLimiter();
+app.UseMiddleware<UserMiddleware>();
 
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI(c =>
-    {
-        c.SwaggerEndpoint("/swagger/v1/swagger.json", "Expense Tracker API v1");
-    });
+    app.UseSwaggerUI();
 }
 
 app.UseHttpsRedirection();
 app.MapControllers();
+
+// auth
+app.UseAuthentication();
+app.UseAuthorization();
+
+// cors
+app.UseCors();
 
 app.Run();
 

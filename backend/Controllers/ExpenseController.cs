@@ -1,39 +1,68 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Vega.classes;
+using Vega.Classes;
+using Vega.Models;
 
-namespace backend.Controllers
+namespace Vega.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
     public class ExpenseController : ControllerBase
     {
-        private readonly MyDBContext _context;
+        private readonly MainDatabaseContext _context;
 
-        public ExpenseController(MyDBContext context)
+        public ExpenseController(MainDatabaseContext context)
         {
             _context = context;
         }
 
         // GET: api/Expense
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Expense>>> GetExpenses()
+        public async Task<IActionResult> GetExpenses([FromQuery] PaginationFilter filter)
         {
-            return await _context.Expenses.ToListAsync();
+            var validFilter = new PaginationFilter(filter.PageNumber, filter.PageSize);
+            var pagedData = await _context.Expenses
+                .Skip((validFilter.PageNumber - 1) * validFilter.PageSize)
+                .Take(validFilter.PageSize)
+                .ToListAsync();
+            // var totalRecords = await _context.Expenses.CountAsync();
+            return Ok(new PagedResponse<List<Expense>>(pagedData, validFilter.PageNumber, validFilter.PageSize));
+        }
+
+        // GET: api/Expense/latest/5
+        [HttpGet("latest/5")]
+        public async Task<ActionResult<IEnumerable<Expense>>> GetLatestExpenses()
+        {
+            return await _context.Expenses
+                                               .OrderByDescending(e => e.Created_at)
+                                               .Take(5)
+                                               .ToListAsync();
+        }
+
+        // GET: api/Expense/total-amount
+        [HttpGet("total-amount")]
+        public async Task<ActionResult<int>> GetTotalAmountOfExpenses()
+        {
+            return await _context.Expenses.CountAsync();
         }
 
         // GET: api/Expense/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Expense>> GetExpense(int id)
         {
+            // TRYING CUSTOM TEMPLATE 
+            // var expense = await _context.Expenses.FindAsync(id);
+
             var expense = await _context.Expenses.FindAsync(id);
+            return Ok(new Response<Expense>(expense));
 
-            if (expense == null)
-            {
-                return NotFound();
-            }
 
-            return expense;
+            // if (expense == null)
+            // {
+            //     return NotFound();
+            // }
+
+            // return expense;
         }
 
         // PUT: api/Expense/5
@@ -72,6 +101,19 @@ namespace backend.Controllers
         [HttpPost]
         public async Task<ActionResult<Expense>> PostExpense(Expense expense)
         {
+            var expense_group = await _context.Expense_groups.FindAsync(expense.ExpenseGroupId);
+
+            if (expense_group == null)
+            {
+                return NotFound();
+            }
+
+            var userIdClaim = User.Claims.FirstOrDefault(c => c.Type == "Id");
+            if (userIdClaim == null || !int.TryParse(userIdClaim.Value, out int userId))
+            {
+                return Unauthorized(new { message = "Invalid user claims" });
+            }
+            expense.UserId = userId;
             _context.Expenses.Add(expense);
             await _context.SaveChangesAsync();
 
@@ -79,6 +121,7 @@ namespace backend.Controllers
         }
 
         // DELETE: api/Expense/5
+        // [Authorize(Roles = "admin")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteExpense(int id)
         {
