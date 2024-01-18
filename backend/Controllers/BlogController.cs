@@ -1,21 +1,17 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Vega.classes;
+using Vega.Classes;
+using Vega.Models;
 
-namespace backend.Controllers
+namespace Vega.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
     public class BlogController : ControllerBase
     {
-        private readonly MyDBContext _context;
+        private readonly MainDatabaseContext _context;
 
-        public BlogController(MyDBContext context)
+        public BlogController(MainDatabaseContext context)
         {
             _context = context;
         }
@@ -24,7 +20,16 @@ namespace backend.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Blog>>> GetBlogs()
         {
-            return await _context.Blogs.ToListAsync();
+            var blogs = await _context.Blogs.OrderByDescending(e => e.Created_at).ToListAsync();
+
+            if (blogs.Count() != 0)
+            {
+                return blogs;
+            }
+            else
+            {
+                return NotFound();
+            }
         }
 
         // GET: api/Blog/5
