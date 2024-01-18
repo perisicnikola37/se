@@ -112,7 +112,7 @@ namespace Vega.Controllers
         {
             try
             {
-                bool isEmailSent = await _emailservice.SendEmail(emailRequest);
+                bool isEmailSent = await _emailservice.SendEmail(emailRequest, "subject", "body");
 
                 if (isEmailSent)
                 {

@@ -1,40 +1,46 @@
-using System;
 using System.Net;
 using System.Net.Mail;
+using System.Security.Cryptography.X509Certificates;
 
 public class EmailService
 {
-    public async Task<bool> SendEmail(EmailRequest emailRequest)
-    {
-        try
-        {
-            // TO DO: Make these credentials in appsettings.json
-            var smtpClient = new SmtpClient("smtp.gmail.com")
-            {
-                Port = 587,
-                Credentials = new NetworkCredential("perisicnikola37@gmail.com", "secret"),
-                EnableSsl = true,
-            };
+	private readonly IConfiguration _configuration;
 
-            var mailMessage = new MailMessage
-            {
-                From = new MailAddress("your-email@example.com"),
-                Subject = "Subject of the email",
-                Body = "Body of the email",
-                IsBodyHtml = true,
-            };
+	public EmailService(IConfiguration configuration)
+	{
+		_configuration = configuration;
+	}
 
-            mailMessage.To.Add(emailRequest.ToEmail);
+	public async Task<bool> SendEmail(EmailRequest emailRequest, string subject, string body)
+	{
+		try
+		{
+			var smtpClient = new SmtpClient(_configuration["Mail:Client"])
+			{
+				Port = 587,
+				Credentials = new NetworkCredential("perisicnikola37@gmail.com", _configuration["Mail:Secret"]),
+				EnableSsl = true,
+			};
 
-            await smtpClient.SendMailAsync(mailMessage);
+			var mailMessage = new MailMessage
+			{
+				From = new MailAddress(_configuration["Mail:EmailSender"]),
+				Subject = subject,
+				Body = body,
+				IsBodyHtml = true,
+			};
 
-            return true;
-        }
-        catch (Exception ex)
-        {
-            return false;
-        }
-    }
+			mailMessage.To.Add(emailRequest.ToEmail);
+
+			await smtpClient.SendMailAsync(mailMessage);
+
+			return true;
+		}
+		catch (Exception ex)
+		{
+			return false;
+		}
+	}
 }
 
 

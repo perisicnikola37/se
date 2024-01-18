@@ -11,7 +11,7 @@ using Vega.Classes;
 namespace backend.Migrations
 {
     [DbContext(typeof(MainDatabaseContext))]
-    [Migration("20240118090627_i")]
+    [Migration("20240118102215_i")]
     partial class i
     {
         /// <inheritdoc />
@@ -37,11 +37,13 @@ namespace backend.Migrations
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasMaxLength(255)
+                        .HasColumnType("varchar(255)");
 
                     b.Property<string>("Text")
                         .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasMaxLength(255)
+                        .HasColumnType("varchar(255)");
 
                     b.HasKey("Id");
 
@@ -117,7 +119,8 @@ namespace backend.Migrations
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasMaxLength(255)
+                        .HasColumnType("varchar(255)");
 
                     b.Property<int>("IncomeGroupId")
                         .HasColumnType("int");
