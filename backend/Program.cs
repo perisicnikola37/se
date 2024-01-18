@@ -14,11 +14,11 @@ var configuration = builder.Services.BuildServiceProvider().GetService<IConfigur
 // builder.Services.AddHttpLogging(o => { });
 builder.Services.AddCors(options =>
 {
-    options.AddDefaultPolicy(
-        policy =>
-        {
-            policy.WithOrigins("http://example.com");
-        });
+	options.AddDefaultPolicy(
+		policy =>
+		{
+			policy.WithOrigins("http://example.com");
+		});
 });
 
 // add DB context
@@ -26,17 +26,17 @@ string connectionString = configuration["DefaultConnection"];
 
 builder.Services.AddDbContext<MainDatabaseContext>(options =>
 {
-    options.UseMySql(
-      connectionString,
-        new MySqlServerVersion(new Version(8, 0, 35))
-    );
+	options.UseMySql(
+	  connectionString,
+		new MySqlServerVersion(new Version(8, 0, 35))
+	);
 });
 
 builder.Services.AddAuthentication();
 
 // important for adding routes based on controllers
 builder.Services.AddControllers().AddNewtonsoftJson(options =>
-    options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+	options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
 );
 
 // services
@@ -46,26 +46,26 @@ builder.Services.AddScoped<EmailService>();
 
 builder.Services.AddAuthentication(options =>
 {
-    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-    options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+	options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+	options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+	options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
 }).AddJwtBearer(o =>
 {
-    string validIssuer = configuration["Jwt:Issuer"];
-    string validAudience = configuration["Jwt:Audience"];
-    string issuerSigningKey = configuration["Jwt:Key"];
+	string validIssuer = configuration["Jwt:Issuer"];
+	string validAudience = configuration["Jwt:Audience"];
+	string issuerSigningKey = configuration["Jwt:Key"];
 
-    o.TokenValidationParameters = new TokenValidationParameters
-    {
-        ValidIssuer = validIssuer,
-        ValidAudience = validAudience,
+	o.TokenValidationParameters = new TokenValidationParameters
+	{
+		ValidIssuer = validIssuer,
+		ValidAudience = validAudience,
 
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(issuerSigningKey)),
-        ValidateIssuer = true,
-        ValidateAudience = true,
-        ValidateLifetime = false,
-        ValidateIssuerSigningKey = true
-    };
+		IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(issuerSigningKey)),
+		ValidateIssuer = true,
+		ValidateAudience = true,
+		ValidateLifetime = false,
+		ValidateIssuerSigningKey = true
+	};
 });
 
 builder.Services.AddAuthorization();
@@ -74,13 +74,13 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddRateLimiter(_ => _
-    .AddFixedWindowLimiter(policyName: "fixed", options =>
-    {
-        options.PermitLimit = 4;
-        options.Window = TimeSpan.FromSeconds(12);
-        options.QueueProcessingOrder = QueueProcessingOrder.OldestFirst;
-        options.QueueLimit = 2;
-    }));
+	.AddFixedWindowLimiter(policyName: "fixed", options =>
+	{
+		options.PermitLimit = 4;
+		options.Window = TimeSpan.FromSeconds(12);
+		options.QueueProcessingOrder = QueueProcessingOrder.OldestFirst;
+		options.QueueLimit = 2;
+	}));
 
 var app = builder.Build();
 
@@ -90,8 +90,8 @@ app.UseMiddleware<UserMiddleware>();
 
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+	app.UseSwagger();
+	app.UseSwaggerUI();
 }
 
 app.UseHttpsRedirection();

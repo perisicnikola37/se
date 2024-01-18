@@ -7,6 +7,9 @@
 
 This .NET-based application is designed to help users manage and track their expenses and incomes effectively. The goal is to provide a comprehensive solution for organizing financial transactions, generating reports, and offering additional premium features for enhanced user experience.
 
+## Postman API documentation
+<a href="https://documenter.getpostman.com/view/21619259/2s9YsRd9TF#757dd6bd-9a08-40fd-b5f9-7b19dfaf9b81" target="_blank">Click here</a>
+
 ## Functionalities
 
 1. **Dashboard**
