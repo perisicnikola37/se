@@ -1,5 +1,7 @@
 namespace Vega.Classes;
 
+using System.Security.Cryptography;
+using System.Text;
 using Microsoft.EntityFrameworkCore;
 using Vega.Interfaces;
 using Vega.Models;
@@ -37,7 +39,7 @@ public class MainDatabaseContext : DbContext, IMainDatabaseContext
 			Id = 1,
 			Username = "Administrator",
 			Email = "admin@gmail.com",
-			Password = "password",
+			Password = HashPassword("password"),
 			AccountType = "Administrator"
 		});
 
@@ -70,6 +72,16 @@ public class MainDatabaseContext : DbContext, IMainDatabaseContext
 			.WithMany(g => g.Incomes)
 			.HasForeignKey(i => i.IncomeGroupId)
 			.OnDelete(DeleteBehavior.Cascade);
+	}
+	
+	private string HashPassword(string password)
+	{
+		using (var sha256 = SHA256.Create())
+		{
+			byte[] hashedBytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(password));
+
+			return BitConverter.ToString(hashedBytes).Replace("-", "").ToLower();
+		}
 	}
 
 	public async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)

@@ -233,9 +233,9 @@ namespace backend.Migrations
                             Id = 1,
                             AccountType = "Administrator",
                             AccountTypeEnum = 1,
-                            Created_at = new DateTime(2024, 1, 19, 9, 16, 3, 205, DateTimeKind.Local).AddTicks(4843),
+                            Created_at = new DateTime(2024, 1, 19, 9, 35, 34, 172, DateTimeKind.Local).AddTicks(9429),
                             Email = "admin@gmail.com",
-                            Password = "password",
+                            Password = "5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8",
                             Username = "Administrator"
                         });
                 });

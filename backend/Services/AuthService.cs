@@ -94,7 +94,7 @@ public class AuthService : IAuthService
 		return newUser;
 	}
 
-	private string HashPassword(string password)
+	public string HashPassword(string password)
 	{
 		using (var sha256 = SHA256.Create())
 		{
