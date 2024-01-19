@@ -39,16 +39,35 @@ namespace Vega.Controllers
 		[HttpGet("{id}")]
 		public async Task<ActionResult<ExpenseGroup>> GetExpenseGroup(int id)
 		{
+			// move this to a repository layer
 			var expenseGroup = await _context.Expense_groups
-				.Include(e => e.Expenses)
-				.FirstOrDefaultAsync(e => e.Id == id);
+			.Include(e => e.Expenses)
+				.ThenInclude(expense => expense.User)
+			.FirstOrDefaultAsync(e => e.Id == id);
 
 			if (expenseGroup == null)
 			{
 				return NotFound();
 			}
 
-			return expenseGroup;
+			var simplifiedIncomeGroup = new
+			{
+				expenseGroup.Id,
+				expenseGroup.Name,
+				expenseGroup.Description,
+				Expenses = expenseGroup.Expenses.Select(expense => new
+				{
+					expense.Id,
+					expense.Description,
+					expense.Amount,
+					CreatedAt = expense.Created_at,
+					expense.ExpenseGroupId,
+					UserId = expense.User.Id,
+					UserUsername = expense.User.Username
+				})
+			};
+
+			return Ok(simplifiedIncomeGroup);
 		}
 
 		// PUT: api/ExpenseGroup/5

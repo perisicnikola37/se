@@ -41,17 +41,34 @@ namespace Vega.Controllers
 		{
 			var incomeGroup = await _context.Income_groups
 				.Include(e => e.Incomes)
+					.ThenInclude(income => income.User)
 				.FirstOrDefaultAsync(e => e.Id == id);
-
 
 			if (incomeGroup == null)
 			{
 				return NotFound();
 			}
 
-			return incomeGroup;
-		}
+			var simplifiedIncomeGroup = new
+			{
+				incomeGroup.Id,
+				incomeGroup.Name,
+				incomeGroup.Description,
+				Incomes = incomeGroup.Incomes.Select(income => new
+				{
+					income.Id,
+					income.Description,
+					income.Amount,
+					CreatedAt = income.Created_at,
+					income.IncomeGroupId,
+					UserId = income.User.Id,
+					UserUsername = income.User.Username
+				})
+			};
 
+			return Ok(simplifiedIncomeGroup); 
+		}
+		
 		// PUT: api/IncomeGroup/5
 		// To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
 		[HttpPut("{id}")]
