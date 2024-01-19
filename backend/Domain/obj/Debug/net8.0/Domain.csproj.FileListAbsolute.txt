@@ -1,0 +1,12 @@
+/home/nikolaperisic/Desktop/Vega/Domain/bin/Debug/net8.0/Domain.deps.json
+/home/nikolaperisic/Desktop/Vega/Domain/bin/Debug/net8.0/Domain.dll
+/home/nikolaperisic/Desktop/Vega/Domain/bin/Debug/net8.0/Domain.pdb
+/home/nikolaperisic/Desktop/Vega/Domain/obj/Debug/net8.0/Domain.csproj.AssemblyReference.cache
+/home/nikolaperisic/Desktop/Vega/Domain/obj/Debug/net8.0/Domain.GeneratedMSBuildEditorConfig.editorconfig
+/home/nikolaperisic/Desktop/Vega/Domain/obj/Debug/net8.0/Domain.AssemblyInfoInputs.cache
+/home/nikolaperisic/Desktop/Vega/Domain/obj/Debug/net8.0/Domain.AssemblyInfo.cs
+/home/nikolaperisic/Desktop/Vega/Domain/obj/Debug/net8.0/Domain.csproj.CoreCompileInputs.cache
+/home/nikolaperisic/Desktop/Vega/Domain/obj/Debug/net8.0/Domain.dll
+/home/nikolaperisic/Desktop/Vega/Domain/obj/Debug/net8.0/refint/Domain.dll
+/home/nikolaperisic/Desktop/Vega/Domain/obj/Debug/net8.0/Domain.pdb
+/home/nikolaperisic/Desktop/Vega/Domain/obj/Debug/net8.0/ref/Domain.dll

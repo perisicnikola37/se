@@ -1,0 +1,14 @@
+/home/nikolaperisic/Desktop/Vega/Persistence/bin/Debug/net8.0/Persistence.deps.json
+/home/nikolaperisic/Desktop/Vega/Persistence/bin/Debug/net8.0/Persistence.runtimeconfig.json
+/home/nikolaperisic/Desktop/Vega/Persistence/bin/Debug/net8.0/Persistence.dll
+/home/nikolaperisic/Desktop/Vega/Persistence/bin/Debug/net8.0/Persistence.pdb
+/home/nikolaperisic/Desktop/Vega/Persistence/obj/Debug/net8.0/Persistence.csproj.AssemblyReference.cache
+/home/nikolaperisic/Desktop/Vega/Persistence/obj/Debug/net8.0/Persistence.GeneratedMSBuildEditorConfig.editorconfig
+/home/nikolaperisic/Desktop/Vega/Persistence/obj/Debug/net8.0/Persistence.AssemblyInfoInputs.cache
+/home/nikolaperisic/Desktop/Vega/Persistence/obj/Debug/net8.0/Persistence.AssemblyInfo.cs
+/home/nikolaperisic/Desktop/Vega/Persistence/obj/Debug/net8.0/Persistence.csproj.CoreCompileInputs.cache
+/home/nikolaperisic/Desktop/Vega/Persistence/obj/Debug/net8.0/Persistence.dll
+/home/nikolaperisic/Desktop/Vega/Persistence/obj/Debug/net8.0/refint/Persistence.dll
+/home/nikolaperisic/Desktop/Vega/Persistence/obj/Debug/net8.0/Persistence.pdb
+/home/nikolaperisic/Desktop/Vega/Persistence/obj/Debug/net8.0/Persistence.genruntimeconfig.cache
+/home/nikolaperisic/Desktop/Vega/Persistence/obj/Debug/net8.0/ref/Persistence.dll
