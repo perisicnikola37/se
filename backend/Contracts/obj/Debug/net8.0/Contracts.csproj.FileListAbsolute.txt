@@ -9,3 +9,14 @@
 /home/nikolaperisic/Desktop/Vega/Contracts/obj/Debug/net8.0/refint/Contracts.dll
 /home/nikolaperisic/Desktop/Vega/Contracts/obj/Debug/net8.0/Contracts.pdb
 /home/nikolaperisic/Desktop/Vega/Contracts/obj/Debug/net8.0/ref/Contracts.dll
+/home/nikolaperisic/Desktop/cloned/vega-internship-project/backend/Contracts/bin/Debug/net8.0/Contracts.deps.json
+/home/nikolaperisic/Desktop/cloned/vega-internship-project/backend/Contracts/bin/Debug/net8.0/Contracts.dll
+/home/nikolaperisic/Desktop/cloned/vega-internship-project/backend/Contracts/bin/Debug/net8.0/Contracts.pdb
+/home/nikolaperisic/Desktop/cloned/vega-internship-project/backend/Contracts/obj/Debug/net8.0/Contracts.GeneratedMSBuildEditorConfig.editorconfig
+/home/nikolaperisic/Desktop/cloned/vega-internship-project/backend/Contracts/obj/Debug/net8.0/Contracts.AssemblyInfoInputs.cache
+/home/nikolaperisic/Desktop/cloned/vega-internship-project/backend/Contracts/obj/Debug/net8.0/Contracts.AssemblyInfo.cs
+/home/nikolaperisic/Desktop/cloned/vega-internship-project/backend/Contracts/obj/Debug/net8.0/Contracts.csproj.CoreCompileInputs.cache
+/home/nikolaperisic/Desktop/cloned/vega-internship-project/backend/Contracts/obj/Debug/net8.0/Contracts.dll
+/home/nikolaperisic/Desktop/cloned/vega-internship-project/backend/Contracts/obj/Debug/net8.0/refint/Contracts.dll
+/home/nikolaperisic/Desktop/cloned/vega-internship-project/backend/Contracts/obj/Debug/net8.0/Contracts.pdb
+/home/nikolaperisic/Desktop/cloned/vega-internship-project/backend/Contracts/obj/Debug/net8.0/ref/Contracts.dll
