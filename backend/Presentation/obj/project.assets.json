@@ -9874,11 +9874,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/home/nikolaperisic/Desktop/Vega/Presentation/Presentation.csproj",
+      "projectUniqueName": "/home/nikolaperisic/Desktop/cloned/vega-internship-project/backend/Presentation/Presentation.csproj",
       "projectName": "Presentation",
-      "projectPath": "/home/nikolaperisic/Desktop/Vega/Presentation/Presentation.csproj",
+      "projectPath": "/home/nikolaperisic/Desktop/cloned/vega-internship-project/backend/Presentation/Presentation.csproj",
       "packagesPath": "/home/nikolaperisic/.nuget/packages/",
-      "outputPath": "/home/nikolaperisic/Desktop/Vega/Presentation/obj/",
+      "outputPath": "/home/nikolaperisic/Desktop/cloned/vega-internship-project/backend/Presentation/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "/home/nikolaperisic/.nuget/NuGet/NuGet.Config"
@@ -9893,14 +9893,14 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "projectReferences": {
-            "/home/nikolaperisic/Desktop/Vega/Domain/Domain.csproj": {
-              "projectPath": "/home/nikolaperisic/Desktop/Vega/Domain/Domain.csproj"
+            "/home/nikolaperisic/Desktop/cloned/vega-internship-project/backend/Domain/Domain.csproj": {
+              "projectPath": "/home/nikolaperisic/Desktop/cloned/vega-internship-project/backend/Domain/Domain.csproj"
             },
-            "/home/nikolaperisic/Desktop/Vega/Infrastructure/Infrastructure.csproj": {
-              "projectPath": "/home/nikolaperisic/Desktop/Vega/Infrastructure/Infrastructure.csproj"
+            "/home/nikolaperisic/Desktop/cloned/vega-internship-project/backend/Infrastructure/Infrastructure.csproj": {
+              "projectPath": "/home/nikolaperisic/Desktop/cloned/vega-internship-project/backend/Infrastructure/Infrastructure.csproj"
             },
-            "/home/nikolaperisic/Desktop/Vega/Service/Service.csproj": {
-              "projectPath": "/home/nikolaperisic/Desktop/Vega/Service/Service.csproj"
+            "/home/nikolaperisic/Desktop/cloned/vega-internship-project/backend/Service/Service.csproj": {
+              "projectPath": "/home/nikolaperisic/Desktop/cloned/vega-internship-project/backend/Service/Service.csproj"
             }
           }
         }

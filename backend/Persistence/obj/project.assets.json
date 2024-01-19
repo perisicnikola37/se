@@ -2226,11 +2226,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/home/nikolaperisic/Desktop/Vega/Persistence/Persistence.csproj",
+      "projectUniqueName": "/home/nikolaperisic/Desktop/cloned/vega-internship-project/backend/Persistence/Persistence.csproj",
       "projectName": "Persistence",
-      "projectPath": "/home/nikolaperisic/Desktop/Vega/Persistence/Persistence.csproj",
+      "projectPath": "/home/nikolaperisic/Desktop/cloned/vega-internship-project/backend/Persistence/Persistence.csproj",
       "packagesPath": "/home/nikolaperisic/.nuget/packages/",
-      "outputPath": "/home/nikolaperisic/Desktop/Vega/Persistence/obj/",
+      "outputPath": "/home/nikolaperisic/Desktop/cloned/vega-internship-project/backend/Persistence/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "/home/nikolaperisic/.nuget/NuGet/NuGet.Config"

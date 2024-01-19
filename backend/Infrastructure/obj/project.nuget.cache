@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "PhHuCgTFwOoybua/bemwizFTgqQvgcx1jqIsXe8aoMqyczrUbrL7eTq6FHesbuim/zXXvVtGKnm85xRlkbujNA==",
+  "dgSpecHash": "9iH3K7NX3Px7zVO3hX9+22S+db9l0H1Pkvy6VY3yQSRfaaO6IkGtyR7YKd0zZe2V5peChyhfDkFOwv+37tmgOQ==",
   "success": true,
-  "projectFilePath": "/home/nikolaperisic/Desktop/Vega/Infrastructure/Infrastructure.csproj",
+  "projectFilePath": "/home/nikolaperisic/Desktop/cloned/vega-internship-project/backend/Infrastructure/Infrastructure.csproj",
   "expectedPackageFiles": [
     "/home/nikolaperisic/.nuget/packages/microsoft.aspnetcore.antiforgery/2.2.0/microsoft.aspnetcore.antiforgery.2.2.0.nupkg.sha512",
     "/home/nikolaperisic/.nuget/packages/microsoft.aspnetcore.authentication.abstractions/2.2.0/microsoft.aspnetcore.authentication.abstractions.2.2.0.nupkg.sha512",

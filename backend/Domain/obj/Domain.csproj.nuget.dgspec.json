@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "/home/nikolaperisic/Desktop/Vega/Domain/Domain.csproj": {}
+    "/home/nikolaperisic/Desktop/cloned/vega-internship-project/backend/Domain/Domain.csproj": {}
   },
   "projects": {
-    "/home/nikolaperisic/Desktop/Vega/Domain/Domain.csproj": {
+    "/home/nikolaperisic/Desktop/cloned/vega-internship-project/backend/Domain/Domain.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/home/nikolaperisic/Desktop/Vega/Domain/Domain.csproj",
+        "projectUniqueName": "/home/nikolaperisic/Desktop/cloned/vega-internship-project/backend/Domain/Domain.csproj",
         "projectName": "Domain",
-        "projectPath": "/home/nikolaperisic/Desktop/Vega/Domain/Domain.csproj",
+        "projectPath": "/home/nikolaperisic/Desktop/cloned/vega-internship-project/backend/Domain/Domain.csproj",
         "packagesPath": "/home/nikolaperisic/.nuget/packages/",
-        "outputPath": "/home/nikolaperisic/Desktop/Vega/Domain/obj/",
+        "outputPath": "/home/nikolaperisic/Desktop/cloned/vega-internship-project/backend/Domain/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/home/nikolaperisic/.nuget/NuGet/NuGet.Config"

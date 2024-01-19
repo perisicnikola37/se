@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "CSoMbpQ4aGWz4t2Qvb/hvlBScH+84BGScLG7Gzel6moS0kvSueIqxOAIbNgAG6JoLCJXv6eFG0omBT6Seqln5w==",
+  "dgSpecHash": "Fo+pzfE06XbxfBXdFYJ0gxQlPoEIvsfTey7i/DRk4lMkMXxkjk1exeVG3vebG5XPBLUD6WIAa5W+93IXzY62Sw==",
   "success": true,
-  "projectFilePath": "/home/nikolaperisic/Desktop/Vega/Service/Service.csproj",
+  "projectFilePath": "/home/nikolaperisic/Desktop/cloned/vega-internship-project/backend/Service/Service.csproj",
   "expectedPackageFiles": [
     "/home/nikolaperisic/.nuget/packages/microsoft.aspnetcore/2.2.0/microsoft.aspnetcore.2.2.0.nupkg.sha512",
     "/home/nikolaperisic/.nuget/packages/microsoft.aspnetcore.antiforgery/2.2.0/microsoft.aspnetcore.antiforgery.2.2.0.nupkg.sha512",

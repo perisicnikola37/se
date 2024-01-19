@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "/home/nikolaperisic/Desktop/Vega/Contracts/Contracts.csproj": {}
+    "/home/nikolaperisic/Desktop/cloned/vega-internship-project/backend/Contracts/Contracts.csproj": {}
   },
   "projects": {
-    "/home/nikolaperisic/Desktop/Vega/Contracts/Contracts.csproj": {
+    "/home/nikolaperisic/Desktop/cloned/vega-internship-project/backend/Contracts/Contracts.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/home/nikolaperisic/Desktop/Vega/Contracts/Contracts.csproj",
+        "projectUniqueName": "/home/nikolaperisic/Desktop/cloned/vega-internship-project/backend/Contracts/Contracts.csproj",
         "projectName": "Contracts",
-        "projectPath": "/home/nikolaperisic/Desktop/Vega/Contracts/Contracts.csproj",
+        "projectPath": "/home/nikolaperisic/Desktop/cloned/vega-internship-project/backend/Contracts/Contracts.csproj",
         "packagesPath": "/home/nikolaperisic/.nuget/packages/",
-        "outputPath": "/home/nikolaperisic/Desktop/Vega/Contracts/obj/",
+        "outputPath": "/home/nikolaperisic/Desktop/cloned/vega-internship-project/backend/Contracts/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/home/nikolaperisic/.nuget/NuGet/NuGet.Config"

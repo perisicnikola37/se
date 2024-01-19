@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "nBzm2gf1euhzRQHTkUPqg4duAE16+AXebZKxxS2lWbaazmqUJ2/5ob2KMEvTrvWEDzZTpDdHVyj3eRqOkDD3wA==",
+  "dgSpecHash": "UqhkuHxy6DQB8VuK4/VhmZKYtsbMOiIQFdH9Q7+1LtWIIwVjXeHnTdxJlyoNl2n3P++egOt+xztPD/jH7I1gsg==",
   "success": true,
-  "projectFilePath": "/home/nikolaperisic/Desktop/Vega/ExpenseTrackerApi/ExpenseTrackerApi.csproj",
+  "projectFilePath": "/home/nikolaperisic/Desktop/cloned/vega-internship-project/backend/ExpenseTrackerApi/ExpenseTrackerApi.csproj",
   "expectedPackageFiles": [
     "/home/nikolaperisic/.nuget/packages/azure.core/1.25.0/azure.core.1.25.0.nupkg.sha512",
     "/home/nikolaperisic/.nuget/packages/azure.identity/1.7.0/azure.identity.1.7.0.nupkg.sha512",
