@@ -88,11 +88,11 @@ var app = builder.Build();
 // app.UseHttpLogging();
 app.UseRateLimiter();
 
-if (app.Environment.IsDevelopment())
-{
+// if (app.Environment.IsDevelopment())
+// {
 	app.UseSwagger();
 	app.UseSwaggerUI();
-}
+// }
 
 app.UseHttpsRedirection();
 app.MapControllers();
