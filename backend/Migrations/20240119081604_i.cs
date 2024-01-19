@@ -186,7 +186,7 @@ namespace backend.Migrations
             migrationBuilder.InsertData(
                 table: "Users",
                 columns: new[] { "Id", "AccountType", "AccountTypeEnum", "Created_at", "Email", "Password", "Username" },
-                values: new object[] { 1, "Regular", 0, new DateTime(2024, 1, 18, 15, 23, 51, 817, DateTimeKind.Local).AddTicks(7752), "admin@gmail.com", "06032004", "admin" });
+                values: new object[] { 1, "Administrator", 1, new DateTime(2024, 1, 19, 9, 16, 3, 205, DateTimeKind.Local).AddTicks(4843), "admin@gmail.com", "password", "Administrator" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Blogs_UserId",

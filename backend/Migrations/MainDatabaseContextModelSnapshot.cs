@@ -231,12 +231,12 @@ namespace backend.Migrations
                         new
                         {
                             Id = 1,
-                            AccountType = "Regular",
-                            AccountTypeEnum = 0,
-                            Created_at = new DateTime(2024, 1, 18, 15, 23, 51, 817, DateTimeKind.Local).AddTicks(7752),
+                            AccountType = "Administrator",
+                            AccountTypeEnum = 1,
+                            Created_at = new DateTime(2024, 1, 19, 9, 16, 3, 205, DateTimeKind.Local).AddTicks(4843),
                             Email = "admin@gmail.com",
-                            Password = "06032004",
-                            Username = "admin"
+                            Password = "password",
+                            Username = "Administrator"
                         });
                 });
 
