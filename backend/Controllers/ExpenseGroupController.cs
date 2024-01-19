@@ -5,111 +5,113 @@ using Vega.Models;
 
 namespace Vega.Controllers
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class ExpenseGroupController : ControllerBase
-    {
-        private readonly MainDatabaseContext _context;
+	[Route("api/[controller]")]
+	[ApiController]
+	public class ExpenseGroupController : ControllerBase
+	{
+		private readonly MainDatabaseContext _context;
 
-        public ExpenseGroupController(MainDatabaseContext context)
-        {
-            _context = context;
-        }
+		public ExpenseGroupController(MainDatabaseContext context)
+		{
+			_context = context;
+		}
 
-        // GET: api/ExpenseGroup
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<ExpenseGroup>>> GetExpense_groups()
-        {
-            var expense_groups = await _context.Expense_groups
-    .Include(e => e.Expenses)
-    .OrderByDescending(e => e.Created_at)
-    .ToListAsync();
+		// GET: api/ExpenseGroup
+		[HttpGet]
+		public async Task<ActionResult<IEnumerable<ExpenseGroup>>> GetExpense_groups()
+		{
+			var expense_groups = await _context.Expense_groups
+				.Include(e => e.Expenses)
+				.OrderByDescending(e => e.Created_at)
+				.ToListAsync();
 
-            if (expense_groups.Count != 0)
-            {
-                return expense_groups;
-            }
-            else
-            {
-                return NotFound();
-            }
-        }
+			if (expense_groups.Count != 0)
+			{
+				return expense_groups;
+			}
+			else
+			{
+				return NotFound();
+			}
+		}
 
-        // GET: api/ExpenseGroup/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<ExpenseGroup>> GetExpenseGroup(int id)
-        {
-            var expenseGroup = await _context.Expense_groups.FindAsync(id);
+		// GET: api/ExpenseGroup/5
+		[HttpGet("{id}")]
+		public async Task<ActionResult<ExpenseGroup>> GetExpenseGroup(int id)
+		{
+			var expenseGroup = await _context.Expense_groups
+				.Include(e => e.Expenses)
+				.FirstOrDefaultAsync(e => e.Id == id);
 
-            if (expenseGroup == null)
-            {
-                return NotFound();
-            }
+			if (expenseGroup == null)
+			{
+				return NotFound();
+			}
 
-            return expenseGroup;
-        }
+			return expenseGroup;
+		}
 
-        // PUT: api/ExpenseGroup/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutExpenseGroup(int id, ExpenseGroup expenseGroup)
-        {
-            if (id != expenseGroup.Id)
-            {
-                return BadRequest();
-            }
+		// PUT: api/ExpenseGroup/5
+		// To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+		[HttpPut("{id}")]
+		public async Task<IActionResult> PutExpenseGroup(int id, ExpenseGroup expenseGroup)
+		{
+			if (id != expenseGroup.Id)
+			{
+				return BadRequest();
+			}
 
-            _context.Entry(expenseGroup).State = EntityState.Modified;
+			_context.Entry(expenseGroup).State = EntityState.Modified;
 
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!ExpenseGroupExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+			try
+			{
+				await _context.SaveChangesAsync();
+			}
+			catch (DbUpdateConcurrencyException)
+			{
+				if (!ExpenseGroupExists(id))
+				{
+					return NotFound();
+				}
+				else
+				{
+					throw;
+				}
+			}
 
-            return NoContent();
-        }
+			return NoContent();
+		}
 
-        // POST: api/ExpenseGroup
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
-        public async Task<ActionResult<ExpenseGroup>> PostExpenseGroup(ExpenseGroup expenseGroup)
-        {
-            _context.Expense_groups.Add(expenseGroup);
-            await _context.SaveChangesAsync();
+		// POST: api/ExpenseGroup
+		// To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+		[HttpPost]
+		public async Task<ActionResult<ExpenseGroup>> PostExpenseGroup(ExpenseGroup expenseGroup)
+		{
+			_context.Expense_groups.Add(expenseGroup);
+			await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetExpenseGroup", new { id = expenseGroup.Id }, expenseGroup);
-        }
+			return CreatedAtAction("GetExpenseGroup", new { id = expenseGroup.Id }, expenseGroup);
+		}
 
-        // DELETE: api/ExpenseGroup/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteExpenseGroup(int id)
-        {
-            var expenseGroup = await _context.Expense_groups.FindAsync(id);
-            if (expenseGroup == null)
-            {
-                return NotFound();
-            }
+		// DELETE: api/ExpenseGroup/5
+		[HttpDelete("{id}")]
+		public async Task<IActionResult> DeleteExpenseGroup(int id)
+		{
+			var expenseGroup = await _context.Expense_groups.FindAsync(id);
+			if (expenseGroup == null)
+			{
+				return NotFound();
+			}
 
-            _context.Expense_groups.Remove(expenseGroup);
-            await _context.SaveChangesAsync();
+			_context.Expense_groups.Remove(expenseGroup);
+			await _context.SaveChangesAsync();
 
-            return NoContent();
-        }
+			return NoContent();
+		}
 
-        private bool ExpenseGroupExists(int id)
-        {
-            return _context.Expense_groups.Any(e => e.Id == id);
-        }
-    }
+		private bool ExpenseGroupExists(int id)
+		{
+			return _context.Expense_groups.Any(e => e.Id == id);
+		}
+	}
 }
