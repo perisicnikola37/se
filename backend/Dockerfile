@@ -1,15 +1,17 @@
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build-env
 WORKDIR /backend
 
-COPY . ./
+COPY *.csproj ./
 RUN dotnet restore
+
+COPY . .
+
 RUN dotnet publish -c Release -o out
 
-# Build runtime image
-FROM mcr.microsoft.com/dotnet/aspnet:8.0
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS runtime
 WORKDIR /backend
 COPY --from=build-env /backend/out .
 
-EXPOSE 5000
+EXPOSE 80
 
-ENTRYPOINT ["dotnet", "backend.dll"]it
+ENTRYPOINT ["dotnet", "backend.dll"]
