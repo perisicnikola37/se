@@ -1,9 +1,5 @@
 using Domain.Interfaces;
-using Domain.Models;
-using Infrastructure.Contexts;
-using Microsoft.AspNetCore.Mvc;
 using Moq;
-using Presentation.Controllers;
 
 namespace ExpenseTrackerApi.Tests;
 

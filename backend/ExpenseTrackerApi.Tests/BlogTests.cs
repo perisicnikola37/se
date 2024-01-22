@@ -1,8 +1,3 @@
-using Domain.Models;
-using Infrastructure.Contexts;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Presentation.Controllers;
 using Service;
 
 namespace ExpenseTrackerApi.Tests;
