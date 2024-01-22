@@ -2,6 +2,7 @@ using System.Text;
 using System.Threading.RateLimiting;
 using Domain.Interfaces;
 using Domain.Models;
+using Domain.Validators;
 using ExpenseTrackerApi.Middlewares;
 using FluentValidation;
 using Infrastructure.Contexts;
@@ -43,10 +44,10 @@ builder.Services.AddControllers().AddNewtonsoftJson(options =>
 );
 
 // services
+builder.Services.AddScoped<IValidator<Blog>, BlogValidator>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<EmailService>();
 builder.Services.AddScoped<GetAuthenticatedUserIdService>();
-builder.Services.AddScoped<IValidator<Blog>, BlogValidator>();
 
 builder.Services.AddAuthentication(options =>
 {
