@@ -1,134 +1,116 @@
+using Domain.Models;
+using Infrastructure.Contexts;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Infrastructure.Contexts;
-using Domain.Models;
 
 namespace Presentation.Controllers;
-	[Route("api/[controller]")]
-	[ApiController]
-	public class ExpenseGroupController : ControllerBase
-	{
-		private readonly MainDatabaseContext _context;
 
-		public ExpenseGroupController(MainDatabaseContext context)
-		{
-			_context = context;
-		}
+[Route("api/[controller]")]
+[ApiController]
+public class ExpenseGroupController : ControllerBase
+{
+    private readonly MainDatabaseContext _context;
 
-		// GET: api/ExpenseGroup
-		[HttpGet]
-		public async Task<ActionResult<IEnumerable<ExpenseGroup>>> GetExpense_groups()
-		{
-			var expense_groups = await _context.Expense_groups
-				.Include(e => e.Expenses)
-				.OrderByDescending(e => e.Created_at)
-				.ToListAsync();
+    public ExpenseGroupController(MainDatabaseContext context)
+    {
+        _context = context;
+    }
 
-			if (expense_groups.Count != 0)
-			{
-				return expense_groups;
-			}
-			else
-			{
-				return NotFound();
-			}
-		}
+    // GET: api/ExpenseGroup
+    [HttpGet]
+    public async Task<ActionResult<IEnumerable<ExpenseGroup>>> GetExpense_groups()
+    {
+        var expense_groups = await _context.Expense_groups
+            .Include(e => e.Expenses)
+            .OrderByDescending(e => e.CreatedAt)
+            .ToListAsync();
 
-		// GET: api/ExpenseGroup/5
-		[HttpGet("{id}")]
-		public async Task<ActionResult<ExpenseGroup>> GetExpenseGroup(int id)
-		{
-			// move this to a repository layer
-			var expenseGroup = await _context.Expense_groups
-			.Include(e => e.Expenses)
-				.ThenInclude(expense => expense.User)
-			.FirstOrDefaultAsync(e => e.Id == id);
+        if (expense_groups.Count != 0)
+            return expense_groups;
+        return NotFound();
+    }
 
-			if (expenseGroup == null)
-			{
-				return NotFound();
-			}
+    // GET: api/ExpenseGroup/5
+    [HttpGet("{id}")]
+    public async Task<ActionResult<ExpenseGroup>> GetExpenseGroup(int id)
+    {
+        // move this to a repository layer
+        var expenseGroup = await _context.Expense_groups
+            .Include(e => e.Expenses)
+            .ThenInclude(expense => expense.User)
+            .FirstOrDefaultAsync(e => e.Id == id);
 
-			var simplifiedIncomeGroup = new
-			{
-				expenseGroup.Id,
-				expenseGroup.Name,
-				expenseGroup.Description,
-				Expenses = expenseGroup.Expenses.Select(expense => new
-				{
-					expense.Id,
-					expense.Description,
-					expense.Amount,
-					CreatedAt = expense.Created_at,
-					expense.ExpenseGroupId,
-					UserId = expense.User.Id,
-					UserUsername = expense.User.Username
-				})
-			};
+        if (expenseGroup == null) return NotFound();
 
-			return Ok(simplifiedIncomeGroup);
-		}
+        var simplifiedIncomeGroup = new
+        {
+            expenseGroup.Id,
+            expenseGroup.Name,
+            expenseGroup.Description,
+            Expenses = expenseGroup.Expenses.Select(expense => new
+            {
+                expense.Id,
+                expense.Description,
+                expense.Amount,
+                expense.CreatedAt,
+                expense.ExpenseGroupId,
+                UserId = expense.User.Id,
+                UserUsername = expense.User.Username
+            })
+        };
 
-		// PUT: api/ExpenseGroup/5
-		// To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-		[HttpPut("{id}")]
-		public async Task<IActionResult> PutExpenseGroup(int id, ExpenseGroup expenseGroup)
-		{
-			if (id != expenseGroup.Id)
-			{
-				return BadRequest();
-			}
+        return Ok(simplifiedIncomeGroup);
+    }
 
-			_context.Entry(expenseGroup).State = EntityState.Modified;
+    // PUT: api/ExpenseGroup/5
+    // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+    [HttpPut("{id}")]
+    public async Task<IActionResult> PutExpenseGroup(int id, ExpenseGroup expenseGroup)
+    {
+        if (id != expenseGroup.Id) return BadRequest();
 
-			try
-			{
-				await _context.SaveChangesAsync();
-			}
-			catch (DbUpdateConcurrencyException)
-			{
-				if (!ExpenseGroupExists(id))
-				{
-					return NotFound();
-				}
-				else
-				{
-					throw;
-				}
-			}
+        _context.Entry(expenseGroup).State = EntityState.Modified;
 
-			return NoContent();
-		}
+        try
+        {
+            await _context.SaveChangesAsync();
+        }
+        catch (DbUpdateConcurrencyException)
+        {
+            if (!ExpenseGroupExists(id))
+                return NotFound();
+            throw;
+        }
 
-		// POST: api/ExpenseGroup
-		// To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-		[HttpPost]
-		public async Task<ActionResult<ExpenseGroup>> PostExpenseGroup(ExpenseGroup expenseGroup)
-		{
-			_context.Expense_groups.Add(expenseGroup);
-			await _context.SaveChangesAsync();
+        return NoContent();
+    }
 
-			return CreatedAtAction("GetExpenseGroup", new { id = expenseGroup.Id }, expenseGroup);
-		}
+    // POST: api/ExpenseGroup
+    // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+    [HttpPost]
+    public async Task<ActionResult<ExpenseGroup>> PostExpenseGroup(ExpenseGroup expenseGroup)
+    {
+        _context.Expense_groups.Add(expenseGroup);
+        await _context.SaveChangesAsync();
 
-		// DELETE: api/ExpenseGroup/5
-		[HttpDelete("{id}")]
-		public async Task<IActionResult> DeleteExpenseGroup(int id)
-		{
-			var expenseGroup = await _context.Expense_groups.FindAsync(id);
-			if (expenseGroup == null)
-			{
-				return NotFound();
-			}
+        return CreatedAtAction("GetExpenseGroup", new { id = expenseGroup.Id }, expenseGroup);
+    }
 
-			_context.Expense_groups.Remove(expenseGroup);
-			await _context.SaveChangesAsync();
+    // DELETE: api/ExpenseGroup/5
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> DeleteExpenseGroup(int id)
+    {
+        var expenseGroup = await _context.Expense_groups.FindAsync(id);
+        if (expenseGroup == null) return NotFound();
 
-			return NoContent();
-		}
+        _context.Expense_groups.Remove(expenseGroup);
+        await _context.SaveChangesAsync();
 
-		private bool ExpenseGroupExists(int id)
-		{
-			return _context.Expense_groups.Any(e => e.Id == id);
-		}
-	}
+        return NoContent();
+    }
+
+    private bool ExpenseGroupExists(int id)
+    {
+        return _context.Expense_groups.Any(e => e.Id == id);
+    }
+}

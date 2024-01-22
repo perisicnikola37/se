@@ -1,140 +1,118 @@
+using Contracts.Dto;
+using Domain.Models;
+using Infrastructure.Contexts;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Infrastructure.Contexts;
-using Domain.Models;
 using Service;
-using Contracts.Dto;
 
 namespace Presentation.Controllers;
-	[Route("api/[controller]")]
-	[ApiController]
-	public class UserController : ControllerBase
-	{
-		private readonly MainDatabaseContext _context;
-		private readonly EmailService _emailservice;
 
-		public UserController(MainDatabaseContext context, EmailService emailservice)
-		{
-			_context = context;
-			_emailservice = emailservice;
-		}
+[Route("api/[controller]")]
+[ApiController]
+public class UserController : ControllerBase
+{
+    private readonly MainDatabaseContext _context;
+    private readonly EmailService _emailservice;
 
-		// GET: api/User
-		[HttpGet]
-		public async Task<ActionResult<IEnumerable<User>>> GetUsers()
-		{
-			var users = await _context.Users
-			   .Include(e => e.Expenses)
-			   .Include(e => e.Incomes)
-			   .OrderByDescending(e => e.Created_at)
-			   .ToListAsync();
+    public UserController(MainDatabaseContext context, EmailService emailservice)
+    {
+        _context = context;
+        _emailservice = emailservice;
+    }
 
-			if (users.Count != 0)
-			{
-				return users;
-			}
-			else
-			{
-				return NotFound();
-			}
-		}
+    // GET: api/User
+    [HttpGet]
+    public async Task<ActionResult<IEnumerable<User>>> GetUsers()
+    {
+        var users = await _context.Users
+            .Include(e => e.Expenses)
+            .Include(e => e.Incomes)
+            .OrderByDescending(e => e.CreatedAt)
+            .ToListAsync();
 
-		// GET: api/User/5
-		[HttpGet("{id}")]
-		public async Task<ActionResult<User>> GetUser(int id)
-		{
-			var user = await _context.Users.FindAsync(id);
+        if (users.Count != 0)
+            return users;
+        return NotFound();
+    }
 
-			if (user == null)
-			{
-				return NotFound();
-			}
+    // GET: api/User/5
+    [HttpGet("{id}")]
+    public async Task<ActionResult<User>> GetUser(int id)
+    {
+        var user = await _context.Users.FindAsync(id);
 
-			return user;
-		}
+        if (user == null) return NotFound();
 
-		// PUT: api/User/5
-		// To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-		[HttpPut("{id}")]
-		public async Task<IActionResult> PutUser(int id, User user)
-		{
-			if (id != user.Id)
-			{
-				return BadRequest();
-			}
+        return user;
+    }
 
-			_context.Entry(user).State = EntityState.Modified;
+    // PUT: api/User/5
+    // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+    [HttpPut("{id}")]
+    public async Task<IActionResult> PutUser(int id, User user)
+    {
+        if (id != user.Id) return BadRequest();
 
-			try
-			{
-				await _context.SaveChangesAsync();
-			}
-			catch (DbUpdateConcurrencyException)
-			{
-				if (!UserExists(id))
-				{
-					return NotFound();
-				}
-				else
-				{
-					throw;
-				}
-			}
+        _context.Entry(user).State = EntityState.Modified;
 
-			return NoContent();
-		}
+        try
+        {
+            await _context.SaveChangesAsync();
+        }
+        catch (DbUpdateConcurrencyException)
+        {
+            if (!UserExists(id))
+                return NotFound();
+            throw;
+        }
 
-		// POST: api/User
-		// To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-		[HttpPost]
-		public async Task<ActionResult<User>> PostUser(User user)
-		{
-			_context.Users.Add(user);
-			await _context.SaveChangesAsync();
+        return NoContent();
+    }
 
-			return CreatedAtAction("GetUser", new { id = user.Id }, user);
-		}
+    // POST: api/User
+    // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+    [HttpPost]
+    public async Task<ActionResult<User>> PostUser(User user)
+    {
+        _context.Users.Add(user);
+        await _context.SaveChangesAsync();
 
-		// DELETE: api/User/5
-		[HttpDelete("{id}")]
-		public async Task<IActionResult> DeleteUser(int id)
-		{
-			var user = await _context.Users.FindAsync(id);
-			if (user == null)
-			{
-				return NotFound();
-			}
+        return CreatedAtAction("GetUser", new { id = user.Id }, user);
+    }
 
-			_context.Users.Remove(user);
-			await _context.SaveChangesAsync();
+    // DELETE: api/User/5
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> DeleteUser(int id)
+    {
+        var user = await _context.Users.FindAsync(id);
+        if (user == null) return NotFound();
 
-			return NoContent();
-		}
+        _context.Users.Remove(user);
+        await _context.SaveChangesAsync();
 
-		// POST: api/User/SendEmail
-		[HttpPost("SendEmail")]
-		public async Task<IActionResult> SendEmail([FromBody] EmailRequest emailRequest)
-		{
-			try
-			{
-				bool isEmailSent = await _emailservice.SendEmail(emailRequest, "subject", "body");
+        return NoContent();
+    }
 
-				if (isEmailSent)
-				{
-					return Ok("Email sent successfully");
-				}
-				else
-				{
-					return BadRequest("Failed to send email");
-				}
-			}
-			catch (Exception ex)
-			{
-				return StatusCode(500, "Internal Server Error");
-			}
-		}
-		private bool UserExists(int id)
-		{
-			return _context.Users.Any(e => e.Id == id);
-		}
-	}
+    // POST: api/User/SendEmail
+    [HttpPost("SendEmail")]
+    public async Task<IActionResult> SendEmail([FromBody] EmailRequest emailRequest)
+    {
+        try
+        {
+            var isEmailSent = await _emailservice.SendEmail(emailRequest, "subject", "body");
+
+            if (isEmailSent)
+                return Ok("Email sent successfully");
+            return BadRequest("Failed to send email");
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, "Internal Server Error");
+        }
+    }
+
+    private bool UserExists(int id)
+    {
+        return _context.Users.Any(e => e.Id == id);
+    }
+}

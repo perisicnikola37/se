@@ -18,10 +18,11 @@ var configuration = builder.Configuration;
 builder.Services.AddCors(options =>
 {
     options.AddDefaultPolicy(
-        policy => { policy.WithOrigins("http://example.com"); });
+        policy => { policy.WithOrigins("https://example.com"); });
 });
 
 // add DB context
+// add exception
 var connectionString = configuration?["DefaultConnection"] ?? "DefaultConnection";
 
 builder.Services.AddDbContext<MainDatabaseContext>(options =>
