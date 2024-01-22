@@ -1,12 +1,9 @@
-using System;
-using System.Threading.Tasks;
 using Domain.Models;
 using Infrastructure.Contexts;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Presentation.Controllers;
 using Service;
-using Xunit;
 
 public class BlogControllerTests
 {
@@ -31,10 +28,8 @@ public class BlogControllerTests
 			CreatedAt = DateTime.Now
 		};
 
-		// Act
 		var result = await controller.PostBlog(blog);
 
-		// Assert
 		var createdAtActionResult = Assert.IsType<CreatedAtActionResult>(result.Result);
 		var createdBlog = Assert.IsType<Blog>(createdAtActionResult.Value);
 
