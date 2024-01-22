@@ -61,26 +61,26 @@ public class BlogController(MainDatabaseContext context, GetAuthenticatedUserIdS
 	// To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
 	[HttpPost]
 	public async Task<ActionResult<Blog>> PostBlog(Blog blog)
-{
-	var validationResult = await validator.ValidateAsync(blog);
-	if (!validationResult.IsValid)
 	{
-	    return BadRequest(validationResult.Errors);
+		var validationResult = await validator.ValidateAsync(blog);
+		if (!validationResult.IsValid)
+		{
+			return BadRequest(validationResult.Errors);
+		}
+
+		var userId = getAuthenticatedUserIdService.GetUserId(User);
+		if (userId == null)
+		{
+			return Unauthorized();
+		}
+
+		blog.UserId = (int)userId;
+
+		context.Blogs.Add(blog);
+		await context.SaveChangesAsync();
+
+		return CreatedAtAction("GetBlog", new { id = blog.Id }, blog);
 	}
-
-	var userId = getAuthenticatedUserIdService.GetUserId(User);
-	if (userId == null)
-	{
-	    return Unauthorized();
-	}
-
-	blog.UserId = (int)userId;
-
-	context.Blogs.Add(blog);
-	await context.SaveChangesAsync();
-
-	return CreatedAtAction("GetBlog", new { id = blog.Id }, blog);
-}
 
 
 	// DELETE: api/Blog/5
