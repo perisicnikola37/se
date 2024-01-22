@@ -10,6 +10,8 @@ public class Blog
     [StringLength(255, MinimumLength = 8, ErrorMessage = "Description must be between 8 and 255 characters")]
     public string Description { get; set; }
 
+    [Required(ErrorMessage = "Author is required")]
+    [StringLength(255, MinimumLength = 8, ErrorMessage = "Author must be between 8 and 255 characters")]
     public string Author { get; set; }
 
     [Required(ErrorMessage = "Text is required")]
