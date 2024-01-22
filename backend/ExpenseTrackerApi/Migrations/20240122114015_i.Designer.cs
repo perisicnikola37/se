@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ExpenseTrackerApi.Migrations
 {
     [DbContext(typeof(MainDatabaseContext))]
-    [Migration("20240122112326_i")]
+    [Migration("20240122114015_i")]
     partial class i
     {
         /// <inheritdoc />
@@ -67,11 +67,9 @@ namespace ExpenseTrackerApi.Migrations
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("varchar(255)");
+                        .HasColumnType("longtext");
 
                     b.Property<int?>("ExpenseGroupId")
-                        .IsRequired()
                         .HasColumnType("int");
 
                     b.Property<int>("UserId")
@@ -97,13 +95,11 @@ namespace ExpenseTrackerApi.Migrations
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("varchar(255)");
+                        .HasColumnType("longtext");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("varchar(255)");
+                        .HasColumnType("longtext");
 
                     b.HasKey("Id");
 
@@ -124,8 +120,7 @@ namespace ExpenseTrackerApi.Migrations
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("varchar(255)");
+                        .HasColumnType("longtext");
 
                     b.Property<int>("IncomeGroupId")
                         .HasColumnType("int");
@@ -153,13 +148,11 @@ namespace ExpenseTrackerApi.Migrations
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("varchar(255)");
+                        .HasColumnType("longtext");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("varchar(255)");
+                        .HasColumnType("longtext");
 
                     b.HasKey("Id");
 
@@ -216,13 +209,11 @@ namespace ExpenseTrackerApi.Migrations
 
                     b.Property<string>("Password")
                         .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("varchar(255)");
+                        .HasColumnType("longtext");
 
                     b.Property<string>("Username")
                         .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("varchar(255)");
+                        .HasColumnType("longtext");
 
                     b.HasKey("Id");
 
@@ -234,7 +225,7 @@ namespace ExpenseTrackerApi.Migrations
                             Id = 1,
                             AccountType = "Administrator",
                             AccountTypeEnum = 1,
-                            CreatedAt = new DateTime(2024, 1, 22, 12, 23, 25, 429, DateTimeKind.Local).AddTicks(9823),
+                            CreatedAt = new DateTime(2024, 1, 22, 12, 40, 15, 52, DateTimeKind.Local).AddTicks(3818),
                             Email = "admin@gmail.com",
                             Password = "5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8",
                             Username = "Administrator"
@@ -257,8 +248,7 @@ namespace ExpenseTrackerApi.Migrations
                     b.HasOne("Domain.Models.ExpenseGroup", "ExpenseGroup")
                         .WithMany("Expenses")
                         .HasForeignKey("ExpenseGroupId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("Domain.Models.User", "User")
                         .WithMany("Expenses")
