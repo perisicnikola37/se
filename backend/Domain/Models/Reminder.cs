@@ -19,7 +19,7 @@ public class Reminder
     private string reminderDay;
 
     [JsonIgnore]
-    public WeekDays Reminder_dayEnum
+    public WeekDays ReminderDayEnum
     {
         get
         {
@@ -32,7 +32,7 @@ public class Reminder
     [Required(ErrorMessage = "Reminder_day is required")]
     [RegularExpression("^(Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday)$",
         ErrorMessage = "Invalid Reminder_day")]
-    public string Reminder_day
+    public string ReminderDay
     {
         get => reminderDay;
         set
