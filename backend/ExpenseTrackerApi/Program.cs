@@ -76,7 +76,7 @@ builder.Services.AddAuthorization();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddRateLimiter(_ => _
+builder.Services.AddRateLimiter(rateLimiterOptions => rateLimiterOptions
 	.AddFixedWindowLimiter(policyName: "fixed", options =>
 	{
 		options.PermitLimit = 4;
