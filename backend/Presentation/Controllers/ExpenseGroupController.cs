@@ -20,13 +20,13 @@ public class ExpenseGroupController : ControllerBase
     [HttpGet]
     public async Task<ActionResult<IEnumerable<ExpenseGroup>>> GetExpense_groups()
     {
-        var expense_groups = await _context.ExpenseGroups
+        var expenseGroups = await _context.ExpenseGroups
             .Include(e => e.Expenses)
             .OrderByDescending(e => e.CreatedAt)
             .ToListAsync();
 
-        if (expense_groups.Count != 0)
-            return expense_groups;
+        if (expenseGroups.Count != 0)
+            return expenseGroups;
         return NotFound();
     }
 
@@ -35,32 +35,41 @@ public class ExpenseGroupController : ControllerBase
     public async Task<ActionResult<ExpenseGroup>> GetExpenseGroup(int id)
     {
         // move this to a repository layer
-        var expenseGroup = await _context.ExpenseGroups
-            .Include(e => e.Expenses)
-            .ThenInclude(expense => expense.User)
-            .FirstOrDefaultAsync(e => e.Id == id);
-
-        if (expenseGroup == null) return NotFound();
-
-        var simplifiedIncomeGroup = new
+        try
         {
-            expenseGroup.Id,
-            expenseGroup.Name,
-            expenseGroup.Description,
-            Expenses = expenseGroup.Expenses.Select(expense => new
-            {
-                expense.Id,
-                expense.Description,
-                expense.Amount,
-                expense.CreatedAt,
-                expense.ExpenseGroupId,
-                UserId = expense.User.Id,
-                UserUsername = expense.User.Username
-            })
-        };
+            var expenseGroup = await _context.ExpenseGroups
+                .Include(e => e.Expenses)!
+                .ThenInclude(expense => expense.User)
+                .FirstOrDefaultAsync(e => e.Id == id);
 
-        return Ok(simplifiedIncomeGroup);
+            if (expenseGroup == null) return NotFound();
+
+            var simplifiedIncomeGroup = new
+            {
+                expenseGroup.Id,
+                expenseGroup.Name,
+                expenseGroup.Description,
+                Expenses = expenseGroup.Expenses?.Select(expense => new
+                {
+                    expense.Id,
+                    expense.Description,
+                    expense.Amount,
+                    expense.CreatedAt,
+                    expense.ExpenseGroupId,
+                    UserId = expense.User?.Id,
+                    UserUsername = expense.User?.Username
+                })
+            };
+
+            return Ok(simplifiedIncomeGroup);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
     }
+
 
     // PUT: api/ExpenseGroup/5
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754

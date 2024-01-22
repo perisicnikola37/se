@@ -20,13 +20,13 @@ public class IncomeGroupController : ControllerBase
     [HttpGet]
     public async Task<ActionResult<IEnumerable<IncomeGroup>>> GetIncome_groups()
     {
-        var income_groups = await _context.IncomeGroups
+        var incomeGroups = await _context.IncomeGroups
             .Include(e => e.Incomes)
             .OrderByDescending(e => e.CreatedAt)
             .ToListAsync();
 
-        if (income_groups.Count != 0)
-            return income_groups;
+        if (incomeGroups.Count != 0)
+            return incomeGroups;
         return NotFound();
     }
 
@@ -34,31 +34,39 @@ public class IncomeGroupController : ControllerBase
     [HttpGet("{id}")]
     public async Task<ActionResult<IncomeGroup>> GetIncomeGroup(int id)
     {
-        var incomeGroup = await _context.IncomeGroups
-            .Include(e => e.Incomes)
-            .ThenInclude(income => income.User)
-            .FirstOrDefaultAsync(e => e.Id == id);
-
-        if (incomeGroup == null) return NotFound();
-
-        var simplifiedIncomeGroup = new
+        try
         {
-            incomeGroup.Id,
-            incomeGroup.Name,
-            incomeGroup.Description,
-            Incomes = incomeGroup.Incomes.Select(income => new
-            {
-                income.Id,
-                income.Description,
-                income.Amount,
-                income.CreatedAt,
-                income.IncomeGroupId,
-                UserId = income.User.Id,
-                UserUsername = income.User.Username
-            })
-        };
+            var incomeGroup = await _context.IncomeGroups
+                .Include(e => e.Incomes)!
+                .ThenInclude(income => income.User)
+                .FirstOrDefaultAsync(e => e.Id == id);
 
-        return Ok(simplifiedIncomeGroup);
+            if (incomeGroup == null) return NotFound();
+
+            var simplifiedIncomeGroup = new
+            {
+                incomeGroup.Id,
+                incomeGroup.Name,
+                incomeGroup.Description,
+                Incomes = incomeGroup.Incomes?.Select(income => new
+                {
+                    income.Id,
+                    income.Description,
+                    income.Amount,
+                    income.CreatedAt,
+                    income.IncomeGroupId,
+                    UserId = income.User?.Id,
+                    UserUsername = income.User?.Username
+                })
+            };
+
+            return Ok(simplifiedIncomeGroup);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
     }
 
     // PUT: api/IncomeGroup/5
