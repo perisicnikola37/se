@@ -61,8 +61,8 @@ public class BlogController(MainDatabaseContext context, GetAuthenticatedUserIdS
     [HttpPost]
     public async Task<ActionResult<Blog>> PostBlog(Blog blog)
     {
-        var userId = getAuthenticatedUserIdService.GetUserId(User);
-        blog.UserId = (int)userId!;
+        // var userId = getAuthenticatedUserIdService.GetUserId(User);
+        // blog.UserId = (int)userId!;
 
         context.Blogs.Add(blog);
         await context.SaveChangesAsync();
