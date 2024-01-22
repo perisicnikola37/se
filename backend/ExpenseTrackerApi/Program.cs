@@ -24,7 +24,7 @@ builder.Services.AddCors(options =>
 });
 
 // add DB context
-string connectionString = configuration["DefaultConnection"];
+string connectionString = configuration?["DefaultConnection"] ?? "DefaultConnection";
 
 builder.Services.AddDbContext<MainDatabaseContext>(options =>
 {
@@ -54,9 +54,9 @@ builder.Services.AddAuthentication(options =>
 	options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
 }).AddJwtBearer(o =>
 {
-	string validIssuer = configuration["Jwt:Issuer"];
-	string validAudience = configuration["Jwt:Audience"];
-	string issuerSigningKey = configuration["Jwt:Key"];
+	string validIssuer = configuration?["Jwt:Issuer"] ?? "https://joydipkanjilal.com/";
+	string validAudience = configuration?["Jwt:Audience"] ?? "https://joydipkanjilal.com/";
+	string issuerSigningKey = configuration?["Jwt:Key"] ?? "ddsadhasbd asdadsad sdas dasd asdasdasd as dasd sad sadas dadssndn asdnasjdnas jd asdas dasjdnas jn dsjan dasjn djasn djasndasjndjasndajsn djnasjnd";
 
 	o.TokenValidationParameters = new TokenValidationParameters
 	{
