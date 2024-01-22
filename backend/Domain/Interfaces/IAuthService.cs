@@ -1,7 +1,7 @@
-namespace Domain.Interfaces;
-
-using Microsoft.AspNetCore.Mvc;
 using Domain.Models;
+using Microsoft.AspNetCore.Mvc;
+
+namespace Domain.Interfaces;
 
 public interface IAuthService
 {

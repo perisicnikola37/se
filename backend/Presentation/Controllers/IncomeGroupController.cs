@@ -20,7 +20,7 @@ public class IncomeGroupController : ControllerBase
     [HttpGet]
     public async Task<ActionResult<IEnumerable<IncomeGroup>>> GetIncome_groups()
     {
-        var income_groups = await _context.Income_groups
+        var income_groups = await _context.IncomeGroups
             .Include(e => e.Incomes)
             .OrderByDescending(e => e.CreatedAt)
             .ToListAsync();
@@ -34,7 +34,7 @@ public class IncomeGroupController : ControllerBase
     [HttpGet("{id}")]
     public async Task<ActionResult<IncomeGroup>> GetIncomeGroup(int id)
     {
-        var incomeGroup = await _context.Income_groups
+        var incomeGroup = await _context.IncomeGroups
             .Include(e => e.Incomes)
             .ThenInclude(income => income.User)
             .FirstOrDefaultAsync(e => e.Id == id);
@@ -89,7 +89,7 @@ public class IncomeGroupController : ControllerBase
     [HttpPost]
     public async Task<ActionResult<IncomeGroup>> PostIncomeGroup(IncomeGroup incomeGroup)
     {
-        _context.Income_groups.Add(incomeGroup);
+        _context.IncomeGroups.Add(incomeGroup);
         await _context.SaveChangesAsync();
 
         return CreatedAtAction("GetIncomeGroup", new { id = incomeGroup.Id }, incomeGroup);
@@ -99,10 +99,10 @@ public class IncomeGroupController : ControllerBase
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteIncomeGroup(int id)
     {
-        var incomeGroup = await _context.Income_groups.FindAsync(id);
+        var incomeGroup = await _context.IncomeGroups.FindAsync(id);
         if (incomeGroup == null) return NotFound();
 
-        _context.Income_groups.Remove(incomeGroup);
+        _context.IncomeGroups.Remove(incomeGroup);
         await _context.SaveChangesAsync();
 
         return NoContent();
@@ -110,6 +110,6 @@ public class IncomeGroupController : ControllerBase
 
     private bool IncomeGroupExists(int id)
     {
-        return _context.Income_groups.Any(e => e.Id == id);
+        return _context.IncomeGroups.Any(e => e.Id == id);
     }
 }

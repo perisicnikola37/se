@@ -85,7 +85,7 @@ public class IncomeController : ControllerBase
     [HttpPost]
     public async Task<ActionResult<Income>> PostIncome(Income income)
     {
-        var income_group = await _context.Income_groups.FindAsync(income.IncomeGroupId);
+        var income_group = await _context.IncomeGroups.FindAsync(income.IncomeGroupId);
 
         if (income_group == null) throw NotFoundException.Create("IncomeGroupId", "Income group not found.");
 

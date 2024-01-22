@@ -20,7 +20,7 @@ public class ExpenseGroupController : ControllerBase
     [HttpGet]
     public async Task<ActionResult<IEnumerable<ExpenseGroup>>> GetExpense_groups()
     {
-        var expense_groups = await _context.Expense_groups
+        var expense_groups = await _context.ExpenseGroups
             .Include(e => e.Expenses)
             .OrderByDescending(e => e.CreatedAt)
             .ToListAsync();
@@ -35,7 +35,7 @@ public class ExpenseGroupController : ControllerBase
     public async Task<ActionResult<ExpenseGroup>> GetExpenseGroup(int id)
     {
         // move this to a repository layer
-        var expenseGroup = await _context.Expense_groups
+        var expenseGroup = await _context.ExpenseGroups
             .Include(e => e.Expenses)
             .ThenInclude(expense => expense.User)
             .FirstOrDefaultAsync(e => e.Id == id);
@@ -90,7 +90,7 @@ public class ExpenseGroupController : ControllerBase
     [HttpPost]
     public async Task<ActionResult<ExpenseGroup>> PostExpenseGroup(ExpenseGroup expenseGroup)
     {
-        _context.Expense_groups.Add(expenseGroup);
+        _context.ExpenseGroups.Add(expenseGroup);
         await _context.SaveChangesAsync();
 
         return CreatedAtAction("GetExpenseGroup", new { id = expenseGroup.Id }, expenseGroup);
@@ -100,10 +100,10 @@ public class ExpenseGroupController : ControllerBase
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteExpenseGroup(int id)
     {
-        var expenseGroup = await _context.Expense_groups.FindAsync(id);
+        var expenseGroup = await _context.ExpenseGroups.FindAsync(id);
         if (expenseGroup == null) return NotFound();
 
-        _context.Expense_groups.Remove(expenseGroup);
+        _context.ExpenseGroups.Remove(expenseGroup);
         await _context.SaveChangesAsync();
 
         return NoContent();
@@ -111,6 +111,6 @@ public class ExpenseGroupController : ControllerBase
 
     private bool ExpenseGroupExists(int id)
     {
-        return _context.Expense_groups.Any(e => e.Id == id);
+        return _context.ExpenseGroups.Any(e => e.Id == id);
     }
 }

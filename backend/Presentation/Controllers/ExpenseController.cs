@@ -100,7 +100,7 @@ public class ExpenseController : ControllerBase
     [HttpPost]
     public async Task<ActionResult<Expense>> PostExpense(Expense expense)
     {
-        var expense_group = await _context.Expense_groups.FindAsync(expense.ExpenseGroupId);
+        var expense_group = await _context.ExpenseGroups.FindAsync(expense.ExpenseGroupId);
 
         if (expense_group == null) throw NotFoundException.Create("ExpenseGroupId", "Expense group not found.");
         var userId = _getAuthenticatedUserIdService.GetUserId(User);
