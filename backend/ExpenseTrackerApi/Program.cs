@@ -21,8 +21,6 @@ builder.Services.AddCors(options =>
 		policy => { policy.WithOrigins("https://example.com"); });
 });
 
-// add DB context
-// add exception
 var connectionString = configuration["DefaultConnection"];
 if (connectionString == null) throw new ArgumentNullException(nameof(connectionString), "DefaultConnection is null");
 
