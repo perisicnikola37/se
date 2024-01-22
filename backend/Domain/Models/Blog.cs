@@ -16,7 +16,7 @@ public class Blog
     [StringLength(255, MinimumLength = 2, ErrorMessage = "Text must be between 2 and 1255 characters")]
     public string Text { get; set; }
 
-    public DateTime Created_at { get; set; } = DateTime.Now;
+    public DateTime CreatedAt { get; set; } = DateTime.Now;
     public int UserId { get; set; }
 
     public User? User { get; set; }
