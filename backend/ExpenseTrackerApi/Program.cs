@@ -1,7 +1,9 @@
 using System.Text;
 using System.Threading.RateLimiting;
 using Domain.Interfaces;
+using Domain.Models;
 using ExpenseTrackerApi.Middlewares;
+using FluentValidation;
 using Infrastructure.Contexts;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.RateLimiting;
@@ -26,10 +28,11 @@ if (connectionString == null) throw new ArgumentNullException(nameof(connectionS
 
 builder.Services.AddDbContext<MainDatabaseContext>(options =>
 {
-	options.UseMySql(
-		connectionString,
-		new MySqlServerVersion(new Version(8, 0, 35))
-	);
+    options.UseMySql(
+        connectionString,
+        new MySqlServerVersion(new Version(8, 0, 35)),
+        b => b.MigrationsAssembly("ExpenseTrackerApi") 
+    );
 });
 
 builder.Services.AddAuthentication();
@@ -43,6 +46,7 @@ builder.Services.AddControllers().AddNewtonsoftJson(options =>
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<EmailService>();
 builder.Services.AddScoped<GetAuthenticatedUserIdService>();
+builder.Services.AddScoped<IValidator<Blog>, BlogValidator>();
 
 builder.Services.AddAuthentication(options =>
 {
