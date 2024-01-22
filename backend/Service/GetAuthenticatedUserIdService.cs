@@ -1,25 +1,15 @@
-namespace Service;
-
 using System.Security.Claims;
+using Domain.Interfaces;
 
-public interface IGetAuthenticatedUserIdService
-{
-	int? GetUserId(ClaimsPrincipal user);
-}
-
-// return Unauthorized(new { message = "Invalid user claims" });
+namespace Service;
 
 public class GetAuthenticatedUserIdService : IGetAuthenticatedUserIdService
 {
-	public int? GetUserId(ClaimsPrincipal user)
-	{
-		var userIdClaim = user.Claims.FirstOrDefault(c => c.Type == "Id");
-		if (userIdClaim == null || !int.TryParse(userIdClaim.Value, out int userId))
-		{
-			return null;
-		} else 
-		{
-			return userId;
-		}
-	}
+    public int? GetUserId(ClaimsPrincipal user)
+    {
+        var userIdClaim = user.Claims.FirstOrDefault(c => c.Type == "Id");
+        if (userIdClaim == null || !int.TryParse(userIdClaim.Value, out var userId))
+            return null;
+        return userId;
+    }
 }

@@ -80,12 +80,12 @@ public class IncomeController(MainDatabaseContext context, GetAuthenticatedUserI
     [HttpPost]
     public async Task<ActionResult<Income>> PostIncome(Income income)
     {
-        var income_group = await _context.IncomeGroups.FindAsync(income.IncomeGroupId);
+        var incomeGroup = await _context.IncomeGroups.FindAsync(income.IncomeGroupId);
 
-        if (income_group == null) throw NotFoundException.Create("IncomeGroupId", "Income group not found.");
+        if (incomeGroup == null) throw NotFoundException.Create("IncomeGroupId", "Income group not found.");
 
         var userId = _getAuthenticatedUserIdService.GetUserId(User);
-        income.UserId = (int)userId;
+        income.UserId = (int)userId!;
 
         _context.Incomes.Add(income);
         await _context.SaveChangesAsync();

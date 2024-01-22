@@ -4,7 +4,6 @@ using System.Security.Cryptography;
 using System.Text;
 using Domain.Interfaces;
 using Domain.Models;
-using Infrastructure.Contexts;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -12,20 +11,11 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace Service;
 
-public class AuthService : IAuthService
+public class AuthService(IMainDatabaseContext context, IConfiguration configuration) : IAuthService
 {
-    private readonly IConfiguration _configuration;
-    private readonly MainDatabaseContext _context;
-
-    public AuthService(MainDatabaseContext context, IConfiguration configuration)
-    {
-        _context = context;
-        _configuration = configuration;
-    }
-
     public async Task<LoggedInUser?> LogInUserAsync(LogInUser user)
     {
-        var authenticatedUser = await _context.Users
+        var authenticatedUser = await context.Users
             .FirstOrDefaultAsync(u => u.Email == user.Email);
 
         if (authenticatedUser == null || !VerifyPassword(user.Password, authenticatedUser.Password)) return null;
@@ -46,7 +36,7 @@ public class AuthService : IAuthService
 
     public async Task<ActionResult<User>> RegisterUserAsync(User userRegistration)
     {
-        if (await _context.Users.AnyAsync(u => u.Email == userRegistration.Email))
+        if (await context.Users.AnyAsync(u => u.Email == userRegistration.Email))
             return new ConflictObjectResult(new { message = "Email is already registered" });
 
         var newUser = new User
@@ -59,8 +49,8 @@ public class AuthService : IAuthService
         var hashedPassword = HashPassword(userRegistration.Password);
         newUser.Password = hashedPassword;
 
-        _context.Users.Add(newUser);
-        await _context.SaveChangesAsync();
+        context.Users.Add(newUser);
+        await context.SaveChangesAsync();
         GenerateJwtToken(newUser);
 
         return newUser;
@@ -68,10 +58,10 @@ public class AuthService : IAuthService
 
     private string GenerateJwtToken(User user)
     {
-        var issuer = _configuration["Jwt:Issuer"];
-        var audience = _configuration["Jwt:Audience"];
-        var key = Encoding.ASCII.GetBytes(_configuration["Jwt:Key"] ??
-                                          "\"ddsadhasbd asdadsad sdas dasd asdasdasd as dasd sad sadas dadssndn asdnasjdnas jd asdas dasjdnas jn dsjan dasjn djasn djasndasjndjasndajsn djnasjnd\"");
+        var issuer = configuration["Jwt:Issuer"];
+        var audience = configuration["Jwt:Audience"];
+        var key = Encoding.ASCII.GetBytes(configuration["Jwt:Key"] ??
+                                          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkZGFzYWRoYXNiZCBhc2RhZHMgc2Rhc3AgZGFzIGRhc2RhcyBhc2RhcyBkYXNkIGFzZGFzZGFzZCBhcyBkYXNhZGFzIGFzIGRhcyBkYXNhZGFzIGFzIGRhcyBkYXNhZGFzZGFzZCBhcyBkYXNhIGRhcyBkYXNhIGRhcyBkYXNhIGRhcyBkYXNhIGRhcyBkYXNhIGRhcyBkYXNhIGFzIGRhcyBkYXNhIGRhcyBkYXNhZGFzIGRhcyBkYXNhZGphcyBkYXNhIGRhcyBkYXNhIGRhcyBkYXNhIGRhcyBkYXNhIGRhcyBkYXNhIGRhcyBkYXNhIGRhcyBkYXNhIGRhcyBkYXNhIGRhcyBkYXNhIGRhcyBkYXNhZGFzIGRhcyBkYXNhIGRhcyBkYXNhIGRhcyBkYXNhIGRhcyBkYXNhIGRhcyBkYXNhIGRhcyBkYXNhIGRhcyBkYXNhZGphcyIsImlhdCI6MTYzNDEwNTUyMn0.S7G4f8pW7sGJ7t9PIShNElA0RRve-HlPfZRvX8hnZ6c");
 
         var tokenDescriptor = new SecurityTokenDescriptor
         {

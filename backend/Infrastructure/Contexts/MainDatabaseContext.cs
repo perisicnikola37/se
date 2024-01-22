@@ -6,19 +6,24 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Contexts;
 
-public class MainDatabaseContext : DbContext, IMainDatabaseContext
+public class MainDatabaseContext(
+    DbContextOptions<MainDatabaseContext> options,
+    DbSet<User> users,
+    DbSet<Blog> blogs,
+    DbSet<ExpenseGroup> expenseGroups,
+    DbSet<Expense> expenses,
+    DbSet<IncomeGroup> incomeGroups,
+    DbSet<Income> incomes,
+    DbSet<Reminder> reminders)
+    : DbContext(options), IMainDatabaseContext
 {
-    public MainDatabaseContext(DbContextOptions<MainDatabaseContext> options) : base(options)
-    {
-    }
-
-    public DbSet<User> Users { get; set; }
-    public DbSet<Blog> Blogs { get; set; }
-    public DbSet<ExpenseGroup> ExpenseGroups { get; set; }
-    public DbSet<Expense> Expenses { get; set; }
-    public DbSet<IncomeGroup> IncomeGroups { get; set; }
-    public DbSet<Income> Incomes { get; set; }
-    public DbSet<Reminder> Reminders { get; set; }
+    public DbSet<User> Users { get; set; } = users;
+    public DbSet<Blog> Blogs { get; set; } = blogs;
+    public DbSet<ExpenseGroup> ExpenseGroups { get; set; } = expenseGroups;
+    public DbSet<Expense> Expenses { get; set; } = expenses;
+    public DbSet<IncomeGroup> IncomeGroups { get; set; } = incomeGroups;
+    public DbSet<Income> Incomes { get; set; } = incomes;
+    public DbSet<Reminder> Reminders { get; set; } = reminders;
 
     public new async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {

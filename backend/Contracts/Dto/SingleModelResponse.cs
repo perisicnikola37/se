@@ -1,18 +1,9 @@
 namespace Contracts.Dto;
-public class Response<T>
+
+public class Response<T>(T data)
 {
-	public Response()
-	{
-	}
-	public Response(T data)
-	{
-		Succeeded = true;
-		Message = string.Empty;
-		Errors = null;
-		Data = data;
-	}
-	public T Data { get; set; }
-	public bool Succeeded { get; set; }
-	public string[] Errors { get; set; }
-	public string Message { get; set; }
+    public T Data { get; set; } = data;
+    public bool Succeeded { get; set; } = true;
+    public string[]? Errors { get; set; } = null;
+    public string? Message { get; set; } = string.Empty;
 }
