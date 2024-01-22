@@ -17,8 +17,8 @@ var configuration = builder.Configuration;
 // builder.Services.AddHttpLogging(o => { });
 builder.Services.AddCors(options =>
 {
-    options.AddDefaultPolicy(
-        policy => { policy.WithOrigins("https://example.com"); });
+	options.AddDefaultPolicy(
+		policy => { policy.WithOrigins("https://example.com"); });
 });
 
 // add DB context
@@ -26,20 +26,19 @@ builder.Services.AddCors(options =>
 var connectionString = configuration["DefaultConnection"];
 if (connectionString == null) throw new ArgumentNullException(nameof(connectionString), "DefaultConnection is null");
 
-
 builder.Services.AddDbContext<MainDatabaseContext>(options =>
 {
-    options.UseMySql(
-        connectionString,
-        new MySqlServerVersion(new Version(8, 0, 35))
-    );
+	options.UseMySql(
+		connectionString,
+		new MySqlServerVersion(new Version(8, 0, 35))
+	);
 });
 
 builder.Services.AddAuthentication();
 
 // important for adding routes based on controllers
 builder.Services.AddControllers().AddNewtonsoftJson(options =>
-    options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+	options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore
 );
 
 // services
@@ -49,9 +48,9 @@ builder.Services.AddScoped<GetAuthenticatedUserIdService>();
 
 builder.Services.AddAuthentication(options =>
 {
-    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-    options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+	options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+	options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+	options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
 }).AddJwtBearer(o =>
 {
     var validIssuer = configuration["Jwt:Issuer"] ?? "https://joydipkanjilal.com/";
@@ -59,17 +58,17 @@ builder.Services.AddAuthentication(options =>
     var issuerSigningKey = configuration["Jwt:Key"] ??
                            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkZGFzYWRoYXNiZCBhc2RhZHMgc2Rhc3AgZGFzIGRhc2RhcyBhc2RhcyBkYXNkIGFzZGFzZGFzZCBhcyBkYXNhZGFzIGFzIGRhcyBkYXNhZGFzIGFzIGRhcyBkYXNhZGFzZGFzZCBhcyBkYXNhIGRhcyBkYXNhIGRhcyBkYXNhIGRhcyBkYXNhIGRhcyBkYXNhIGRhcyBkYXNhIGFzIGRhcyBkYXNhIGRhcyBkYXNhZGFzIGRhcyBkYXNhZGphcyBkYXNhIGRhcyBkYXNhIGRhcyBkYXNhIGRhcyBkYXNhIGRhcyBkYXNhIGRhcyBkYXNhIGRhcyBkYXNhIGRhcyBkYXNhIGRhcyBkYXNhIGRhcyBkYXNhZGFzIGRhcyBkYXNhIGRhcyBkYXNhIGRhcyBkYXNhIGRhcyBkYXNhIGRhcyBkYXNhIGRhcyBkYXNhIGRhcyBkYXNhZGphcyIsImlhdCI6MTYzNDEwNTUyMn0.S7G4f8pW7sGJ7t9PIShNElA0RRve-HlPfZRvX8hnZ6c";
 
-    o.TokenValidationParameters = new TokenValidationParameters
-    {
-        ValidIssuer = validIssuer,
-        ValidAudience = validAudience,
+	o.TokenValidationParameters = new TokenValidationParameters
+	{
+		ValidIssuer = validIssuer,
+		ValidAudience = validAudience,
 
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(issuerSigningKey)),
-        ValidateIssuer = true,
-        ValidateAudience = true,
-        ValidateLifetime = false,
-        ValidateIssuerSigningKey = true
-    };
+		IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(issuerSigningKey)),
+		ValidateIssuer = true,
+		ValidateAudience = true,
+		ValidateLifetime = false,
+		ValidateIssuerSigningKey = true
+	};
 });
 
 builder.Services.AddAuthorization();
@@ -78,13 +77,13 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddRateLimiter(rateLimiterOptions => rateLimiterOptions
-    .AddFixedWindowLimiter("fixed", options =>
-    {
-        options.PermitLimit = 4;
-        options.Window = TimeSpan.FromSeconds(12);
-        options.QueueProcessingOrder = QueueProcessingOrder.OldestFirst;
-        options.QueueLimit = 2;
-    }));
+	.AddFixedWindowLimiter("fixed", options =>
+	{
+		options.PermitLimit = 4;
+		options.Window = TimeSpan.FromSeconds(12);
+		options.QueueProcessingOrder = QueueProcessingOrder.OldestFirst;
+		options.QueueLimit = 2;
+	}));
 
 var app = builder.Build();
 
