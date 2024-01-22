@@ -7,20 +7,13 @@ namespace Presentation.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class ExpenseGroupController : ControllerBase
+public class ExpenseGroupController(MainDatabaseContext context) : ControllerBase
 {
-    private readonly MainDatabaseContext _context;
-
-    public ExpenseGroupController(MainDatabaseContext context)
-    {
-        _context = context;
-    }
-
     // GET: api/ExpenseGroup
     [HttpGet]
     public async Task<ActionResult<IEnumerable<ExpenseGroup>>> GetExpense_groups()
     {
-        var expenseGroups = await _context.ExpenseGroups
+        var expenseGroups = await context.ExpenseGroups
             .Include(e => e.Expenses)
             .OrderByDescending(e => e.CreatedAt)
             .ToListAsync();
@@ -37,7 +30,7 @@ public class ExpenseGroupController : ControllerBase
         // move this to a repository layer
         try
         {
-            var expenseGroup = await _context.ExpenseGroups
+            var expenseGroup = await context.ExpenseGroups
                 .Include(e => e.Expenses)!
                 .ThenInclude(expense => expense.User)
                 .FirstOrDefaultAsync(e => e.Id == id);
@@ -70,7 +63,6 @@ public class ExpenseGroupController : ControllerBase
         }
     }
 
-
     // PUT: api/ExpenseGroup/5
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     [HttpPut("{id}")]
@@ -78,11 +70,11 @@ public class ExpenseGroupController : ControllerBase
     {
         if (id != expenseGroup.Id) return BadRequest();
 
-        _context.Entry(expenseGroup).State = EntityState.Modified;
+        context.Entry(expenseGroup).State = EntityState.Modified;
 
         try
         {
-            await _context.SaveChangesAsync();
+            await context.SaveChangesAsync();
         }
         catch (DbUpdateConcurrencyException)
         {
@@ -99,8 +91,8 @@ public class ExpenseGroupController : ControllerBase
     [HttpPost]
     public async Task<ActionResult<ExpenseGroup>> PostExpenseGroup(ExpenseGroup expenseGroup)
     {
-        _context.ExpenseGroups.Add(expenseGroup);
-        await _context.SaveChangesAsync();
+        context.ExpenseGroups.Add(expenseGroup);
+        await context.SaveChangesAsync();
 
         return CreatedAtAction("GetExpenseGroup", new { id = expenseGroup.Id }, expenseGroup);
     }
@@ -109,17 +101,17 @@ public class ExpenseGroupController : ControllerBase
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteExpenseGroup(int id)
     {
-        var expenseGroup = await _context.ExpenseGroups.FindAsync(id);
+        var expenseGroup = await context.ExpenseGroups.FindAsync(id);
         if (expenseGroup == null) return NotFound();
 
-        _context.ExpenseGroups.Remove(expenseGroup);
-        await _context.SaveChangesAsync();
+        context.ExpenseGroups.Remove(expenseGroup);
+        await context.SaveChangesAsync();
 
         return NoContent();
     }
 
     private bool ExpenseGroupExists(int id)
     {
-        return _context.ExpenseGroups.Any(e => e.Id == id);
+        return context.ExpenseGroups.Any(e => e.Id == id);
     }
 }

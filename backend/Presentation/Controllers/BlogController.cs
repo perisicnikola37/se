@@ -8,22 +8,14 @@ namespace Presentation.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class BlogController : ControllerBase
+public class BlogController(MainDatabaseContext context, GetAuthenticatedUserIdService getAuthenticatedUserIdService)
+    : ControllerBase
 {
-    private readonly MainDatabaseContext _context;
-    private readonly GetAuthenticatedUserIdService _getAuthenticatedUserIdService;
-
-    public BlogController(MainDatabaseContext context, GetAuthenticatedUserIdService getAuthenticatedUserIdService)
-    {
-        _context = context;
-        _getAuthenticatedUserIdService = getAuthenticatedUserIdService;
-    }
-
     // GET: api/Blog
     [HttpGet]
     public async Task<ActionResult<IEnumerable<Blog>>> GetBlogs()
     {
-        var blogs = await _context.Blogs.OrderByDescending(e => e.CreatedAt).ToListAsync();
+        var blogs = await context.Blogs.OrderByDescending(e => e.CreatedAt).ToListAsync();
 
         if (blogs.Count() != 0)
             return blogs;
@@ -34,7 +26,7 @@ public class BlogController : ControllerBase
     [HttpGet("{id}")]
     public async Task<ActionResult<Blog>> GetBlog(int id)
     {
-        var blog = await _context.Blogs.FindAsync(id);
+        var blog = await context.Blogs.FindAsync(id);
 
         if (blog == null) return NotFound();
 
@@ -48,11 +40,11 @@ public class BlogController : ControllerBase
     {
         if (id != blog.Id) return BadRequest();
 
-        _context.Entry(blog).State = EntityState.Modified;
+        context.Entry(blog).State = EntityState.Modified;
 
         try
         {
-            await _context.SaveChangesAsync();
+            await context.SaveChangesAsync();
         }
         catch (DbUpdateConcurrencyException)
         {
@@ -69,11 +61,11 @@ public class BlogController : ControllerBase
     [HttpPost]
     public async Task<ActionResult<Blog>> PostBlog(Blog blog)
     {
-        var userId = _getAuthenticatedUserIdService.GetUserId(User);
-        blog.UserId = (int)userId;
+        var userId = getAuthenticatedUserIdService.GetUserId(User);
+        blog.UserId = (int)userId!;
 
-        _context.Blogs.Add(blog);
-        await _context.SaveChangesAsync();
+        context.Blogs.Add(blog);
+        await context.SaveChangesAsync();
 
         return CreatedAtAction("GetBlog", new { id = blog.Id }, blog);
     }
@@ -82,17 +74,17 @@ public class BlogController : ControllerBase
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteBlog(int id)
     {
-        var blog = await _context.Blogs.FindAsync(id);
+        var blog = await context.Blogs.FindAsync(id);
         if (blog == null) return NotFound();
 
-        _context.Blogs.Remove(blog);
-        await _context.SaveChangesAsync();
+        context.Blogs.Remove(blog);
+        await context.SaveChangesAsync();
 
         return NoContent();
     }
 
     private bool BlogExists(int id)
     {
-        return _context.Blogs.Any(e => e.Id == id);
+        return context.Blogs.Any(e => e.Id == id);
     }
 }

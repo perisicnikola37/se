@@ -9,22 +9,13 @@ namespace Presentation.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class UserController : ControllerBase
+public class UserController(MainDatabaseContext context, EmailService emailservice) : ControllerBase
 {
-    private readonly MainDatabaseContext _context;
-    private readonly EmailService _emailservice;
-
-    public UserController(MainDatabaseContext context, EmailService emailservice)
-    {
-        _context = context;
-        _emailservice = emailservice;
-    }
-
     // GET: api/User
     [HttpGet]
     public async Task<ActionResult<IEnumerable<User>>> GetUsers()
     {
-        var users = await _context.Users
+        var users = await context.Users
             .Include(e => e.Expenses)
             .Include(e => e.Incomes)
             .OrderByDescending(e => e.CreatedAt)
@@ -39,7 +30,7 @@ public class UserController : ControllerBase
     [HttpGet("{id}")]
     public async Task<ActionResult<User>> GetUser(int id)
     {
-        var user = await _context.Users.FindAsync(id);
+        var user = await context.Users.FindAsync(id);
 
         if (user == null) return NotFound();
 
@@ -53,11 +44,11 @@ public class UserController : ControllerBase
     {
         if (id != user.Id) return BadRequest();
 
-        _context.Entry(user).State = EntityState.Modified;
+        context.Entry(user).State = EntityState.Modified;
 
         try
         {
-            await _context.SaveChangesAsync();
+            await context.SaveChangesAsync();
         }
         catch (DbUpdateConcurrencyException)
         {
@@ -74,8 +65,8 @@ public class UserController : ControllerBase
     [HttpPost]
     public async Task<ActionResult<User>> PostUser(User user)
     {
-        _context.Users.Add(user);
-        await _context.SaveChangesAsync();
+        context.Users.Add(user);
+        await context.SaveChangesAsync();
 
         return CreatedAtAction("GetUser", new { id = user.Id }, user);
     }
@@ -84,11 +75,11 @@ public class UserController : ControllerBase
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteUser(int id)
     {
-        var user = await _context.Users.FindAsync(id);
+        var user = await context.Users.FindAsync(id);
         if (user == null) return NotFound();
 
-        _context.Users.Remove(user);
-        await _context.SaveChangesAsync();
+        context.Users.Remove(user);
+        await context.SaveChangesAsync();
 
         return NoContent();
     }
@@ -99,20 +90,21 @@ public class UserController : ControllerBase
     {
         try
         {
-            var isEmailSent = await _emailservice.SendEmail(emailRequest, "subject", "body");
+            var isEmailSent = await emailservice.SendEmail(emailRequest, "subject", "body");
 
             if (isEmailSent)
                 return Ok("Email sent successfully");
             return BadRequest("Failed to send email");
         }
-        catch (Exception ex)
+        catch (Exception e)
         {
-            return StatusCode(500, "Internal Server Error");
+            Console.WriteLine(e);
+            throw;
         }
     }
 
     private bool UserExists(int id)
     {
-        return _context.Users.Any(e => e.Id == id);
+        return context.Users.Any(e => e.Id == id);
     }
 }

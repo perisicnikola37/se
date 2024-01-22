@@ -1,49 +1,42 @@
-namespace Service;
-
 using System.Net;
 using System.Net.Mail;
-using Microsoft.Extensions.Configuration;
 using Contracts.Dto;
+using Microsoft.Extensions.Configuration;
 
-public class EmailService
+namespace Service;
+
+public class EmailService(IConfiguration configuration)
 {
-	private readonly IConfiguration _configuration;
+    public async Task<bool> SendEmail(EmailRequest emailRequest, string subject, string body)
+    {
+        try
+        {
+            var smtpClient = new SmtpClient(configuration["Mail:Client"] ?? "smtp.gmail.com")
+            {
+                Port = 587,
+                Credentials =
+                    new NetworkCredential("perisicnikola37@gmail.com", configuration["Mail:Secret"] ?? "secret"),
+                EnableSsl = true
+            };
 
-	public EmailService(IConfiguration configuration)
-	{
-		_configuration = configuration;
-	}
+            var mailMessage = new MailMessage
+            {
+                From = new MailAddress(configuration["Mail:EmailSender"] ?? "example@gmail.com"),
+                Subject = subject,
+                Body = body,
+                IsBodyHtml = true
+            };
 
-	public async Task<bool> SendEmail(EmailRequest emailRequest, string subject, string body)
-	{
-		try
-		{
-			var smtpClient = new SmtpClient(_configuration["Mail:Client"])
-			{
-				Port = 587,
-				Credentials = new NetworkCredential("perisicnikola37@gmail.com", _configuration["Mail:Secret"]),
-				EnableSsl = true,
-			};
+            mailMessage.To.Add(emailRequest.ToEmail);
 
-			var mailMessage = new MailMessage
-			{
-				From = new MailAddress(_configuration["Mail:EmailSender"]),
-				Subject = subject,
-				Body = body,
-				IsBodyHtml = true,
-			};
+            await smtpClient.SendMailAsync(mailMessage);
 
-			mailMessage.To.Add(emailRequest.ToEmail);
-
-			await smtpClient.SendMailAsync(mailMessage);
-
-			return true;
-		}
-		catch (Exception ex)
-		{
-			return false;
-		}
-	}
+            return true;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
 }
-
-

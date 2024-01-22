@@ -2,15 +2,8 @@ using ExpenseTrackerApi.Exclusions;
 
 namespace ExpenseTrackerApi.Middlewares;
 
-public class ClaimsMiddleware
+public class ClaimsMiddleware(RequestDelegate next)
 {
-    private readonly RequestDelegate _next;
-
-    public ClaimsMiddleware(RequestDelegate next)
-    {
-        _next = next;
-    }
-
     public async Task Invoke(HttpContext context)
     {
         var httpMethod = context.Request.Method;
@@ -20,7 +13,7 @@ public class ClaimsMiddleware
 
         if (httpMethod == "GET" || excludedEndpoints.Contains(httpPath))
         {
-            await _next(context);
+            await next(context);
         }
         else
         {
@@ -36,7 +29,7 @@ public class ClaimsMiddleware
             }
             else
             {
-                await _next(context);
+                await next(context);
             }
         }
     }

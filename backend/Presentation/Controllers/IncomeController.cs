@@ -11,16 +11,11 @@ namespace Presentation.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class IncomeController : ControllerBase
+public class IncomeController(MainDatabaseContext context, GetAuthenticatedUserIdService getAuthenticatedUserIdService)
+    : ControllerBase
 {
-    private readonly MainDatabaseContext _context;
-    private readonly GetAuthenticatedUserIdService _getAuthenticatedUserIdService;
-
-    public IncomeController(MainDatabaseContext context, GetAuthenticatedUserIdService getAuthenticatedUserIdService)
-    {
-        _context = context;
-        _getAuthenticatedUserIdService = getAuthenticatedUserIdService;
-    }
+    private readonly MainDatabaseContext _context = context;
+    private readonly GetAuthenticatedUserIdService _getAuthenticatedUserIdService = getAuthenticatedUserIdService;
 
     // GET: api/Income
     [HttpGet]

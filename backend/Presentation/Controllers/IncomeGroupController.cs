@@ -7,20 +7,13 @@ namespace Presentation.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class IncomeGroupController : ControllerBase
+public class IncomeGroupController(MainDatabaseContext context) : ControllerBase
 {
-    private readonly MainDatabaseContext _context;
-
-    public IncomeGroupController(MainDatabaseContext context)
-    {
-        _context = context;
-    }
-
     // GET: api/IncomeGroup
     [HttpGet]
     public async Task<ActionResult<IEnumerable<IncomeGroup>>> GetIncome_groups()
     {
-        var incomeGroups = await _context.IncomeGroups
+        var incomeGroups = await context.IncomeGroups
             .Include(e => e.Incomes)
             .OrderByDescending(e => e.CreatedAt)
             .ToListAsync();
@@ -36,7 +29,7 @@ public class IncomeGroupController : ControllerBase
     {
         try
         {
-            var incomeGroup = await _context.IncomeGroups
+            var incomeGroup = await context.IncomeGroups
                 .Include(e => e.Incomes)!
                 .ThenInclude(income => income.User)
                 .FirstOrDefaultAsync(e => e.Id == id);
@@ -76,11 +69,11 @@ public class IncomeGroupController : ControllerBase
     {
         if (id != incomeGroup.Id) return BadRequest();
 
-        _context.Entry(incomeGroup).State = EntityState.Modified;
+        context.Entry(incomeGroup).State = EntityState.Modified;
 
         try
         {
-            await _context.SaveChangesAsync();
+            await context.SaveChangesAsync();
         }
         catch (DbUpdateConcurrencyException)
         {
@@ -97,8 +90,8 @@ public class IncomeGroupController : ControllerBase
     [HttpPost]
     public async Task<ActionResult<IncomeGroup>> PostIncomeGroup(IncomeGroup incomeGroup)
     {
-        _context.IncomeGroups.Add(incomeGroup);
-        await _context.SaveChangesAsync();
+        context.IncomeGroups.Add(incomeGroup);
+        await context.SaveChangesAsync();
 
         return CreatedAtAction("GetIncomeGroup", new { id = incomeGroup.Id }, incomeGroup);
     }
@@ -107,17 +100,17 @@ public class IncomeGroupController : ControllerBase
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteIncomeGroup(int id)
     {
-        var incomeGroup = await _context.IncomeGroups.FindAsync(id);
+        var incomeGroup = await context.IncomeGroups.FindAsync(id);
         if (incomeGroup == null) return NotFound();
 
-        _context.IncomeGroups.Remove(incomeGroup);
-        await _context.SaveChangesAsync();
+        context.IncomeGroups.Remove(incomeGroup);
+        await context.SaveChangesAsync();
 
         return NoContent();
     }
 
     private bool IncomeGroupExists(int id)
     {
-        return _context.IncomeGroups.Any(e => e.Id == id);
+        return context.IncomeGroups.Any(e => e.Id == id);
     }
 }

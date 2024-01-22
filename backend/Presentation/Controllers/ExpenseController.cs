@@ -11,23 +11,15 @@ namespace Presentation.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class ExpenseController : ControllerBase
+public class ExpenseController(MainDatabaseContext context, GetAuthenticatedUserIdService getAuthenticatedUserIdService)
+    : ControllerBase
 {
-    private readonly MainDatabaseContext _context;
-    private readonly GetAuthenticatedUserIdService _getAuthenticatedUserIdService;
-
-    public ExpenseController(MainDatabaseContext context, GetAuthenticatedUserIdService getAuthenticatedUserIdService)
-    {
-        _context = context;
-        _getAuthenticatedUserIdService = getAuthenticatedUserIdService;
-    }
-
     // GET: api/Expense
     [HttpGet]
     public async Task<IActionResult> GetExpenses([FromQuery] PaginationFilter filter)
     {
         var validFilter = new PaginationFilter(filter.PageNumber, filter.PageSize);
-        var pagedData = await _context.Expenses
+        var pagedData = await context.Expenses
             .Skip((validFilter.PageNumber - 1) * validFilter.PageSize)
             .Take(validFilter.PageSize)
             .ToListAsync();
@@ -39,7 +31,7 @@ public class ExpenseController : ControllerBase
     [HttpGet("latest/5")]
     public async Task<ActionResult<IEnumerable<Expense>>> GetLatestExpenses()
     {
-        return await _context.Expenses
+        return await context.Expenses
             .Include(e => e.User)
             .OrderByDescending(e => e.CreatedAt)
             .Take(5)
@@ -50,7 +42,7 @@ public class ExpenseController : ControllerBase
     [HttpGet("total-amount")]
     public async Task<ActionResult<int>> GetTotalAmountOfExpenses()
     {
-        return await _context.Expenses.CountAsync();
+        return await context.Expenses.CountAsync();
     }
 
     // GET: api/Expense/5
@@ -59,10 +51,8 @@ public class ExpenseController : ControllerBase
     {
         // TRYING CUSTOM TEMPLATE 
         // var expense = await _context.Expenses.FindAsync(id);
-
-        var expense = await _context.Expenses.FindAsync(id);
-        return Ok(new Response<Expense>(expense));
-
+        var expense = await context.Expenses.FindAsync(id);
+        return Ok(new Response<Expense>(expense!));
 
         // if (expense == null)
         // {
@@ -79,11 +69,11 @@ public class ExpenseController : ControllerBase
     {
         if (id != expense.Id) return BadRequest();
 
-        _context.Entry(expense).State = EntityState.Modified;
+        context.Entry(expense).State = EntityState.Modified;
 
         try
         {
-            await _context.SaveChangesAsync();
+            await context.SaveChangesAsync();
         }
         catch (DbUpdateConcurrencyException)
         {
@@ -100,14 +90,14 @@ public class ExpenseController : ControllerBase
     [HttpPost]
     public async Task<ActionResult<Expense>> PostExpense(Expense expense)
     {
-        var expense_group = await _context.ExpenseGroups.FindAsync(expense.ExpenseGroupId);
+        var expenseGroup = await context.ExpenseGroups.FindAsync(expense.ExpenseGroupId);
 
-        if (expense_group == null) throw NotFoundException.Create("ExpenseGroupId", "Expense group not found.");
-        var userId = _getAuthenticatedUserIdService.GetUserId(User);
-        expense.UserId = (int)userId;
+        if (expenseGroup == null) throw NotFoundException.Create("ExpenseGroupId", "Expense group not found.");
+        var userId = getAuthenticatedUserIdService.GetUserId(User);
+        expense.UserId = (int)userId!;
 
-        _context.Expenses.Add(expense);
-        await _context.SaveChangesAsync();
+        context.Expenses.Add(expense);
+        await context.SaveChangesAsync();
 
         return CreatedAtAction("GetExpense", new { id = expense.Id }, expense);
     }
@@ -117,17 +107,17 @@ public class ExpenseController : ControllerBase
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteExpense(int id)
     {
-        var expense = await _context.Expenses.FindAsync(id);
+        var expense = await context.Expenses.FindAsync(id);
         if (expense == null) return NotFound();
 
-        _context.Expenses.Remove(expense);
-        await _context.SaveChangesAsync();
+        context.Expenses.Remove(expense);
+        await context.SaveChangesAsync();
 
         return NoContent();
     }
 
     private bool ExpenseExists(int id)
     {
-        return _context.Expenses.Any(e => e.Id == id);
+        return context.Expenses.Any(e => e.Id == id);
     }
 }
