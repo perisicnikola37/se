@@ -11,16 +11,45 @@ public class IncomeGroupController(MainDatabaseContext context) : ControllerBase
 {
     // GET: api/IncomeGroup
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<IncomeGroup>>> GetIncome_groups()
+    public async Task<ActionResult<IEnumerable<object>>> GetIncome_groups()
     {
-        var incomeGroups = await context.IncomeGroups
-            .Include(e => e.Incomes)
-            .OrderByDescending(e => e.CreatedAt)
-            .ToListAsync();
+        try
+        {
+            var incomeGroups = await context.IncomeGroups
+                .Include(e => e.Incomes)
+                    .ThenInclude(income => income.User)
+                .OrderByDescending(e => e.CreatedAt)
+                .ToListAsync();
 
-        if (incomeGroups.Count != 0)
-            return incomeGroups;
-        return NotFound();
+            if (incomeGroups.Count != 0)
+            {
+                var simplifiedIncomeGroups = incomeGroups.Select(incomeGroup => new
+                {
+                    incomeGroup.Id,
+                    incomeGroup.Name,
+                    incomeGroup.Description,
+                    Incomes = incomeGroup.Incomes?.Select(income => new
+                    {
+                        income.Id,
+                        income.Description,
+                        income.Amount,
+                        income.CreatedAt,
+                        income.IncomeGroupId,
+                        UserId = income.User?.Id,
+                        UserUsername = income.User?.Username
+                    })
+                });
+
+                return Ok(simplifiedIncomeGroups);
+            }
+
+            return NotFound();
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
     }
 
     // GET: api/IncomeGroup/5
