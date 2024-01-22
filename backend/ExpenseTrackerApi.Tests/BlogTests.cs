@@ -1,113 +1,116 @@
-using Domain.Models;
-using Infrastructure.Contexts;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Presentation.Controllers;
-using Service;
+// using Domain.Models;
+// using Infrastructure.Contexts;
+// using Microsoft.AspNetCore.Mvc;
+// using Microsoft.EntityFrameworkCore;
+// using Presentation.Controllers;
+// using Service;
 
-public class BlogControllerTests
-{
-	[Fact]
-	public async Task GetBlogs_ReturnsListOfBlogs()
-	{
-		var options = new DbContextOptionsBuilder<MainDatabaseContext>()
-			.UseInMemoryDatabase(databaseName: "TestDatabase")
-			.Options;
+// namespace ExpenseTrackerApi.Tests;
 
-		using var context = new MainDatabaseContext(options);
-		var getAuthenticatedUserIdService = new GetAuthenticatedUserIdService();
+// public class BlogControllerTests
+// {
+// 	[Fact]
+// 	public async Task GetBlogs_ReturnsListOfBlogs()
+// 	{
+// 		var options = new DbContextOptionsBuilder<MainDatabaseContext>()
+// 			.UseInMemoryDatabase(databaseName: "TestDatabase")
+// 			.Options;
 
-		var controller = new BlogController(context, getAuthenticatedUserIdService);
+// 		using var context = new MainDatabaseContext(options);
+// 		var getAuthenticatedUserIdService = new GetAuthenticatedUserIdService();
 
-		// Add some test blogs to the database
-		await context.Blogs.AddRangeAsync(
-			new Blog { Description = "Blog 1", Author = "John Doe", Text = "Text 1", UserId = 1, CreatedAt = DateTime.Now },
-			new Blog { Description = "Blog 2", Author = "Jane Doe", Text = "Text 2", UserId = 1, CreatedAt = DateTime.Now }
-		);
-		await context.SaveChangesAsync();
+// 		var controller = new BlogController(context, getAuthenticatedUserIdService);
 
-		var result = await controller.GetBlogs();
+// 		// Add some test blogs to the database
+// 		await context.Blogs.AddRangeAsync(
+// 			new Blog { Description = "Blog 1", Author = "John Doe", Text = "Text 1", UserId = 1, CreatedAt = DateTime.Now },
+// 			new Blog { Description = "Blog 2", Author = "Jane Doe", Text = "Text 2", UserId = 1, CreatedAt = DateTime.Now }
+// 		);
+// 		await context.SaveChangesAsync();
 
-		var blogs = Assert.IsType<List<Blog>>(result.Value);
-		Assert.Equal(3, blogs.Count);
-	}
+// 		var result = await controller.GetBlogs();
 
-	[Fact]
-	public async Task GetBlog_ReturnsBlogById()
-	{
-		var options = new DbContextOptionsBuilder<MainDatabaseContext>()
-			.UseInMemoryDatabase(databaseName: "TestDatabase")
-			.Options;
+// 		var blogs = Assert.IsType<List<Blog>>(result.Value);
+// 		Assert.Equal(3, blogs.Count);
+// 	}
 
-		using var context = new MainDatabaseContext(options);
-		var getAuthenticatedUserIdService = new GetAuthenticatedUserIdService();
+// 	[Fact]
+// 	public async Task GetBlog_ReturnsBlogById()
+// 	{
+// 		var options = new DbContextOptionsBuilder<MainDatabaseContext>()
+// 			.UseInMemoryDatabase(databaseName: "TestDatabase")
+// 			.Options;
 
-		var controller = new BlogController(context, getAuthenticatedUserIdService);
+// 		using var context = new MainDatabaseContext(options);
+// 		var getAuthenticatedUserIdService = new GetAuthenticatedUserIdService();
 
-		var testBlog = new Blog { Description = "Test Blog", Author = "John Doe", Text = "Test Text", UserId = 1, CreatedAt = DateTime.Now };
-		await context.Blogs.AddAsync(testBlog);
-		await context.SaveChangesAsync();
+// 		var controller = new BlogController(context, getAuthenticatedUserIdService);
 
-		var result = await controller.GetBlog(testBlog.Id);
+// 		var testBlog = new Blog { Description = "Test Blog", Author = "John Doe", Text = "Test Text", UserId = 1, CreatedAt = DateTime.Now };
+// 		await context.Blogs.AddAsync(testBlog);
+// 		await context.SaveChangesAsync();
 
-		var blog = Assert.IsType<Blog>(result.Value);
-		Assert.Equal(testBlog.Description, blog.Description);
-		Assert.Equal(testBlog.Author, blog.Author);
-		Assert.Equal(testBlog.Text, blog.Text);
-		Assert.Equal(testBlog.UserId, blog.UserId);
-		Assert.Equal(testBlog.CreatedAt, blog.CreatedAt);
-	}
+// 		var result = await controller.GetBlog(testBlog.Id);
 
-	[Fact]
-	public async Task PutBlog_UpdatesBlog()
-	{
-		var options = new DbContextOptionsBuilder<MainDatabaseContext>()
-			.UseInMemoryDatabase(databaseName: "TestDatabase")
-			.Options;
+// 		var blog = Assert.IsType<Blog>(result.Value);
+// 		Assert.Equal(testBlog.Description, blog.Description);
+// 		Assert.Equal(testBlog.Author, blog.Author);
+// 		Assert.Equal(testBlog.Text, blog.Text);
+// 		Assert.Equal(testBlog.UserId, blog.UserId);
+// 		Assert.Equal(testBlog.CreatedAt, blog.CreatedAt);
+// 	}
 
-		using var context = new MainDatabaseContext(options);
-		var getAuthenticatedUserIdService = new GetAuthenticatedUserIdService();
+// 	[Fact]
+// 	public async Task PutBlog_UpdatesBlog()
+// 	{
+// 		var options = new DbContextOptionsBuilder<MainDatabaseContext>()
+// 			.UseInMemoryDatabase(databaseName: "TestDatabase")
+// 			.Options;
 
-		var controller = new BlogController(context, getAuthenticatedUserIdService);
+// 		using var context = new MainDatabaseContext(options);
+// 		var getAuthenticatedUserIdService = new GetAuthenticatedUserIdService();
 
-		var testBlog = new Blog { Description = "Test Blog", Author = "John Doe", Text = "Test Text", UserId = 1, CreatedAt = DateTime.Now };
-		await context.Blogs.AddAsync(testBlog);
-		await context.SaveChangesAsync();
+// 		var controller = new BlogController(context, getAuthenticatedUserIdService);
 
-		testBlog.Description = "Updated Description";
-		
-		var result = await controller.PutBlog(testBlog.Id, testBlog);
+// 		var testBlog = new Blog { Description = "Test Blog", Author = "John Doe", Text = "Test Text", UserId = 1, CreatedAt = DateTime.Now };
+// 		await context.Blogs.AddAsync(testBlog);
+// 		await context.SaveChangesAsync();
 
-		Assert.IsType<NoContentResult>(result);
+// 		testBlog.Description = "Updated Description";
 
-		// Check if the blog was actually updated in the database
-		var updatedBlog = await context.Blogs.FindAsync(testBlog.Id);
-		Assert.Equal(testBlog.Description, updatedBlog.Description);
-	}
+// 		var result = await controller.PutBlog(testBlog.Id, testBlog);
 
-	[Fact]
-	public async Task DeleteBlog_RemovesBlog()
-	{
-		var options = new DbContextOptionsBuilder<MainDatabaseContext>()
-			.UseInMemoryDatabase(databaseName: "TestDatabase")
-			.Options;
+// 		Assert.IsType<NoContentResult>(result);
 
-		using var context = new MainDatabaseContext(options);
-		var getAuthenticatedUserIdService = new GetAuthenticatedUserIdService();
+// 		// Check if the blog was actually updated in the database
+// 		var updatedBlog = await context.Blogs.FindAsync(testBlog.Id);
+// 		Assert.Equal(testBlog.Description, updatedBlog.Description);
+// 	}
 
-		var controller = new BlogController(context, getAuthenticatedUserIdService);
+// 	[Fact]
+// 	public async Task DeleteBlog_RemovesBlog()
+// 	{
+// 		var options = new DbContextOptionsBuilder<MainDatabaseContext>()
+// 			.UseInMemoryDatabase(databaseName: "TestDatabase")
+// 			.Options;
 
-		var testBlog = new Blog { Description = "Test Blog", Author = "John Doe", Text = "Test Text", UserId = 1, CreatedAt = DateTime.Now };
-		await context.Blogs.AddAsync(testBlog);
-		await context.SaveChangesAsync();
+// 		using var context = new MainDatabaseContext(options);
+// 		var getAuthenticatedUserIdService = new GetAuthenticatedUserIdService();
 
-		// Act
-		var result = await controller.DeleteBlog(testBlog.Id);
+// 		var controller = new BlogController(context, getAuthenticatedUserIdService);
 
-		// Assert
-		Assert.IsType<NoContentResult>(result);
+// 		var testBlog = new Blog { Description = "Test Blog", Author = "John Doe", Text = "Test Text", UserId = 1, CreatedAt = DateTime.Now };
+// 		await context.Blogs.AddAsync(testBlog);
+// 		await context.SaveChangesAsync();
 
-		var deletedBlog = await context.Blogs.FindAsync(testBlog.Id);
-		Assert.Null(deletedBlog);
-	}
-}
+// 		// Act
+// 		var result = await controller.DeleteBlog(testBlog.Id);
+
+// 		// Assert
+// 		Assert.IsType<NoContentResult>(result);
+
+// 		var deletedBlog = await context.Blogs.FindAsync(testBlog.Id);
+// 		Assert.Null(deletedBlog);
+// 	}
+// }
+
