@@ -1,7 +1,10 @@
 using System.Text;
 using System.Threading.RateLimiting;
 using Domain.Interfaces;
+using Domain.Models;
+using Domain.Validators;
 using ExpenseTrackerApi.Middlewares;
+using FluentValidation;
 using Infrastructure.Contexts;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.RateLimiting;
@@ -21,8 +24,6 @@ builder.Services.AddCors(options =>
 		policy => { policy.WithOrigins("https://example.com"); });
 });
 
-// add DB context
-// add exception
 var connectionString = configuration["DefaultConnection"];
 if (connectionString == null) throw new ArgumentNullException(nameof(connectionString), "DefaultConnection is null");
 
@@ -30,7 +31,8 @@ builder.Services.AddDbContext<MainDatabaseContext>(options =>
 {
 	options.UseMySql(
 		connectionString,
-		new MySqlServerVersion(new Version(8, 0, 35))
+		new MySqlServerVersion(new Version(8, 0, 35)),
+		b => b.MigrationsAssembly("ExpenseTrackerApi") 
 	);
 });
 
@@ -40,6 +42,14 @@ builder.Services.AddAuthentication();
 builder.Services.AddControllers().AddNewtonsoftJson(options =>
 	options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore
 );
+
+// validators
+builder.Services.AddScoped<IValidator<Blog>, BlogValidator>();
+builder.Services.AddScoped<IValidator<ExpenseGroup>, ExpenseGroupValidator>();
+builder.Services.AddScoped<IValidator<Expense>, ExpenseValidator>();
+builder.Services.AddScoped<IValidator<IncomeGroup>, IncomeGroupValidator>();
+builder.Services.AddScoped<IValidator<Income>, IncomeValidator>();
+builder.Services.AddScoped<IValidator<User>, UserValidator>();
 
 // services
 builder.Services.AddScoped<IAuthService, AuthService>();
@@ -53,10 +63,10 @@ builder.Services.AddAuthentication(options =>
 	options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
 }).AddJwtBearer(o =>
 {
-    var validIssuer = configuration["Jwt:Issuer"] ?? "https://joydipkanjilal.com/";
-    var validAudience = configuration["Jwt:Audience"] ?? "https://joydipkanjilal.com/";
-    var issuerSigningKey = configuration["Jwt:Key"] ??
-                           "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkZGFzYWRoYXNiZCBhc2RhZHMgc2Rhc3AgZGFzIGRhc2RhcyBhc2RhcyBkYXNkIGFzZGFzZGFzZCBhcyBkYXNhZGFzIGFzIGRhcyBkYXNhZGFzIGFzIGRhcyBkYXNhZGFzZGFzZCBhcyBkYXNhIGRhcyBkYXNhIGRhcyBkYXNhIGRhcyBkYXNhIGRhcyBkYXNhIGRhcyBkYXNhIGFzIGRhcyBkYXNhIGRhcyBkYXNhZGFzIGRhcyBkYXNhZGphcyBkYXNhIGRhcyBkYXNhIGRhcyBkYXNhIGRhcyBkYXNhIGRhcyBkYXNhIGRhcyBkYXNhIGRhcyBkYXNhIGRhcyBkYXNhIGRhcyBkYXNhIGRhcyBkYXNhZGFzIGRhcyBkYXNhIGRhcyBkYXNhIGRhcyBkYXNhIGRhcyBkYXNhIGRhcyBkYXNhIGRhcyBkYXNhIGRhcyBkYXNhZGphcyIsImlhdCI6MTYzNDEwNTUyMn0.S7G4f8pW7sGJ7t9PIShNElA0RRve-HlPfZRvX8hnZ6c";
+	var validIssuer = configuration["Jwt:Issuer"] ?? "https://joydipkanjilal.com/";
+	var validAudience = configuration["Jwt:Audience"] ?? "https://joydipkanjilal.com/";
+	var issuerSigningKey = configuration["Jwt:Key"] ??
+						   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkZGFzYWRoYXNiZCBhc2RhZHMgc2Rhc3AgZGFzIGRhc2RhcyBhc2RhcyBkYXNkIGFzZGFzZGFzZCBhcyBkYXNhZGFzIGFzIGRhcyBkYXNhZGFzIGFzIGRhcyBkYXNhZGFzZGFzZCBhcyBkYXNhIGRhcyBkYXNhIGRhcyBkYXNhIGRhcyBkYXNhIGRhcyBkYXNhIGRhcyBkYXNhIGFzIGRhcyBkYXNhIGRhcyBkYXNhZGFzIGRhcyBkYXNhZGphcyBkYXNhIGRhcyBkYXNhIGRhcyBkYXNhIGRhcyBkYXNhIGRhcyBkYXNhIGRhcyBkYXNhIGRhcyBkYXNhIGRhcyBkYXNhIGRhcyBkYXNhIGRhcyBkYXNhZGFzIGRhcyBkYXNhIGRhcyBkYXNhIGRhcyBkYXNhIGRhcyBkYXNhIGRhcyBkYXNhIGRhcyBkYXNhIGRhcyBkYXNhZGphcyIsImlhdCI6MTYzNDEwNTUyMn0.S7G4f8pW7sGJ7t9PIShNElA0RRve-HlPfZRvX8hnZ6c";
 
 	o.TokenValidationParameters = new TokenValidationParameters
 	{
