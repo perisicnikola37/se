@@ -19,7 +19,6 @@ public class AuthController : ControllerBase
         _authService = authService;
     }
 
-
     [HttpPost("Login")]
     public async Task<ActionResult<User>> LogInUser(LogInUser user)
     {
