@@ -8,7 +8,7 @@ namespace Presentation.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class ExpenseGroupController(MainDatabaseContext context, IValidator<ExpenseGroup> validator) : ControllerBase
+public class ExpenseGroupController(DatabaseContext context, IValidator<ExpenseGroup> validator) : ControllerBase
 {
 	// GET: api/ExpenseGroup
 	[HttpGet]
@@ -44,7 +44,7 @@ public class ExpenseGroupController(MainDatabaseContext context, IValidator<Expe
 				return Ok(simplifiedExpenseGroups);
 			}
 
-			return NotFound();
+			return Ok(expenseGroups);
 		}
 		catch (Exception e)
 		{

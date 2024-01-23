@@ -7,7 +7,7 @@ namespace Presentation.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class ReminderController(MainDatabaseContext context) : ControllerBase
+public class ReminderController(DatabaseContext context) : ControllerBase
 {
     // GET: api/Reminder
     [HttpGet]
@@ -17,7 +17,7 @@ public class ReminderController(MainDatabaseContext context) : ControllerBase
 
         if (reminders.Count != 0)
             return reminders;
-        return NotFound();
+        return Ok(reminders);
     }
 
     // GET: api/Reminder/5

@@ -6,14 +6,14 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Contexts;
 
-public class MainDatabaseContext : DbContext, IMainDatabaseContext
+public class DatabaseContext : DbContext, IDatabaseContext
 {
-	public MainDatabaseContext(DbContextOptions<MainDatabaseContext> options) : base(options)
+	public DatabaseContext(DbContextOptions<DatabaseContext> options) : base(options)
 	{
 	}
 	
 	 // Parameterless constructor
-    public MainDatabaseContext() : base()
+    public DatabaseContext() : base()
     {
     }
 
@@ -84,13 +84,10 @@ public class MainDatabaseContext : DbContext, IMainDatabaseContext
 			.OnDelete(DeleteBehavior.Cascade);
 	}
 
-	private string HashPassword(string password)
-	{
-		using (var sha256 = SHA256.Create())
-		{
-			var hashedBytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(password));
+	private static string HashPassword(string password)
+    {
+        var hashedBytes = SHA256.HashData(Encoding.UTF8.GetBytes(password));
 
-			return BitConverter.ToString(hashedBytes).Replace("-", "").ToLower();
-		}
-	}
+        return BitConverter.ToString(hashedBytes).Replace("-", "").ToLower();
+    }
 }

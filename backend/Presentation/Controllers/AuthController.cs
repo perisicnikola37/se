@@ -1,71 +1,93 @@
 using Domain.Interfaces;
 using Domain.Models;
 using FluentValidation;
-using Infrastructure.Contexts;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
-namespace Presentation.Controllers;
-
-[Route("api/[controller]")]
-[ApiController]
-public class AuthController : ControllerBase
+namespace Presentation.Controllers
 {
-	private readonly IAuthService _authService;
-	private readonly MainDatabaseContext _context;
-	private readonly IValidator<User> _validator;
-
-	public AuthController(MainDatabaseContext context, IAuthService authService, IValidator<User> validator)
+	[Route("api/[controller]")]
+	[ApiController]
+	public class AuthController(
+		IAuthService authService,
+		IValidator<User> validator,
+		ILogger<AuthController> logger,
+		GetCurrentUserService getCurrentUserService) : ControllerBase
 	{
-		_context = context;
-		_authService = authService;
-		_validator = validator;
-	}
+		private readonly IAuthService _authService = authService ?? throw new ArgumentNullException(nameof(authService));
+		private readonly IValidator<User> _validator = validator ?? throw new ArgumentNullException(nameof(validator));
+		private readonly GetCurrentUserService _getCurrentUserService = getCurrentUserService ?? throw new ArgumentNullException(nameof(getCurrentUserService));
+		private readonly ILogger<AuthController> _logger = logger ?? throw new ArgumentNullException(nameof(logger));
 
-	[HttpPost("Login")]
-	public async Task<ActionResult<User>> LogInUser(LogInUser user)
-	{
-		// AuthService
-		var userWithToken = await _authService.LogInUserAsync(user);
-
-		if (userWithToken == null!) return NotFound(new { message = "Invalid email or password" });
-
-		return Ok(new { message = "User logged in successfully", user = userWithToken });
-	}
-
-	// POST: api/Auth/Register
-	[HttpPost("Register")]
-	public async Task<ActionResult<User>> RegisterUser(User userRegistration)
-	{
-		var validationResult = await _validator.ValidateAsync(userRegistration);
-		if (!validationResult.IsValid)
+		[HttpPost("Login")]
+		public async Task<ActionResult<User>> LogInUserAsync(LogInUser user)
 		{
-			return BadRequest(validationResult.Errors);
+			try
+			{
+				var userWithToken = await _authService.LogInUserAsync(user);
+
+				if (userWithToken == null)
+				{
+					_logger.LogWarning("Invalid email or password for login attempt.");
+
+					// Return a 403 Forbidden status code
+					return Unauthorized(new { message = "Invalid email or password" });
+				}
+
+				_logger.LogInformation("User logged in successfully.");
+
+				return Ok(new { message = "User logged in successfully", user = userWithToken });
+			}
+			catch (Exception ex)
+			{
+				_logger.LogError(ex, "An error occurred during login.");
+
+				return StatusCode(500, new { message = "An error occurred during login" });
+			}
 		}
-		else
+
+		[HttpPost("Register")]
+		public async Task<ActionResult<User>> RegisterUserAsync(User userRegistration)
 		{
-			return await _authService.RegisterUserAsync(userRegistration);
+			try
+			{
+				var validationResult = await _validator.ValidateAsync(userRegistration);
+
+				if (!validationResult.IsValid)
+				{
+					_logger.LogWarning("User registration validation failed.");
+
+					return BadRequest(validationResult.Errors);
+				}
+				else
+				{
+					var registeredUser = await _authService.RegisterUserAsync(userRegistration);
+					_logger.LogInformation("User registered successfully.");
+
+					return registeredUser;
+				}
+			}
+			catch (Exception ex)
+			{
+				_logger.LogError(ex, "An error occurred during user registration.");
+
+				return StatusCode(500, new { message = "An error occurred during user registration" });
+			}
 		}
-	}
 
-	/// POST: api/Auth/CurrentUser
-	[HttpGet("CurrentUser")]
-	public ActionResult<LoggedInUser> GetCurrentUser()
-	{
-		foreach (var claim in User.Claims) Console.WriteLine($"Claim Type: {claim.Type}, Claim Value: {claim.Value}");
+		[HttpGet("CurrentUser")]
+		public ActionResult<LoggedInUser> GetCurrentUser()
+		{
+			try
+			{
+				return _getCurrentUserService.GetCurrentUser();
+			}
+			catch (Exception ex)
+			{
+				_logger.LogError(ex, "An error occurred while getting the current user.");
 
-		var userIdClaim = User.Claims.FirstOrDefault(c => c.Type == "Id");
-		if (userIdClaim == null || !int.TryParse(userIdClaim.Value, out var userId))
-			return BadRequest(new { message = "Invalid user claims" });
-
-		var user = _context.Users
-			.Include(u => u.Expenses)
-			.Include(u => u.Incomes)
-			.Include(u => u.Blogs)
-			.FirstOrDefault(u => u.Id == userId);
-
-		if (user == null) return NotFound(new { message = "User not found" });
-
-		return Ok(user);
+				return StatusCode(500, new { message = "An error occurred while getting the current user" });
+			}
+		}
 	}
 }

@@ -12,7 +12,7 @@ namespace Presentation.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class ExpenseController(MainDatabaseContext context, GetAuthenticatedUserIdService getAuthenticatedUserIdService, IValidator<Expense> validator)
+public class ExpenseController(DatabaseContext context, GetAuthenticatedUserIdService getAuthenticatedUserIdService, IValidator<Expense> validator)
 	: ControllerBase
 {
 	// GET: api/Expense
@@ -53,6 +53,7 @@ public class ExpenseController(MainDatabaseContext context, GetAuthenticatedUser
 		// TRYING CUSTOM TEMPLATE 
 		// var expense = await _context.Expenses.FindAsync(id);
 		var expense = await context.Expenses.FindAsync(id);
+		
 		return Ok(new Response<Expense>(expense!));
 
 		// if (expense == null)

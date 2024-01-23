@@ -9,7 +9,7 @@ namespace Presentation.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class BlogController(MainDatabaseContext context, GetAuthenticatedUserIdService getAuthenticatedUserIdService, IValidator<Blog> validator) : ControllerBase
+public class BlogController(DatabaseContext context, GetAuthenticatedUserIdService getAuthenticatedUserIdService, IValidator<Blog> validator) : ControllerBase
 {
 	// GET: api/Blog
 	[HttpGet]
@@ -17,9 +17,12 @@ public class BlogController(MainDatabaseContext context, GetAuthenticatedUserIdS
 	{
 		var blogs = await context.Blogs.OrderByDescending(e => e.CreatedAt).ToListAsync();
 
-		if (blogs.Count() != 0)
-			return blogs;
-		return NotFound();
+		if (blogs.Count != 0)
+		{
+			return Ok(blogs);
+		}
+
+		return Ok(new List<Blog>());
 	}
 
 	// GET: api/Blog/5

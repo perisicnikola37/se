@@ -8,7 +8,7 @@ namespace Presentation.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class IncomeGroupController(MainDatabaseContext context, IValidator<IncomeGroup> validator) : ControllerBase
+public class IncomeGroupController(DatabaseContext context, IValidator<IncomeGroup> validator) : ControllerBase
 {
     // GET: api/IncomeGroup
     [HttpGet]
@@ -44,7 +44,7 @@ public class IncomeGroupController(MainDatabaseContext context, IValidator<Incom
                 return Ok(simplifiedIncomeGroups);
             }
 
-            return NotFound();
+            return Ok(incomeGroups);
         }
         catch (Exception e)
         {
