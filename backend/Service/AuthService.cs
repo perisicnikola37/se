@@ -12,7 +12,7 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace Service;
 
-public class AuthService : IAuthService
+public class AuthService(MainDatabaseContext context, IConfiguration configuration) : IAuthService
 {
 	private readonly IConfiguration _configuration;
 	private readonly MainDatabaseContext _context;
@@ -66,12 +66,12 @@ public class AuthService : IAuthService
 		return newUser;
 	}
 
-	private string GenerateJwtToken(User user)
-	{
-		var issuer = _configuration["Jwt:Issuer"];
-		var audience = _configuration["Jwt:Audience"];
-		var key = Encoding.ASCII.GetBytes(_configuration["Jwt:Key"] ??
-										  "ddsadhasbd asdadsad sdas dasd asdasdasd as dasd sad sadas dadssndn asdnasjdnas jd asdas dasjdnas jn dsjan dasjn djasn djasndasjndjasndajsn djnasjnd");
+    public string GenerateJwtToken(User user)
+    {
+        var issuer = _configuration["Jwt:Issuer"];
+        var audience = _configuration["Jwt:Audience"];
+        var key = Encoding.ASCII.GetBytes(_configuration["Jwt:Key"] ??
+                                          "ddsadhasbd asdadsad sdas dasd asdasdasd as dasd sad sadas dadssndn asdnasjdnas jd asdas dasjdnas jn dsjan dasjn djasn djasndasjndjasndajsn djnasjnd");
 
 		var tokenDescriptor = new SecurityTokenDescriptor
 		{
@@ -93,24 +93,18 @@ public class AuthService : IAuthService
 		return tokenHandler.WriteToken(tokenHandler.CreateToken(tokenDescriptor));
 	}
 
-	public string HashPassword(string password)
-	{
-		using (var sha256 = SHA256.Create())
-		{
-			var hashedBytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(password));
+    public static string HashPassword(string password)
+    {
+        var hashedBytes = SHA256.HashData(Encoding.UTF8.GetBytes(password));
 
-			return BitConverter.ToString(hashedBytes).Replace("-", "").ToLower();
-		}
-	}
+        return BitConverter.ToString(hashedBytes).Replace("-", "").ToLower();
+    }
 
-	private bool VerifyPassword(string inputPassword, string hashedPassword)
-	{
-		using (var sha256 = SHA256.Create())
-		{
-			var hashedBytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(inputPassword));
-			var inputHashedPassword = BitConverter.ToString(hashedBytes).Replace("-", "").ToLower();
+    public static bool VerifyPassword(string inputPassword, string hashedPassword)
+    {
+        var hashedBytes = SHA256.HashData(Encoding.UTF8.GetBytes(inputPassword));
+        var inputHashedPassword = BitConverter.ToString(hashedBytes).Replace("-", "").ToLower();
 
-			return string.Equals(inputHashedPassword, hashedPassword, StringComparison.OrdinalIgnoreCase);
-		}
-	}
+        return string.Equals(inputHashedPassword, hashedPassword, StringComparison.OrdinalIgnoreCase);
+    }
 }

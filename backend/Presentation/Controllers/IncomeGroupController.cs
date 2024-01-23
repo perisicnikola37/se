@@ -10,6 +10,7 @@ namespace Presentation.Controllers;
 [ApiController]
 public class IncomeGroupController(MainDatabaseContext context, IValidator<IncomeGroup> validator) : ControllerBase
 {
+<<<<<<< f761a5018843e15eab521a84eef4beaa05940ca2
 	// GET: api/IncomeGroup
 	[HttpGet]
 	public async Task<ActionResult<IEnumerable<IncomeGroup>>> GetIncome_groups()
@@ -23,6 +24,50 @@ public class IncomeGroupController(MainDatabaseContext context, IValidator<Incom
 			return incomeGroups;
 		return NotFound();
 	}
+=======
+    // GET: api/IncomeGroup
+    [HttpGet]
+    public async Task<ActionResult<IEnumerable<object>>> GetIncome_groups()
+    {
+        try
+        {
+            var incomeGroups = await context.IncomeGroups
+                .Include(e => e.Incomes)
+                    .ThenInclude(income => income.User)
+                .OrderByDescending(e => e.CreatedAt)
+                .ToListAsync();
+
+            if (incomeGroups.Count != 0)
+            {
+                var simplifiedIncomeGroups = incomeGroups.Select(incomeGroup => new
+                {
+                    incomeGroup.Id,
+                    incomeGroup.Name,
+                    incomeGroup.Description,
+                    Incomes = incomeGroup.Incomes?.Select(income => new
+                    {
+                        income.Id,
+                        income.Description,
+                        income.Amount,
+                        income.CreatedAt,
+                        income.IncomeGroupId,
+                        UserId = income.User?.Id,
+                        UserUsername = income.User?.Username
+                    })
+                });
+
+                return Ok(simplifiedIncomeGroups);
+            }
+
+            return NotFound();
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+>>>>>>> cbe03f3e9b25aa91bdb2cd899c243733b4f0e7d6
 
 	// GET: api/IncomeGroup/5
 	[HttpGet("{id}")]
