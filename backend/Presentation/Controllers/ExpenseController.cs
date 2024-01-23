@@ -7,8 +7,7 @@ namespace Presentation.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class ExpenseController(ExpenseService _expenseService)
-	: ControllerBase
+public class ExpenseController(ExpenseService _expenseService) : ControllerBase
 {
 	// GET: api/Expense
 	[HttpGet]
