@@ -9,14 +9,19 @@ public class JwtTokenGeneratorTests
 {
 	private readonly IConfiguration _configuration;
 
+	private static string GetJwtKey()
+	{
+		return "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.	eyJkZGFzYWRoYXNiZCBhc2RhZHMgc2Rhc3AgZGFzIGRhc2RhcyBhc2RhcyBkYXNkIGFzZGFzZGFzZCBhcyBkYXNhZGFzIGFzIGRhcyBkYXNhZGFzIGFzIGRhcyBkYXNhZGFzZGFzZCBhcyBkYXNhIGRhcyBkYXNhIGRhcyBkYXNhIGRhcyBkYXNhIGRhcyBkYXNhIGRhcyBkYXNhIGRhcyBkYXNhIGFzIGRhcyBkYXNhIGRhcyBkYXNhZGFzIGRhcyBkYXNhZGphcyBkYXNhIGRhcyBkYXNhIGRhcyBkYXNhIGRhcyBkYXNhIGRhcyBkYXNhIGRhcyBkYXNhIGRhcyBkYXNhIGRhcyBkYXNhIGRhcyBkYXNhIGRhcyBkYXNhZGphcyIsImlhdCI6MTYzNDEwNTUyMn0.S7G4f8pW7sGJ7t9PIShNElA0RRve-HlPfZRvX8hnZ6c";
+	}
+
 	public JwtTokenGeneratorTests()
 	{
 		_configuration = new ConfigurationBuilder()
 			.AddInMemoryCollection(new Dictionary<string, string>
 			{
-					{"Jwt:Issuer", "https://joydipkanjilal.com/"},
-					{"Jwt:Audience", "https://joydipkanjilal.com/"},
-					{"Jwt:Key", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.	eyJkZGFzYWRoYXNiZCBhc2RhZHMgc2Rhc3AgZGFzIGRhc2RhcyBhc2RhcyBkYXNkIGFzZGFzZGFzZCBhcyBkYXNhZGFzIGFzIGRhcyBkYXNhZGFzIGFzIGRhcyBkYXNhZGFzZGFzZCBhcyBkYXNhIGRhcyBkYXNhIGRhcyBkYXNhIGRhcyBkYXNhIGRhcyBkYXNhIGRhcyBkYXNhIGRhcyBkYXNhIGFzIGRhcyBkYXNhIGRhcyBkYXNhZGFzIGRhcyBkYXNhZGphcyBkYXNhIGRhcyBkYXNhIGRhcyBkYXNhIGRhcyBkYXNhIGRhcyBkYXNhIGRhcyBkYXNhIGRhcyBkYXNhIGRhcyBkYXNhIGRhcyBkYXNhIGRhcyBkYXNhZGphcyIsImlhdCI6MTYzNDEwNTUyMn0.S7G4f8pW7sGJ7t9PIShNElA0RRve-HlPfZRvX8hnZ6c"}
+				{"Jwt:Issuer", "https://joydipkanjilal.com/"},
+				{"Jwt:Audience", "https://joydipkanjilal.com/"},
+				{"Jwt:Key", GetJwtKey()}
 			})
 			.Build();
 	}
@@ -51,7 +56,7 @@ public class JwtTokenGeneratorTests
 			ValidateIssuer = true,
 			ValidateAudience = true,
 			ValidateIssuerSigningKey = true,
-			IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_configuration["Jwt:Key"] ?? "key")),
+			IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(GetJwtKey())),
 			ValidIssuer = _configuration["Jwt:Issuer"],
 			ValidAudience = _configuration["Jwt:Audience"],
 		};
@@ -59,6 +64,25 @@ public class JwtTokenGeneratorTests
 		tokenHandler.ValidateToken(token, validationParameters, out SecurityToken validatedToken);
 
 		Assert.NotNull(validatedToken);
+
+		// Additional granular assertions about claims
+		var jwtToken = validatedToken as JwtSecurityToken;
+		Assert.NotNull(jwtToken);
+
+		// Example: Check user ID claim
+		var userIdClaim = jwtToken?.Claims.FirstOrDefault(c => c.Type == "Id");
+		Assert.NotNull(userIdClaim);
+		Assert.Equal(user.Id.ToString(), userIdClaim.Value);
+
+		// Example: Check username claim
+		var usernameClaim = jwtToken?.Claims.FirstOrDefault(c => c.Type == "sub");
+		Assert.NotNull(usernameClaim);
+		Assert.Equal(user.Username, usernameClaim.Value);
+
+		// Example: Check email claim
+		var emailClaim = jwtToken?.Claims.FirstOrDefault(c => c.Type == "email");
+		Assert.NotNull(emailClaim);
+		Assert.Equal(user.Email, emailClaim.Value);
 	}
 }
 
