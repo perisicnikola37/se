@@ -3,6 +3,7 @@ using Domain.Models;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Service;
 
 namespace Presentation.Controllers
 {
