@@ -9,7 +9,7 @@ namespace Presentation.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class BlogController(MainDatabaseContext context, GetAuthenticatedUserIdService getAuthenticatedUserIdService, IValidator<Blog> validator) : ControllerBase
+public class BlogController(DatabaseContext context, GetAuthenticatedUserIdService getAuthenticatedUserIdService, IValidator<Blog> validator) : ControllerBase
 {
 	// GET: api/Blog
 	[HttpGet]

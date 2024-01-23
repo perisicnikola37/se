@@ -10,7 +10,7 @@ namespace Presentation.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class UserController(MainDatabaseContext context, EmailService emailservice, IValidator <User> validator) : ControllerBase
+public class UserController(DatabaseContext context, EmailService emailservice, IValidator <User> validator) : ControllerBase
 {
 	// GET: api/User
 	[HttpGet]

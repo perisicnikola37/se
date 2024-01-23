@@ -12,10 +12,10 @@ namespace Presentation.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class IncomeController(MainDatabaseContext context, GetAuthenticatedUserIdService getAuthenticatedUserIdService, IValidator <Income> validator)
+public class IncomeController(DatabaseContext context, GetAuthenticatedUserIdService getAuthenticatedUserIdService, IValidator <Income> validator)
 	: ControllerBase
 {
-	private readonly MainDatabaseContext _context = context;
+	private readonly DatabaseContext _context = context;
 	private readonly GetAuthenticatedUserIdService _getAuthenticatedUserIdService = getAuthenticatedUserIdService;
 
 	// GET: api/Income

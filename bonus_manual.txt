@@ -1,7 +1,7 @@
 Bonus Manual
 
 1. Database Seeding:
-To seed the database, navigate to line 24 in the file "MainDatabaseContext.cs". Note: Currently, only the seeding option for the "Blogs" model is available. Please be aware of this limitation.
+To seed the database, navigate to line 24 in the file "DatabaseContext.cs". Note: Currently, only the seeding option for the "Blogs" model is available. Please be aware of this limitation.
 
 2. Environment Variable Configuration:
 Modify connection strings, JWT (JSON Web Token), or email environment variable values by accessing the "appsettings.json" file.

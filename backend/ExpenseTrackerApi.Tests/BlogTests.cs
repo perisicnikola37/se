@@ -37,11 +37,11 @@ public class BlogControllerTests(DatabaseFixture fixture) : IClassFixture<Databa
 	public async Task GetBlog_ReturnsBlogById()
 	{
 		// Arrange
-		var options = new DbContextOptionsBuilder<MainDatabaseContext>()
+		var options = new DbContextOptionsBuilder<DatabaseContext>()
 			.UseInMemoryDatabase(databaseName: "TestDatabase")
 			.Options;
 
-		using var context = new MainDatabaseContext(options);
+		using var context = new DatabaseContext(options);
 		var getAuthenticatedUserIdService = new GetAuthenticatedUserIdService();
 
 		// Create an instance of the controller
@@ -68,11 +68,11 @@ public class BlogControllerTests(DatabaseFixture fixture) : IClassFixture<Databa
 	public async Task PutBlog_UpdatesBlog()
 	{
 		// Arrange
-		var options = new DbContextOptionsBuilder<MainDatabaseContext>()
+		var options = new DbContextOptionsBuilder<DatabaseContext>()
 			.UseInMemoryDatabase(databaseName: "TestDatabase")
 			.Options;
 
-		using var context = new MainDatabaseContext(options);
+		using var context = new DatabaseContext(options);
 		var getAuthenticatedUserIdService = new GetAuthenticatedUserIdService();
 
 		// Create an instance of the controller 
@@ -101,11 +101,11 @@ public class BlogControllerTests(DatabaseFixture fixture) : IClassFixture<Databa
 	public async Task DeleteBlog_RemovesBlog()
 	{
 		// Arrange
-		var options = new DbContextOptionsBuilder<MainDatabaseContext>()
+		var options = new DbContextOptionsBuilder<DatabaseContext>()
 			.UseInMemoryDatabase(databaseName: "TestDatabase")
 			.Options;
 
-		using var context = new MainDatabaseContext(options);
+		using var context = new DatabaseContext(options);
 		var getAuthenticatedUserIdService = new GetAuthenticatedUserIdService();
 
 		// Create an instance of the controller 

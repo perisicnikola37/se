@@ -12,7 +12,7 @@ namespace Presentation.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class ExpenseController(MainDatabaseContext context, GetAuthenticatedUserIdService getAuthenticatedUserIdService, IValidator<Expense> validator)
+public class ExpenseController(DatabaseContext context, GetAuthenticatedUserIdService getAuthenticatedUserIdService, IValidator<Expense> validator)
 	: ControllerBase
 {
 	// GET: api/Expense

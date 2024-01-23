@@ -27,7 +27,7 @@ builder.Services.AddCors(options =>
 var connectionString = configuration["DefaultConnection"];
 if (connectionString == null) throw new ArgumentNullException(nameof(connectionString), "DefaultConnection is null");
 
-builder.Services.AddDbContext<MainDatabaseContext>(options =>
+builder.Services.AddDbContext<DatabaseContext>(options =>
 {
 	options.UseMySql(
 		connectionString,

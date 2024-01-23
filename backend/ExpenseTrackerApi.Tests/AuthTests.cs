@@ -6,7 +6,7 @@ namespace ExpenseTrackerApi.Tests;
 
 public class AuthControllerTests
 {
-	private readonly Mock<MainDatabaseContext> dbContextMock = new();
+	private readonly Mock<DatabaseContext> dbContextMock = new();
 	private readonly Mock<IAuthService> authServiceMock = new();
 	private readonly Mock<IValidator<User>> validatorMock = new();
 

@@ -30,7 +30,7 @@ public class JwtTokenGeneratorTests
 	public void GenerateJwtToken_ValidUser_ReturnsValidToken()
 	{
 		// Arrange
-		var dbContextMock = new Mock<MainDatabaseContext>();
+		var dbContextMock = new Mock<DatabaseContext>();
 
 		// Create a mock user object
 		var user = new User

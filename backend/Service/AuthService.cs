@@ -12,7 +12,7 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace Service;
 
-public class AuthService(MainDatabaseContext _context, IConfiguration _configuration) : IAuthService
+public class AuthService(DatabaseContext _context, IConfiguration _configuration) : IAuthService
 {
 	public async Task<LoggedInUser?> LogInUserAsync(LogInUser user)
 	{

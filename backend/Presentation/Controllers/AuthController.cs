@@ -12,10 +12,10 @@ namespace Presentation.Controllers;
 public class AuthController : ControllerBase
 {
 	private readonly IAuthService _authService;
-	private readonly MainDatabaseContext _context;
+	private readonly DatabaseContext _context;
 	private readonly IValidator<User> _validator;
 
-	public AuthController(MainDatabaseContext context, IAuthService authService, IValidator<User> validator)
+	public AuthController(DatabaseContext context, IAuthService authService, IValidator<User> validator)
 	{
 		_context = context;
 		_authService = authService;
