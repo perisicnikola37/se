@@ -1,7 +1,4 @@
-using Service;
-
-namespace ExpenseTrackerApi.Tests
-{
+namespace ExpenseTrackerApi.Tests;
 	public class UtilitiesTests
 	{
 		[Fact]
@@ -37,4 +34,4 @@ namespace ExpenseTrackerApi.Tests
 			Assert.False(result);
 		}
 	}
-}
+

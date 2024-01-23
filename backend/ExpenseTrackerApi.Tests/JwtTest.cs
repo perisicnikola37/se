@@ -3,7 +3,6 @@ using System.Text;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using Moq;
-using Service;
 
 namespace ExpenseTrackerApi.Tests;
 	public class JwtTokenGeneratorTests

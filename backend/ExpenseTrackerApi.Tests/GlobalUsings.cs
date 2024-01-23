@@ -4,3 +4,4 @@ global using Infrastructure.Contexts;
 global using Microsoft.AspNetCore.Mvc;
 global using Microsoft.EntityFrameworkCore;
 global using Presentation.Controllers;
+global using Service;
