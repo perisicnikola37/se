@@ -52,6 +52,8 @@ builder.Services.AddScoped<IValidator<Income>, IncomeValidator>();
 builder.Services.AddScoped<IValidator<User>, UserValidator>();
 
 // services
+builder.Services.AddHttpContextAccessor(); 
+builder.Services.AddScoped<GetCurrentUserService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<EmailService>();
 builder.Services.AddScoped<GetAuthenticatedUserIdService>();
@@ -85,7 +87,6 @@ builder.Services.AddAuthorization();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-
 builder.Services.AddRateLimiter(rateLimiterOptions => rateLimiterOptions
 	.AddFixedWindowLimiter("fixed", options =>
 	{
