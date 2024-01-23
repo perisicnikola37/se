@@ -6,19 +6,13 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Service;
 
-public class GetCurrentUserService
+public class GetCurrentUserService(IHttpContextAccessor httpContextAccessor, DatabaseContext context)
 {
 	private const string UserIdClaimType = "Id"; 
-	private readonly IHttpContextAccessor _httpContextAccessor;
-	private readonly DatabaseContext _context;
+	private readonly IHttpContextAccessor _httpContextAccessor = httpContextAccessor ?? throw new ArgumentNullException(nameof(httpContextAccessor));
+	private readonly DatabaseContext _context = context ?? throw new ArgumentNullException(nameof(context));
 
-	public GetCurrentUserService(IHttpContextAccessor httpContextAccessor, DatabaseContext context)
-	{
-		_httpContextAccessor = httpContextAccessor ?? throw new ArgumentNullException(nameof(httpContextAccessor));
-		_context = context ?? throw new ArgumentNullException(nameof(context));
-	}
-
-	public ActionResult<LoggedInUser> GetCurrentUser()
+    public ActionResult<LoggedInUser> GetCurrentUser()
 	{
 		foreach (var claim in _httpContextAccessor.HttpContext.User.Claims)
 		{
