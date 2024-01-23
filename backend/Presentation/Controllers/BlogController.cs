@@ -36,9 +36,9 @@ public class BlogController(MainDatabaseContext context, GetAuthenticatedUserIdS
 	// PUT: api/Blog/5
 	// To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
 	[HttpPut("{id}")]
-    public async Task<IActionResult> PutBlog(int id, Blog blog)
-    {
-        if (id != blog.Id) return BadRequest();
+	public async Task<IActionResult> PutBlog(int id, Blog blog)
+	{
+		if (id != blog.Id) return BadRequest();
 
 		context.Entry(blog).State = EntityState.Modified;
 

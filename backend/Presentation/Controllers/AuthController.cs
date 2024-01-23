@@ -22,7 +22,6 @@ public class AuthController : ControllerBase
 		_validator = validator;
 	}
 
-
 	[HttpPost("Login")]
 	public async Task<ActionResult<User>> LogInUser(LogInUser user)
 	{

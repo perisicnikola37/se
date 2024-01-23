@@ -1,10 +1,16 @@
+using FluentValidation;
+using Moq;
+
 namespace ExpenseTrackerApi.Tests;
 
 public class BlogControllerTests
 {
+	private readonly Mock<IValidator<Blog>> validatorMock = new();
+
 	[Fact]
 	public async Task GetBlogs_ReturnsListOfBlogs()
 	{
+		// Arrange
 		var options = new DbContextOptionsBuilder<MainDatabaseContext>()
 			.UseInMemoryDatabase(databaseName: "TestDatabase")
 			.Options;
@@ -12,7 +18,8 @@ public class BlogControllerTests
 		using var context = new MainDatabaseContext(options);
 		var getAuthenticatedUserIdService = new GetAuthenticatedUserIdService();
 
-		var controller = new BlogController(context, getAuthenticatedUserIdService);
+		// Create an instance of the controller
+		var controller = new BlogController(context, getAuthenticatedUserIdService, validatorMock.Object);
 
 		// Add some test blogs to the database
 		await context.Blogs.AddRangeAsync(
@@ -21,8 +28,10 @@ public class BlogControllerTests
 		);
 		await context.SaveChangesAsync();
 
+		// Act
 		var result = await controller.GetBlogs();
 
+		// Assert
 		var blogs = Assert.IsType<List<Blog>>(result.Value);
 		Assert.Equal(4, blogs.Count);
 	}
@@ -30,6 +39,7 @@ public class BlogControllerTests
 	[Fact]
 	public async Task GetBlog_ReturnsBlogById()
 	{
+		// Arrange
 		var options = new DbContextOptionsBuilder<MainDatabaseContext>()
 			.UseInMemoryDatabase(databaseName: "TestDatabase")
 			.Options;
@@ -37,14 +47,18 @@ public class BlogControllerTests
 		using var context = new MainDatabaseContext(options);
 		var getAuthenticatedUserIdService = new GetAuthenticatedUserIdService();
 
-		var controller = new BlogController(context, getAuthenticatedUserIdService);
+		// Create an instance of the controller
+		var controller = new BlogController(context, getAuthenticatedUserIdService, validatorMock.Object);
 
+		// Create a test blog and add it to the in-memory database
 		var testBlog = new Blog { Description = "Test Blog", Author = "John Doe", Text = "Test Text", UserId = 1, CreatedAt = DateTime.Now };
 		await context.Blogs.AddAsync(testBlog);
 		await context.SaveChangesAsync();
 
+		// Act
 		var result = await controller.GetBlog(testBlog.Id);
 
+		// Assert
 		var blog = Assert.IsType<Blog>(result.Value);
 		Assert.Equal(testBlog.Description, blog.Description);
 		Assert.Equal(testBlog.Author, blog.Author);
@@ -56,6 +70,7 @@ public class BlogControllerTests
 	[Fact]
 	public async Task PutBlog_UpdatesBlog()
 	{
+		// Arrange
 		var options = new DbContextOptionsBuilder<MainDatabaseContext>()
 			.UseInMemoryDatabase(databaseName: "TestDatabase")
 			.Options;
@@ -63,16 +78,21 @@ public class BlogControllerTests
 		using var context = new MainDatabaseContext(options);
 		var getAuthenticatedUserIdService = new GetAuthenticatedUserIdService();
 
-		var controller = new BlogController(context, getAuthenticatedUserIdService);
+		// Create an instance of the controller 
+		var controller = new BlogController(context, getAuthenticatedUserIdService, validatorMock.Object);
 
+		// Create a test blog and add it to the in-memory database
 		var testBlog = new Blog { Description = "Test Blog", Author = "John Doe", Text = "Test Text", UserId = 1, CreatedAt = DateTime.Now };
 		await context.Blogs.AddAsync(testBlog);
 		await context.SaveChangesAsync();
 
+		// Modify the test blog with updated information
 		testBlog.Description = "Updated Description";
 
+		// Act
 		var result = await controller.PutBlog(testBlog.Id, testBlog);
 
+		// Assert
 		Assert.IsType<NoContentResult>(result);
 
 		// Check if the blog was actually updated in the database
@@ -83,6 +103,7 @@ public class BlogControllerTests
 	[Fact]
 	public async Task DeleteBlog_RemovesBlog()
 	{
+		// Arrange
 		var options = new DbContextOptionsBuilder<MainDatabaseContext>()
 			.UseInMemoryDatabase(databaseName: "TestDatabase")
 			.Options;
@@ -90,8 +111,10 @@ public class BlogControllerTests
 		using var context = new MainDatabaseContext(options);
 		var getAuthenticatedUserIdService = new GetAuthenticatedUserIdService();
 
-		var controller = new BlogController(context, getAuthenticatedUserIdService);
+		// Create an instance of the controller 
+		var controller = new BlogController(context, getAuthenticatedUserIdService, validatorMock.Object);
 
+		// Create a test blog and add it to the in-memory database
 		var testBlog = new Blog { Description = "Test Blog", Author = "John Doe", Text = "Test Text", UserId = 1, CreatedAt = DateTime.Now };
 		await context.Blogs.AddAsync(testBlog);
 		await context.SaveChangesAsync();
@@ -102,6 +125,7 @@ public class BlogControllerTests
 		// Assert
 		Assert.IsType<NoContentResult>(result);
 
+		// Check if the blog was actually deleted from the database
 		var deletedBlog = await context.Blogs.FindAsync(testBlog.Id);
 		Assert.Null(deletedBlog);
 	}
