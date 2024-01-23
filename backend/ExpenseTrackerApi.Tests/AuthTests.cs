@@ -58,6 +58,7 @@ public class AuthControllerTests
 
 		var actualErrorMessage =
 			(string)notFoundResult.Value.GetType().GetProperty("message")!.GetValue(notFoundResult.Value, null)!;
+
 		Assert.Equal("Invalid email or password", actualErrorMessage);
 	}
 }

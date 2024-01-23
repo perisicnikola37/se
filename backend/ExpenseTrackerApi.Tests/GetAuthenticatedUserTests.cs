@@ -1,67 +1,64 @@
 using System.Security.Claims;
 
-namespace ExpenseTrackerApi.Tests;
-public class GetAuthenticatedUserIdServiceTests
+namespace ExpenseTrackerApi.Tests
 {
-	[Fact]
-	public void GetUserId_ShouldReturnUserId_WhenValidClaimsProvided()
-	{
-		// Arrange
-		// Create an instance of the GetAuthenticatedUserIdService 
-		var service = new GetAuthenticatedUserIdService();
-		// Create claims with a user ID for testing
-		var claims = new List<Claim>
-		{
-			new("Id", "123")
-		};
+    public class GetAuthenticatedUserIdServiceTests
+    {
+        private readonly GetAuthenticatedUserIdService _service;
 
-		// Create a ClaimsPrincipal with the test claims
-		var user = new ClaimsPrincipal(new ClaimsIdentity(claims, "TestAuthentication"));
+        public GetAuthenticatedUserIdServiceTests()
+        {
+            _service = new GetAuthenticatedUserIdService();
+        }
 
-		// Act
-		var userId = service.GetUserId(user);
+        [Fact]
+        public void GetUserId_ShouldReturnUserId_WhenValidClaimsProvided()
+        {
+            // Arrange
+            var claims = new List<Claim>
+            {
+                new("Id", "123")
+            };
 
-		// Assert
-		Assert.NotNull(userId);
-		Assert.Equal(123, userId);
-	}
+            var user = new ClaimsPrincipal(new ClaimsIdentity(claims, "TestAuthentication"));
 
-	[Fact]
-	public void GetUserId_ShouldReturnNull_WhenNoIdClaim()
-	{
-		// Arrange
-		// Create an instance of the GetAuthenticatedUserIdService under test
-		var service = new GetAuthenticatedUserIdService();
+            // Act
+            var userId = _service.GetUserId(user);
 
-		// Create a ClaimsPrincipal without any claims
-		var user = new ClaimsPrincipal(new ClaimsIdentity());
+            // Assert
+            Assert.NotNull(userId);
+            Assert.Equal(123, userId);
+        }
 
-		// Act
-		var userId = service.GetUserId(user);
+        [Fact]
+        public void GetUserId_ShouldReturnNull_WhenNoIdClaim()
+        {
+            // Arrange
+            var user = new ClaimsPrincipal(new ClaimsIdentity());
 
-		// Assert
-		Assert.Null(userId);
-	}
+            // Act
+            var userId = _service.GetUserId(user);
 
-	[Fact]
-	public void GetUserId_ShouldReturnNull_WhenInvalidIdClaim()
-	{
-		// Arrange
-		var service = new GetAuthenticatedUserIdService();
+            // Assert
+            Assert.Null(userId);
+        }
 
-		// Create claims with an invalid (non-numeric) user ID for testing
-		var claims = new List<Claim>
-		{
-		new("Id", "invalid")
-		};
+        [Fact]
+        public void GetUserId_ShouldReturnNull_WhenInvalidIdClaim()
+        {
+            // Arrange
+            var claims = new List<Claim>
+            {
+                new("Id", "invalid")
+            };
 
-		// Create a ClaimsPrincipal with the test claims
-		var user = new ClaimsPrincipal(new ClaimsIdentity(claims, "TestAuthentication"));
+            var user = new ClaimsPrincipal(new ClaimsIdentity(claims, "TestAuthentication"));
 
-		// Act
-		var userId = service.GetUserId(user);
+            // Act
+            var userId = _service.GetUserId(user);
 
-		// Assert
-		Assert.Null(userId);
-	}
+            // Assert
+            Assert.Null(userId);
+        }
+    }
 }
