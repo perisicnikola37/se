@@ -44,7 +44,7 @@ public class ExpenseGroupController(DatabaseContext context, IValidator<ExpenseG
 				return Ok(simplifiedExpenseGroups);
 			}
 
-			return NotFound();
+			return Ok(expenseGroups);
 		}
 		catch (Exception e)
 		{

@@ -17,9 +17,12 @@ public class BlogController(DatabaseContext context, GetAuthenticatedUserIdServi
 	{
 		var blogs = await context.Blogs.OrderByDescending(e => e.CreatedAt).ToListAsync();
 
-		if (blogs.Count() != 0)
-			return blogs;
-		return NotFound();
+		if (blogs.Count != 0)
+		{
+			return Ok(blogs);
+		}
+
+		return Ok(new List<Blog>());
 	}
 
 	// GET: api/Blog/5

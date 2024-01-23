@@ -17,7 +17,7 @@ public class ReminderController(DatabaseContext context) : ControllerBase
 
         if (reminders.Count != 0)
             return reminders;
-        return NotFound();
+        return Ok(reminders);
     }
 
     // GET: api/Reminder/5

@@ -53,6 +53,7 @@ public class ExpenseController(DatabaseContext context, GetAuthenticatedUserIdSe
 		// TRYING CUSTOM TEMPLATE 
 		// var expense = await _context.Expenses.FindAsync(id);
 		var expense = await context.Expenses.FindAsync(id);
+		
 		return Ok(new Response<Expense>(expense!));
 
 		// if (expense == null)

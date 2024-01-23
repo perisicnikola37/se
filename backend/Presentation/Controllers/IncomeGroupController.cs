@@ -44,7 +44,7 @@ public class IncomeGroupController(DatabaseContext context, IValidator<IncomeGro
                 return Ok(simplifiedIncomeGroups);
             }
 
-            return NotFound();
+            return Ok(incomeGroups);
         }
         catch (Exception e)
         {

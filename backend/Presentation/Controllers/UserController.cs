@@ -24,7 +24,7 @@ public class UserController(DatabaseContext context, EmailService emailservice, 
 
 		if (users.Count != 0)
 			return users;
-		return NotFound();
+		return Ok(users);
 	}
 
 	// GET: api/User/5
