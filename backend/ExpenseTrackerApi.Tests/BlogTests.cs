@@ -3,19 +3,16 @@ using Moq;
 
 namespace ExpenseTrackerApi.Tests;
 
-public class BlogControllerTests
+public class BlogControllerTests(DatabaseFixture fixture) : IClassFixture<DatabaseFixture>
 {
 	private readonly Mock<IValidator<Blog>> validatorMock = new();
+	private readonly DatabaseFixture databaseFixture = fixture;
 
 	[Fact]
 	public async Task GetBlogs_ReturnsListOfBlogs()
 	{
 		// Arrange
-		var options = new DbContextOptionsBuilder<MainDatabaseContext>()
-			.UseInMemoryDatabase(databaseName: "TestDatabase")
-			.Options;
-
-		using var context = new MainDatabaseContext(options);
+		using var context = databaseFixture.Context;
 		var getAuthenticatedUserIdService = new GetAuthenticatedUserIdService();
 
 		// Create an instance of the controller

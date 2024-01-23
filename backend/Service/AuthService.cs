@@ -12,11 +12,8 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace Service;
 
-public class AuthService(MainDatabaseContext context, IConfiguration configuration) : IAuthService
+public class AuthService(MainDatabaseContext _context, IConfiguration _configuration) : IAuthService
 {
-	private readonly IConfiguration _configuration;
-	private readonly MainDatabaseContext _context;
-
 	public async Task<LoggedInUser?> LogInUserAsync(LogInUser user)
 	{
 		var authenticatedUser = await _context.Users
