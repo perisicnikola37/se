@@ -44,6 +44,7 @@ public class User
 	// old custom validation
 	// [EmailValidation(ErrorMessage = "Please enter a valid email address.")]
 	public string Email { get; set; }
+	[JsonIgnore]
 	public string Password { get; set; }
 	public DateTime CreatedAt { get; set; } = DateTime.Now;
 	public List<Expense>? Expenses { get; set; }
