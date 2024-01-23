@@ -1,9 +1,6 @@
 namespace Domain.Exceptions;
 
-public abstract class ConflictException : Exception
+public abstract class ConflictException(string message) : Exception(message)
 {
-    protected ConflictException(string message)
-        : base(message)
-    {
-    }
 }
+
