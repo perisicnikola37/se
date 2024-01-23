@@ -17,12 +17,6 @@ public class AuthService(MainDatabaseContext context, IConfiguration configurati
 	private readonly IConfiguration _configuration;
 	private readonly MainDatabaseContext _context;
 
-	public AuthService(MainDatabaseContext context, IConfiguration configuration)
-	{
-		_context = context;
-		_configuration = configuration;
-	}
-
 	public async Task<LoggedInUser?> LogInUserAsync(LogInUser user)
 	{
 		var authenticatedUser = await _context.Users
