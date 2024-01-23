@@ -47,13 +47,12 @@ public class GetAuthenticatedUserIdServiceTests
 	public void GetUserId_ShouldReturnNull_WhenInvalidIdClaim()
 	{
 		// Arrange
-		// Create an instance of the GetAuthenticatedUserIdService under test
 		var service = new GetAuthenticatedUserIdService();
 
 		// Create claims with an invalid (non-numeric) user ID for testing
 		var claims = new List<Claim>
 		{
-			new("Id", "123")
+		new("Id", "invalid")
 		};
 
 		// Create a ClaimsPrincipal with the test claims
@@ -65,6 +64,4 @@ public class GetAuthenticatedUserIdServiceTests
 		// Assert
 		Assert.Null(userId);
 	}
-
-
 }
