@@ -57,6 +57,7 @@ builder.Services.AddScoped<GetCurrentUserService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<EmailService>();
 builder.Services.AddScoped<GetAuthenticatedUserIdService>();
+builder.Services.AddScoped<BlogService>();
 
 builder.Services.AddAuthentication(options =>
 {
