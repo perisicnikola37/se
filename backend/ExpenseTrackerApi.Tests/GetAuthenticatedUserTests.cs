@@ -1,5 +1,4 @@
 using System.Security.Claims;
-using Service;
 
 namespace ExpenseTrackerApi.Tests;
 	public class GetAuthenticatedUserIdServiceTests
