@@ -1,6 +1,6 @@
 namespace Contracts.Dto;
 public record FinancialSummary
 {
-	public int ExpenseCount;
-	public int IncomeCount;
+	public int ExpenseCount { get; set; }
+	public int IncomeCount { get; set; }
 }

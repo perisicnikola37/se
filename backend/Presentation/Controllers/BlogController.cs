@@ -1,47 +1,90 @@
-using Contracts.Dto;
 using Domain.Models;
+using Infrastructure.Contexts;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Service;
 
 namespace Presentation.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class BlogController(BlogService _blogService) : ControllerBase
+public class BlogController(MainDatabaseContext context, GetAuthenticatedUserIdService getAuthenticatedUserIdService)
+    : ControllerBase
 {
-	// GET: api/Blog
-	[HttpGet]
-	public async Task<ActionResult<IEnumerable<BlogDTO>>> GetBlogsAsync()
-	{
-		return Ok(await _blogService.GetBlogsAsync());
-	}
+    // GET: api/Blog
+    [HttpGet]
+    public async Task<ActionResult<IEnumerable<Blog>>> GetBlogs()
+    {
+        var blogs = await context.Blogs.OrderByDescending(e => e.CreatedAt).ToListAsync();
 
-	// GET: api/Blog/5
-	[HttpGet("{id}")]
-	public async Task<ActionResult<SingleBlogDTO>> GetBlogAsync(int id)
-	{
-		return await _blogService.GetBlogAsync(id);
-	}
+        if (blogs.Count() != 0)
+            return blogs;
+        return NotFound();
+    }
 
-	// PUT: api/Blog/5
-	[HttpPut("{id}")]
-	public async Task<IActionResult> PutBlogAsync(int id, Blog blog)
-	{
-		return await _blogService.UpdateBlogAsync(id, blog, this);
-	}
+    // GET: api/Blog/5
+    [HttpGet("{id}")]
+    public async Task<ActionResult<Blog>> GetBlog(int id)
+    {
+        var blog = await context.Blogs.FindAsync(id);
 
-	// POST: api/Blog
-	[HttpPost]
-	public async Task<ActionResult<Blog>> PostBlogAsync(Blog blog)
-	{
+        if (blog == null) return NotFound();
 
-		return await _blogService.CreateBlogAsync(blog, this);
-	}
+        return blog;
+    }
 
-	// DELETE: api/Blog/5
-	[HttpDelete("{id}")]
-	public async Task<IActionResult> DeleteBlogAsync(int id)
-	{
-		return await _blogService.DeleteBlogAsync(id);
-	}
+    // PUT: api/Blog/5
+    // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+    [HttpPut("{id}")]
+    public async Task<IActionResult> PutBlog(int id, Blog blog)
+    {
+        if (id != blog.Id) return BadRequest();
+
+        context.Entry(blog).State = EntityState.Modified;
+
+        try
+        {
+            await context.SaveChangesAsync();
+        }
+        catch (DbUpdateConcurrencyException)
+        {
+            if (!BlogExists(id))
+                return NotFound();
+            throw;
+        }
+
+        return NoContent();
+    }
+
+    // POST: api/Blog
+    // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+    [HttpPost]
+    public async Task<ActionResult<Blog>> PostBlog(Blog blog)
+    {
+        var userId = getAuthenticatedUserIdService.GetUserId(User);
+        blog.UserId = (int)userId!;
+
+        context.Blogs.Add(blog);
+        await context.SaveChangesAsync();
+
+        return CreatedAtAction("GetBlog", new { id = blog.Id }, blog);
+    }
+
+    // DELETE: api/Blog/5
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> DeleteBlog(int id)
+    {
+        var blog = await context.Blogs.FindAsync(id);
+        if (blog == null) return NotFound();
+
+        context.Blogs.Remove(blog);
+        await context.SaveChangesAsync();
+
+        return NoContent();
+    }
+
+    private bool BlogExists(int id)
+    {
+        return context.Blogs.Any(e => e.Id == id);
+    }
 }
