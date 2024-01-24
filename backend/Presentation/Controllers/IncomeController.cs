@@ -34,14 +34,9 @@ public class IncomeController(IncomeService _incomeService) : ControllerBase
 	[HttpGet("{id}")]
 	public async Task<IActionResult> GetIncomeAsync(int id)
 	{
-		var incomeResponse = await _incomeService.GetIncomeAsync(id);
+		var income = await _incomeService.GetIncomeAsync(id);
 
-		if (incomeResponse == null)
-		{
-			return NotFound();
-		}
-
-		return Ok(incomeResponse);
+		return income != null ? Ok(income) : NotFound();
 	}
 
 	// PUT: api/Income/5

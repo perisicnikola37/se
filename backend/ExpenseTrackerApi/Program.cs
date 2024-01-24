@@ -62,6 +62,7 @@ builder.Services.AddScoped<ExpenseService>();
 builder.Services.AddScoped<IncomeService>();
 builder.Services.AddScoped<ReminderService>();
 builder.Services.AddScoped<ExpenseGroupService>();
+builder.Services.AddScoped<IncomeGroupService>();
 
 builder.Services.AddAuthentication(options =>
 {
