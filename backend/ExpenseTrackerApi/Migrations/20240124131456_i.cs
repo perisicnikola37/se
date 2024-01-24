@@ -186,7 +186,7 @@ namespace ExpenseTrackerApi.Migrations
             migrationBuilder.InsertData(
                 table: "Users",
                 columns: new[] { "Id", "AccountType", "AccountTypeEnum", "CreatedAt", "Email", "Password", "Username" },
-                values: new object[] { 1, "Administrator", 1, new DateTime(2024, 1, 23, 15, 53, 30, 482, DateTimeKind.Local).AddTicks(6157), "admin@gmail.com", "5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8", "Administrator" });
+                values: new object[] { 1, "Administrator", 1, new DateTime(2024, 1, 24, 14, 14, 55, 946, DateTimeKind.Local).AddTicks(7898), "admin@gmail.com", "5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8", "Administrator" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Blogs_UserId",

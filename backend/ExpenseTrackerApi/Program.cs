@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using System.Text;
 using System.Threading.RateLimiting;
 using Domain.Interfaces;
@@ -7,6 +8,7 @@ using ExpenseTrackerApi.Middlewares;
 using FluentValidation;
 using Infrastructure.Contexts;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -24,6 +26,19 @@ builder.Services.AddCors(options =>
 		policy => { policy.WithOrigins("https://example.com"); });
 });
 
+builder.Services.AddAuthorization();
+
+builder.Services.AddHttpContextAccessor();
+
+// Policies
+builder.Services.AddAuthorizationBuilder()
+	.AddPolicy("BlogOwnerPolicy", policy =>
+	{
+		policy.Requirements.Add(new BlogAuthorizationRequirement());
+	});
+	
+builder.Services.AddScoped<IAuthorizationHandler, BlogAuthorizationHandler>();
+
 var connectionString = configuration["DefaultConnection"];
 if (connectionString == null) throw new ArgumentNullException(nameof(connectionString), "DefaultConnection is null");
 
@@ -32,7 +47,7 @@ builder.Services.AddDbContext<DatabaseContext>(options =>
 	options.UseMySql(
 		connectionString,
 		new MySqlServerVersion(new Version(8, 0, 35)),
-		b => b.MigrationsAssembly("ExpenseTrackerApi") 
+		b => b.MigrationsAssembly("ExpenseTrackerApi")
 	);
 });
 
@@ -52,7 +67,7 @@ builder.Services.AddScoped<IValidator<Income>, IncomeValidator>();
 builder.Services.AddScoped<IValidator<User>, UserValidator>();
 
 // services
-builder.Services.AddHttpContextAccessor(); 
+builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<GetCurrentUserService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<EmailService>();
@@ -88,8 +103,6 @@ builder.Services.AddAuthentication(options =>
 		ValidateIssuerSigningKey = true
 	};
 });
-
-builder.Services.AddAuthorization();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
