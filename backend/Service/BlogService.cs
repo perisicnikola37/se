@@ -124,7 +124,6 @@ public class BlogService(DatabaseContext _context, IValidator<Blog> _validator, 
 			throw;
 		}
 	}
-
 	public async Task<ActionResult<Blog>> CreateBlogAsync(Blog blog, ControllerBase controller)
 	{
 		try

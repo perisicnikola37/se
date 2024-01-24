@@ -23,17 +23,18 @@ public class ExpenseController(ExpenseService _expenseService) : ControllerBase
 		return Ok(await _expenseService.GetLatestExpensesAsync());
 	}
 
-    // GET: api/Expense/total-amount
-    [HttpGet("total-amount")]
-    public ActionResult<int> GetTotalAmountOfExpensesAsync()
-    {
-        return Ok(_expenseService.GetTotalAmountOfExpensesAsync());
-    }
+	// GET: api/Expense/total-amount
+	[HttpGet("total-amount")]
+	public ActionResult<int> GetTotalAmountOfExpensesAsync()
+	{
+		return Ok(_expenseService.GetTotalAmountOfExpensesAsync());
+	}
 
-    // GET: api/Expense/5
-    [HttpGet("{id}")]
+	// GET: api/Expense/5
+	[HttpGet("{id}")]
 	public async Task<IActionResult> GetExpenseAsync(int id)
 	{
+		// mijenjati
 		var expenseResponse = await _expenseService.GetExpenseAsync(id);
 
 		if (expenseResponse == null)

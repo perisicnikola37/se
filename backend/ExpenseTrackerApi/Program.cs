@@ -60,6 +60,7 @@ builder.Services.AddScoped<GetAuthenticatedUserIdService>();
 builder.Services.AddScoped<BlogService>();
 builder.Services.AddScoped<ExpenseService>();
 builder.Services.AddScoped<IncomeService>();
+builder.Services.AddScoped<ReminderService>();
 
 builder.Services.AddAuthentication(options =>
 {
