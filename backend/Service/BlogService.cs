@@ -8,12 +8,12 @@ using Microsoft.Extensions.Logging;
 
 namespace Service;
 
-public class BlogService(DatabaseContext _context, IValidator<Blog> _validator, GetAuthenticatedUserIdService getAuthenticatedUserIdService, ILogger<BlogService> _logger)
+public class BlogService(DatabaseContext _context, IValidator<Blog> _validator, GetAuthenticatedUserIdService _getAuthenticatedUserIdService, ILogger<BlogService> _logger)
 {
 	private readonly DatabaseContext _context = _context;
 	private readonly IValidator<Blog> _validator = _validator;
 	private readonly ILogger<BlogService> _logger = _logger;
-	private readonly GetAuthenticatedUserIdService getAuthenticatedUserIdService = getAuthenticatedUserIdService;
+	private readonly GetAuthenticatedUserIdService _getAuthenticatedUserIdService = _getAuthenticatedUserIdService;
 
 	public async Task<ActionResult<BlogDTO>> GetBlogsAsync()
 	{
@@ -85,45 +85,6 @@ public class BlogService(DatabaseContext _context, IValidator<Blog> _validator, 
 		}
 	}
 
-	public async Task<IActionResult> UpdateBlogAsync(int id, Blog blog, ControllerBase controller)
-	{
-		try
-		{
-			if (id != blog.Id) return new BadRequestResult();
-
-			if (!BlogExists(id))
-			{
-				return new NotFoundResult();
-			}
-
-			// Get authenticated user id
-			var userId = getAuthenticatedUserIdService.GetUserId(controller.User);
-			var isAuthorized = await _context.Blogs.AnyAsync(b => b.Id == id && b.UserId == userId);
-
-			if (!isAuthorized)
-			{
-				return new UnauthorizedResult();
-			}
-
-			// Update the blog
-			_context.Entry(blog).State = EntityState.Modified;
-			await _context.SaveChangesAsync();
-
-			return new NoContentResult();
-		}
-		catch (DbUpdateConcurrencyException ex)
-		{
-			_logger.LogError($"UpdateBlogAsync: Concurrency conflict occurred. Error: {ex.Message}");
-			if (!BlogExists(id))
-				return new NotFoundResult();
-			throw;
-		}
-		catch (Exception ex)
-		{
-			_logger.LogError($"UpdateBlogAsync: An error occurred. Error: {ex.Message}");
-			throw;
-		}
-	}
 	public async Task<ActionResult<Blog>> CreateBlogAsync(Blog blog, ControllerBase controller)
 	{
 		try
@@ -135,7 +96,7 @@ public class BlogService(DatabaseContext _context, IValidator<Blog> _validator, 
 				return new BadRequestObjectResult(validationResult.Errors);
 			}
 
-			var userId = getAuthenticatedUserIdService.GetUserId(controller.User);
+			var userId = _getAuthenticatedUserIdService.GetUserId(controller.User);
 
 			if (userId == null)
 			{
@@ -172,6 +133,50 @@ public class BlogService(DatabaseContext _context, IValidator<Blog> _validator, 
 		}
 	}
 
+	public async Task<IActionResult> UpdateBlogAsync(int id, Blog blog, ControllerBase controller)
+	{
+		try
+		{
+			if (id != blog.Id) return new BadRequestResult();
+
+			if (!BlogExists(id)) return new NotFoundResult();
+
+			int? authenticatedUserId = _getAuthenticatedUserIdService.GetUserId(controller.User);
+
+			// Check if authenticatedUserId has a value
+			if (authenticatedUserId.HasValue)
+			{
+				// attach authenticated user id
+				blog.UserId = authenticatedUserId.Value;
+
+				_context.Entry(blog).State = EntityState.Modified;
+
+				try
+				{
+					await _context.SaveChangesAsync();
+				}
+				catch (DbUpdateConcurrencyException)
+				{
+					if (!BlogExists(id))
+					{
+						return new NotFoundResult();
+					}
+					throw;
+				}
+
+				return new NoContentResult();
+			}
+			else
+			{
+				return new BadRequestResult();
+			}
+		}
+		catch (Exception ex)
+		{
+			_logger.LogError($"UpdateBlogAsync: An error occurred. Error: {ex.Message}");
+			throw;
+		}
+	}
 	public async Task<IActionResult> DeleteBlogAsync(int id)
 	{
 		try

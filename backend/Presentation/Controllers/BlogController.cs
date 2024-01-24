@@ -1,5 +1,6 @@
 using Contracts.Dto;
 using Domain.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Service;
 
@@ -25,6 +26,7 @@ public class BlogController(BlogService _blogService) : ControllerBase
 
 	// PUT: api/Blog/5
 	[HttpPut("{id}")]
+	[Authorize("BlogOwnerPolicy")]
 	public async Task<IActionResult> PutBlogAsync(int id, Blog blog)
 	{
 		return await _blogService.UpdateBlogAsync(id, blog, this);

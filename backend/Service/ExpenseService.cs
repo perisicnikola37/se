@@ -125,10 +125,7 @@ public class ExpenseService(DatabaseContext _context, IValidator<Expense> _valid
 	{
 		try
 		{
-			if (id != updatedExpense.Id)
-			{
-				return new BadRequestResult();
-			}
+			if (id != updatedExpense.Id) return new BadRequestResult();
 
 			_context.Entry(updatedExpense).State = EntityState.Modified;
 
