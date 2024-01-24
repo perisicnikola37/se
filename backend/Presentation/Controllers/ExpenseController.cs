@@ -32,18 +32,11 @@ public class ExpenseController(ExpenseService _expenseService) : ControllerBase
 
 	// GET: api/Expense/5
 	[HttpGet("{id}")]
-	public async Task<IActionResult> GetExpenseAsync(int id)
-	{
-		// mijenjati
-		var expenseResponse = await _expenseService.GetExpenseAsync(id);
-
-		if (expenseResponse == null)
-		{
-			return NotFound();
-		}
-
-		return Ok(expenseResponse);
-	}
+	// TO DO
+	// public async Task<IActionResult> GetExpenseAsync(int id)
+	// {
+	// 	return await _expenseService.GetExpenseAsync(id);
+	// }
 
 	// PUT: api/Expense/5
 	[HttpPut("{id}")]
