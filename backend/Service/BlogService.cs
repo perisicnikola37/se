@@ -15,7 +15,7 @@ public class BlogService(DatabaseContext _context, IValidator<Blog> _validator, 
 	private readonly ILogger<BlogService> _logger = _logger;
 	private readonly GetAuthenticatedUserIdService getAuthenticatedUserIdService = getAuthenticatedUserIdService;
 
-    public async Task<ActionResult<BlogDTO>> GetBlogsAsync()
+	public async Task<ActionResult<BlogDTO>> GetBlogsAsync()
 	{
 		try
 		{

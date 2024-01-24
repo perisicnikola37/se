@@ -18,17 +18,32 @@ public class IncomeService(DatabaseContext _context, IValidator<Income> _validat
 	private readonly GetAuthenticatedUserIdService getAuthenticatedUserIdService = getAuthenticatedUserIdService;
 
 	[HttpGet]
-	public async Task<PagedResponse<List<Income>>> GetIncomesAsync(PaginationFilter filter)
+	public async Task<PagedResponse<List<IncomeResponse>>> GetIncomesAsync(PaginationFilter filter)
 	{
 		try
 		{
 			var validFilter = new PaginationFilter(filter.PageNumber, filter.PageSize);
 			var pagedData = await _context.Incomes
+				.Include(e => e.User)
 				.Skip((validFilter.PageNumber - 1) * validFilter.PageSize)
 				.Take(validFilter.PageSize)
+				.Select(e => new IncomeResponse
+				{
+					Id = e.Id,
+					Description = e.Description,
+					Amount = e.Amount,
+					CreatedAt = e.CreatedAt,
+					IncomeGroupId = e.IncomeGroupId,
+					IncomeGroup = e.IncomeGroup,
+					UserId = e.UserId,
+					User = new UserResponse
+					{
+						Username = e.User.Username
+					}
+				})
 				.ToListAsync();
 
-			return new PagedResponse<List<Income>>(pagedData, validFilter.PageNumber, validFilter.PageSize);
+			return new PagedResponse<List<IncomeResponse>>(pagedData, validFilter.PageNumber, validFilter.PageSize);
 		}
 		catch (Exception ex)
 		{

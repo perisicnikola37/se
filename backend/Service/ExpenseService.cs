@@ -18,17 +18,32 @@ public class ExpenseService(DatabaseContext _context, IValidator<Expense> _valid
 	private readonly GetAuthenticatedUserIdService getAuthenticatedUserIdService = getAuthenticatedUserIdService;
 
 	[HttpGet]
-	public async Task<PagedResponse<List<Expense>>> GetExpensesAsync(PaginationFilter filter)
+	public async Task<PagedResponse<List<ExpenseResponse>>> GetExpensesAsync(PaginationFilter filter)
 	{
 		try
 		{
 			var validFilter = new PaginationFilter(filter.PageNumber, filter.PageSize);
 			var pagedData = await _context.Expenses
+				.Include(e => e.User)
 				.Skip((validFilter.PageNumber - 1) * validFilter.PageSize)
 				.Take(validFilter.PageSize)
+				.Select(e => new ExpenseResponse
+				{
+					Id = e.Id,
+					Description = e.Description,
+					Amount = e.Amount,
+					CreatedAt = e.CreatedAt,
+					ExpenseGroupId = e.ExpenseGroupId,
+					ExpenseGroup = e.ExpenseGroup,
+					UserId = e.UserId,
+					User = new UserResponse
+					{
+						Username = e.User.Username
+					}
+				})
 				.ToListAsync();
 
-			return new PagedResponse<List<Expense>>(pagedData, validFilter.PageNumber, validFilter.PageSize);
+			return new PagedResponse<List<ExpenseResponse>>(pagedData, validFilter.PageNumber, validFilter.PageSize);
 		}
 		catch (Exception ex)
 		{
