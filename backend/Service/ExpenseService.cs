@@ -1,0 +1,190 @@
+using Contracts.Dto;
+using Contracts.Filter;
+using Domain.Exceptions;
+using Domain.Models;
+using FluentValidation;
+using Infrastructure.Contexts;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+
+namespace Service;
+
+public class ExpenseService(DatabaseContext _context, IValidator<Expense> _validator, GetAuthenticatedUserIdService getAuthenticatedUserIdService, ILogger<ExpenseService> _logger)
+{
+	private readonly DatabaseContext _context = _context;
+	private readonly IValidator<Expense> _validator = _validator;
+	private readonly ILogger<ExpenseService> _logger = _logger;
+	private readonly GetAuthenticatedUserIdService getAuthenticatedUserIdService = getAuthenticatedUserIdService;
+
+	[HttpGet]
+	public async Task<PagedResponse<List<Expense>>> GetExpensesAsync(PaginationFilter filter)
+	{
+		try
+		{
+			var validFilter = new PaginationFilter(filter.PageNumber, filter.PageSize);
+			var pagedData = await _context.Expenses
+				.Skip((validFilter.PageNumber - 1) * validFilter.PageSize)
+				.Take(validFilter.PageSize)
+				.ToListAsync();
+
+			return new PagedResponse<List<Expense>>(pagedData, validFilter.PageNumber, validFilter.PageSize);
+		}
+		catch (Exception ex)
+		{
+			_logger.LogError($"GetExpensesAsync: An error occurred. Error: {ex.Message}");
+			throw;
+		}
+	}
+
+	public async Task<List<Expense>> GetLatestExpensesAsync()
+	{
+		try
+		{
+			return await _context.Expenses
+				.Include(e => e.User)
+				.Include(e => e.ExpenseGroup)
+				.OrderByDescending(e => e.CreatedAt)
+				.Take(5)
+				.ToListAsync();
+		}
+		catch (Exception ex)
+		{
+			_logger.LogError($"GetLatestExpensesAsync: An error occurred. Error: {ex.Message}");
+			throw;
+		}
+	}
+
+	public async Task<Response<Expense>?> GetExpenseAsync(int id)
+	{
+		try
+		{
+			var expense = await _context.Expenses
+				.Where(e => e.Id == id)
+				.FirstOrDefaultAsync();
+
+			if (expense == null)
+			{
+				return null;
+			}
+
+			return new Response<Expense>(expense);
+		}
+		catch (Exception ex)
+		{
+			_logger.LogError($"GetExpenseAsync: An error occurred. Error: {ex.Message}");
+			throw;
+		}
+	}
+
+	public async Task<ActionResult<Expense>> CreateExpenseAsync(Expense expense, ControllerBase controller)
+	{
+		try
+		{
+			var validationResult = await _validator.ValidateAsync(expense);
+			if (!validationResult.IsValid)
+			{
+				return new BadRequestObjectResult(validationResult.Errors);
+			}
+
+			var expenseGroup = await _context.ExpenseGroups.FindAsync(expense.ExpenseGroupId) ?? throw NotFoundException.Create("ExpenseGroupId", "Expense group not found.");
+
+			var userId = getAuthenticatedUserIdService.GetUserId(controller.User);
+
+			expense.UserId = (int)userId!;
+
+			_context.Expenses.Add(expense);
+
+			await _context.SaveChangesAsync();
+
+			return new CreatedAtActionResult("GetExpense", "Expense", new { id = expense.Id }, expense);
+		}
+		catch (Exception ex)
+		{
+			_logger.LogError($"CreateExpenseAsync: An error occurred. Error: {ex.Message}");
+			throw;
+		}
+	}
+
+	public async Task<IActionResult> UpdateExpenseAsync(int id, Expense updatedExpense)
+	{
+		try
+		{
+			if (id != updatedExpense.Id)
+			{
+				return new BadRequestResult();
+			}
+
+			_context.Entry(updatedExpense).State = EntityState.Modified;
+
+			try
+			{
+				await _context.SaveChangesAsync();
+			}
+			catch (DbUpdateConcurrencyException)
+			{
+				if (!ExpenseExists(id))
+				{
+					return new NotFoundResult();
+				}
+				throw;
+			}
+
+			return new NoContentResult();
+		}
+		catch (Exception ex)
+		{
+			_logger.LogError($"UpdateExpenseAsync: An error occurred. Error: {ex.Message}");
+			throw;
+		}
+	}
+
+	public async Task<IActionResult> DeleteExpenseByIdAsync(int id)
+	{
+		try
+		{
+			var expense = await _context.Expenses.FindAsync(id);
+
+			if (expense == null)
+			{
+				return new NotFoundResult();
+			}
+
+			_context.Expenses.Remove(expense);
+			await _context.SaveChangesAsync();
+
+			return new NoContentResult();
+		}
+		catch (Exception ex)
+		{
+			_logger.LogError($"DeleteExpenseByIdAsync: An error occurred. Error: {ex.Message}");
+			throw;
+		}
+	}
+
+	public async Task<ActionResult<int>> GetTotalAmountOfExpensesAsync()
+	{
+		try
+		{
+			return await _context.Expenses.CountAsync();
+		}
+		catch (Exception ex)
+		{
+			_logger.LogError($"GetTotalAmountOfExpensesAsync: An error occurred. Error: {ex.Message}");
+			throw;
+		}
+	}
+
+	private bool ExpenseExists(int id)
+	{
+		try
+		{
+			return _context.Expenses.Any(e => e.Id == id);
+		}
+		catch (Exception ex)
+		{
+			_logger.LogError($"ExpenseExists: An error occurred. Error: {ex.Message}");
+			throw;
+		}
+	}
+}

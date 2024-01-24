@@ -1,62 +1,94 @@
 using Domain.Interfaces;
 using Domain.Models;
-using Infrastructure.Contexts;
+using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+using Service;
 
-namespace Presentation.Controllers;
-
-[Route("api/[controller]")]
-[ApiController]
-public class AuthController : ControllerBase
+namespace Presentation.Controllers
 {
-    private readonly IAuthService _authService;
-    private readonly MainDatabaseContext _context;
+	[Route("api/[controller]")]
+	[ApiController]
+	public class AuthController(
+		IAuthService authService,
+		IValidator<User> validator,
+		ILogger<AuthController> logger,
+		GetCurrentUserService getCurrentUserService) : ControllerBase
+	{
+		private readonly IAuthService _authService = authService ?? throw new ArgumentNullException(nameof(authService));
+		private readonly IValidator<User> _validator = validator ?? throw new ArgumentNullException(nameof(validator));
+		private readonly GetCurrentUserService _getCurrentUserService = getCurrentUserService ?? throw new ArgumentNullException(nameof(getCurrentUserService));
+		private readonly ILogger<AuthController> _logger = logger ?? throw new ArgumentNullException(nameof(logger));
 
-    public AuthController(MainDatabaseContext context, IAuthService authService)
-    {
-        _context = context;
-        _authService = authService;
-    }
+		[HttpPost("Login")]
+		public async Task<ActionResult<User>> LogInUserAsync(LogInUser user)
+		{
+			try
+			{
+				var userWithToken = await _authService.LogInUserAsync(user);
 
+				if (userWithToken == null)
+				{
+					_logger.LogWarning("Invalid email or password for login attempt.");
 
-    [HttpPost("Login")]
-    public async Task<ActionResult<User>> LogInUser(LogInUser user)
-    {
-        // AuthService
-        var userWithToken = await _authService.LogInUserAsync(user);
+					// Return a 403 Forbidden status code
+					return Unauthorized(new { message = "Invalid email or password" });
+				}
 
-        if (userWithToken == null!) return NotFound(new { message = "Invalid email or password" });
+				_logger.LogInformation("User logged in successfully.");
 
-        return Ok(new { message = "User logged in successfully", user = userWithToken });
-    }
+				return Ok(new { message = "User logged in successfully", user = userWithToken });
+			}
+			catch (Exception ex)
+			{
+				_logger.LogError(ex, "An error occurred during login.");
 
-    // POST: api/Auth/Register
-    [HttpPost("Register")]
-    public async Task<ActionResult<User>> RegisterUser(User userRegistration)
-    {
-        // AuthService
-        return await _authService.RegisterUserAsync(userRegistration);
-    }
+				return StatusCode(500, new { message = "An error occurred during login" });
+			}
+		}
 
-    /// POST: api/Auth/CurrentUser
-    [HttpGet("CurrentUser")]
-    public ActionResult<LoggedInUser> GetCurrentUser()
-    {
-        foreach (var claim in User.Claims) Console.WriteLine($"Claim Type: {claim.Type}, Claim Value: {claim.Value}");
+		[HttpPost("Register")]
+		public async Task<ActionResult<User>> RegisterUserAsync(User userRegistration)
+		{
+			try
+			{
+				var validationResult = await _validator.ValidateAsync(userRegistration);
 
-        var userIdClaim = User.Claims.FirstOrDefault(c => c.Type == "Id");
-        if (userIdClaim == null || !int.TryParse(userIdClaim.Value, out var userId))
-            return BadRequest(new { message = "Invalid user claims" });
+				if (!validationResult.IsValid)
+				{
+					_logger.LogWarning("User registration validation failed.");
 
-        var user = _context.Users
-            .Include(u => u.Expenses)
-            .Include(u => u.Incomes)
-            .Include(u => u.Blogs)
-            .FirstOrDefault(u => u.Id == userId);
+					return BadRequest(validationResult.Errors);
+				}
+				else
+				{
+					var registeredUser = await _authService.RegisterUserAsync(userRegistration);
+					_logger.LogInformation("User registered successfully.");
 
-        if (user == null) return NotFound(new { message = "User not found" });
+					return registeredUser;
+				}
+			}
+			catch (Exception ex)
+			{
+				_logger.LogError(ex, "An error occurred during user registration.");
 
-        return Ok(user);
-    }
+				return StatusCode(500, new { message = "An error occurred during user registration" });
+			}
+		}
+
+		[HttpGet("CurrentUser")]
+		public ActionResult<LoggedInUser> GetCurrentUser()
+		{
+			try
+			{
+				return _getCurrentUserService.GetCurrentUser();
+			}
+			catch (Exception ex)
+			{
+				_logger.LogError(ex, "An error occurred while getting the current user.");
+
+				return StatusCode(500, new { message = "An error occurred while getting the current user" });
+			}
+		}
+	}
 }

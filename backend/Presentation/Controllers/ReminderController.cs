@@ -1,85 +1,46 @@
+using Contracts.Dto;
 using Domain.Models;
-using Infrastructure.Contexts;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+using Service;
 
 namespace Presentation.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class ReminderController(MainDatabaseContext context) : ControllerBase
+public class ReminderController(ReminderService _reminderService) : ControllerBase
 {
-    // GET: api/Reminder
-    [HttpGet]
-    public async Task<ActionResult<IEnumerable<Reminder>>> GetReminders()
-    {
-        var reminders = await context.Reminders.OrderByDescending(e => e.CreatedAt).ToListAsync();
+	// GET: api/Reminder
+	[HttpGet]
+	public async Task<ActionResult<IEnumerable<ReminderDTO>>> GetRemindersAsync()
+	{
+		return Ok(await _reminderService.GetRemindersAsync());
+	}
 
-        if (reminders.Count != 0)
-            return reminders;
-        return NotFound();
-    }
+	// GET: api/Reminder/5
+	[HttpGet("{id}")]
+	public async Task<ActionResult<SingleReminderDTO>> GetReminder(int id)
+	{
+		return await _reminderService.GetReminderAsync(id);
+	}
 
-    // GET: api/Reminder/5
-    [HttpGet("{id}")]
-    public async Task<ActionResult<Reminder>> GetReminder(int id)
-    {
-        var reminder = await context.Reminders.FindAsync(id);
+	// PUT: api/Reminder/5
+	[HttpPut("{id}")]
+	public async Task<IActionResult> PutReminderAsync(int id, Reminder reminder)
+	{
+		return await _reminderService.UpdateReminderAsync(id, reminder, this);
+	}
 
-        if (reminder == null) return NotFound();
+	// POST: api/Reminder
+	[HttpPost]
+	public async Task<ActionResult<Reminder>> PostReminderAsync(Reminder reminder)
+	{
+		return await _reminderService.CreateReminderAsync(reminder, this);
+	}
 
-        return reminder;
-    }
-
-    // PUT: api/Reminder/5
-    // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-    [HttpPut("{id}")]
-    public async Task<IActionResult> PutReminder(int id, Reminder reminder)
-    {
-        if (id != reminder.Id) return BadRequest();
-
-        context.Entry(reminder).State = EntityState.Modified;
-
-        try
-        {
-            await context.SaveChangesAsync();
-        }
-        catch (DbUpdateConcurrencyException)
-        {
-            if (!ReminderExists(id))
-                return NotFound();
-            throw;
-        }
-
-        return NoContent();
-    }
-
-    // POST: api/Reminder
-    // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-    [HttpPost]
-    public async Task<ActionResult<Reminder>> PostReminder(Reminder reminder)
-    {
-        context.Reminders.Add(reminder);
-        await context.SaveChangesAsync();
-
-        return CreatedAtAction("GetReminder", new { id = reminder.Id }, reminder);
-    }
-
-    // DELETE: api/Reminder/5
-    [HttpDelete("{id}")]
-    public async Task<IActionResult> DeleteReminder(int id)
-    {
-        var reminder = await context.Reminders.FindAsync(id);
-        if (reminder == null) return NotFound();
-
-        context.Reminders.Remove(reminder);
-        await context.SaveChangesAsync();
-
-        return NoContent();
-    }
-
-    private bool ReminderExists(int id)
-    {
-        return context.Reminders.Any(e => e.Id == id);
-    }
+	// DELETE: api/Reminder/5
+	[HttpDelete("{id}")]
+	public async Task<IActionResult> DeleteReminderAsync(int id)
+	{
+		return await _reminderService.DeleteReminderAsync(id);
+	}
 }

@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Domain.Interfaces;
 
-public interface IMainDatabaseContext
+public interface IDatabaseContext
 {
     DbSet<User> Users { get; set; }
     DbSet<Blog> Blogs { get; set; }
