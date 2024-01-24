@@ -12,7 +12,6 @@ public class ExpenseController(ExpenseService _expenseService) : ControllerBase
 {
 	// GET: api/Expense
 	[HttpGet]
-	[Authorize(Policy = "SessionPolicy")]
 	public async Task<IActionResult> GetExpensesAsync([FromQuery] PaginationFilter filter)
 	{
 		return Ok(await _expenseService.GetExpensesAsync(filter));

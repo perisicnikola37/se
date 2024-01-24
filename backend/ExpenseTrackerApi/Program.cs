@@ -1,9 +1,9 @@
-using System.Security.Claims;
 using System.Text;
 using System.Threading.RateLimiting;
 using Domain.Interfaces;
 using Domain.Models;
 using Domain.Validators;
+using ExpenseTrackerApi.Handlers;
 using ExpenseTrackerApi.Middlewares;
 using FluentValidation;
 using Infrastructure.Contexts;
@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
 using Service;
 
@@ -105,7 +106,37 @@ builder.Services.AddAuthentication(options =>
 });
 
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1.0.0", new OpenApiInfo { Title = "Expense Tracker", Version = "v1.0.0" });
+
+    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme()
+    {
+        Name = "Authorization",
+        Type = SecuritySchemeType.ApiKey,
+        Scheme = "Bearer",
+        BearerFormat = "JWT",
+        In = ParameterLocation.Header,
+        Description = "JWT Authorization header using the Bearer scheme."
+
+    });
+    c.AddSecurityRequirement(new OpenApiSecurityRequirement
+                {
+                    {
+                          new OpenApiSecurityScheme
+                          {
+                              Reference = new OpenApiReference
+                              {
+                                  Type = ReferenceType.SecurityScheme,
+                                  Id = "Bearer"
+                              }
+                          },
+                         new string[] {}
+                    }
+                });
+});
+
 builder.Services.AddRateLimiter(rateLimiterOptions => rateLimiterOptions
 	.AddFixedWindowLimiter("fixed", options =>
 	{
