@@ -92,62 +92,13 @@ builder.Services.AddScoped<ReminderService>();
 builder.Services.AddScoped<ExpenseGroupService>();
 builder.Services.AddScoped<IncomeGroupService>();
 
-builder.Services.AddAuthentication(options =>
-{
-	options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-	options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-	options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-}).AddJwtBearer(o =>
-{
-	var validIssuer = configuration["Jwt:Issuer"] ?? "https://joydipkanjilal.com/";
-	var validAudience = configuration["Jwt:Audience"] ?? "https://joydipkanjilal.com/";
-	var issuerSigningKey = configuration["Jwt:Key"] ??
-						   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.	eyJkZGFzYWRoYXNiZCBhc2RhZHMgc2Rhc3AgZGFzIGRhc2RhcyBhc2RhcyBkYXNkIGFzZGFzZGFzZCBhcyBkYXNhZGFzIGFzIGRhcyBkYXNhZGFzIGFzIGRhcyBkYXNhZGFzZGFzZCBhcyBkYXNhIGRhcyBkYXNhIGRhcyBkYXNhIGRhcyBkYXNhIGRhcyBkYXNhIGRhcyBkYXNhIGRhcyBkYXNhIGFzIGRhcyBkYXNhIGRhcyBkYXNhZGFzIGRhcyBkYXNhZGphcyBkYXNhIGRhcyBkYXNhIGRhcyBkYXNhIGRhcyBkYXNhIGRhcyBkYXNhIGRhcyBkYXNhIGRhcyBkYXNhIGRhcyBkYXNhIGRhcyBkYXNhIGRhcyBkYXNhZGphcyIsImlhdCI6MTYzNDEwNTUyMn0.S7G4f8pW7sGJ7t9PIShNElA0RRve-HlPfZRvX8hnZ6c";
-
-	o.TokenValidationParameters = new TokenValidationParameters
-	{
-		ValidIssuer = validIssuer,
-		ValidAudience = validAudience,
-
-		IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(issuerSigningKey)),
-		ValidateIssuer = true,
-		ValidateAudience = true,
-		ValidateLifetime = false,
-		ValidateIssuerSigningKey = true
-	};
-});
+// Jwt configuration
+builder.Services.ConfigureJwtAuthentication(builder.Configuration);
 
 builder.Services.AddEndpointsApiExplorer();
 
-builder.Services.AddSwaggerGen(c =>
-{
-	c.SwaggerDoc("v1", new OpenApiInfo { Title = "Expense Tracker", Version = "v1" });
-
-	c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme()
-	{
-		Name = "Authorization",
-		Type = SecuritySchemeType.ApiKey,
-		Scheme = "Bearer",
-		BearerFormat = "JWT",
-		In = ParameterLocation.Header,
-		Description = "JWT Authorization header using the Bearer scheme."
-
-	});
-	c.AddSecurityRequirement(new OpenApiSecurityRequirement
-				{
-					{
-						  new OpenApiSecurityScheme
-						  {
-							  Reference = new OpenApiReference
-							  {
-								  Type = ReferenceType.SecurityScheme,
-								  Id = "Bearer"
-							  }
-						  },
-						 Array.Empty<string>()
-					}
-				});
-});
+// Swagger configuration
+builder.Services.ConfigureSwaggerGen();
 
 builder.Services.AddRateLimiter(rateLimiterOptions => rateLimiterOptions
 	.AddFixedWindowLimiter("fixed", options =>
@@ -163,11 +114,11 @@ var app = builder.Build();
 // app.UseHttpLogging();
 app.UseRateLimiter();
 
-// if (app.Environment.IsDevelopment())
-// {
+if (app.Environment.IsDevelopment())
+{
 app.UseSwagger();
 app.UseSwaggerUI();
-// }
+}
 
 app.UseHttpsRedirection();
 app.MapControllers();
