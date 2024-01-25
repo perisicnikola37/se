@@ -1,0 +1,18 @@
+stages:
+  - test
+
+variables:
+  SOLUTION_PATH: backend/ExpenseTrackerApi/Solution.sln
+
+before_script:
+  - 'dotnet restore $SOLUTION_PATH'
+
+test:
+  stage: test
+  script:
+    - 'dotnet test $SOLUTION_PATH'
+  only:
+    - branches
+  except:
+    - master
+
