@@ -1,3 +1,4 @@
+using System.Linq.Expressions;
 using Contracts.Dto;
 using Contracts.Filter;
 using Domain.Exceptions;
@@ -23,11 +24,24 @@ public class IncomeService(DatabaseContext _context, IValidator<Income> _validat
 		try
 		{
 			int? authenticatedUserId = _getAuthenticatedUserIdService.GetUserId(controller.User);
-			
+
+			string description = controller.HttpContext.Request.Query["description"];
+			string minAmount = controller.HttpContext.Request.Query["minAmount"];
+			string maxAmount = controller.HttpContext.Request.Query["maxAmount"];
+			string incomeGroupId = controller.HttpContext.Request.Query["incomeGroupId"];
+
 			var validFilter = new PaginationFilter(filter.PageNumber, filter.PageSize);
-			var pagedData = await _context.Incomes
+
+			var query = _context.Incomes
 				.Include(e => e.User)
-				.Where(e => e.UserId == authenticatedUserId)
+				.Where(e => e.UserId == authenticatedUserId);
+
+			query = ApplyFilter(query, e => e.Description.Contains(description), !string.IsNullOrWhiteSpace(description));
+			query = ApplyFilter(query, e => e.Amount >= float.Parse(minAmount), !string.IsNullOrWhiteSpace(minAmount));
+			query = ApplyFilter(query, e => e.Amount <= float.Parse(maxAmount), !string.IsNullOrWhiteSpace(maxAmount));
+			query = ApplyFilter(query, e => e.IncomeGroupId == int.Parse(incomeGroupId), !string.IsNullOrWhiteSpace(incomeGroupId));
+
+			var pagedData = await query
 				.Skip((validFilter.PageNumber - 1) * validFilter.PageSize)
 				.Take(validFilter.PageSize)
 				.Select(e => new IncomeResponse
@@ -210,5 +224,10 @@ public class IncomeService(DatabaseContext _context, IValidator<Income> _validat
 			_logger.LogError($"IncomeExists: An error occurred. Error: {ex.Message}");
 			throw;
 		}
+	}
+
+	static IQueryable<Income> ApplyFilter(IQueryable<Income> query, Expression<Func<Income, bool>> filter, bool condition)
+	{
+		return condition ? query.Where(filter) : query;
 	}
 }
