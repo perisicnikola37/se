@@ -9,11 +9,10 @@ before_script:
 
 test:
   stage: test
+  only:
+  - main
   script:
     - 'dotnet test $SOLUTION_PATH'
 
 image:
   name: mcr.microsoft.com/dotnet/sdk:latest
-
-except:
-  - frontend
