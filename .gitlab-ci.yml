@@ -2,7 +2,7 @@ stages:
   - test
 
 variables:
-  SOLUTION_PATH: backend/ExpenseTrackerApi/Solution.sln
+  SOLUTION_PATH: backend/Solution.sln
 
 before_script:
   - 'dotnet restore $SOLUTION_PATH'
