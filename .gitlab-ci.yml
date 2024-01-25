@@ -16,3 +16,5 @@ test:
   except:
     - master
 
+image:
+  name: mcr.microsoft.com/dotnet/sdk:latest
