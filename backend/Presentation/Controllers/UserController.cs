@@ -8,7 +8,7 @@ using Service;
 
 namespace Presentation.Controllers;
 
-[Route("api/[controller]")]
+[Route("api/users")]
 [ApiController]
 public class UserController(DatabaseContext context, EmailService emailservice, IValidator <User> validator) : ControllerBase
 {
@@ -92,7 +92,7 @@ public class UserController(DatabaseContext context, EmailService emailservice, 
 	}
 
 	// POST: api/User/SendEmail
-	[HttpPost("SendEmail")]
+	[HttpPost("email/send")]
 	public async Task<IActionResult> SendEmail([FromBody] EmailRequest emailRequest)
 	{
 		try

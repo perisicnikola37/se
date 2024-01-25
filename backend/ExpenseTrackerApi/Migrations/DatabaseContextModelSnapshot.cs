@@ -222,7 +222,7 @@ namespace ExpenseTrackerApi.Migrations
                             Id = 1,
                             AccountType = "Administrator",
                             AccountTypeEnum = 1,
-                            CreatedAt = new DateTime(2024, 1, 23, 15, 53, 30, 482, DateTimeKind.Local).AddTicks(6157),
+                            CreatedAt = new DateTime(2024, 1, 25, 9, 2, 54, 3, DateTimeKind.Local).AddTicks(3731),
                             Email = "admin@gmail.com",
                             Password = "5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8",
                             Username = "Administrator"

@@ -10,25 +10,43 @@ using Microsoft.Extensions.Logging;
 
 namespace Service;
 
-public class ExpenseService(DatabaseContext _context, IValidator<Expense> _validator, GetAuthenticatedUserIdService getAuthenticatedUserIdService, ILogger<ExpenseService> _logger)
+public class ExpenseService(DatabaseContext _context, IValidator<Expense> _validator, GetAuthenticatedUserIdService _getAuthenticatedUserIdService, ILogger<ExpenseService> _logger)
 {
 	private readonly DatabaseContext _context = _context;
 	private readonly IValidator<Expense> _validator = _validator;
 	private readonly ILogger<ExpenseService> _logger = _logger;
-	private readonly GetAuthenticatedUserIdService getAuthenticatedUserIdService = getAuthenticatedUserIdService;
+	private readonly GetAuthenticatedUserIdService getAuthenticatedUserIdService = _getAuthenticatedUserIdService;
 
 	[HttpGet]
-	public async Task<PagedResponse<List<Expense>>> GetExpensesAsync(PaginationFilter filter)
+	public async Task<PagedResponse<List<ExpenseResponse>>> GetExpensesAsync(PaginationFilter filter, ControllerBase controller)
 	{
 		try
 		{
+			int? authenticatedUserId = _getAuthenticatedUserIdService.GetUserId(controller.User);
+
 			var validFilter = new PaginationFilter(filter.PageNumber, filter.PageSize);
 			var pagedData = await _context.Expenses
+				.Include(e => e.User)
+				.Where(e => e.UserId == authenticatedUserId)
 				.Skip((validFilter.PageNumber - 1) * validFilter.PageSize)
 				.Take(validFilter.PageSize)
+				.Select(e => new ExpenseResponse
+				{
+					Id = e.Id,
+					Description = e.Description,
+					Amount = e.Amount,
+					CreatedAt = e.CreatedAt,
+					ExpenseGroupId = e.ExpenseGroupId,
+					ExpenseGroup = e.ExpenseGroup,
+					UserId = e.UserId,
+					User = new UserResponse
+					{
+						Username = e.User.Username
+					}
+				})
 				.ToListAsync();
 
-			return new PagedResponse<List<Expense>>(pagedData, validFilter.PageNumber, validFilter.PageSize);
+			return new PagedResponse<List<ExpenseResponse>>(pagedData, validFilter.PageNumber, validFilter.PageSize);
 		}
 		catch (Exception ex)
 		{
@@ -106,31 +124,38 @@ public class ExpenseService(DatabaseContext _context, IValidator<Expense> _valid
 		}
 	}
 
-	public async Task<IActionResult> UpdateExpenseAsync(int id, Expense updatedExpense)
+	public async Task<IActionResult> UpdateExpenseAsync(int id, Expense updatedExpense, ControllerBase controller)
 	{
 		try
 		{
-			if (id != updatedExpense.Id)
+			if (id != updatedExpense.Id) return new BadRequestResult();
+
+			int? authenticatedUserId = _getAuthenticatedUserIdService.GetUserId(controller.User);
+
+			// Check if authenticatedUserId has a value
+			if (authenticatedUserId.HasValue)
+			{
+				// Attach authenticated user id
+				updatedExpense.UserId = authenticatedUserId.Value;
+
+				_context.Entry(updatedExpense).State = EntityState.Modified;
+
+				try
+				{
+					await _context.SaveChangesAsync();
+				}
+				catch (DbUpdateConcurrencyException)
+				{
+					if (!ExpenseExists(id)) return new NotFoundResult();
+					throw;
+				}
+
+				return new NoContentResult();
+			}
+			else
 			{
 				return new BadRequestResult();
 			}
-
-			_context.Entry(updatedExpense).State = EntityState.Modified;
-
-			try
-			{
-				await _context.SaveChangesAsync();
-			}
-			catch (DbUpdateConcurrencyException)
-			{
-				if (!ExpenseExists(id))
-				{
-					return new NotFoundResult();
-				}
-				throw;
-			}
-
-			return new NoContentResult();
 		}
 		catch (Exception ex)
 		{
@@ -138,6 +163,7 @@ public class ExpenseService(DatabaseContext _context, IValidator<Expense> _valid
 			throw;
 		}
 	}
+
 
 	public async Task<IActionResult> DeleteExpenseByIdAsync(int id)
 	{

@@ -1,11 +1,12 @@
 using Contracts.Filter;
 using Domain.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Service;
 
 namespace Presentation.Controllers;
 
-[Route("api/[controller]")]
+[Route("api/expenses")]
 [ApiController]
 public class ExpenseController(ExpenseService _expenseService) : ControllerBase
 {
@@ -13,7 +14,7 @@ public class ExpenseController(ExpenseService _expenseService) : ControllerBase
 	[HttpGet]
 	public async Task<IActionResult> GetExpensesAsync([FromQuery] PaginationFilter filter)
 	{
-		return Ok(await _expenseService.GetExpensesAsync(filter));
+		return Ok(await _expenseService.GetExpensesAsync(filter, this));
 	}
 
 	// GET: api/Expense/latest/5
@@ -41,9 +42,10 @@ public class ExpenseController(ExpenseService _expenseService) : ControllerBase
 
 	// PUT: api/Expense/5
 	[HttpPut("{id}")]
+	[Authorize("ExpenseOwnerPolicy")]
 	public async Task<IActionResult> PutExpenseAsync(int id, Expense expense)
 	{
-		return await _expenseService.UpdateExpenseAsync(id, expense);
+		return await _expenseService.UpdateExpenseAsync(id, expense, this);
 	}
 
 	// POST: api/Expense
@@ -55,6 +57,7 @@ public class ExpenseController(ExpenseService _expenseService) : ControllerBase
 
 	// DELETE: api/Expense/5
 	[HttpDelete("{id}")]
+	[Authorize("ExpenseOwnerPolicy")]
 	public async Task<IActionResult> DeleteExpenseAsync(int id)
 	{
 		return await _expenseService.DeleteExpenseByIdAsync(id);

@@ -1,11 +1,12 @@
 using Contracts.Filter;
 using Domain.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Service;
 
 namespace Presentation.Controllers;
 
-[Route("api/[controller]")]
+[Route("api/incomes")]
 [ApiController]
 public class IncomeController(IncomeService _incomeService) : ControllerBase
 {
@@ -13,7 +14,7 @@ public class IncomeController(IncomeService _incomeService) : ControllerBase
 	[HttpGet]
 	public async Task<IActionResult> GetIncomesAsync([FromQuery] PaginationFilter filter)
 	{
-		return Ok(await _incomeService.GetIncomesAsync(filter));
+		return Ok(await _incomeService.GetIncomesAsync(filter, this));
 	}
 
 	// GET: api/Income/latest/5
@@ -41,9 +42,10 @@ public class IncomeController(IncomeService _incomeService) : ControllerBase
 
 	// PUT: api/Income/5
 	[HttpPut("{id}")]
+	[Authorize("IncomeOwnerPolicy")]
 	public async Task<IActionResult> PutIncomeAsync(int id, Income income)
 	{
-		return await _incomeService.UpdateIncomeAsync(id, income);
+		return await _incomeService.UpdateIncomeAsync(id, income, this);
 	}
 
 	// POST: api/Income
@@ -55,6 +57,7 @@ public class IncomeController(IncomeService _incomeService) : ControllerBase
 
 	// DELETE: api/Income/5
 	[HttpDelete("{id}")]
+	[Authorize("IncomeOwnerPolicy")]
 	public async Task<IActionResult> DeleteIncomeAsync(int id)
 	{
 		return await _incomeService.DeleteIncomeByIdAsync(id);

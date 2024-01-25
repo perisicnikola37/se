@@ -1,6 +1,8 @@
+using Microsoft.Extensions.Logging;
 using Domain.Interfaces;
 using FluentValidation;
 using Moq;
+using Microsoft.AspNetCore.Http;
 
 namespace ExpenseTrackerApi.Tests;
 
@@ -9,6 +11,8 @@ public class AuthControllerTests
 	private readonly Mock<DatabaseContext> dbContextMock = new();
 	private readonly Mock<IAuthService> authServiceMock = new();
 	private readonly Mock<IValidator<User>> validatorMock = new();
+	private readonly Mock<ILogger<AuthController>> logger = new();
+	private readonly Mock<IHttpContextAccessor> httpContextAccessor = new();
 
 	[Fact]
 	public async Task LogInUser_ReturnsOkResult()
@@ -28,10 +32,10 @@ public class AuthControllerTests
 		// Set up the mock AuthService to return the mock user with a token when LogInUserAsync is called
 		authServiceMock.Setup(x => x.LogInUserAsync(user)).ReturnsAsync(userWithToken);
 
-		var authController = new AuthController(dbContextMock.Object, authServiceMock.Object, validatorMock.Object);
+		var authController = new AuthController(authServiceMock.Object, validatorMock.Object, logger.Object, new GetCurrentUserService(httpContextAccessor.Object, dbContextMock.Object));
 
 		// Act
-		var result = await authController.LogInUser(user);
+		var result = await authController.LogInUserAsync(user);
 
 		// Assert
 		Assert.IsType<ActionResult<User>>(result);
@@ -47,14 +51,14 @@ public class AuthControllerTests
 		// Set up the mock AuthService to return null when LogInUserAsync is called for a nonexistent user
 		authServiceMock.Setup(x => x.LogInUserAsync(user)).ReturnsAsync((LoggedInUser)null!);
 
-		var authController = new AuthController(dbContextMock.Object, authServiceMock.Object, validatorMock.Object);
+		var authController = new AuthController(authServiceMock.Object, validatorMock.Object, logger.Object, new GetCurrentUserService(httpContextAccessor.Object, dbContextMock.Object));
 
 		// Act
-		var result = await authController.LogInUser(user);
+		var result = await authController.LogInUserAsync(user);
 
 		// Assert
 		var actionResult = Assert.IsType<ActionResult<User>>(result);
-		var notFoundResult = Assert.IsType<NotFoundObjectResult>(actionResult.Result);
+		var notFoundResult = Assert.IsType<UnauthorizedObjectResult>(actionResult.Result);
 
 		var actualErrorMessage =
 			(string)notFoundResult.Value.GetType().GetProperty("message")!.GetValue(notFoundResult.Value, null)!;

@@ -5,7 +5,7 @@ using Service;
 
 namespace Presentation.Controllers;
 
-[Route("api/[controller]")]
+[Route("api/reminders")]
 [ApiController]
 public class ReminderController(ReminderService _reminderService) : ControllerBase
 {

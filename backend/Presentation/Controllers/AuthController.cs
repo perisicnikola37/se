@@ -7,7 +7,7 @@ using Service;
 
 namespace Presentation.Controllers
 {
-	[Route("api/[controller]")]
+	[Route("api/auth")]
 	[ApiController]
 	public class AuthController(
 		IAuthService authService,
@@ -20,7 +20,7 @@ namespace Presentation.Controllers
 		private readonly GetCurrentUserService _getCurrentUserService = getCurrentUserService ?? throw new ArgumentNullException(nameof(getCurrentUserService));
 		private readonly ILogger<AuthController> _logger = logger ?? throw new ArgumentNullException(nameof(logger));
 
-		[HttpPost("Login")]
+		[HttpPost("login")]
 		public async Task<ActionResult<User>> LogInUserAsync(LogInUser user)
 		{
 			try
@@ -47,7 +47,7 @@ namespace Presentation.Controllers
 			}
 		}
 
-		[HttpPost("Register")]
+		[HttpPost("register")]
 		public async Task<ActionResult<User>> RegisterUserAsync(User userRegistration)
 		{
 			try
@@ -76,7 +76,7 @@ namespace Presentation.Controllers
 			}
 		}
 
-		[HttpGet("CurrentUser")]
+		[HttpGet("user")]
 		public ActionResult<LoggedInUser> GetCurrentUser()
 		{
 			try

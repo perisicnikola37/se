@@ -3,13 +3,16 @@ using System.Threading.RateLimiting;
 using Domain.Interfaces;
 using Domain.Models;
 using Domain.Validators;
+using ExpenseTrackerApi.Handlers;
 using ExpenseTrackerApi.Middlewares;
 using FluentValidation;
 using Infrastructure.Contexts;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
 using Service;
 
@@ -24,6 +27,31 @@ builder.Services.AddCors(options =>
 		policy => { policy.WithOrigins("https://example.com"); });
 });
 
+builder.Services.AddAuthorization();
+
+builder.Services.AddHttpContextAccessor();
+
+// Policies
+builder.Services.AddAuthorization(options =>
+{
+	options.AddPolicy("BlogOwnerPolicy", policy =>
+	{
+		policy.Requirements.Add(new BlogAuthorizationRequirement());
+	});
+	options.AddPolicy("ExpenseOwnerPolicy", policy =>
+	{
+		policy.Requirements.Add(new ExpenseAuthorizationRequirement());
+	});
+	options.AddPolicy("IncomeOwnerPolicy", policy =>
+	{
+		policy.Requirements.Add(new IncomeAuthorizationRequirement());
+	});
+});
+
+builder.Services.AddScoped<IAuthorizationHandler, BlogAuthorizationHandler>();
+builder.Services.AddScoped<IAuthorizationHandler, ExpenseAuthorizationHandler>();
+builder.Services.AddScoped<IAuthorizationHandler, IncomeAuthorizationHandler>();
+
 var connectionString = configuration["DefaultConnection"];
 if (connectionString == null) throw new ArgumentNullException(nameof(connectionString), "DefaultConnection is null");
 
@@ -32,7 +60,7 @@ builder.Services.AddDbContext<DatabaseContext>(options =>
 	options.UseMySql(
 		connectionString,
 		new MySqlServerVersion(new Version(8, 0, 35)),
-		b => b.MigrationsAssembly("ExpenseTrackerApi") 
+		b => b.MigrationsAssembly("ExpenseTrackerApi")
 	);
 });
 
@@ -52,7 +80,7 @@ builder.Services.AddScoped<IValidator<Income>, IncomeValidator>();
 builder.Services.AddScoped<IValidator<User>, UserValidator>();
 
 // services
-builder.Services.AddHttpContextAccessor(); 
+builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<GetCurrentUserService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<EmailService>();
@@ -89,10 +117,38 @@ builder.Services.AddAuthentication(options =>
 	};
 });
 
-builder.Services.AddAuthorization();
-
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+
+builder.Services.AddSwaggerGen(c =>
+{
+	c.SwaggerDoc("v1", new OpenApiInfo { Title = "Expense Tracker", Version = "v1" });
+
+	c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme()
+	{
+		Name = "Authorization",
+		Type = SecuritySchemeType.ApiKey,
+		Scheme = "Bearer",
+		BearerFormat = "JWT",
+		In = ParameterLocation.Header,
+		Description = "JWT Authorization header using the Bearer scheme."
+
+	});
+	c.AddSecurityRequirement(new OpenApiSecurityRequirement
+				{
+					{
+						  new OpenApiSecurityScheme
+						  {
+							  Reference = new OpenApiReference
+							  {
+								  Type = ReferenceType.SecurityScheme,
+								  Id = "Bearer"
+							  }
+						  },
+						 Array.Empty<string>()
+					}
+				});
+});
+
 builder.Services.AddRateLimiter(rateLimiterOptions => rateLimiterOptions
 	.AddFixedWindowLimiter("fixed", options =>
 	{

@@ -4,7 +4,7 @@ public static class AuthenticationEndpointExclusions
 {
     public static List<string> ExcludedEndpoints =>
     [
-        "/api/Auth/Login",
-        "/api/Auth/Register"
+        "/api/auth/login",
+        "/api/auth/register"
     ];
 }
