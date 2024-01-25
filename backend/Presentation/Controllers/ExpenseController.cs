@@ -13,7 +13,7 @@ public class ExpenseController(ExpenseService _expenseService) : ControllerBase
 	[HttpGet]
 	public async Task<IActionResult> GetExpensesAsync([FromQuery] PaginationFilter filter)
 	{
-		return Ok(await _expenseService.GetExpensesAsync(filter));
+		return Ok(await _expenseService.GetExpensesAsync(filter, this));
 	}
 
 	// GET: api/Expense/latest/5

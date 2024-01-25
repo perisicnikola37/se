@@ -13,7 +13,7 @@ public class IncomeController(IncomeService _incomeService) : ControllerBase
 	[HttpGet]
 	public async Task<IActionResult> GetIncomesAsync([FromQuery] PaginationFilter filter)
 	{
-		return Ok(await _incomeService.GetIncomesAsync(filter));
+		return Ok(await _incomeService.GetIncomesAsync(filter, this));
 	}
 
 	// GET: api/Income/latest/5

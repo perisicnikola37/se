@@ -98,10 +98,7 @@ public class BlogService(DatabaseContext _context, IValidator<Blog> _validator, 
 
 			var userId = _getAuthenticatedUserIdService.GetUserId(controller.User);
 
-			if (userId == null)
-			{
-				return new UnauthorizedResult();
-			}
+			if (userId == null) return new UnauthorizedResult();
 
 			blog.UserId = (int)userId;
 
