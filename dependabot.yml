@@ -1,9 +1,5 @@
 version: 2
-updates:
-  - package-ecosystem: "gradle"
-    directory: "/"
-    schedule:
-      interval: "daily"
-    open-pull-requests-limit: 20
-    rebase-strategy: auto
-    auto-merge: true
+updates: 
+  — package-ecosystem: “nuget”
+  directory: “/backend/ExpenseTrackerApi” 
+  interval: “daily"
