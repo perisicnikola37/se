@@ -5,7 +5,7 @@ using Service;
 
 namespace Presentation.Controllers;
 
-[Route("api/[controller]")]
+[Route("api/incomes")]
 [ApiController]
 public class IncomeController(IncomeService _incomeService) : ControllerBase
 {

@@ -4,7 +4,7 @@ using Service;
 
 namespace Presentation.Controllers;
 
-[Route("api/[controller]")]
+[Route("api/expenses/groups")]
 [ApiController]
 public class ExpenseGroupController(ExpenseGroupService _expenseGroupService) : ControllerBase
 {

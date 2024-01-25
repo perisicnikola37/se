@@ -6,7 +6,7 @@ using Service;
 
 namespace Presentation.Controllers;
 
-[Route("api/[controller]")]
+[Route("api/blogs")]
 [ApiController]
 public class BlogController(BlogService _blogService) : ControllerBase
 {

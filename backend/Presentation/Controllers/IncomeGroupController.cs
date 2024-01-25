@@ -4,7 +4,7 @@ using Service;
 
 namespace Presentation.Controllers;
 
-[Route("api/[controller]")]
+[Route("api/incomes/groups")]
 [ApiController]
 public class IncomeGroupController(IncomeGroupService _incomeGroupService) : ControllerBase
 {

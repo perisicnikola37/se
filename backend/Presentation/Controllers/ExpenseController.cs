@@ -1,12 +1,11 @@
 using Contracts.Filter;
 using Domain.Models;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Service;
 
 namespace Presentation.Controllers;
 
-[Route("api/[controller]")]
+[Route("api/expenses")]
 [ApiController]
 public class ExpenseController(ExpenseService _expenseService) : ControllerBase
 {
