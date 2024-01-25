@@ -163,7 +163,7 @@ public class ExpenseService(DatabaseContext _context, IValidator<Expense> _valid
 				catch (ConflictException)
 				{
 					if (!ExpenseExists(id)) return new NotFoundResult();
-					throw;
+					throw new ConflictException("ExpenseService.cs");
 				}
 
 				return new NoContentResult();

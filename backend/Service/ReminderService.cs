@@ -70,7 +70,7 @@ public class ReminderService(DatabaseContext _context, ILogger<ReminderService> 
 			_logger.LogError($"UpdateReminderAsync: Concurrency conflict occurred. Error: {ex.Message}");
 			if (!ReminderExists(id))
 				return new NotFoundResult();
-			throw;
+			throw new ConflictException("ReminderService.cs");
 		}
 		catch (Exception ex)
 		{
@@ -130,6 +130,7 @@ public class ReminderService(DatabaseContext _context, ILogger<ReminderService> 
 		catch (ConflictException ex)
 		{
 			_logger.LogError($"DeleteReminderAsync: Concurrency conflict occurred. Error: {ex.Message}");
+			throw new ConflictException("ReminderService.cs");
 		}
 		catch (Exception ex)
 		{

@@ -160,7 +160,7 @@ public class IncomeService(DatabaseContext _context, IValidator<Income> _validat
 				catch (ConflictException)
 				{
 					if (!IncomeExists(id)) return new NotFoundResult();
-					throw;
+					throw new ConflictException("IncomeService.cs");
 				}
 
 				return new NoContentResult();

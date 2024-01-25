@@ -133,7 +133,7 @@ public class ExpenseGroupService(DatabaseContext _context, IValidator<ExpenseGro
 					return new NotFoundResult();
 				}
 
-				throw;
+				throw new ConflictException("ExpenseGroupService.cs");
 			}
 			return new NoContentResult();
 		}

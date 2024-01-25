@@ -132,7 +132,7 @@ public class IncomeGroupService(DatabaseContext _context, IValidator<IncomeGroup
 					return new NotFoundResult();
 				}
 
-				throw;
+				throw new ConflictException("IncomeGroupService.cs");
 			}
 			return new NoContentResult();
 		}

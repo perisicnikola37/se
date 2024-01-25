@@ -150,13 +150,13 @@ public class BlogService(DatabaseContext _context, IValidator<Blog> _validator, 
 				{
 					await _context.SaveChangesAsync();
 				}
-				catch (ConflictException)
+				catch (Exception)
 				{
 					if (!BlogExists(id))
 					{
 						return new NotFoundResult();
 					}
-					throw;
+					throw new ConflictException("BlogService.cs");
 				}
 
 				return new NoContentResult();
@@ -194,14 +194,13 @@ public class BlogService(DatabaseContext _context, IValidator<Blog> _validator, 
 		catch (ConflictException ex)
 		{
 			_logger.LogError($"DeleteBlogAsync: Concurrency conflict occurred. Error: {ex.Message}");
+			throw new ConflictException("BlogService.cs");
 		}
 		catch (Exception ex)
 		{
 			_logger.LogError($"DeleteBlogAsync: An error occurred. Error: {ex.Message}");
 			throw;
 		}
-
-		return new NoContentResult();
 	}
 
 	private bool BlogExists(int id)

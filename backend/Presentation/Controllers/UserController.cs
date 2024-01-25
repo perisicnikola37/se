@@ -54,11 +54,11 @@ public class UserController(DatabaseContext context, EmailService emailservice, 
 		{
 			await context.SaveChangesAsync();
 		}
-		catch (ConflictException)
+		catch (Exception)
 		{
 			if (!UserExists(id))
 				return NotFound();
-			throw;
+			throw new ConflictException("UserController.cs");
 		}
 
 		return NoContent();
