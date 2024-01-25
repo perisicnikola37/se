@@ -1,4 +1,3 @@
-using System.Text;
 using System.Threading.RateLimiting;
 using Domain.Interfaces;
 using Domain.Models;
@@ -7,12 +6,9 @@ using ExpenseTrackerApi.Handlers;
 using ExpenseTrackerApi.Middlewares;
 using FluentValidation;
 using Infrastructure.Contexts;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
-using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
 using Service;
 
@@ -100,33 +96,28 @@ builder.Services.AddEndpointsApiExplorer();
 // Swagger configuration
 builder.Services.ConfigureSwaggerGen();
 
-builder.Services.AddRateLimiter(rateLimiterOptions => rateLimiterOptions
-	.AddFixedWindowLimiter("fixed", options =>
-	{
-		options.PermitLimit = 4;
-		options.Window = TimeSpan.FromSeconds(12);
-		options.QueueProcessingOrder = QueueProcessingOrder.OldestFirst;
-		options.QueueLimit = 2;
-	}));
+// Rate Limiter configuration
+builder.Services.ConfigureRateLimiter();
 
 var app = builder.Build();
 
 // app.UseHttpLogging();
-app.UseRateLimiter();
 
 if (app.Environment.IsDevelopment())
 {
-app.UseSwagger();
-app.UseSwaggerUI();
+	app.UseSwagger();
+	app.UseSwaggerUI();
 }
 
 app.UseHttpsRedirection();
-app.MapControllers();
 
 // auth
 app.UseAuthentication();
 app.UseAuthorization();
 
+app.UseRateLimiter();
+
+app.MapControllers();
 // this middleware needs to be after .net auth middlewares!
 app.UseMiddleware<ClaimsMiddleware>();
 

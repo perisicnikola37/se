@@ -3,6 +3,7 @@ using Domain.Models;
 using FluentValidation;
 using Infrastructure.Contexts;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
 using Service;
 
@@ -10,6 +11,7 @@ namespace Presentation.Controllers;
 
 [Route("api/users")]
 [ApiController]
+[EnableRateLimiting("fixed")]
 public class UserController(DatabaseContext context, EmailService emailservice, IValidator <User> validator) : ControllerBase
 {
 	// GET: api/User

@@ -2,12 +2,14 @@ using Contracts.Filter;
 using Domain.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using Service;
 
 namespace Presentation.Controllers;
 
 [Route("api/incomes")]
 [ApiController]
+[EnableRateLimiting("fixed")]
 public class IncomeController(IncomeService _incomeService) : ControllerBase
 {
 	// GET: api/Income
