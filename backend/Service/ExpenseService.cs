@@ -1,3 +1,4 @@
+using System.Linq.Expressions;
 using Contracts.Dto;
 using Contracts.Filter;
 using Domain.Exceptions;
@@ -18,16 +19,31 @@ public class ExpenseService(DatabaseContext _context, IValidator<Expense> _valid
 	private readonly GetAuthenticatedUserIdService getAuthenticatedUserIdService = _getAuthenticatedUserIdService;
 
 	[HttpGet]
-	public async Task<PagedResponse<List<ExpenseResponse>>> GetExpensesAsync(PaginationFilter filter, ControllerBase controller)
+	public async Task<PagedResponse<List<ExpenseResponse>>> GetExpensesAsync(
+	PaginationFilter filter,
+	ControllerBase controller)
 	{
 		try
 		{
 			int? authenticatedUserId = _getAuthenticatedUserIdService.GetUserId(controller.User);
 
+			string description = controller.HttpContext.Request.Query["description"];
+			string minPrice = controller.HttpContext.Request.Query["minPrice"];
+			string maxPrice = controller.HttpContext.Request.Query["maxPrice"];
+			string expenseGroupId = controller.HttpContext.Request.Query["expenseGroupId"];
+
 			var validFilter = new PaginationFilter(filter.PageNumber, filter.PageSize);
-			var pagedData = await _context.Expenses
+
+			var query = _context.Expenses
 				.Include(e => e.User)
-				.Where(e => e.UserId == authenticatedUserId)
+				.Where(e => e.UserId == authenticatedUserId);
+
+			query = ApplyFilter(query, e => e.Description.Contains(description), !string.IsNullOrWhiteSpace(description));
+			query = ApplyFilter(query, e => e.Amount >= float.Parse(minPrice), !string.IsNullOrWhiteSpace(minPrice));
+			query = ApplyFilter(query, e => e.Amount <= float.Parse(maxPrice), !string.IsNullOrWhiteSpace(maxPrice));
+			query = ApplyFilter(query, e => e.ExpenseGroupId == int.Parse(expenseGroupId), !string.IsNullOrWhiteSpace(expenseGroupId));
+
+			var pagedData = await query
 				.Skip((validFilter.PageNumber - 1) * validFilter.PageSize)
 				.Take(validFilter.PageSize)
 				.Select(e => new ExpenseResponse
@@ -144,10 +160,10 @@ public class ExpenseService(DatabaseContext _context, IValidator<Expense> _valid
 				{
 					await _context.SaveChangesAsync();
 				}
-				catch (DbUpdateConcurrencyException)
+				catch (ConflictException)
 				{
 					if (!ExpenseExists(id)) return new NotFoundResult();
-					throw;
+					throw new ConflictException("ExpenseService.cs");
 				}
 
 				return new NoContentResult();
@@ -163,7 +179,6 @@ public class ExpenseService(DatabaseContext _context, IValidator<Expense> _valid
 			throw;
 		}
 	}
-
 
 	public async Task<IActionResult> DeleteExpenseByIdAsync(int id)
 	{
@@ -212,5 +227,10 @@ public class ExpenseService(DatabaseContext _context, IValidator<Expense> _valid
 			_logger.LogError($"ExpenseExists: An error occurred. Error: {ex.Message}");
 			throw;
 		}
+	}
+
+	static IQueryable<Expense> ApplyFilter(IQueryable<Expense> query, Expression<Func<Expense, bool>> filter, bool condition)
+	{
+		return condition ? query.Where(filter) : query;
 	}
 }

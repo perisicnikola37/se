@@ -1,8 +1,10 @@
 using Contracts.Dto;
+using Domain.Exceptions;
 using Domain.Models;
 using FluentValidation;
 using Infrastructure.Contexts;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
 using Service;
 
@@ -10,6 +12,7 @@ namespace Presentation.Controllers;
 
 [Route("api/users")]
 [ApiController]
+[EnableRateLimiting("fixed")]
 public class UserController(DatabaseContext context, EmailService emailservice, IValidator <User> validator) : ControllerBase
 {
 	// GET: api/User
@@ -51,11 +54,11 @@ public class UserController(DatabaseContext context, EmailService emailservice, 
 		{
 			await context.SaveChangesAsync();
 		}
-		catch (DbUpdateConcurrencyException)
+		catch (Exception)
 		{
 			if (!UserExists(id))
 				return NotFound();
-			throw;
+			throw new ConflictException("UserController.cs");
 		}
 
 		return NoContent();

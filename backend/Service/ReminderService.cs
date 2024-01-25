@@ -1,4 +1,5 @@
 using Contracts.Dto;
+using Domain.Exceptions;
 using Domain.Models;
 using Infrastructure.Contexts;
 using Microsoft.AspNetCore.Mvc;
@@ -64,12 +65,12 @@ public class ReminderService(DatabaseContext _context, ILogger<ReminderService> 
 
 			return new NoContentResult();
 		}
-		catch (DbUpdateConcurrencyException ex)
+		catch (ConflictException ex)
 		{
 			_logger.LogError($"UpdateReminderAsync: Concurrency conflict occurred. Error: {ex.Message}");
 			if (!ReminderExists(id))
 				return new NotFoundResult();
-			throw;
+			throw new ConflictException("ReminderService.cs");
 		}
 		catch (Exception ex)
 		{
@@ -126,9 +127,10 @@ public class ReminderService(DatabaseContext _context, ILogger<ReminderService> 
 
 			return new NoContentResult();
 		}
-		catch (DbUpdateConcurrencyException ex)
+		catch (ConflictException ex)
 		{
 			_logger.LogError($"DeleteReminderAsync: Concurrency conflict occurred. Error: {ex.Message}");
+			throw new ConflictException("ReminderService.cs");
 		}
 		catch (Exception ex)
 		{

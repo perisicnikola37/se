@@ -1,12 +1,14 @@
 using Contracts.Dto;
 using Domain.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using Service;
 
 namespace Presentation.Controllers;
 
 [Route("api/reminders")]
 [ApiController]
+[EnableRateLimiting("fixed")]
 public class ReminderController(ReminderService _reminderService) : ControllerBase
 {
 	// GET: api/Reminder

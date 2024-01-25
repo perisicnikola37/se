@@ -2,12 +2,14 @@ using Contracts.Filter;
 using Domain.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using Service;
 
 namespace Presentation.Controllers;
 
 [Route("api/expenses")]
 [ApiController]
+[EnableRateLimiting("fixed")]
 public class ExpenseController(ExpenseService _expenseService) : ControllerBase
 {
 	// GET: api/Expense

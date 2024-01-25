@@ -1,4 +1,5 @@
 using Contracts.Dto;
+using Domain.Exceptions;
 using Domain.Models;
 using FluentValidation;
 using Infrastructure.Contexts;
@@ -91,10 +92,7 @@ public class BlogService(DatabaseContext _context, IValidator<Blog> _validator, 
 		{
 			var validationResult = await _validator.ValidateAsync(blog);
 
-			if (!validationResult.IsValid)
-			{
-				return new BadRequestObjectResult(validationResult.Errors);
-			}
+			if (!validationResult.IsValid) return new BadRequestObjectResult(validationResult.Errors);
 
 			var userId = _getAuthenticatedUserIdService.GetUserId(controller.User);
 
@@ -152,13 +150,13 @@ public class BlogService(DatabaseContext _context, IValidator<Blog> _validator, 
 				{
 					await _context.SaveChangesAsync();
 				}
-				catch (DbUpdateConcurrencyException)
+				catch (Exception)
 				{
 					if (!BlogExists(id))
 					{
 						return new NotFoundResult();
 					}
-					throw;
+					throw new ConflictException("BlogService.cs");
 				}
 
 				return new NoContentResult();
@@ -193,17 +191,16 @@ public class BlogService(DatabaseContext _context, IValidator<Blog> _validator, 
 
 			return new NoContentResult();
 		}
-		catch (DbUpdateConcurrencyException ex)
+		catch (ConflictException ex)
 		{
 			_logger.LogError($"DeleteBlogAsync: Concurrency conflict occurred. Error: {ex.Message}");
+			throw new ConflictException("BlogService.cs");
 		}
 		catch (Exception ex)
 		{
 			_logger.LogError($"DeleteBlogAsync: An error occurred. Error: {ex.Message}");
 			throw;
 		}
-
-		return new NoContentResult();
 	}
 
 	private bool BlogExists(int id)

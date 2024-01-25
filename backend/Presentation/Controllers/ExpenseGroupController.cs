@@ -1,11 +1,13 @@
 using Domain.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using Service;
 
 namespace Presentation.Controllers;
 
 [Route("api/expenses/groups")]
 [ApiController]
+[EnableRateLimiting("fixed")]
 public class ExpenseGroupController(ExpenseGroupService _expenseGroupService) : ControllerBase
 {
 	// GET: api/ExpenseGroup

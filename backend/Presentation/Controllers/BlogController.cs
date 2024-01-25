@@ -2,12 +2,14 @@ using Contracts.Dto;
 using Domain.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using Service;
 
 namespace Presentation.Controllers;
 
 [Route("api/blogs")]
 [ApiController]
+[EnableRateLimiting("fixed")]
 public class BlogController(BlogService _blogService) : ControllerBase
 {
 	// GET: api/Blog

@@ -1,3 +1,4 @@
+using Domain.Exceptions;
 using Domain.Models;
 using FluentValidation;
 using Infrastructure.Contexts;
@@ -124,14 +125,14 @@ public class IncomeGroupService(DatabaseContext _context, IValidator<IncomeGroup
 			{
 				await _context.SaveChangesAsync();
 			}
-			catch (DbUpdateConcurrencyException)
+			catch (ConflictException)
 			{
 				if (!IncomeGroupExists(id))
 				{
 					return new NotFoundResult();
 				}
 
-				throw;
+				throw new ConflictException("IncomeGroupService.cs");
 			}
 			return new NoContentResult();
 		}
