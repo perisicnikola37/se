@@ -1,5 +1,6 @@
 using Contracts.Filter;
 using Domain.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Service;
 
@@ -41,6 +42,7 @@ public class IncomeController(IncomeService _incomeService) : ControllerBase
 
 	// PUT: api/Income/5
 	[HttpPut("{id}")]
+	[Authorize("IncomeOwnerPolicy")]
 	public async Task<IActionResult> PutIncomeAsync(int id, Income income)
 	{
 		return await _incomeService.UpdateIncomeAsync(id, income, this);
@@ -55,6 +57,7 @@ public class IncomeController(IncomeService _incomeService) : ControllerBase
 
 	// DELETE: api/Income/5
 	[HttpDelete("{id}")]
+	[Authorize("IncomeOwnerPolicy")]
 	public async Task<IActionResult> DeleteIncomeAsync(int id)
 	{
 		return await _incomeService.DeleteIncomeByIdAsync(id);

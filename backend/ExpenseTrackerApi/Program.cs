@@ -32,13 +32,24 @@ builder.Services.AddAuthorization();
 builder.Services.AddHttpContextAccessor();
 
 // Policies
-builder.Services.AddAuthorizationBuilder()
-	.AddPolicy("BlogOwnerPolicy", policy =>
+builder.Services.AddAuthorization(options =>
+{
+	options.AddPolicy("BlogOwnerPolicy", policy =>
 	{
 		policy.Requirements.Add(new BlogAuthorizationRequirement());
 	});
-	
+	options.AddPolicy("ExpenseOwnerPolicy", policy =>
+	{
+		policy.Requirements.Add(new ExpenseAuthorizationRequirement());
+	});
+	options.AddPolicy("IncomeOwnerPolicy", policy =>
+	{
+		// policy.Requirements.Add(new IncomeAuthorizationRequirement());
+	});
+});
+
 builder.Services.AddScoped<IAuthorizationHandler, BlogAuthorizationHandler>();
+builder.Services.AddScoped<IAuthorizationHandler, ExpenseAuthorizationHandler>();
 
 var connectionString = configuration["DefaultConnection"];
 if (connectionString == null) throw new ArgumentNullException(nameof(connectionString), "DefaultConnection is null");
@@ -109,32 +120,32 @@ builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.AddSwaggerGen(c =>
 {
-    c.SwaggerDoc("v1", new OpenApiInfo { Title = "Expense Tracker", Version = "v1" });
+	c.SwaggerDoc("v1", new OpenApiInfo { Title = "Expense Tracker", Version = "v1" });
 
-    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme()
-    {
-        Name = "Authorization",
-        Type = SecuritySchemeType.ApiKey,
-        Scheme = "Bearer",
-        BearerFormat = "JWT",
-        In = ParameterLocation.Header,
-        Description = "JWT Authorization header using the Bearer scheme."
+	c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme()
+	{
+		Name = "Authorization",
+		Type = SecuritySchemeType.ApiKey,
+		Scheme = "Bearer",
+		BearerFormat = "JWT",
+		In = ParameterLocation.Header,
+		Description = "JWT Authorization header using the Bearer scheme."
 
-    });
-    c.AddSecurityRequirement(new OpenApiSecurityRequirement
-                {
-                    {
-                          new OpenApiSecurityScheme
-                          {
-                              Reference = new OpenApiReference
-                              {
-                                  Type = ReferenceType.SecurityScheme,
-                                  Id = "Bearer"
-                              }
-                          },
-                         Array.Empty<string>()
-                    }
-                });
+	});
+	c.AddSecurityRequirement(new OpenApiSecurityRequirement
+				{
+					{
+						  new OpenApiSecurityScheme
+						  {
+							  Reference = new OpenApiReference
+							  {
+								  Type = ReferenceType.SecurityScheme,
+								  Id = "Bearer"
+							  }
+						  },
+						 Array.Empty<string>()
+					}
+				});
 });
 
 builder.Services.AddRateLimiter(rateLimiterOptions => rateLimiterOptions

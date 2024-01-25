@@ -23,10 +23,11 @@ public class ExpenseService(DatabaseContext _context, IValidator<Expense> _valid
 		try
 		{
 			int? authenticatedUserId = _getAuthenticatedUserIdService.GetUserId(controller.User);
-			
+
 			var validFilter = new PaginationFilter(filter.PageNumber, filter.PageSize);
 			var pagedData = await _context.Expenses
 				.Include(e => e.User)
+				.Where(e => e.UserId == authenticatedUserId)
 				.Skip((validFilter.PageNumber - 1) * validFilter.PageSize)
 				.Take(validFilter.PageSize)
 				.Select(e => new ExpenseResponse
@@ -124,44 +125,44 @@ public class ExpenseService(DatabaseContext _context, IValidator<Expense> _valid
 	}
 
 	public async Task<IActionResult> UpdateExpenseAsync(int id, Expense updatedExpense, ControllerBase controller)
-{
-	try
 	{
-		if (id != updatedExpense.Id) return new BadRequestResult();
-
-		int? authenticatedUserId = _getAuthenticatedUserIdService.GetUserId(controller.User);
-
-		// Check if authenticatedUserId has a value
-		if (authenticatedUserId.HasValue)
+		try
 		{
-			// Attach authenticated user id
-			updatedExpense.UserId = authenticatedUserId.Value;
+			if (id != updatedExpense.Id) return new BadRequestResult();
 
-			_context.Entry(updatedExpense).State = EntityState.Modified;
+			int? authenticatedUserId = _getAuthenticatedUserIdService.GetUserId(controller.User);
 
-			try
+			// Check if authenticatedUserId has a value
+			if (authenticatedUserId.HasValue)
 			{
-				await _context.SaveChangesAsync();
-			}
-			catch (DbUpdateConcurrencyException)
-			{
-				if (!ExpenseExists(id)) return new NotFoundResult();
-				throw;
-			}
+				// Attach authenticated user id
+				updatedExpense.UserId = authenticatedUserId.Value;
 
-			return new NoContentResult();
+				_context.Entry(updatedExpense).State = EntityState.Modified;
+
+				try
+				{
+					await _context.SaveChangesAsync();
+				}
+				catch (DbUpdateConcurrencyException)
+				{
+					if (!ExpenseExists(id)) return new NotFoundResult();
+					throw;
+				}
+
+				return new NoContentResult();
+			}
+			else
+			{
+				return new BadRequestResult();
+			}
 		}
-		else
+		catch (Exception ex)
 		{
-			return new BadRequestResult();
+			_logger.LogError($"UpdateExpenseAsync: An error occurred. Error: {ex.Message}");
+			throw;
 		}
 	}
-	catch (Exception ex)
-	{
-		_logger.LogError($"UpdateExpenseAsync: An error occurred. Error: {ex.Message}");
-		throw;
-	}
-}
 
 
 	public async Task<IActionResult> DeleteExpenseByIdAsync(int id)

@@ -42,6 +42,7 @@ public class BlogController(BlogService _blogService) : ControllerBase
 
 	// DELETE: api/Blog/5
 	[HttpDelete("{id}")]
+	[Authorize("BlogOwnerPolicy")]
 	public async Task<IActionResult> DeleteBlogAsync(int id)
 	{
 		return await _blogService.DeleteBlogAsync(id);

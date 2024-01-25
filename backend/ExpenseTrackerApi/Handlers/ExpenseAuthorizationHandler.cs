@@ -4,18 +4,18 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ExpenseTrackerApi.Handlers;
 
-public class BlogAuthorizationRequirement : IAuthorizationRequirement
+public class ExpenseAuthorizationRequirement : IAuthorizationRequirement
 {
 }
 
-public class BlogAuthorizationHandler(IHttpContextAccessor httpContextAccessor, DatabaseContext dbContext) : AuthorizationHandler<BlogAuthorizationRequirement>
+public class ExpenseAuthorizationHandler(IHttpContextAccessor httpContextAccessor, DatabaseContext dbContext) : AuthorizationHandler<ExpenseAuthorizationRequirement>
 {
 	private readonly IHttpContextAccessor _httpContextAccessor = httpContextAccessor ?? throw new ArgumentNullException(nameof(httpContextAccessor));
 	private readonly DatabaseContext _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
 
     protected override async Task HandleRequirementAsync(
 	AuthorizationHandlerContext context,
-	BlogAuthorizationRequirement requirement)
+	ExpenseAuthorizationRequirement requirement)
 {
 	var userIdClaim = context.User.Claims.FirstOrDefault(c => c.Type == "Id");
 
@@ -25,16 +25,16 @@ public class BlogAuthorizationHandler(IHttpContextAccessor httpContextAccessor, 
 
 		if (int.TryParse(userIdClaim.Value, out int userId))
 		{
-			var blogId = GetIdFromUrl();
+			var expenseId = GetIdFromUrl();
 
-			var blog = await _dbContext.Blogs.FirstOrDefaultAsync(b => b.Id == blogId);
+			var expense = await _dbContext.Expenses.FirstOrDefaultAsync(b => b.Id == expenseId);
 
-			if (blog != null && blog.UserId == userId)
+			if (expense != null && expense.UserId == userId)
 			{
 				Console.WriteLine("Entering the condition");
 
 				// Detach the existing tracked entity if any
-				_dbContext.Entry(blog).State = EntityState.Detached;
+				_dbContext.Entry(expense).State = EntityState.Detached;
 
 				context.Succeed(requirement);
 			}

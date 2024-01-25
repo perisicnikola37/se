@@ -1,5 +1,6 @@
 using Contracts.Filter;
 using Domain.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Service;
 
@@ -41,6 +42,7 @@ public class ExpenseController(ExpenseService _expenseService) : ControllerBase
 
 	// PUT: api/Expense/5
 	[HttpPut("{id}")]
+	[Authorize("ExpenseOwnerPolicy")]
 	public async Task<IActionResult> PutExpenseAsync(int id, Expense expense)
 	{
 		return await _expenseService.UpdateExpenseAsync(id, expense, this);
@@ -55,6 +57,7 @@ public class ExpenseController(ExpenseService _expenseService) : ControllerBase
 
 	// DELETE: api/Expense/5
 	[HttpDelete("{id}")]
+	[Authorize("ExpenseOwnerPolicy")]
 	public async Task<IActionResult> DeleteExpenseAsync(int id)
 	{
 		return await _expenseService.DeleteExpenseByIdAsync(id);
