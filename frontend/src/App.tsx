@@ -1,9 +1,9 @@
-const App = () => {
+function App() {
   return (
     <>
-    <h1>Main</h1>
+    <p>App</p>
     </>
-  )
+  );
 }
 
 export default App;
