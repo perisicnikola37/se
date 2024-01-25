@@ -1,4 +1,5 @@
 using Contracts.Dto;
+using Domain.Exceptions;
 using Domain.Models;
 using FluentValidation;
 using Infrastructure.Contexts;

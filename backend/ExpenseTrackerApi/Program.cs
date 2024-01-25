@@ -118,10 +118,11 @@ app.UseAuthorization();
 app.UseRateLimiter();
 
 app.MapControllers();
+
 // this middleware needs to be after .net auth middlewares!
 app.UseMiddleware<ClaimsMiddleware>();
+app.UseGlobalExceptionHandler();
 
-// cors
 app.UseCors();
 
 app.Run();
