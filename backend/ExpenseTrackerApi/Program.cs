@@ -44,12 +44,13 @@ builder.Services.AddAuthorization(options =>
 	});
 	options.AddPolicy("IncomeOwnerPolicy", policy =>
 	{
-		// policy.Requirements.Add(new IncomeAuthorizationRequirement());
+		policy.Requirements.Add(new IncomeAuthorizationRequirement());
 	});
 });
 
 builder.Services.AddScoped<IAuthorizationHandler, BlogAuthorizationHandler>();
 builder.Services.AddScoped<IAuthorizationHandler, ExpenseAuthorizationHandler>();
+builder.Services.AddScoped<IAuthorizationHandler, IncomeAuthorizationHandler>();
 
 var connectionString = configuration["DefaultConnection"];
 if (connectionString == null) throw new ArgumentNullException(nameof(connectionString), "DefaultConnection is null");
