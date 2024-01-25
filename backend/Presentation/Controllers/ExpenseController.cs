@@ -44,7 +44,7 @@ public class ExpenseController(ExpenseService _expenseService) : ControllerBase
 	[HttpPut("{id}")]
 	public async Task<IActionResult> PutExpenseAsync(int id, Expense expense)
 	{
-		return await _expenseService.UpdateExpenseAsync(id, expense);
+		return await _expenseService.UpdateExpenseAsync(id, expense, this);
 	}
 
 	// POST: api/Expense

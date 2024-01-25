@@ -177,6 +177,7 @@ public class BlogService(DatabaseContext _context, IValidator<Blog> _validator, 
 			throw;
 		}
 	}
+	
 	public async Task<IActionResult> DeleteBlogAsync(int id)
 	{
 		try

@@ -43,7 +43,7 @@ public class IncomeController(IncomeService _incomeService) : ControllerBase
 	[HttpPut("{id}")]
 	public async Task<IActionResult> PutIncomeAsync(int id, Income income)
 	{
-		return await _incomeService.UpdateIncomeAsync(id, income);
+		return await _incomeService.UpdateIncomeAsync(id, income, this);
 	}
 
 	// POST: api/Income

@@ -10,12 +10,12 @@ using Microsoft.Extensions.Logging;
 
 namespace Service;
 
-public class IncomeService(DatabaseContext _context, IValidator<Income> _validator, GetAuthenticatedUserIdService getAuthenticatedUserIdService, ILogger<IncomeService> _logger)
+public class IncomeService(DatabaseContext _context, IValidator<Income> _validator, GetAuthenticatedUserIdService _getAuthenticatedUserIdService, ILogger<IncomeService> _logger)
 {
 	private readonly DatabaseContext _context = _context;
 	private readonly IValidator<Income> _validator = _validator;
 	private readonly ILogger<IncomeService> _logger = _logger;
-	private readonly GetAuthenticatedUserIdService getAuthenticatedUserIdService = getAuthenticatedUserIdService;
+	private readonly GetAuthenticatedUserIdService getAuthenticatedUserIdService = _getAuthenticatedUserIdService;
 
 	[HttpGet]
 	public async Task<PagedResponse<List<IncomeResponse>>> GetIncomesAsync(PaginationFilter filter)
@@ -120,31 +120,38 @@ public class IncomeService(DatabaseContext _context, IValidator<Income> _validat
 		}
 	}
 
-	public async Task<IActionResult> UpdateIncomeAsync(int id, Income updatedIncome)
+	public async Task<IActionResult> UpdateIncomeAsync(int id, Income income, ControllerBase controller)
 	{
 		try
 		{
-			if (id != updatedIncome.Id)
+			if (id != income.Id) return new BadRequestResult();
+
+			int? authenticatedUserId = _getAuthenticatedUserIdService.GetUserId(controller.User);
+
+			// Check if authenticatedUserId has a value
+			if (authenticatedUserId.HasValue)
+			{
+				// Attach authenticated user id
+				income.UserId = authenticatedUserId.Value;
+
+				_context.Entry(income).State = EntityState.Modified;
+
+				try
+				{
+					await _context.SaveChangesAsync();
+				}
+				catch (DbUpdateConcurrencyException)
+				{
+					if (!IncomeExists(id)) return new NotFoundResult();
+					throw;
+				}
+
+				return new NoContentResult();
+			}
+			else
 			{
 				return new BadRequestResult();
 			}
-
-			_context.Entry(updatedIncome).State = EntityState.Modified;
-
-			try
-			{
-				await _context.SaveChangesAsync();
-			}
-			catch (DbUpdateConcurrencyException)
-			{
-				if (!IncomeExists(id))
-				{
-					return new NotFoundResult();
-				}
-				throw;
-			}
-
-			return new NoContentResult();
 		}
 		catch (Exception ex)
 		{

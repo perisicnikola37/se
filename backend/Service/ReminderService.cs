@@ -56,19 +56,7 @@ public class ReminderService(DatabaseContext _context, ILogger<ReminderService> 
 		{
 			if (id != reminder.Id) return new BadRequestResult();
 
-			if (!ReminderExists(id))
-			{
-				return new NotFoundResult();
-			}
-
-			// Get authenticated user id
-			var userId = getAuthenticatedUserIdService.GetUserId(controller.User);
-			var isAuthorized = await _context.Blogs.AnyAsync(b => b.Id == id && b.UserId == userId);
-
-			if (!isAuthorized)
-			{
-				return new UnauthorizedResult();
-			}
+			if (!ReminderExists(id)) return new NotFoundResult();
 
 			// Update the reminder
 			_context.Entry(reminder).State = EntityState.Modified;

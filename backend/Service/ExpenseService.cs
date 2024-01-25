@@ -10,12 +10,12 @@ using Microsoft.Extensions.Logging;
 
 namespace Service;
 
-public class ExpenseService(DatabaseContext _context, IValidator<Expense> _validator, GetAuthenticatedUserIdService getAuthenticatedUserIdService, ILogger<ExpenseService> _logger)
+public class ExpenseService(DatabaseContext _context, IValidator<Expense> _validator, GetAuthenticatedUserIdService _getAuthenticatedUserIdService, ILogger<ExpenseService> _logger)
 {
 	private readonly DatabaseContext _context = _context;
 	private readonly IValidator<Expense> _validator = _validator;
 	private readonly ILogger<ExpenseService> _logger = _logger;
-	private readonly GetAuthenticatedUserIdService getAuthenticatedUserIdService = getAuthenticatedUserIdService;
+	private readonly GetAuthenticatedUserIdService getAuthenticatedUserIdService = _getAuthenticatedUserIdService;
 
 	[HttpGet]
 	public async Task<PagedResponse<List<ExpenseResponse>>> GetExpensesAsync(PaginationFilter filter)
@@ -121,35 +121,46 @@ public class ExpenseService(DatabaseContext _context, IValidator<Expense> _valid
 		}
 	}
 
-	public async Task<IActionResult> UpdateExpenseAsync(int id, Expense updatedExpense)
-	{
-		try
-		{
-			if (id != updatedExpense.Id) return new BadRequestResult();
+	public async Task<IActionResult> UpdateExpenseAsync(int id, Expense updatedExpense, ControllerBase controller)
+{
+    try
+    {
+        if (id != updatedExpense.Id) return new BadRequestResult();
 
-			_context.Entry(updatedExpense).State = EntityState.Modified;
+        int? authenticatedUserId = _getAuthenticatedUserIdService.GetUserId(controller.User);
 
-			try
-			{
-				await _context.SaveChangesAsync();
-			}
-			catch (DbUpdateConcurrencyException)
-			{
-				if (!ExpenseExists(id))
-				{
-					return new NotFoundResult();
-				}
-				throw;
-			}
+        // Check if authenticatedUserId has a value
+        if (authenticatedUserId.HasValue)
+        {
+            // Attach authenticated user id
+            updatedExpense.UserId = authenticatedUserId.Value;
 
-			return new NoContentResult();
-		}
-		catch (Exception ex)
-		{
-			_logger.LogError($"UpdateExpenseAsync: An error occurred. Error: {ex.Message}");
-			throw;
-		}
-	}
+            _context.Entry(updatedExpense).State = EntityState.Modified;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!ExpenseExists(id)) return new NotFoundResult();
+                throw;
+            }
+
+            return new NoContentResult();
+        }
+        else
+        {
+            return new BadRequestResult();
+        }
+    }
+    catch (Exception ex)
+    {
+        _logger.LogError($"UpdateExpenseAsync: An error occurred. Error: {ex.Message}");
+        throw;
+    }
+}
+
 
 	public async Task<IActionResult> DeleteExpenseByIdAsync(int id)
 	{
