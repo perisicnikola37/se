@@ -1,9 +1,7 @@
-namespace Domain.Exceptions;
-
-public abstract class UnauthorizedException : Exception
+namespace Domain.Exceptions
 {
-    protected UnauthorizedException(string message)
-        : base(message)
+    public class UnauthorizedException(string fileName) : Exception($"Conflict.")
     {
+        public string FileName { get; } = fileName;
     }
 }

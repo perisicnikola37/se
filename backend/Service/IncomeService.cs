@@ -157,7 +157,7 @@ public class IncomeService(DatabaseContext _context, IValidator<Income> _validat
 				{
 					await _context.SaveChangesAsync();
 				}
-				catch (DbUpdateConcurrencyException)
+				catch (ConflictException)
 				{
 					if (!IncomeExists(id)) return new NotFoundResult();
 					throw;

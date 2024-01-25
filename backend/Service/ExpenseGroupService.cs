@@ -1,3 +1,4 @@
+using Domain.Exceptions;
 using Domain.Models;
 using FluentValidation;
 using Infrastructure.Contexts;
@@ -125,7 +126,7 @@ public class ExpenseGroupService(DatabaseContext _context, IValidator<ExpenseGro
 			{
 				await _context.SaveChangesAsync();
 			}
-			catch (DbUpdateConcurrencyException)
+			catch (ConflictException)
 			{
 				if (!ExpenseGroupExists(id))
 				{

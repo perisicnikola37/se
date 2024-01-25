@@ -92,10 +92,7 @@ public class BlogService(DatabaseContext _context, IValidator<Blog> _validator, 
 		{
 			var validationResult = await _validator.ValidateAsync(blog);
 
-			if (!validationResult.IsValid)
-			{
-				return new BadRequestObjectResult(validationResult.Errors);
-			}
+			if (!validationResult.IsValid) return new BadRequestObjectResult(validationResult.Errors);
 
 			var userId = _getAuthenticatedUserIdService.GetUserId(controller.User);
 
@@ -153,7 +150,7 @@ public class BlogService(DatabaseContext _context, IValidator<Blog> _validator, 
 				{
 					await _context.SaveChangesAsync();
 				}
-				catch (DbUpdateConcurrencyException)
+				catch (ConflictException)
 				{
 					if (!BlogExists(id))
 					{
@@ -194,7 +191,7 @@ public class BlogService(DatabaseContext _context, IValidator<Blog> _validator, 
 
 			return new NoContentResult();
 		}
-		catch (DbUpdateConcurrencyException ex)
+		catch (ConflictException ex)
 		{
 			_logger.LogError($"DeleteBlogAsync: Concurrency conflict occurred. Error: {ex.Message}");
 		}

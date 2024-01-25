@@ -160,7 +160,7 @@ public class ExpenseService(DatabaseContext _context, IValidator<Expense> _valid
 				{
 					await _context.SaveChangesAsync();
 				}
-				catch (DbUpdateConcurrencyException)
+				catch (ConflictException)
 				{
 					if (!ExpenseExists(id)) return new NotFoundResult();
 					throw;
@@ -179,7 +179,6 @@ public class ExpenseService(DatabaseContext _context, IValidator<Expense> _valid
 			throw;
 		}
 	}
-
 
 	public async Task<IActionResult> DeleteExpenseByIdAsync(int id)
 	{

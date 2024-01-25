@@ -1,4 +1,5 @@
 using Contracts.Dto;
+using Domain.Exceptions;
 using Domain.Models;
 using FluentValidation;
 using Infrastructure.Contexts;
@@ -53,7 +54,7 @@ public class UserController(DatabaseContext context, EmailService emailservice, 
 		{
 			await context.SaveChangesAsync();
 		}
-		catch (DbUpdateConcurrencyException)
+		catch (ConflictException)
 		{
 			if (!UserExists(id))
 				return NotFound();
