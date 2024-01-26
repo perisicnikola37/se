@@ -97,10 +97,7 @@ public class ExpenseService(DatabaseContext _context, IValidator<Expense> _valid
 				.Where(e => e.Id == id)
 				.FirstOrDefaultAsync();
 
-			if (expense == null)
-			{
-				return null;
-			}
+			if (expense == null) return null;
 
 			return new Response<Expense>(expense);
 		}
@@ -116,10 +113,7 @@ public class ExpenseService(DatabaseContext _context, IValidator<Expense> _valid
 		try
 		{
 			var validationResult = await _validator.ValidateAsync(expense);
-			if (!validationResult.IsValid)
-			{
-				return new BadRequestObjectResult(validationResult.Errors);
-			}
+			if (!validationResult.IsValid) return new BadRequestObjectResult(validationResult.Errors);
 
 			var expenseGroup = await _context.ExpenseGroups.FindAsync(expense.ExpenseGroupId) ?? throw NotFoundException.Create("ExpenseGroupId", "Expense group not found.");
 
@@ -139,7 +133,6 @@ public class ExpenseService(DatabaseContext _context, IValidator<Expense> _valid
 			throw;
 		}
 	}
-
 	public async Task<IActionResult> UpdateExpenseAsync(int id, Expense updatedExpense, ControllerBase controller)
 	{
 		try
@@ -186,10 +179,7 @@ public class ExpenseService(DatabaseContext _context, IValidator<Expense> _valid
 		{
 			var expense = await _context.Expenses.FindAsync(id);
 
-			if (expense == null)
-			{
-				return new NotFoundResult();
-			}
+			if (expense == null) return new NotFoundResult();
 
 			_context.Expenses.Remove(expense);
 			await _context.SaveChangesAsync();
@@ -202,7 +192,7 @@ public class ExpenseService(DatabaseContext _context, IValidator<Expense> _valid
 			throw;
 		}
 	}
-
+	
 	public async Task<ActionResult<int>> GetTotalAmountOfExpensesAsync()
 	{
 		try

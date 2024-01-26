@@ -94,10 +94,7 @@ public class IncomeService(DatabaseContext _context, IValidator<Income> _validat
 				.Where(e => e.Id == id)
 				.FirstOrDefaultAsync();
 
-			if (income == null)
-			{
-				return null;
-			}
+			if (income == null) return null;
 
 			return new Response<Income>(income);
 		}
@@ -113,10 +110,7 @@ public class IncomeService(DatabaseContext _context, IValidator<Income> _validat
 		try
 		{
 			var validationResult = await _validator.ValidateAsync(income);
-			if (!validationResult.IsValid)
-			{
-				return new BadRequestObjectResult(validationResult.Errors);
-			}
+			if (!validationResult.IsValid) return new BadRequestObjectResult(validationResult.Errors);
 
 			var incomeGroup = await _context.IncomeGroups.FindAsync(income.IncomeGroupId) ?? throw NotFoundException.Create("IncomeGroupId", "Income group not found.");
 
@@ -183,10 +177,7 @@ public class IncomeService(DatabaseContext _context, IValidator<Income> _validat
 		{
 			var income = await _context.Incomes.FindAsync(id);
 
-			if (income == null)
-			{
-				return new NotFoundResult();
-			}
+			if (income == null) return new NotFoundResult();
 
 			_context.Incomes.Remove(income);
 			await _context.SaveChangesAsync();

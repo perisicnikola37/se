@@ -64,10 +64,7 @@ public class IncomeGroupService(DatabaseContext _context, IValidator<IncomeGroup
 					.ThenInclude(income => income.User)
 				.FirstOrDefaultAsync(e => e.Id == id);
 
-			if (incomeGroup == null)
-			{
-				return new NotFoundResult();
-			}
+			if (incomeGroup == null) return new NotFoundResult();
 
 			var simplifiedIncomeGroup = new
 			{
@@ -99,6 +96,9 @@ public class IncomeGroupService(DatabaseContext _context, IValidator<IncomeGroup
 	{
 		try
 		{
+			var validationResult = await _validator.ValidateAsync(incomeGroup);
+			if (!validationResult.IsValid) return new BadRequestObjectResult(validationResult.Errors);
+			
 			_context.IncomeGroups.Add(incomeGroup);
 			await _context.SaveChangesAsync();
 
@@ -114,10 +114,7 @@ public class IncomeGroupService(DatabaseContext _context, IValidator<IncomeGroup
 	{
 		try
 		{
-			if (id != incomeGroup.Id)
-			{
-				return new BadRequestResult();
-			}
+			if (id != incomeGroup.Id) return new BadRequestResult();
 
 			_context.Entry(incomeGroup).State = EntityState.Modified;
 
@@ -127,10 +124,7 @@ public class IncomeGroupService(DatabaseContext _context, IValidator<IncomeGroup
 			}
 			catch (ConflictException)
 			{
-				if (!IncomeGroupExists(id))
-				{
-					return new NotFoundResult();
-				}
+				if (!IncomeGroupExists(id)) return new NotFoundResult();
 
 				throw new ConflictException("IncomeGroupService.cs");
 			}
@@ -149,10 +143,7 @@ public class IncomeGroupService(DatabaseContext _context, IValidator<IncomeGroup
 		{
 			var incomeGroup = await _context.IncomeGroups.FindAsync(id);
 
-			if (incomeGroup == null)
-			{
-				return new NotFoundResult();
-			}
+			if (incomeGroup == null) return new NotFoundResult();
 
 			_context.IncomeGroups.Remove(incomeGroup);
 			await _context.SaveChangesAsync();

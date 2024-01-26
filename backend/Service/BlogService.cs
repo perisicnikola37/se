@@ -152,10 +152,7 @@ public class BlogService(DatabaseContext _context, IValidator<Blog> _validator, 
 				}
 				catch (Exception)
 				{
-					if (!BlogExists(id))
-					{
-						return new NotFoundResult();
-					}
+					if (!BlogExists(id)) return new NotFoundResult();
 					throw new ConflictException("BlogService.cs");
 				}
 

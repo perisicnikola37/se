@@ -1,6 +1,7 @@
 using Contracts.Dto;
 using Domain.Exceptions;
 using Domain.Models;
+using FluentValidation;
 using Infrastructure.Contexts;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -8,7 +9,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Service;
 
-public class ReminderService(DatabaseContext _context, ILogger<ReminderService> _logger, GetAuthenticatedUserIdService getAuthenticatedUserIdService)
+public class ReminderService(DatabaseContext _context, ILogger<ReminderService> _logger, GetAuthenticatedUserIdService getAuthenticatedUserIdService, IValidator<Reminder> _validator)
 {
 	private readonly DatabaseContext _context = _context;
 	private readonly ILogger<ReminderService> _logger = _logger;
@@ -83,12 +84,8 @@ public class ReminderService(DatabaseContext _context, ILogger<ReminderService> 
 	{
 		try
 		{
-			// var validationResult = await _validator.ValidateAsync(reminder);
-
-			// if (!validationResult.IsValid)
-			// {
-			// 	return new BadRequestObjectResult(validationResult.Errors);
-			// }
+			var validationResult = await _validator.ValidateAsync(reminder);
+			if (!validationResult.IsValid) return new BadRequestObjectResult(validationResult.Errors);
 
 			var userId = getAuthenticatedUserIdService.GetUserId(controller.User);
 
@@ -137,8 +134,6 @@ public class ReminderService(DatabaseContext _context, ILogger<ReminderService> 
 			_logger.LogError($"DeleteReminderAsync: An error occurred. Error: {ex.Message}");
 			throw;
 		}
-
-		return new NoContentResult();
 	}
 
 	private bool ReminderExists(int id)

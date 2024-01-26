@@ -70,10 +70,7 @@ public class UserController(DatabaseContext context, EmailService emailservice, 
 	public async Task<ActionResult<User>> PostUser(User user)
 	{
 		var validationResult = await validator.ValidateAsync(user);
-		if (!validationResult.IsValid)
-		{
-			return BadRequest(validationResult.Errors);
-		}
+		if (!validationResult.IsValid) return BadRequest(validationResult.Errors);
 		
 		context.Users.Add(user);
 		await context.SaveChangesAsync();

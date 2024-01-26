@@ -65,10 +65,7 @@ public class ExpenseGroupService(DatabaseContext _context, IValidator<ExpenseGro
 					.ThenInclude(expense => expense.User)
 				.FirstOrDefaultAsync(e => e.Id == id);
 
-			if (expenseGroup == null)
-			{
-				return new NotFoundResult();
-			}
+			if (expenseGroup == null) return new NotFoundResult();
 
 			var simplifiedExpenseGroup = new
 			{
@@ -100,6 +97,9 @@ public class ExpenseGroupService(DatabaseContext _context, IValidator<ExpenseGro
 	{
 		try
 		{
+			var validationResult = await _validator.ValidateAsync(expenseGroup);
+			if (!validationResult.IsValid) return new BadRequestObjectResult(validationResult.Errors);
+			
 			_context.ExpenseGroups.Add(expenseGroup);
 			await _context.SaveChangesAsync();
 
@@ -115,10 +115,7 @@ public class ExpenseGroupService(DatabaseContext _context, IValidator<ExpenseGro
 	{
 		try
 		{
-			if (id != expenseGroup.Id)
-			{
-				return new BadRequestResult();
-			}
+			if (id != expenseGroup.Id) return new BadRequestResult();
 
 			_context.Entry(expenseGroup).State = EntityState.Modified;
 
@@ -128,10 +125,7 @@ public class ExpenseGroupService(DatabaseContext _context, IValidator<ExpenseGro
 			}
 			catch (ConflictException)
 			{
-				if (!ExpenseGroupExists(id))
-				{
-					return new NotFoundResult();
-				}
+				if (!ExpenseGroupExists(id)) return new NotFoundResult();
 
 				throw new ConflictException("ExpenseGroupService.cs");
 			}
@@ -150,10 +144,7 @@ public class ExpenseGroupService(DatabaseContext _context, IValidator<ExpenseGro
 		{
 			var expenseGroup = await _context.ExpenseGroups.FindAsync(id);
 
-			if (expenseGroup == null)
-			{
-				return new NotFoundResult();
-			}
+			if (expenseGroup == null) return new NotFoundResult();
 
 			_context.ExpenseGroups.Remove(expenseGroup);
 			await _context.SaveChangesAsync();
