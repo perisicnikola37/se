@@ -38,7 +38,6 @@ public class BlogController(IBlogService blogService) : ControllerBase
 	[HttpPost]
 	public async Task<ActionResult<Blog>> PostBlogAsync(Blog blog)
 	{
-
 		return await blogService.CreateBlogAsync(blog, this);
 	}
 

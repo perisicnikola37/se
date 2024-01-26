@@ -1,21 +1,20 @@
-namespace ExpenseTrackerApi.Tests
+namespace ExpenseTrackerApi.Tests.Fixtures;
+
+public class DatabaseFixture : IDisposable
 {
-    public class DatabaseFixture : IDisposable
+    public DatabaseFixture()
     {
-        public DatabaseContext Context { get; }
+        var options = new DbContextOptionsBuilder<DatabaseContext>()
+            .UseInMemoryDatabase("TestDatabase")
+            .Options;
 
-        public DatabaseFixture()
-        {
-            var options = new DbContextOptionsBuilder<DatabaseContext>()
-                .UseInMemoryDatabase(databaseName: "TestDatabase")
-                .Options;
+        Context = new DatabaseContext(options);
+    }
 
-            Context = new DatabaseContext(options);
-        }
+    public DatabaseContext Context { get; }
 
-        public void Dispose()
-        {
-            Context.Dispose();
-        }
+    public void Dispose()
+    {
+        Context.Dispose();
     }
 }
