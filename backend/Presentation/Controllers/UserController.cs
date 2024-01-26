@@ -13,105 +13,106 @@ namespace Presentation.Controllers;
 [Route("api/users")]
 [ApiController]
 [EnableRateLimiting("fixed")]
-public class UserController(DatabaseContext context, IEmailService emailService, IValidator <User> validator) : ControllerBase
+public class UserController(DatabaseContext context, IEmailService emailService, IValidator<User> validator)
+    : ControllerBase
 {
-	// GET: api/User
-	[HttpGet]
-	public async Task<ActionResult<IEnumerable<User>>> GetUsers()
-	{
-		var users = await context.Users
-			.Include(e => e.Expenses)
-			.Include(e => e.Incomes)
-			.OrderByDescending(e => e.CreatedAt)
-			.ToListAsync();
+    // GET: api/User
+    [HttpGet]
+    public async Task<ActionResult<IEnumerable<User>>> GetUsers()
+    {
+        var users = await context.Users
+            .Include(e => e.Expenses)
+            .Include(e => e.Incomes)
+            .OrderByDescending(e => e.CreatedAt)
+            .ToListAsync();
 
-		if (users.Count != 0)
-			return users;
-		return Ok(users);
-	}
+        if (users.Count != 0)
+            return users;
+        return Ok(users);
+    }
 
-	// GET: api/User/5
-	[HttpGet("{id}")]
-	public async Task<ActionResult<User>> GetUser(int id)
-	{
-		var user = await context.Users.FindAsync(id);
+    // GET: api/User/5
+    [HttpGet("{id}")]
+    public async Task<ActionResult<User>> GetUser(int id)
+    {
+        var user = await context.Users.FindAsync(id);
 
-		if (user == null) return NotFound();
+        if (user == null) return NotFound();
 
-		return user;
-	}
+        return user;
+    }
 
-	// PUT: api/User/5
-	// To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-	[HttpPut("{id}")]
-	public async Task<IActionResult> PutUser(int id, User user)
-	{
-		if (id != user.Id) return BadRequest();
+    // PUT: api/User/5
+    // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+    [HttpPut("{id}")]
+    public async Task<IActionResult> PutUser(int id, User user)
+    {
+        if (id != user.Id) return BadRequest();
 
-		context.Entry(user).State = EntityState.Modified;
+        context.Entry(user).State = EntityState.Modified;
 
-		try
-		{
-			await context.SaveChangesAsync();
-		}
-		catch (Exception)
-		{
-			if (!UserExists(id))
-				return NotFound();
-			throw new ConflictException("UserController.cs");
-		}
+        try
+        {
+            await context.SaveChangesAsync();
+        }
+        catch (Exception)
+        {
+            if (!UserExists(id))
+                return NotFound();
+            throw new ConflictException("UserController.cs");
+        }
 
-		return NoContent();
-	}
+        return NoContent();
+    }
 
-	// POST: api/User
-	// To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-	[HttpPost]
-	public async Task<ActionResult<User>> PostUser(User user)
-	{
-		var validationResult = await validator.ValidateAsync(user);
-		if (!validationResult.IsValid) return BadRequest(validationResult.Errors);
-		
-		context.Users.Add(user);
-		await context.SaveChangesAsync();
+    // POST: api/User
+    // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+    [HttpPost]
+    public async Task<ActionResult<User>> PostUser(User user)
+    {
+        var validationResult = await validator.ValidateAsync(user);
+        if (!validationResult.IsValid) return BadRequest(validationResult.Errors);
 
-		return CreatedAtAction("GetUser", new { id = user.Id }, user);
-	}
+        context.Users.Add(user);
+        await context.SaveChangesAsync();
 
-	// DELETE: api/User/5
-	[HttpDelete("{id}")]
-	public async Task<IActionResult> DeleteUser(int id)
-	{
-		var user = await context.Users.FindAsync(id);
-		if (user == null) return NotFound();
+        return CreatedAtAction("GetUser", new { id = user.Id }, user);
+    }
 
-		context.Users.Remove(user);
-		await context.SaveChangesAsync();
+    // DELETE: api/User/5
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> DeleteUser(int id)
+    {
+        var user = await context.Users.FindAsync(id);
+        if (user == null) return NotFound();
 
-		return NoContent();
-	}
+        context.Users.Remove(user);
+        await context.SaveChangesAsync();
 
-	// POST: api/User/SendEmail
-	[HttpPost("email/send")]
-	public async Task<IActionResult> SendEmail([FromBody] EmailRequest emailRequest)
-	{
-		try
-		{
-			var isEmailSent = await emailService.SendEmail(emailRequest, "subject", "body");
+        return NoContent();
+    }
 
-			if (isEmailSent)
-				return Ok("Email sent successfully");
-			return BadRequest("Failed to send email");
-		}
-		catch (Exception e)
-		{
-			Console.WriteLine(e);
-			throw;
-		}
-	}
+    // POST: api/User/SendEmail
+    [HttpPost("email/send")]
+    public async Task<IActionResult> SendEmail([FromBody] EmailRequestDto emailRequest)
+    {
+        try
+        {
+            var isEmailSent = await emailService.SendEmail(emailRequest, "subject", "body");
 
-	private bool UserExists(int id)
-	{
-		return context.Users.Any(e => e.Id == id);
-	}
+            if (isEmailSent)
+                return Ok("Email sent successfully");
+            return BadRequest("Failed to send email");
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+
+    private bool UserExists(int id)
+    {
+        return context.Users.Any(e => e.Id == id);
+    }
 }

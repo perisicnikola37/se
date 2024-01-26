@@ -6,9 +6,9 @@ using Microsoft.Extensions.Configuration;
 
 namespace Service;
 
-public class EmailService(IConfiguration configuration): IEmailService
+public class EmailService(IConfiguration configuration) : IEmailService
 {
-    public async Task<bool> SendEmail(EmailRequest emailRequest, string subject, string body)
+    public async Task<bool> SendEmail(EmailRequestDto emailRequest, string subject, string body)
     {
         try
         {

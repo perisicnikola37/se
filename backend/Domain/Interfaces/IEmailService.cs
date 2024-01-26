@@ -1,9 +1,8 @@
 using Contracts.Dto;
 
-namespace Domain.Interfaces
+namespace Domain.Interfaces;
+
+public interface IEmailService
 {
-    public interface IEmailService
-    {
-        Task<bool> SendEmail(EmailRequest emailRequest, string subject, string body);
-    }
+    Task<bool> SendEmail(EmailRequestDto emailRequest, string subject, string body);
 }

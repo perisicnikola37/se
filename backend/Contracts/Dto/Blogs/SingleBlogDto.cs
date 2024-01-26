@@ -1,7 +1,6 @@
-namespace Contracts.Dto
+namespace Contracts.Dto.Blogs;
+
+public record SingleBlogDto
 {
-    public class SingleBlogDTO
-    {
-        public object? Blog { get; set; }
-    }
+    public object? Blog { get; set; }
 }

@@ -1,4 +1,4 @@
-using Contracts.Dto;
+using Contracts.Dto.Blogs;
 using Domain.Exceptions;
 using Domain.Interfaces;
 using Domain.Models;
@@ -16,41 +16,7 @@ public class BlogService(
     IGetAuthenticatedUserIdService getAuthenticatedUserId,
     ILogger<BlogService> logger) : IBlogService
 {
-    public async Task<ActionResult<BlogDTO>> GetBlogsAsync()
-    {
-        try
-        {
-            var blogs = await context.Blogs
-                .OrderByDescending(e => e.CreatedAt)
-                .Include(blog => blog.User)
-                .Select(blog => new
-                {
-                    blog.Id,
-                    blog.Description,
-                    blog.Author,
-                    blog.Text,
-                    blog.CreatedAt,
-                    blog.UserId,
-                    User = new
-                    {
-                        blog.User!.Username
-                    }
-                })
-                .ToListAsync();
-
-            return new BlogDTO
-            {
-                Blogs = blogs
-            };
-        }
-        catch (Exception ex)
-        {
-            logger.LogError($"GetBlogsAsync: An error occurred. Error: {ex.Message}");
-            throw;
-        }
-    }
-
-    public async Task<ActionResult<SingleBlogDTO>> GetBlogAsync(int id)
+    public async Task<ActionResult<SingleBlogDto>> GetBlogAsync(int id)
     {
         try
         {
@@ -74,7 +40,7 @@ public class BlogService(
 
             if (blog == null) return new NotFoundResult();
 
-            return new SingleBlogDTO
+            return new SingleBlogDto
             {
                 Blog = new[] { blog }
             };
@@ -194,6 +160,40 @@ public class BlogService(
         catch (Exception ex)
         {
             logger.LogError($"DeleteBlogAsync: An error occurred. Error: {ex.Message}");
+            throw;
+        }
+    }
+
+    public async Task<ActionResult<BlogDto>> GetBlogsAsync()
+    {
+        try
+        {
+            var blogs = await context.Blogs
+                .OrderByDescending(e => e.CreatedAt)
+                .Include(blog => blog.User)
+                .Select(blog => new
+                {
+                    blog.Id,
+                    blog.Description,
+                    blog.Author,
+                    blog.Text,
+                    blog.CreatedAt,
+                    blog.UserId,
+                    User = new
+                    {
+                        blog.User!.Username
+                    }
+                })
+                .ToListAsync();
+
+            return new BlogDto
+            {
+                Blogs = blogs
+            };
+        }
+        catch (Exception ex)
+        {
+            logger.LogError($"GetBlogsAsync: An error occurred. Error: {ex.Message}");
             throw;
         }
     }

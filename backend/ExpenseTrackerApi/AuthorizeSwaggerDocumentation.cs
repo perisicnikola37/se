@@ -2,6 +2,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
+namespace ExpenseTrackerApi;
+
 public class AuthorizeCheckOperationFilter : IOperationFilter
 {
     public void Apply(OpenApiOperation operation, OperationFilterContext context)
@@ -10,7 +12,7 @@ public class AuthorizeCheckOperationFilter : IOperationFilter
             return;
 
         var hasAuthorize = context.MethodInfo.DeclaringType.GetCustomAttributes(true).OfType<AuthorizeAttribute>().Any()
-                    || context.MethodInfo.GetCustomAttributes(true).OfType<AuthorizeAttribute>().Any();
+                           || context.MethodInfo.GetCustomAttributes(true).OfType<AuthorizeAttribute>().Any();
 
         if (hasAuthorize)
         {
@@ -27,7 +29,8 @@ public class AuthorizeCheckOperationFilter : IOperationFilter
 
             operation.Security =
             [
-                new() {
+                new OpenApiSecurityRequirement
+                {
                     [jwtBearerScheme] = Array.Empty<string>()
                 }
             ];

@@ -1,15 +1,14 @@
-using Contracts.Dto;
+using Contracts.Dto.Blogs;
 using Domain.Models;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Domain.Interfaces
+namespace Domain.Interfaces;
+
+public interface IBlogService
 {
-    public interface IBlogService
-    {
-        Task<ActionResult<BlogDTO>> GetBlogsAsync();
-        Task<ActionResult<SingleBlogDTO>> GetBlogAsync(int id);
-        Task<ActionResult<Blog>> CreateBlogAsync(Blog blog, ControllerBase controller);
-        Task<IActionResult> UpdateBlogAsync(int id, Blog blog, ControllerBase controller);
-        Task<IActionResult> DeleteBlogAsync(int id);
-    }
+    Task<ActionResult<BlogDto>> GetBlogsAsync();
+    Task<ActionResult<SingleBlogDto>> GetBlogAsync(int id);
+    Task<ActionResult<Blog>> CreateBlogAsync(Blog blog, ControllerBase controller);
+    Task<IActionResult> UpdateBlogAsync(int id, Blog blog, ControllerBase controller);
+    Task<IActionResult> DeleteBlogAsync(int id);
 }

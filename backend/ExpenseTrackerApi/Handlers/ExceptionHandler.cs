@@ -1,4 +1,5 @@
 using System.Net;
+using Contracts.Dto;
 using Domain.Exceptions;
 using Newtonsoft.Json;
 

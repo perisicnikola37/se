@@ -1,3 +1,5 @@
+namespace Contracts.Dto;
+
 public record ErrorResponse
 {
     public string Error { get; init; }

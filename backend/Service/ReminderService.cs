@@ -1,4 +1,4 @@
-using Contracts.Dto;
+using Contracts.Dto.Reminders;
 using Domain.Exceptions;
 using Domain.Interfaces;
 using Domain.Models;
@@ -15,13 +15,13 @@ public class ReminderService(
     IValidator<Reminder> validator,
     ReminderRepository reminderRepository) : IReminderService
 {
-    public async Task<ActionResult<ReminderDTO>> GetRemindersAsync()
+    public async Task<ActionResult<ReminderDto>> GetRemindersAsync()
     {
         try
         {
             var reminders = await reminderRepository.GetRemindersAsync();
 
-            return await Task.FromResult<ActionResult<ReminderDTO>>(new ReminderDTO
+            return await Task.FromResult<ActionResult<ReminderDto>>(new ReminderDto
             {
                 Reminders = reminders
             });
@@ -33,7 +33,7 @@ public class ReminderService(
         }
     }
 
-    public async Task<ActionResult<SingleReminderDTO>> GetReminderAsync(int id)
+    public async Task<ActionResult<SingleReminderDto>> GetReminderAsync(int id)
     {
         try
         {
@@ -45,7 +45,7 @@ public class ReminderService(
                 return new NotFoundResult();
             }
 
-            return new SingleReminderDTO
+            return new SingleReminderDto
             {
                 Reminder = new[] { reminder }
             };
