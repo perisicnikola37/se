@@ -1,13 +1,11 @@
-import { Box, Button, TextField } from "@mui/material";
-import logo from "../assets/logo.png";
+import { Box, Button, InputLabel, MenuItem, Select, TextField } from "@mui/material";
 
 export default function SignIn() {
   return (
     <div className="flex items-center justify-center h-screen bg-[#222629] text-white">
       <div className="sm:w-full sm:max-w-sm text-center">
-        <img className="mx-auto w-auto" src={logo} alt="Your Company" />
         <h2 className="mt-10 text-2xl font-bold leading-9 tracking-tight">
-          Sign in to your account
+          Sign in
         </h2>
 
         <Box
@@ -25,10 +23,20 @@ export default function SignIn() {
             label="Confirm password"
             variant="outlined"
           />
-          <TextField id="outlined-basic" label="Account Type" variant="outlined" />
+
+          <InputLabel id="demo-simple-select-label">Age</InputLabel>
+          <Select
+            labelId="demo-simple-select-label"
+            id="demo-simple-select"
+            label="Age"
+          >
+            <MenuItem value={0}>Regular</MenuItem>
+            <MenuItem value={1}>Administrator</MenuItem>
+          </Select>
+
         </Box>
 
-        <Button variant="contained">Sign Up</Button>
+        <Button variant="contained" className="w-[40.5ch]">Sign Up</Button>
 
         <div className="mt-10">
           <form className="space-y-6" action="#" method="POST"></form>
