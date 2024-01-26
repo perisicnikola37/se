@@ -74,6 +74,7 @@ builder.Services.AddScoped<IValidator<Expense>, ExpenseValidator>();
 builder.Services.AddScoped<IValidator<IncomeGroup>, IncomeGroupValidator>();
 builder.Services.AddScoped<IValidator<Income>, IncomeValidator>();
 builder.Services.AddScoped<IValidator<User>, UserValidator>();
+builder.Services.AddScoped<IValidator<Reminder>, ReminderValidator>();
 
 // services
 builder.Services.AddHttpContextAccessor();
