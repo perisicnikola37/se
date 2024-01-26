@@ -1,6 +1,7 @@
 using System.Net;
 using System.Net.Mail;
 using Contracts.Dto;
+using Domain.Interfaces;
 using Microsoft.Extensions.Configuration;
 
 namespace Service;

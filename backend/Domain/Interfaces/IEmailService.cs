@@ -1,6 +1,6 @@
 using Contracts.Dto;
 
-namespace Service
+namespace Domain.Interfaces
 {
     public interface IEmailService
     {

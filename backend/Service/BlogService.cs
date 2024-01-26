@@ -1,5 +1,6 @@
 using Contracts.Dto;
 using Domain.Exceptions;
+using Domain.Interfaces;
 using Domain.Models;
 using FluentValidation;
 using Infrastructure.Contexts;
@@ -9,18 +10,13 @@ using Microsoft.Extensions.Logging;
 
 namespace Service;
 
-public class BlogService(DatabaseContext _context, IValidator<Blog> _validator, GetAuthenticatedUserIdService _getAuthenticatedUserIdService, ILogger<BlogService> _logger): IBlogService
+public class BlogService(DatabaseContext context, IValidator<Blog> validator, IGetAuthenticatedUserIdService getAuthenticatedUserId, ILogger<BlogService> logger): IBlogService
 {
-	private readonly DatabaseContext _context = _context;
-	private readonly IValidator<Blog> _validator = _validator;
-	private readonly ILogger<BlogService> _logger = _logger;
-	private readonly GetAuthenticatedUserIdService _getAuthenticatedUserIdService = _getAuthenticatedUserIdService;
-
 	public async Task<ActionResult<BlogDTO>> GetBlogsAsync()
 	{
 		try
 		{
-			var blogs = await _context.Blogs
+			var blogs = await context.Blogs
 				.OrderByDescending(e => e.CreatedAt)
 				.Include(blog => blog.User)
 				.Select(blog => new
@@ -45,7 +41,7 @@ public class BlogService(DatabaseContext _context, IValidator<Blog> _validator, 
 		}
 		catch (Exception ex)
 		{
-			_logger.LogError($"GetBlogsAsync: An error occurred. Error: {ex.Message}");
+			logger.LogError($"GetBlogsAsync: An error occurred. Error: {ex.Message}");
 			throw;
 		}
 	}
@@ -54,7 +50,7 @@ public class BlogService(DatabaseContext _context, IValidator<Blog> _validator, 
 	{
 		try
 		{
-			var blog = await _context.Blogs
+			var blog = await context.Blogs
 				.Where(b => b.Id == id)
 				.Include(blog => blog.User)
 				.Select(blog => new
@@ -81,7 +77,7 @@ public class BlogService(DatabaseContext _context, IValidator<Blog> _validator, 
 		}
 		catch (Exception ex)
 		{
-			_logger.LogError($"GetBlogAsync: An error occurred. Error: {ex.Message}");
+			logger.LogError($"GetBlogAsync: An error occurred. Error: {ex.Message}");
 			throw;
 		}
 	}
@@ -90,20 +86,20 @@ public class BlogService(DatabaseContext _context, IValidator<Blog> _validator, 
 	{
 		try
 		{
-			var validationResult = await _validator.ValidateAsync(blog);
+			var validationResult = await validator.ValidateAsync(blog);
 
 			if (!validationResult.IsValid) return new BadRequestObjectResult(validationResult.Errors);
 
-			var userId = _getAuthenticatedUserIdService.GetUserId(controller.User);
+			var userId = getAuthenticatedUserId.GetUserId(controller.User);
 
 			if (userId == null) return new UnauthorizedResult();
 
 			blog.UserId = (int)userId;
 
-			blog.User = await _context.Users.FindAsync(blog.UserId);
+			blog.User = await context.Users.FindAsync(blog.UserId);
 
-			_context.Blogs.Add(blog);
-			await _context.SaveChangesAsync();
+			context.Blogs.Add(blog);
+			await context.SaveChangesAsync();
 
 			var responseBlog = new
 			{
@@ -123,7 +119,7 @@ public class BlogService(DatabaseContext _context, IValidator<Blog> _validator, 
 		}
 		catch (Exception ex)
 		{
-			_logger.LogError($"CreateBlogAsync: An error occurred. Error: {ex.Message}");
+			logger.LogError($"CreateBlogAsync: An error occurred. Error: {ex.Message}");
 			throw;
 		}
 	}
@@ -136,7 +132,7 @@ public class BlogService(DatabaseContext _context, IValidator<Blog> _validator, 
 
 			if (!BlogExists(id)) return new NotFoundResult();
 
-			int? authenticatedUserId = _getAuthenticatedUserIdService.GetUserId(controller.User);
+			int? authenticatedUserId = getAuthenticatedUserId.GetUserId(controller.User);
 
 			// Check if authenticatedUserId has a value
 			if (authenticatedUserId.HasValue)
@@ -144,11 +140,11 @@ public class BlogService(DatabaseContext _context, IValidator<Blog> _validator, 
 				// attach authenticated user id
 				blog.UserId = authenticatedUserId.Value;
 
-				_context.Entry(blog).State = EntityState.Modified;
+				context.Entry(blog).State = EntityState.Modified;
 
 				try
 				{
-					await _context.SaveChangesAsync();
+					await context.SaveChangesAsync();
 				}
 				catch (Exception)
 				{
@@ -165,7 +161,7 @@ public class BlogService(DatabaseContext _context, IValidator<Blog> _validator, 
 		}
 		catch (Exception ex)
 		{
-			_logger.LogError($"UpdateBlogAsync: An error occurred. Error: {ex.Message}");
+			logger.LogError($"UpdateBlogAsync: An error occurred. Error: {ex.Message}");
 			throw;
 		}
 	}
@@ -174,34 +170,34 @@ public class BlogService(DatabaseContext _context, IValidator<Blog> _validator, 
 	{
 		try
 		{
-			var blog = await _context.Blogs.FindAsync(id);
+			var blog = await context.Blogs.FindAsync(id);
 			if (blog == null)
 			{
-				_logger.LogWarning($"DeleteBlogAsync: Blog with ID {id} not found.");
+				logger.LogWarning($"DeleteBlogAsync: Blog with ID {id} not found.");
 				return new NotFoundResult();
 			}
 
-			_context.Blogs.Remove(blog);
-			await _context.SaveChangesAsync();
+			context.Blogs.Remove(blog);
+			await context.SaveChangesAsync();
 
-			_logger.LogInformation($"DeleteBlogAsync: Blog with ID {id} successfully deleted.");
+			logger.LogInformation($"DeleteBlogAsync: Blog with ID {id} successfully deleted.");
 
 			return new NoContentResult();
 		}
 		catch (ConflictException ex)
 		{
-			_logger.LogError($"DeleteBlogAsync: Concurrency conflict occurred. Error: {ex.Message}");
+			logger.LogError($"DeleteBlogAsync: Concurrency conflict occurred. Error: {ex.Message}");
 			throw new ConflictException("BlogService.cs");
 		}
 		catch (Exception ex)
 		{
-			_logger.LogError($"DeleteBlogAsync: An error occurred. Error: {ex.Message}");
+			logger.LogError($"DeleteBlogAsync: An error occurred. Error: {ex.Message}");
 			throw;
 		}
 	}
 
 	private bool BlogExists(int id)
 	{
-		return _context.Blogs.Any(e => e.Id == id);
+		return context.Blogs.Any(e => e.Id == id);
 	}
 }

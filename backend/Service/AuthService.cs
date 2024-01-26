@@ -12,11 +12,11 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace Service;
 
-public class AuthService(DatabaseContext _context, IConfiguration _configuration) : IAuthService
+public class AuthService(IDatabaseContext context, IConfiguration configuration) : IAuthService
 {
 	public async Task<LoggedInUser?> LogInUserAsync(LogInUser user)
 	{
-		var authenticatedUser = await _context.Users
+		var authenticatedUser = await context.Users
 			.FirstOrDefaultAsync(u => u.Email == user.Email);
 
 		if (authenticatedUser == null || !VerifyPassword(user.Password, authenticatedUser.Password)) return null;
@@ -37,7 +37,7 @@ public class AuthService(DatabaseContext _context, IConfiguration _configuration
 
 	public async Task<ActionResult<User>> RegisterUserAsync(User userRegistration)
 	{
-		if (await _context.Users.AnyAsync(u => u.Email == userRegistration.Email))
+		if (await context.Users.AnyAsync(u => u.Email == userRegistration.Email))
 			return new ConflictObjectResult(new { message = "Email is already registered" });
 
 		var newUser = new User
@@ -50,8 +50,8 @@ public class AuthService(DatabaseContext _context, IConfiguration _configuration
 		var hashedPassword = HashPassword(userRegistration.Password);
 		newUser.Password = hashedPassword;
 
-		_context.Users.Add(newUser);
-		await _context.SaveChangesAsync();
+		context.Users.Add(newUser);
+		await context.SaveChangesAsync();
 		GenerateJwtToken(newUser);
 
 		return newUser;
@@ -59,9 +59,9 @@ public class AuthService(DatabaseContext _context, IConfiguration _configuration
 
     public string GenerateJwtToken(User user)
     {
-        var issuer = _configuration["Jwt:Issuer"];
-        var audience = _configuration["Jwt:Audience"];
-        var key = Encoding.ASCII.GetBytes(_configuration["Jwt:Key"] ??
+        var issuer = configuration["Jwt:Issuer"];
+        var audience = configuration["Jwt:Audience"];
+        var key = Encoding.ASCII.GetBytes(configuration["Jwt:Key"] ??
                                           "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.	eyJkZGFzYWRoYXNiZCBhc2RhZHMgc2Rhc3AgZGFzIGRhc2RhcyBhc2RhcyBkYXNkIGFzZGFzZGFzZCBhcyBkYXNhZGFzIGFzIGRhcyBkYXNhZGFzIGFzIGRhcyBkYXNhZGFzZGFzZCBhcyBkYXNhIGRhcyBkYXNhIGRhcyBkYXNhIGRhcyBkYXNhIGRhcyBkYXNhIGRhcyBkYXNhIGRhcyBkYXNhIGFzIGRhcyBkYXNhIGRhcyBkYXNhZGFzIGRhcyBkYXNhZGphcyBkYXNhIGRhcyBkYXNhIGRhcyBkYXNhIGRhcyBkYXNhIGRhcyBkYXNhIGRhcyBkYXNhIGRhcyBkYXNhIGRhcyBkYXNhIGRhcyBkYXNhIGRhcyBkYXNhZGphcyIsImlhdCI6MTYzNDEwNTUyMn0.S7G4f8pW7sGJ7t9PIShNElA0RRve-HlPfZRvX8hnZ6c");
 
 		var tokenDescriptor = new SecurityTokenDescriptor

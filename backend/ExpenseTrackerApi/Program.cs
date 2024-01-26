@@ -1,4 +1,3 @@
-using System.Threading.RateLimiting;
 using Domain.Interfaces;
 using Domain.Models;
 using Domain.Validators;
@@ -7,7 +6,6 @@ using ExpenseTrackerApi.Middlewares;
 using FluentValidation;
 using Infrastructure.Contexts;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using Service;
@@ -77,7 +75,6 @@ builder.Services.AddScoped<IValidator<User>, UserValidator>();
 builder.Services.AddScoped<IValidator<Reminder>, ReminderValidator>();
 
 // services
-builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<GetCurrentUserService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<EmailService>();

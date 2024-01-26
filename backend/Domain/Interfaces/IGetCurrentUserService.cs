@@ -1,7 +1,7 @@
 using Domain.Models;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Service
+namespace Domain.Interfaces
 {
     public interface IGetCurrentUserService
     {

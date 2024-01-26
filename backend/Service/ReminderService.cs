@@ -1,5 +1,6 @@
 using Contracts.Dto;
 using Domain.Exceptions;
+using Domain.Interfaces;
 using Domain.Models;
 using FluentValidation;
 using Infrastructure.Contexts;
@@ -9,16 +10,13 @@ using Microsoft.Extensions.Logging;
 
 namespace Service;
 
-public class ReminderService(DatabaseContext _context, ILogger<ReminderService> _logger, GetAuthenticatedUserIdService getAuthenticatedUserIdService, IValidator<Reminder> _validator): IReminderService
+public class ReminderService(DatabaseContext context, ILogger<ReminderService> logger, IGetAuthenticatedUserIdService getAuthenticatedUserId, IValidator<Reminder> validator): IReminderService
 {
-	private readonly DatabaseContext _context = _context;
-	private readonly ILogger<ReminderService> _logger = _logger;
-	private readonly GetAuthenticatedUserIdService getAuthenticatedUserIdService = getAuthenticatedUserIdService;
 	public async Task<ActionResult<ReminderDTO>> GetRemindersAsync()
 	{
 		try
 		{
-			var reminders = await _context.Reminders.OrderByDescending(e => e.CreatedAt).ToListAsync();
+			var reminders = await context.Reminders.OrderByDescending(e => e.CreatedAt).ToListAsync();
 
 			return new ReminderDTO
 			{
@@ -27,7 +25,7 @@ public class ReminderService(DatabaseContext _context, ILogger<ReminderService> 
 		}
 		catch (Exception ex)
 		{
-			_logger.LogError($"GetRemindersAsync: An error occurred. Error: {ex.Message}");
+			logger.LogError($"GetRemindersAsync: An error occurred. Error: {ex.Message}");
 			throw;
 		}
 	}
@@ -36,7 +34,7 @@ public class ReminderService(DatabaseContext _context, ILogger<ReminderService> 
 	{
 		try
 		{
-			var reminder = await _context.Reminders.FindAsync(id);
+			var reminder = await context.Reminders.FindAsync(id);
 
 			if (reminder == null) return new NotFoundResult();
 
@@ -47,7 +45,7 @@ public class ReminderService(DatabaseContext _context, ILogger<ReminderService> 
 		}
 		catch (Exception ex)
 		{
-			_logger.LogError($"GetReminderAsync: An error occurred. Error: {ex.Message}");
+			logger.LogError($"GetReminderAsync: An error occurred. Error: {ex.Message}");
 			throw;
 		}
 	}
@@ -61,21 +59,21 @@ public class ReminderService(DatabaseContext _context, ILogger<ReminderService> 
 			if (!ReminderExists(id)) return new NotFoundResult();
 
 			// Update the reminder
-			_context.Entry(reminder).State = EntityState.Modified;
-			await _context.SaveChangesAsync();
+			context.Entry(reminder).State = EntityState.Modified;
+			await context.SaveChangesAsync();
 
 			return new NoContentResult();
 		}
 		catch (ConflictException ex)
 		{
-			_logger.LogError($"UpdateReminderAsync: Concurrency conflict occurred. Error: {ex.Message}");
+			logger.LogError($"UpdateReminderAsync: Concurrency conflict occurred. Error: {ex.Message}");
 			if (!ReminderExists(id))
 				return new NotFoundResult();
 			throw new ConflictException("ReminderService.cs");
 		}
 		catch (Exception ex)
 		{
-			_logger.LogError($"UpdateReminderAsync: An error occurred. Error: {ex.Message}");
+			logger.LogError($"UpdateReminderAsync: An error occurred. Error: {ex.Message}");
 			throw;
 		}
 	}
@@ -84,24 +82,24 @@ public class ReminderService(DatabaseContext _context, ILogger<ReminderService> 
 	{
 		try
 		{
-			var validationResult = await _validator.ValidateAsync(reminder);
+			var validationResult = await validator.ValidateAsync(reminder);
 			if (!validationResult.IsValid) return new BadRequestObjectResult(validationResult.Errors);
 
-			var userId = getAuthenticatedUserIdService.GetUserId(controller.User);
+			var userId = getAuthenticatedUserId.GetUserId(controller.User);
 
 			if (userId == null)
 			{
 				return new UnauthorizedResult();
 			}
 
-			_context.Reminders.Add(reminder);
-			await _context.SaveChangesAsync();
+			context.Reminders.Add(reminder);
+			await context.SaveChangesAsync();
 
 			return new CreatedAtActionResult("GetReminder", "Reminder", new { id = reminder.Id }, reminder);
 		}
 		catch (Exception ex)
 		{
-			_logger.LogError($"CreateReminderAsync: An error occurred. Error: {ex.Message}");
+			logger.LogError($"CreateReminderAsync: An error occurred. Error: {ex.Message}");
 			throw;
 		}
 	}
@@ -110,35 +108,35 @@ public class ReminderService(DatabaseContext _context, ILogger<ReminderService> 
 	{
 		try
 		{
-			var reminder = await _context.Reminders.FindAsync(id);
+			var reminder = await context.Reminders.FindAsync(id);
 			if (reminder == null)
 			{
-				_logger.LogWarning($"DeleteReminderAsync: Reminder with ID {id} not found.");
+				logger.LogWarning($"DeleteReminderAsync: Reminder with ID {id} not found.");
 				return new NotFoundResult();
 			}
 
-			_context.Reminders.Remove(reminder);
-			await _context.SaveChangesAsync();
+			context.Reminders.Remove(reminder);
+			await context.SaveChangesAsync();
 
-			_logger.LogInformation($"DeleteReminderAsync: Reminder with ID {id} successfully deleted.");
+			logger.LogInformation($"DeleteReminderAsync: Reminder with ID {id} successfully deleted.");
 
 			return new NoContentResult();
 		}
 		catch (ConflictException ex)
 		{
-			_logger.LogError($"DeleteReminderAsync: Concurrency conflict occurred. Error: {ex.Message}");
+			logger.LogError($"DeleteReminderAsync: Concurrency conflict occurred. Error: {ex.Message}");
 			throw new ConflictException("ReminderService.cs");
 		}
 		catch (Exception ex)
 		{
-			_logger.LogError($"DeleteReminderAsync: An error occurred. Error: {ex.Message}");
+			logger.LogError($"DeleteReminderAsync: An error occurred. Error: {ex.Message}");
 			throw;
 		}
 	}
 
 	private bool ReminderExists(int id)
 	{
-		return _context.Reminders.Any(e => e.Id == id);
+		return context.Reminders.Any(e => e.Id == id);
 	}
 
 }

@@ -2,6 +2,7 @@ using System.Linq.Expressions;
 using Contracts.Dto;
 using Contracts.Filter;
 using Domain.Exceptions;
+using Domain.Interfaces;
 using Domain.Models;
 using FluentValidation;
 using Infrastructure.Contexts;
@@ -11,13 +12,8 @@ using Microsoft.Extensions.Logging;
 
 namespace Service;
 
-public class ExpenseService(DatabaseContext _context, IValidator<Expense> _validator, GetAuthenticatedUserIdService _getAuthenticatedUserIdService, ILogger<ExpenseService> _logger): IExpenseService
+public class ExpenseService(DatabaseContext context, IValidator<Expense> validator, IGetAuthenticatedUserIdService getAuthenticatedUserId, ILogger<ExpenseService> logger): IExpenseService
 {
-	private readonly DatabaseContext _context = _context;
-	private readonly IValidator<Expense> _validator = _validator;
-	private readonly ILogger<ExpenseService> _logger = _logger;
-	private readonly GetAuthenticatedUserIdService getAuthenticatedUserIdService = _getAuthenticatedUserIdService;
-
 	[HttpGet]
 	public async Task<PagedResponse<List<ExpenseResponse>>> GetExpensesAsync(
 	PaginationFilter filter,
@@ -25,16 +21,16 @@ public class ExpenseService(DatabaseContext _context, IValidator<Expense> _valid
 	{
 		try
 		{
-			int? authenticatedUserId = _getAuthenticatedUserIdService.GetUserId(controller.User);
+			int? authenticatedUserId = getAuthenticatedUserId.GetUserId(controller.User);
 
-			string description = controller.HttpContext.Request.Query["description"];
-			string minPrice = controller.HttpContext.Request.Query["minPrice"];
-			string maxPrice = controller.HttpContext.Request.Query["maxPrice"];
-			string expenseGroupId = controller.HttpContext.Request.Query["expenseGroupId"];
+			string description = controller.HttpContext.Request.Query["description"]!;
+			string minPrice = controller.HttpContext.Request.Query["minPrice"]!;
+			string maxPrice = controller.HttpContext.Request.Query["maxPrice"]!;
+			string expenseGroupId = controller.HttpContext.Request.Query["expenseGroupId"]!;
 
 			var validFilter = new PaginationFilter(filter.PageNumber, filter.PageSize);
 
-			var query = _context.Expenses
+			var query = context.Expenses
 				.Include(e => e.User)
 				.Where(e => e.UserId == authenticatedUserId);
 
@@ -53,11 +49,11 @@ public class ExpenseService(DatabaseContext _context, IValidator<Expense> _valid
 					Amount = e.Amount,
 					CreatedAt = e.CreatedAt,
 					ExpenseGroupId = e.ExpenseGroupId,
-					ExpenseGroup = e.ExpenseGroup,
+					ExpenseGroup = e.ExpenseGroup!,
 					UserId = e.UserId,
 					User = new UserResponse
 					{
-						Username = e.User.Username
+						Username = e.User!.Username
 					}
 				})
 				.ToListAsync();
@@ -66,7 +62,7 @@ public class ExpenseService(DatabaseContext _context, IValidator<Expense> _valid
 		}
 		catch (Exception ex)
 		{
-			_logger.LogError($"GetExpensesAsync: An error occurred. Error: {ex.Message}");
+			logger.LogError($"GetExpensesAsync: An error occurred. Error: {ex.Message}");
 			throw;
 		}
 	}
@@ -75,7 +71,7 @@ public class ExpenseService(DatabaseContext _context, IValidator<Expense> _valid
 	{
 		try
 		{
-			return await _context.Expenses
+			return await context.Expenses
 				.Include(e => e.User)
 				.Include(e => e.ExpenseGroup)
 				.OrderByDescending(e => e.CreatedAt)
@@ -84,7 +80,7 @@ public class ExpenseService(DatabaseContext _context, IValidator<Expense> _valid
 		}
 		catch (Exception ex)
 		{
-			_logger.LogError($"GetLatestExpensesAsync: An error occurred. Error: {ex.Message}");
+			logger.LogError($"GetLatestExpensesAsync: An error occurred. Error: {ex.Message}");
 			throw;
 		}
 	}
@@ -93,7 +89,7 @@ public class ExpenseService(DatabaseContext _context, IValidator<Expense> _valid
 	{
 		try
 		{
-			var expense = await _context.Expenses
+			var expense = await context.Expenses
 				.Where(e => e.Id == id)
 				.FirstOrDefaultAsync();
 
@@ -103,7 +99,7 @@ public class ExpenseService(DatabaseContext _context, IValidator<Expense> _valid
 		}
 		catch (Exception ex)
 		{
-			_logger.LogError($"GetExpenseAsync: An error occurred. Error: {ex.Message}");
+			logger.LogError($"GetExpenseAsync: An error occurred. Error: {ex.Message}");
 			throw;
 		}
 	}
@@ -112,24 +108,24 @@ public class ExpenseService(DatabaseContext _context, IValidator<Expense> _valid
 	{
 		try
 		{
-			var validationResult = await _validator.ValidateAsync(expense);
+			var validationResult = await validator.ValidateAsync(expense);
 			if (!validationResult.IsValid) return new BadRequestObjectResult(validationResult.Errors);
 
-			var expenseGroup = await _context.ExpenseGroups.FindAsync(expense.ExpenseGroupId) ?? throw NotFoundException.Create("ExpenseGroupId", "Expense group not found.");
+			_ = await context.ExpenseGroups.FindAsync(expense.ExpenseGroupId) ?? throw NotFoundException.Create("ExpenseGroupId", "Expense group not found.");
 
-			var userId = getAuthenticatedUserIdService.GetUserId(controller.User);
+			var userId = getAuthenticatedUserId.GetUserId(controller.User);
 
 			expense.UserId = (int)userId!;
 
-			_context.Expenses.Add(expense);
+			context.Expenses.Add(expense);
 
-			await _context.SaveChangesAsync();
+			await context.SaveChangesAsync();
 
 			return new CreatedAtActionResult("GetExpense", "Expense", new { id = expense.Id }, expense);
 		}
 		catch (Exception ex)
 		{
-			_logger.LogError($"CreateExpenseAsync: An error occurred. Error: {ex.Message}");
+			logger.LogError($"CreateExpenseAsync: An error occurred. Error: {ex.Message}");
 			throw;
 		}
 	}
@@ -139,7 +135,7 @@ public class ExpenseService(DatabaseContext _context, IValidator<Expense> _valid
 		{
 			if (id != updatedExpense.Id) return new BadRequestResult();
 
-			int? authenticatedUserId = _getAuthenticatedUserIdService.GetUserId(controller.User);
+			int? authenticatedUserId = getAuthenticatedUserId.GetUserId(controller.User);
 
 			// Check if authenticatedUserId has a value
 			if (authenticatedUserId.HasValue)
@@ -147,11 +143,11 @@ public class ExpenseService(DatabaseContext _context, IValidator<Expense> _valid
 				// Attach authenticated user id
 				updatedExpense.UserId = authenticatedUserId.Value;
 
-				_context.Entry(updatedExpense).State = EntityState.Modified;
+				context.Entry(updatedExpense).State = EntityState.Modified;
 
 				try
 				{
-					await _context.SaveChangesAsync();
+					await context.SaveChangesAsync();
 				}
 				catch (ConflictException)
 				{
@@ -168,7 +164,7 @@ public class ExpenseService(DatabaseContext _context, IValidator<Expense> _valid
 		}
 		catch (Exception ex)
 		{
-			_logger.LogError($"UpdateExpenseAsync: An error occurred. Error: {ex.Message}");
+			logger.LogError($"UpdateExpenseAsync: An error occurred. Error: {ex.Message}");
 			throw;
 		}
 	}
@@ -177,18 +173,18 @@ public class ExpenseService(DatabaseContext _context, IValidator<Expense> _valid
 	{
 		try
 		{
-			var expense = await _context.Expenses.FindAsync(id);
+			var expense = await context.Expenses.FindAsync(id);
 
 			if (expense == null) return new NotFoundResult();
 
-			_context.Expenses.Remove(expense);
-			await _context.SaveChangesAsync();
+			context.Expenses.Remove(expense);
+			await context.SaveChangesAsync();
 
 			return new NoContentResult();
 		}
 		catch (Exception ex)
 		{
-			_logger.LogError($"DeleteExpenseByIdAsync: An error occurred. Error: {ex.Message}");
+			logger.LogError($"DeleteExpenseByIdAsync: An error occurred. Error: {ex.Message}");
 			throw;
 		}
 	}
@@ -197,11 +193,11 @@ public class ExpenseService(DatabaseContext _context, IValidator<Expense> _valid
 	{
 		try
 		{
-			return await _context.Expenses.CountAsync();
+			return await context.Expenses.CountAsync();
 		}
 		catch (Exception ex)
 		{
-			_logger.LogError($"GetTotalAmountOfExpensesAsync: An error occurred. Error: {ex.Message}");
+			logger.LogError($"GetTotalAmountOfExpensesAsync: An error occurred. Error: {ex.Message}");
 			throw;
 		}
 	}
@@ -210,11 +206,11 @@ public class ExpenseService(DatabaseContext _context, IValidator<Expense> _valid
 	{
 		try
 		{
-			return _context.Expenses.Any(e => e.Id == id);
+			return context.Expenses.Any(e => e.Id == id);
 		}
 		catch (Exception ex)
 		{
-			_logger.LogError($"ExpenseExists: An error occurred. Error: {ex.Message}");
+			logger.LogError($"ExpenseExists: An error occurred. Error: {ex.Message}");
 			throw;
 		}
 	}
