@@ -14,7 +14,7 @@ using Persistence;
 using Service;
 
 var builder = WebApplication.CreateBuilder(args);
-
+builder.Services.AddAutoMapper(typeof(Program));
 var configuration = builder.Configuration;
 // disabled
 // builder.Services.AddHttpLogging(o => { });
