@@ -109,3 +109,15 @@ Password: password
    - Details of currently set reminder on the dashboard
 
 7. **Blog Page (Premium Feature)**
+
+## Additional integrations
+
+### Emails on push
+Email the commits and diff of each push to a list of recipients.
+
+### Pipeline status emails
+Email the pipeline status to a list of recipients. Only failed pipelines.
+
+<hr/>
+
+Copyright &copy; 2023
