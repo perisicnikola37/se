@@ -13,6 +13,11 @@ public class DatabaseContext : DbContext, IDatabaseContext
     {
     }
 
+    // important for tests
+    public DatabaseContext()
+    {
+    }
+
     public DbSet<User> Users { get; set; }
     public DbSet<Blog> Blogs { get; set; }
     public DbSet<ExpenseGroup> ExpenseGroups { get; set; }
