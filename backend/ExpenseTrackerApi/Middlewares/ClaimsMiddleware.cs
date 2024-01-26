@@ -2,11 +2,10 @@ using ExpenseTrackerApi.Exclusions;
 
 namespace ExpenseTrackerApi.Middlewares;
 
-public class ClaimsMiddleware(RequestDelegate next)
+public class ClaimsMiddleware(RequestDelegate next, ILogger<ClaimsMiddleware> logger)
 {
     public async Task Invoke(HttpContext context)
     {
-        var httpMethod = context.Request.Method;
         var httpPath = context.Request.Path;
 
         var excludedEndpoints = AuthenticationEndpointExclusions.ExcludedEndpoints;
@@ -23,7 +22,8 @@ public class ClaimsMiddleware(RequestDelegate next)
             {
                 if (!context.Response.HasStarted)
                 {
-                    context.Response.StatusCode = 401;
+                    logger.LogWarning("Unauthorized: Invalid user claims");
+                    context.Response.StatusCode = StatusCodes.Status401Unauthorized;
                     await context.Response.WriteAsync("Unauthorized: Invalid user claims");
                 }
             }

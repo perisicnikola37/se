@@ -1,4 +1,6 @@
-public record ReminderDTO
+namespace Contracts.Dto.Reminders;
+
+public record ReminderDto
 {
     public IEnumerable<object>? Reminders;
 }

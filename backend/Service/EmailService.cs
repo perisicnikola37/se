@@ -1,13 +1,14 @@
 using System.Net;
 using System.Net.Mail;
 using Contracts.Dto;
+using Domain.Interfaces;
 using Microsoft.Extensions.Configuration;
 
 namespace Service;
 
-public class EmailService(IConfiguration configuration)
+public class EmailService(IConfiguration configuration) : IEmailService
 {
-    public async Task<bool> SendEmail(EmailRequest emailRequest, string subject, string body)
+    public async Task<bool> SendEmail(EmailRequestDto emailRequest, string subject, string body)
     {
         try
         {

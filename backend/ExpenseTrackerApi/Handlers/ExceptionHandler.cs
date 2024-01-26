@@ -1,60 +1,56 @@
 using System.Net;
+using Contracts.Dto;
 using Domain.Exceptions;
 using Newtonsoft.Json;
 
-public class GlobalExceptionHandlerMiddleware
+namespace ExpenseTrackerApi.Handlers;
+
+public class GlobalExceptionHandlerMiddleware(RequestDelegate next)
 {
-	private readonly RequestDelegate _next;
+    public async Task Invoke(HttpContext context)
+    {
+        try
+        {
+            await next(context);
+        }
+        catch (Exception ex)
+        {
+            await HandleExceptionAsync(context, ex);
+        }
+    }
 
-	public GlobalExceptionHandlerMiddleware(RequestDelegate next)
-	{
-		_next = next ?? throw new ArgumentNullException(nameof(next));
-	}
+    private static Task HandleExceptionAsync(HttpContext context, Exception exception)
+    {
+        var code = HttpStatusCode.InternalServerError;
+        string? fileName = null;
 
-	public async Task Invoke(HttpContext context)
-	{
-		try
-		{
-			await _next(context);
-		}
-		catch (Exception ex)
-		{
-			await HandleExceptionAsync(context, ex);
-		}
-	}
+        if (exception is InvalidAccountTypeException invalidAccountTypeException)
+        {
+            code = HttpStatusCode.BadRequest;
+            fileName = invalidAccountTypeException.FileName;
+        }
 
-	private static Task HandleExceptionAsync(HttpContext context, Exception exception)
-	{
-		var code = HttpStatusCode.InternalServerError;
-		string? fileName = null;
+        var errorResponse = new ErrorResponse
+        {
+            Error = exception.Message,
+            StatusCode = (int)code,
+            Path = context.Request.Path,
+            FileName = fileName
+        };
 
-		if (exception is InvalidAccountTypeException invalidAccountTypeException)
-		{
-			code = HttpStatusCode.BadRequest;
-			fileName = invalidAccountTypeException.FileName;
-		}
+        var result = JsonConvert.SerializeObject(errorResponse);
+        context.Response.ContentType = "application/json";
+        context.Response.StatusCode = (int)code;
 
-		var errorResponse = new ErrorResponse
-		{
-			Error = exception.Message,
-			StatusCode = (int)code,
-			Path = context.Request.Path,
-			FileName = fileName
-		};
-
-		var result = JsonConvert.SerializeObject(errorResponse);
-		context.Response.ContentType = "application/json";
-		context.Response.StatusCode = (int)code;
-
-		return context.Response.WriteAsync(result);
-	}
+        return context.Response.WriteAsync(result);
+    }
 }
 
 // Extension method used to add the middleware to the HTTP request pipeline.
 public static class GlobalExceptionHandlerMiddlewareExtensions
 {
-	public static IApplicationBuilder UseGlobalExceptionHandler(this IApplicationBuilder builder)
-	{
-		return builder.UseMiddleware<GlobalExceptionHandlerMiddleware>();
-	}
+    public static IApplicationBuilder UseGlobalExceptionHandler(this IApplicationBuilder builder)
+    {
+        return builder.UseMiddleware<GlobalExceptionHandlerMiddleware>();
+    }
 }

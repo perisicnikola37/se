@@ -16,7 +16,7 @@ public class Reminder
         Sunday
     }
 
-    private string reminderDay;
+    private readonly string reminderDay;
 
     [JsonIgnore]
     public WeekDays ReminderDayEnum
@@ -26,7 +26,7 @@ public class Reminder
             Enum.TryParse(reminderDay, out WeekDays result);
             return result;
         }
-        set => reminderDay = value.ToString();
+        init => reminderDay = value.ToString();
     }
 
     [Required(ErrorMessage = "Reminder_day is required")]
@@ -35,7 +35,7 @@ public class Reminder
     public string ReminderDay
     {
         get => reminderDay;
-        set
+        init
         {
             if (Enum.TryParse(value, out WeekDays result))
                 reminderDay = value;

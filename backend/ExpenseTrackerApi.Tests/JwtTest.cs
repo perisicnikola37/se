@@ -85,4 +85,3 @@ public class JwtTokenGeneratorTests
 		Assert.Equal(user.Email, emailClaim.Value);
 	}
 }
-
