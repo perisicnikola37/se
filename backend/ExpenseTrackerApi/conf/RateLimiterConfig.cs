@@ -1,6 +1,8 @@
 using System.Threading.RateLimiting;
 using Microsoft.AspNetCore.RateLimiting;
 
+namespace ExpenseTrackerApi.conf;
+
 public static class RateLimiterConfig
 {
     public static void ConfigureRateLimiter(this IServiceCollection services)
