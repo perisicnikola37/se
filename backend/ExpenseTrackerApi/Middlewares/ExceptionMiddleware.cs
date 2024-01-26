@@ -51,6 +51,7 @@ public class GlobalExceptionHandlerMiddleware(RequestDelegate next)
 				code = HttpStatusCode.Unauthorized;
 				fileName = unauthorizedException.FileName;
 				break;
+				
 			default:
 				break;
 		}
