@@ -44,7 +44,7 @@
     </ItemGroup>
 
     <PropertyGroup>
-        <NoWarn>CS8604;AD0001</NoWarn>
+        <NoWarn>CS8604;AD0001;CS8618:</NoWarn>
     </PropertyGroup>
 
 </Project>
