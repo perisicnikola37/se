@@ -4,7 +4,6 @@ using System.Security.Cryptography;
 using System.Text;
 using Domain.Interfaces;
 using Domain.Models;
-using Infrastructure.Contexts;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;

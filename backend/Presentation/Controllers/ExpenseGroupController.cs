@@ -11,14 +11,8 @@ namespace Presentation.Controllers;
 public class ExpenseGroupController(IExpenseGroupService expenseGroupService) : ControllerBase
 {
 	// GET: api/ExpenseGroup
-	
-	public IActionResult GetExpenseGroup(int id)
-	{
-		throw new NotImplementedException();
-	}
-	
 	[HttpGet]
-	public async Task<ActionResult<IEnumerable<object>>> GetExpenseGroupsAsync()
+	public async Task<ActionResult<IEnumerable<ExpenseGroup>>> GetExpenseGroupsAsync()
 	{
 		return Ok(await expenseGroupService.GetExpenseGroupsAsync());
 	}

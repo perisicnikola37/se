@@ -29,7 +29,7 @@ public class BlogService(DatabaseContext context, IValidator<Blog> validator, IG
 					blog.UserId,
 					User = new
 					{
-						blog.User.Username
+						blog.User!.Username
 					}
 				})
 				.ToListAsync();
@@ -63,7 +63,7 @@ public class BlogService(DatabaseContext context, IValidator<Blog> validator, IG
 					blog.UserId,
 					User = new
 					{
-						blog.User.Username
+						blog.User!.Username
 					}
 				})
 				.SingleOrDefaultAsync();
@@ -111,7 +111,7 @@ public class BlogService(DatabaseContext context, IValidator<Blog> validator, IG
 				blog.UserId,
 				User = new
 				{
-					blog.User.Username,
+					blog.User!.Username,
 				}
 			};
 

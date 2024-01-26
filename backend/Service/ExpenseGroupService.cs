@@ -99,7 +99,7 @@ public class ExpenseGroupService(DatabaseContext context, IValidator<ExpenseGrou
 			context.ExpenseGroups.Add(expenseGroup);
 			await context.SaveChangesAsync();
 
-			return controller.CreatedAtAction("GetExpenseGroup", new { id = expenseGroup.Id }, expenseGroup);
+			return controller.CreatedAtAction("GetExpenseGroupsAsync", new { id = expenseGroup.Id }, expenseGroup);
 		}
 		catch (Exception ex)
 		{

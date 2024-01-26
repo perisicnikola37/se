@@ -75,16 +75,20 @@ builder.Services.AddScoped<IValidator<User>, UserValidator>();
 builder.Services.AddScoped<IValidator<Reminder>, ReminderValidator>();
 
 // services
+builder.Services.AddScoped<IDatabaseContext, DatabaseContext>();
+builder.Services.AddScoped<IGetAuthenticatedUserIdService, GetAuthenticatedUserIdService>();
+builder.Services.AddScoped<IBlogService, BlogService>();
+builder.Services.AddScoped<IExpenseService, ExpenseService>();
+builder.Services.AddScoped<IIncomeService, IncomeService>();
+builder.Services.AddScoped<IReminderService, ReminderService>();
 builder.Services.AddScoped<GetCurrentUserService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<EmailService>();
 builder.Services.AddScoped<GetAuthenticatedUserIdService>();
-builder.Services.AddScoped<BlogService>();
-builder.Services.AddScoped<ExpenseService>();
-builder.Services.AddScoped<IncomeService>();
 builder.Services.AddScoped<ReminderService>();
 builder.Services.AddScoped<ExpenseGroupService>();
 builder.Services.AddScoped<IncomeGroupService>();
+
 
 // Jwt configuration
 builder.Services.ConfigureJwtAuthentication(builder.Configuration);
