@@ -4,5 +4,5 @@ public record ErrorResponse
     public int StatusCode { get; init; }
     public string Path { get; init; }
     public DateTime Timestamp { get; init; } = DateTime.UtcNow;
-    public string FileName { get; init; } 
+    public string? FileName { get; init; }
 }
