@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Service;
 
-public class GetCurrentUserService(IHttpContextAccessor httpContextAccessor, DatabaseContext context)
+public class GetCurrentUserService(IHttpContextAccessor httpContextAccessor, DatabaseContext context): IGetCurrentUserService
 {
 	private const string UserIdClaimType = "Id"; 
 	private readonly IHttpContextAccessor _httpContextAccessor = httpContextAccessor ?? throw new ArgumentNullException(nameof(httpContextAccessor));

@@ -8,7 +8,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Service;
 
-public class IncomeGroupService(DatabaseContext _context, IValidator<IncomeGroup> _validator, GetAuthenticatedUserIdService getAuthenticatedUserIdService, ILogger<IncomeGroupService> _logger)
+public class IncomeGroupService(DatabaseContext _context, IValidator<IncomeGroup> _validator, GetAuthenticatedUserIdService getAuthenticatedUserIdService, ILogger<IncomeGroupService> _logger): IIncomeGroupService
 {
 	private readonly DatabaseContext _context = _context;
 	private readonly IValidator<IncomeGroup> _validator = _validator;

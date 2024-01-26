@@ -11,7 +11,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Service;
 
-public class ExpenseService(DatabaseContext _context, IValidator<Expense> _validator, GetAuthenticatedUserIdService _getAuthenticatedUserIdService, ILogger<ExpenseService> _logger)
+public class ExpenseService(DatabaseContext _context, IValidator<Expense> _validator, GetAuthenticatedUserIdService _getAuthenticatedUserIdService, ILogger<ExpenseService> _logger): IExpenseService
 {
 	private readonly DatabaseContext _context = _context;
 	private readonly IValidator<Expense> _validator = _validator;

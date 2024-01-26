@@ -11,7 +11,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Service;
 
-public class IncomeService(DatabaseContext _context, IValidator<Income> _validator, GetAuthenticatedUserIdService _getAuthenticatedUserIdService, ILogger<IncomeService> _logger)
+public class IncomeService(DatabaseContext _context, IValidator<Income> _validator, GetAuthenticatedUserIdService _getAuthenticatedUserIdService, ILogger<IncomeService> _logger): IIncomeService
 {
 	private readonly DatabaseContext _context = _context;
 	private readonly IValidator<Income> _validator = _validator;

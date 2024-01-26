@@ -9,7 +9,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Service;
 
-public class BlogService(DatabaseContext _context, IValidator<Blog> _validator, GetAuthenticatedUserIdService _getAuthenticatedUserIdService, ILogger<BlogService> _logger)
+public class BlogService(DatabaseContext _context, IValidator<Blog> _validator, GetAuthenticatedUserIdService _getAuthenticatedUserIdService, ILogger<BlogService> _logger): IBlogService
 {
 	private readonly DatabaseContext _context = _context;
 	private readonly IValidator<Blog> _validator = _validator;

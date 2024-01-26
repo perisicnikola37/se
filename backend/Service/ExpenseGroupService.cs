@@ -8,7 +8,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Service;
 
-public class ExpenseGroupService(DatabaseContext _context, IValidator<ExpenseGroup> _validator, GetAuthenticatedUserIdService getAuthenticatedUserIdService, ILogger<ExpenseGroupService> _logger)
+public class ExpenseGroupService(DatabaseContext _context, IValidator<ExpenseGroup> _validator, GetAuthenticatedUserIdService getAuthenticatedUserIdService, ILogger<ExpenseGroupService> _logger): IExpenseGroupService
 {
 	private readonly DatabaseContext _context = _context;
 	private readonly IValidator<ExpenseGroup> _validator = _validator;

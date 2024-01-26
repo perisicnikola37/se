@@ -9,7 +9,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Service;
 
-public class ReminderService(DatabaseContext _context, ILogger<ReminderService> _logger, GetAuthenticatedUserIdService getAuthenticatedUserIdService, IValidator<Reminder> _validator)
+public class ReminderService(DatabaseContext _context, ILogger<ReminderService> _logger, GetAuthenticatedUserIdService getAuthenticatedUserIdService, IValidator<Reminder> _validator): IReminderService
 {
 	private readonly DatabaseContext _context = _context;
 	private readonly ILogger<ReminderService> _logger = _logger;
