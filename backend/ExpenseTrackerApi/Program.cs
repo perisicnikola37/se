@@ -143,6 +143,7 @@ app.MapControllers();
 // this middleware needs to be after .net auth middlewares!
 app.UseMiddleware<ClaimsMiddleware>();
 app.UseGlobalExceptionHandler();
+app.UseMiddleware<TimeTrackingMiddleware>();
 
 app.UseCors();
 

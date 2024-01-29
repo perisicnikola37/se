@@ -1,35 +1,21 @@
-using System;
 using System.Net;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Contracts.Dto;
 using Domain.Exceptions;
 
 namespace ExpenseTrackerApi.Middlewares
 {
-	public class GlobalExceptionHandlerMiddleware
-	{
-		private readonly RequestDelegate _next;
-		private readonly ILogger<GlobalExceptionHandlerMiddleware> _logger;
-
-		public GlobalExceptionHandlerMiddleware(RequestDelegate next, ILogger<GlobalExceptionHandlerMiddleware> logger)
-		{
-			_next = next ?? throw new ArgumentNullException(nameof(next));
-			_logger = logger ?? throw new ArgumentNullException(nameof(logger));
-		}
-
-		public async Task InvokeAsync(HttpContext context)
+	public class GlobalExceptionHandlerMiddleware(RequestDelegate next, ILogger<GlobalExceptionHandlerMiddleware> logger)
+    {
+        public async Task InvokeAsync(HttpContext context)
 		{
 			try
 			{
-				await _next(context);
+				await next(context);
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError(ex, ex.Message);
+				logger.LogError(ex, ex.Message);
 				await HandleExceptionAsync(context, ex);
 			}
 		}
