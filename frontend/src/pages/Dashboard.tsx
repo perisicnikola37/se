@@ -4,6 +4,10 @@ import ChartReacharts from "../components/Chart";
 import { Table } from "@mui/material";
 import ViewInArIcon from '@mui/icons-material/ViewInAr';
 import FeaturedInSection from "../components/FeaturedIn";
+import LatestIncomes from "../components/LatestIncomes";
+import 'slick-carousel/slick/slick.css';
+import 'slick-carousel/slick/slick-theme.css';
+import LatestExpenses from "../components/LatestExpenses";
 
 const Dashboard = () => {
     const h1MotionStyle: MotionStyle = {
@@ -71,6 +75,9 @@ const Dashboard = () => {
                     layout
                 ></motion.div>
             </AnimatePresence>
+
+            <LatestIncomes />
+            <LatestExpenses />
 
             <FeaturedInSection />
         </div >
