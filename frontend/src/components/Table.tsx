@@ -22,38 +22,31 @@ import Skeleton from "@mui/material/Skeleton";
 
 interface Data {
     id: number;
-    calories: number;
-    carbs: number;
-    fat: number;
-    name: string;
-    protein: number;
+    description: string;
+    amount: number;
+    incomeGroup: string;
 }
 
 type Order = "asc" | "desc";
 
 function createData(
     id: number,
-    name: string,
-    calories: number,
-    fat: number,
-    carbs: number,
-    protein: number
+    description: string,
+    amount: number,
+    incomeGroup: string
 ): Data {
     return {
         id,
-        name,
-        calories,
-        fat,
-        carbs,
-        protein,
+        description,
+        amount,
+        incomeGroup,
     };
 }
 
 const rows = [
-    createData(1, "Cupcake", 305, 3.7, 67, 4.3),
-    createData(2, "Donut", 452, 25.0, 51, 4.9),
-    createData(3, "Eclair", 262, 16.0, 24, 6.0),
-    // ... (add more rows as needed)
+    createData(1, "Salary - June", 1304.99, "Company"),
+    createData(2, "Salary - July", 1299.99, "Company"),
+    createData(3, "Salary - August", 1168.99, "Company"),
 ];
 
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
@@ -66,17 +59,15 @@ function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
     return 0;
 }
 
-function getComparator<Key extends keyof unknown>(
+function getComparator<Key extends keyof Data>(
     order: Order,
     orderBy: Key
-): (
-    a: { [key in Key]: number | string },
-    b: { [key in Key]: number | string }
-) => number {
+): (a: Data, b: Data) => number {
     return order === "desc"
         ? (a, b) => descendingComparator(a, b, orderBy)
         : (a, b) => -descendingComparator(a, b, orderBy);
 }
+
 
 function stableSort<T>(
     array: readonly T[],
@@ -102,34 +93,28 @@ interface HeadCell {
 
 const headCells: readonly HeadCell[] = [
     {
-        id: "name",
+        id: "id",
         numeric: false,
         disablePadding: true,
-        label: "Dessert (100g serving)",
+        label: "ID",
     },
     {
-        id: "calories",
+        id: "description",
         numeric: true,
         disablePadding: false,
-        label: "Calories",
+        label: "Description",
     },
     {
-        id: "fat",
+        id: "amount",
         numeric: true,
         disablePadding: false,
-        label: "Fat (g)",
+        label: "Amount",
     },
     {
-        id: "carbs",
+        id: "incomeGroup",
         numeric: true,
         disablePadding: false,
-        label: "Carbs (g)",
-    },
-    {
-        id: "protein",
-        numeric: true,
-        disablePadding: false,
-        label: "Protein (g)",
+        label: "Income group",
     },
 ];
 
@@ -240,7 +225,7 @@ function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
                     id="tableTitle"
                     component="div"
                 >
-                    Nutrition
+                    Incomes
                 </Typography>
             )}
             {numSelected > 0 ? (
@@ -287,7 +272,7 @@ function LoadingTableRow() {
 
 function EnhancedTable() {
     const [order, setOrder] = React.useState<Order>("asc");
-    const [orderBy, setOrderBy] = React.useState<keyof Data>("calories");
+    const [orderBy, setOrderBy] = React.useState<keyof Data>("description");
     const [selected, setSelected] = React.useState<readonly number[]>([]);
     const [page, setPage] = React.useState(0);
     const [dense] = React.useState(false);
@@ -303,7 +288,7 @@ function EnhancedTable() {
     }, []);
 
     const handleRequestSort = (
-        event: React.MouseEvent<unknown>,
+        _: React.MouseEvent<unknown>,
         property: keyof Data
     ) => {
         const isAsc = orderBy === property && order === "asc";
@@ -322,7 +307,7 @@ function EnhancedTable() {
         setSelected([]);
     };
 
-    const handleClick = (event: React.MouseEvent<unknown>, id: number) => {
+    const handleClick = (_event: React.MouseEvent<unknown>, id: number) => {
         const selectedIndex = selected.indexOf(id);
         let newSelected: readonly number[] = [];
 
@@ -341,7 +326,7 @@ function EnhancedTable() {
         setSelected(newSelected);
     };
 
-    const handleChangePage = (event: unknown, newPage: number) => {
+    const handleChangePage = (_event: unknown, newPage: number) => {
         setPage(newPage);
     };
 
@@ -387,53 +372,50 @@ function EnhancedTable() {
                         <TableBody>
                             {loading
                                 ? Array.from({ length: rowsPerPage }).map(
-                                      (_, index) => (
-                                          <LoadingTableRow key={index} />
-                                      )
-                                  )
+                                    (_, index) => (
+                                        <LoadingTableRow key={index} />
+                                    )
+                                )
                                 : visibleRows.map((row, index) => (
-                                      <TableRow
-                                          hover
-                                          onClick={(event) =>
-                                              handleClick(event, row.id)
-                                          }
-                                          role="checkbox"
-                                          aria-checked={isSelected(row.id)}
-                                          tabIndex={-1}
-                                          key={row.id}
-                                          selected={isSelected(row.id)}
-                                          sx={{ cursor: "pointer" }}
-                                      >
-                                          <TableCell padding="checkbox">
-                                              <Checkbox
-                                                  color="primary"
-                                                  checked={isSelected(row.id)}
-                                                  inputProps={{
-                                                      "aria-labelledby": `enhanced-table-checkbox-${index}`,
-                                                  }}
-                                              />
-                                          </TableCell>
-                                          <TableCell
-                                              component="th"
-                                              scope="row"
-                                              padding="none"
-                                          >
-                                              {row.name}
-                                          </TableCell>
-                                          <TableCell align="right">
-                                              {row.calories}
-                                          </TableCell>
-                                          <TableCell align="right">
-                                              {row.fat}
-                                          </TableCell>
-                                          <TableCell align="right">
-                                              {row.carbs}
-                                          </TableCell>
-                                          <TableCell align="right">
-                                              {row.protein}
-                                          </TableCell>
-                                      </TableRow>
-                                  ))}
+                                    <TableRow
+                                        hover
+                                        onClick={(event) =>
+                                            handleClick(event, row.id)
+                                        }
+                                        role="checkbox"
+                                        aria-checked={isSelected(row.id)}
+                                        tabIndex={-1}
+                                        key={row.id}
+                                        selected={isSelected(row.id)}
+                                        sx={{ cursor: "pointer" }}
+                                    >
+                                        <TableCell padding="checkbox">
+                                            <Checkbox
+                                                color="primary"
+                                                checked={isSelected(row.id)}
+                                                inputProps={{
+                                                    "aria-labelledby": `enhanced-table-checkbox-${index}`,
+                                                }}
+                                            />
+                                        </TableCell>
+                                        <TableCell
+                                            component="th"
+                                            scope="row"
+                                            padding="none"
+                                        >
+                                            {row.id}
+                                        </TableCell>
+                                        <TableCell align="right">
+                                            {row.description}
+                                        </TableCell>
+                                        <TableCell align="right">
+                                            {row.amount}
+                                        </TableCell>
+                                        <TableCell align="right">
+                                            {row.incomeGroup}
+                                        </TableCell>
+                                    </TableRow>
+                                ))}
                             {emptyRows > 0 && !loading && (
                                 <TableRow
                                     style={{

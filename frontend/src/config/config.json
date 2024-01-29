@@ -11,6 +11,14 @@
             {
                 "name": "Rashodi",
                 "url": "/expenses"
+            },
+            {
+                "name": "Blogovi",
+                "url": "/blogs"
+            },
+            {
+                "name": "FAQ",
+                "url": "/faq"
             }
         ],
         "settings": ["Profil", "Odjava"],
@@ -30,6 +38,14 @@
             {
                 "name": "Expenses",
                 "url": "/expenses"
+            },
+            {
+                "name": "Blogs",
+                "url": "/blogs"
+            },
+            {
+                "name": "FAQ",
+                "url": "/faq"
             }
         ],
         "settings": ["Profile", "Logout"],

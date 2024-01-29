@@ -1,12 +1,10 @@
-import { useEffect } from "react";
+import EnhancedTable from "../components/Table";
 
 const Incomes = () => {
-    useEffect(() => {
-        console.log("Incomes page loaded");
-    }
-        , []);
     return (
-        <><h1>Incomes</h1></>
+        <div className="w-full max-w-screen-xl h-[40rem] mx-auto p-4 md:py-8">
+            <EnhancedTable />
+        </div>
     )
 }
 

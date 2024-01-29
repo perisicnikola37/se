@@ -41,7 +41,7 @@ export default function ChartReacharts() {
     return (
         <>
             <LineChart
-                className="m-auto mt-10"
+                className="_chart m-auto mt-10"
                 width={500}
                 height={300}
                 data={data}

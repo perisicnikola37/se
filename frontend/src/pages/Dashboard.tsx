@@ -1,12 +1,12 @@
 // Dashboard.tsx
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, MotionStyle, motion } from "framer-motion";
 import ChartReacharts from "../components/Chart";
 import { Table } from "@mui/material";
 import ViewInArIcon from '@mui/icons-material/ViewInAr';
 import FeaturedInSection from "../components/FeaturedIn";
 
 const Dashboard = () => {
-    const h1Style = {
+    const h1MotionStyle: MotionStyle = {
         fontFamily: 'Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"',
         fontStyle: 'normal',
         fontVariantCaps: 'normal',
@@ -17,27 +17,25 @@ const Dashboard = () => {
     };
 
     return (
-        <div className="flex-grow flex flex-col min-h-screen items-center justify-center">
-            <div>
-                <center>
-                    <motion.h4
-                        style={h1Style}
-                        className="font-extrabold text-4xl mt-20 tracking-tighter leading-none"
-                        initial={{ opacity: 0, scale: 0.8 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        transition={{ duration: 0.8 }}
-                    >
-                        Track expenses even faster with <br /> our brand new Expense Tracker application
-                    </motion.h4>
-                    <motion.p
-                        className="w-[40%] mt-3 text-gray-500"
-                        initial={{ opacity: 0, scale: 0.8 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        transition={{ duration: 0.8 }}
-                    >
-                        Start developing with an open-source library of over 600+ UI components, sections, and pages built with the utility classes from Tailwind CSS and designed in Figma.
-                    </motion.p>
-                </center>
+        <div className="flex-grow flex flex-col  items-center justify-center">
+            <div className="_main-text">
+                <motion.h4
+                    style={h1MotionStyle}
+                    className="font-extrabold text-4xl mt-20 tracking-tighter leading-none"
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ duration: 0.8 }}
+                >
+                    Track expenses even faster with <br /> our brand new Expense Tracker application
+                </motion.h4>
+                <motion.p
+                    className="_main-text_paragraph mt-3 text-gray-500"
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ duration: 0.8 }}
+                >
+                    Take advantage of our open-source solution, designed to streamline and enhance your expense tracking experience. Dive into a wealth of features and functionalities that empower you to manage your finances effortlessly.
+                </motion.p>
             </div>
             <div className="mt-5">
                 <button type="button" className="text-white bg-blue-700 hover:bg-blue-800  font-medium rounded-md text-sm px-3 py-1.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
@@ -75,8 +73,7 @@ const Dashboard = () => {
             </AnimatePresence>
 
             <FeaturedInSection />
-
-        </div>
+        </div >
     );
 };
 

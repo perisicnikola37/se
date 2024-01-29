@@ -1,4 +1,3 @@
-import * as React from "react";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import Dialog from "@mui/material/Dialog";
@@ -7,9 +6,10 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
+import { useState } from "react";
 
 export default function FormDialog() {
-    const [open, setOpen] = React.useState(false);
+    const [open, setOpen] = useState(false);
 
     const handleClickOpen = () => {
         setOpen(true);
@@ -20,7 +20,7 @@ export default function FormDialog() {
     };
 
     return (
-        <React.Fragment>
+        <>
             <Button variant="outlined" onClick={handleClickOpen}>
                 New income
             </Button>
@@ -33,7 +33,7 @@ export default function FormDialog() {
                         event.preventDefault();
                         const formData = new FormData(event.currentTarget);
                         const formJson = Object.fromEntries(
-                            (formData as unknown).entries()
+                            Array.from(formData.entries())
                         );
                         const email = formJson.email;
                         const amount = formJson.amount;
@@ -79,9 +79,6 @@ export default function FormDialog() {
                         <Select
                             labelId="demo-simple-select-label"
                             id="demo-simple-select"
-                            // value={age}
-                            label="Income group"
-                        // onChange={handleChange}
                         >
                             <MenuItem value={10}>Ten</MenuItem>
                             <MenuItem value={20}>Twenty</MenuItem>
@@ -94,6 +91,6 @@ export default function FormDialog() {
                     <Button type="submit">Create</Button>
                 </DialogActions>
             </Dialog>
-        </React.Fragment>
+        </>
     );
 }

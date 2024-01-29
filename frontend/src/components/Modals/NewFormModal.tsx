@@ -33,7 +33,7 @@ const NewFormModal = () => {
                         event.preventDefault();
                         const formData = new FormData(event.currentTarget);
                         const formJson = Object.fromEntries(
-                            (formData as unknown).entries()
+                            Array.from(formData.entries())
                         );
                         const email = formJson.email;
                         const amount = formJson.amount;

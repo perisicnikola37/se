@@ -32,8 +32,33 @@ body {
     font-size: 0rem;
 }
 
+._main-text {
+    text-align: center;
+}
+
+._main-text_paragraph {
+    margin-top: 1% !important;
+    margin: auto;
+    width: 40%;
+}
+
 @media (max-width: 768px) {
     ._close-icon {
         top: 60% !important;
+    }
+    ._sub-header {
+        display: none;
+    }
+    ._main-text {
+        text-align: left;
+        padding: 2%;
+    }
+    ._main-text_paragraph {
+        text-align: left;
+        width: 100%;
+        padding: 2%;
+    }
+    ._chart {
+        display: none;
     }
 }

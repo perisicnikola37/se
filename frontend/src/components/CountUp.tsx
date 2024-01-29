@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 
 const CountUp = () => {
-    const countupRef = useRef(null);
+    const countupRef = useRef<HTMLHeadingElement | null>(null);
     let countUpAnim;
 
     useEffect(() => {
@@ -10,7 +10,7 @@ const CountUp = () => {
 
     async function initCountUp() {
         const countUpModule = await import("countup.js");
-        countUpAnim = new countUpModule.CountUp(countupRef.current, 6);
+        countUpAnim = new countUpModule.CountUp(countupRef.current?.textContent || '', 6);
         if (!countUpAnim.error) {
             countUpAnim.start();
         } else {

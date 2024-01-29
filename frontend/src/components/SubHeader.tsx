@@ -5,7 +5,7 @@ const SubHeader = () => {
     const iconStyle = { fontSize: 16 };
 
     return (
-        <div style={{ fontSize: "12px", WebkitFontSmoothing: "antialiased", MozOsxFontSmoothing: "grayscale", backgroundColor: "#F9FAFB" }} className="sticky w-full flex font-bold items-center justify-center border-b border-gray-200 h-10">
+        <div style={{ fontSize: "12px", WebkitFontSmoothing: "antialiased", MozOsxFontSmoothing: "grayscale", backgroundColor: "#F9FAFB" }} className="_sub-header sticky w-full flex font-bold items-center justify-center border-b border-gray-200 h-10">
             <Chip label="New" variant="outlined" size="small" className="text-xs mr-2 " />
             <p className="text-gray-700">
                 We have launched automated pipelines in our GitLab repository!

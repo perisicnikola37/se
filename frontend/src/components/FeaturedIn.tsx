@@ -1,9 +1,9 @@
 const FeaturedInSection = () => {
     return (
-        <div className="max-w-4xl mb-10 mx-auto text-center select-none">
+        <div className="_featured-in max-w-4xl mb-10 mt-10 mx-auto text-center select-none">
             <h2 className="text-xs font-semibold mb-4 text-gray-500 uppercase">Featured in</h2>
 
-            <div className="flex justify-center items-center space-x-4">
+            <div className="flex flex-col items-center space-y-4 md:flex-row md:space-y-0 md:space-x-4">
                 <img
                     width={100}
                     src="https://assets.stickpng.com/images/629b7adc7c5cd817694c3231.png"
