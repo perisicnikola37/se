@@ -1,0 +1,34 @@
+{
+    "ME": {
+        "pages": [{
+                "name": "Početna",
+                "url": "/dashboard"
+            },
+            {
+                "name": "Prihodi",
+                "url": "/incomes"
+            },
+            {
+                "name": "Rashodi",
+                "url": "/expenses"
+            }
+        ],
+        "settings": ["Profil", "Odjava"]
+    },
+    "EN": {
+        "pages": [{
+                "name": "Dashboard",
+                "url": "/dashboard"
+            },
+            {
+                "name": "Incomes",
+                "url": "/incomes"
+            },
+            {
+                "name": "Expenses",
+                "url": "/expenses"
+            }
+        ],
+        "settings": ["Profile", "Logout"]
+    }
+}
