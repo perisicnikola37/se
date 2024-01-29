@@ -4,6 +4,9 @@ export type Page = {
 };
 
 export type LanguageConfig = {
+    acceptButton: string;
+    privacyPolicy: string;
+    policyText: string;
     pages: Page[];
 };
 

@@ -24,3 +24,16 @@ body {
 ::-webkit-scrollbar-thumb:hover {
     background: #a78bfa;
 }
+
+._close-icon {
+    position: absolute;
+    top: 0;
+    right: 0;
+    font-size: 0rem;
+}
+
+@media (max-width: 768px) {
+    ._close-icon {
+        top: 60% !important;
+    }
+}

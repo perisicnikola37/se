@@ -14,6 +14,7 @@ import { ThemeProvider, createTheme } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import Cookies from "js-cookie";
 import { LoadingProvider } from "./contexts/LoadingContext.tsx";
+import { LanguageProvider } from "./contexts/GetLanguageKeyContext.tsx";
 
 const darkTheme = createTheme({
     palette: {
@@ -38,7 +39,9 @@ const router = createBrowserRouter([
             <ThemeProvider theme={selectedTheme}>
                 <CssBaseline />
                 <LoadingProvider>
-                    <App />
+                    <LanguageProvider>
+                        <App />
+                    </LanguageProvider>
                 </LoadingProvider>
             </ThemeProvider>
         ),

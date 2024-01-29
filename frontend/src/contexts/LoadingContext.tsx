@@ -1,25 +1,21 @@
-import React, { createContext, useContext, useState, ReactNode } from 'react';
-import { LoadingContextProps } from '../interfaces/contextsInterfaces';
+import { createContext, useContext, useState } from 'react';
+import { LoadingContextProps, LoadingProviderProps } from '../interfaces/contextsInterfaces';
 
 const LoadingContext = createContext<LoadingContextProps | undefined>(undefined);
 
-interface LoadingProviderProps {
-    children: ReactNode;
-}
-
-export const LoadingProvider: React.FC<LoadingProviderProps> = ({ children }) => {
+export const LoadingProvider = ({ children }: LoadingProviderProps) => {
     const [loading, setLoading] = useState(true);
 
     const setLoadingState = (state: boolean) => {
         setLoading(state);
-    };
+    }
 
     return (
         <LoadingContext.Provider value={{ loading, setLoadingState }}>
             {children}
         </LoadingContext.Provider>
-    );
-};
+    )
+}
 
 export const useLoading = (): LoadingContextProps => {
     const context = useContext(LoadingContext);
