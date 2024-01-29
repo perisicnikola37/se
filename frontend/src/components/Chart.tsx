@@ -1,4 +1,3 @@
-import React from "react";
 import {
     LineChart,
     Line,
@@ -9,7 +8,6 @@ import {
     Legend,
 } from "recharts";
 
-// Unapred definisane vrednosti iz servera
 const mockApiResponse = {
     Expenses: [1, 2, 3, 0, 2, 6, 3],
     Incomes: [2, 3, 4, 5, 6, 7, 3],
@@ -41,8 +39,9 @@ export default function ChartReacharts() {
     const data = generateData();
 
     return (
-        <div>
+        <>
             <LineChart
+                className="m-auto mt-10"
                 width={500}
                 height={300}
                 data={data}
@@ -59,7 +58,6 @@ export default function ChartReacharts() {
                 <Tooltip />
                 <Legend />
 
-                {/* Prikaži liniju za Incomes */}
                 <Line
                     type="monotone"
                     dataKey="Incomes"
@@ -67,7 +65,6 @@ export default function ChartReacharts() {
                     activeDot={{ r: 8 }}
                 />
 
-                {/* Prikaži liniju za Expenses */}
                 <Line
                     type="monotone"
                     dataKey="Expenses"
@@ -75,6 +72,6 @@ export default function ChartReacharts() {
                     activeDot={{ r: 8 }}
                 />
             </LineChart>
-        </div>
+        </>
     );
 }

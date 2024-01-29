@@ -2,7 +2,7 @@
     "ME": {
         "pages": [{
                 "name": "Početna",
-                "url": "/dashboard"
+                "url": "/"
             },
             {
                 "name": "Prihodi",
@@ -21,7 +21,7 @@
     "EN": {
         "pages": [{
                 "name": "Dashboard",
-                "url": "/dashboard"
+                "url": "/"
             },
             {
                 "name": "Incomes",
