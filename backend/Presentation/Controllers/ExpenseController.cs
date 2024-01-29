@@ -1,45 +1,43 @@
 using Contracts.Filter;
+using Domain.Interfaces;
 using Domain.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
-using Service;
 
 namespace Presentation.Controllers;
 
 [Route("api/expenses")]
 [ApiController]
 [EnableRateLimiting("fixed")]
-public class ExpenseController(ExpenseService _expenseService) : ControllerBase
+public class ExpenseController(IExpenseService expenseService) : ControllerBase
 {
 	// GET: api/Expense
 	[HttpGet]
-	public async Task<IActionResult> GetExpensesAsync([FromQuery] PaginationFilter filter)
+	public async Task<IActionResult> GetExpensesAsync([FromQuery] PaginationFilterDto filter)
 	{
-		return Ok(await _expenseService.GetExpensesAsync(filter, this));
+		return Ok(await expenseService.GetExpensesAsync(filter, this));
 	}
 
 	// GET: api/Expense/latest/5
 	[HttpGet("latest/5")]
 	public async Task<ActionResult<IEnumerable<Expense>>> GetLatestExpensesAsync()
 	{
-		return Ok(await _expenseService.GetLatestExpensesAsync());
+		return Ok(await expenseService.GetLatestExpensesAsync());
 	}
 
 	// GET: api/Expense/total-amount
 	[HttpGet("total-amount")]
 	public ActionResult<int> GetTotalAmountOfExpensesAsync()
 	{
-		return Ok(_expenseService.GetTotalAmountOfExpensesAsync());
+		return Ok(expenseService.GetTotalAmountOfExpensesAsync());
 	}
 
 	// GET: api/Expense/5
 	[HttpGet("{id}")]
-	public async Task<IActionResult> GetExpenseAsync(int id)
+	public async Task<ActionResult<Expense>> GetExpenseAsync(int id)
 	{
-		var expense = await _expenseService.GetExpenseAsync(id);
-
-		return expense != null ? Ok(expense) : NotFound();
+		return await expenseService.GetExpenseAsync(id);
 	}
 
 	// PUT: api/Expense/5
@@ -47,14 +45,14 @@ public class ExpenseController(ExpenseService _expenseService) : ControllerBase
 	[Authorize("ExpenseOwnerPolicy")]
 	public async Task<IActionResult> PutExpenseAsync(int id, Expense expense)
 	{
-		return await _expenseService.UpdateExpenseAsync(id, expense, this);
+		return await expenseService.UpdateExpenseAsync(id, expense, this);
 	}
 
 	// POST: api/Expense
 	[HttpPost]
 	public async Task<ActionResult<Expense>> PostExpenseAsync(Expense expense)
 	{
-		return await _expenseService.CreateExpenseAsync(expense, this);
+		return await expenseService.CreateExpenseAsync(expense, this);
 	}
 
 	// DELETE: api/Expense/5
@@ -62,6 +60,6 @@ public class ExpenseController(ExpenseService _expenseService) : ControllerBase
 	[Authorize("ExpenseOwnerPolicy")]
 	public async Task<IActionResult> DeleteExpenseAsync(int id)
 	{
-		return await _expenseService.DeleteExpenseByIdAsync(id);
+		return await expenseService.DeleteExpenseByIdAsync(id);
 	}
 }

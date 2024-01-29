@@ -1,4 +1,4 @@
-using Domain.Models;
+namespace Domain.Models;
 
 public class ExpenseResponse
 {
@@ -11,4 +11,3 @@ public class ExpenseResponse
     public int UserId { get; set; }
     public UserResponse User { get; set; }
 }
-

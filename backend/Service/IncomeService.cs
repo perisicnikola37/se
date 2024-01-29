@@ -2,6 +2,7 @@ using System.Linq.Expressions;
 using Contracts.Dto;
 using Contracts.Filter;
 using Domain.Exceptions;
+using Domain.Interfaces;
 using Domain.Models;
 using FluentValidation;
 using Infrastructure.Contexts;
@@ -11,35 +12,37 @@ using Microsoft.Extensions.Logging;
 
 namespace Service;
 
-public class IncomeService(DatabaseContext _context, IValidator<Income> _validator, GetAuthenticatedUserIdService _getAuthenticatedUserIdService, ILogger<IncomeService> _logger)
+public class IncomeService(
+	DatabaseContext context,
+	IValidator<Income> validator,
+	IGetAuthenticatedUserIdService getAuthenticatedUserId,
+	ILogger<IncomeService> logger) : IIncomeService
 {
-	private readonly DatabaseContext _context = _context;
-	private readonly IValidator<Income> _validator = _validator;
-	private readonly ILogger<IncomeService> _logger = _logger;
-	private readonly GetAuthenticatedUserIdService getAuthenticatedUserIdService = _getAuthenticatedUserIdService;
-
 	[HttpGet]
-	public async Task<PagedResponse<List<IncomeResponse>>> GetIncomesAsync(PaginationFilter filter, ControllerBase controller)
+	public async Task<PagedResponseDto<List<IncomeResponse>>> GetIncomesAsync(PaginationFilterDto filter,
+		ControllerBase controller)
 	{
 		try
 		{
-			int? authenticatedUserId = _getAuthenticatedUserIdService.GetUserId(controller.User);
+			var authenticatedUserId = getAuthenticatedUserId.GetUserId(controller.User);
 
-			string description = controller.HttpContext.Request.Query["description"];
-			string minAmount = controller.HttpContext.Request.Query["minAmount"];
-			string maxAmount = controller.HttpContext.Request.Query["maxAmount"];
-			string incomeGroupId = controller.HttpContext.Request.Query["incomeGroupId"];
+			string description = controller.HttpContext.Request.Query["description"]!;
+			string minAmount = controller.HttpContext.Request.Query["minAmount"]!;
+			string maxAmount = controller.HttpContext.Request.Query["maxAmount"]!;
+			string incomeGroupId = controller.HttpContext.Request.Query["incomeGroupId"]!;
 
-			var validFilter = new PaginationFilter(filter.PageNumber, filter.PageSize);
+			var validFilter = new PaginationFilterDto(filter.PageNumber, filter.PageSize);
 
-			var query = _context.Incomes
+			var query = context.Incomes
 				.Include(e => e.User)
 				.Where(e => e.UserId == authenticatedUserId);
 
-			query = ApplyFilter(query, e => e.Description.Contains(description), !string.IsNullOrWhiteSpace(description));
+			query = ApplyFilter(query, e => e.Description.Contains(description),
+				!string.IsNullOrWhiteSpace(description));
 			query = ApplyFilter(query, e => e.Amount >= float.Parse(minAmount), !string.IsNullOrWhiteSpace(minAmount));
 			query = ApplyFilter(query, e => e.Amount <= float.Parse(maxAmount), !string.IsNullOrWhiteSpace(maxAmount));
-			query = ApplyFilter(query, e => e.IncomeGroupId == int.Parse(incomeGroupId), !string.IsNullOrWhiteSpace(incomeGroupId));
+			query = ApplyFilter(query, e => e.IncomeGroupId == int.Parse(incomeGroupId),
+				!string.IsNullOrWhiteSpace(incomeGroupId));
 
 			var pagedData = await query
 				.Skip((validFilter.PageNumber - 1) * validFilter.PageSize)
@@ -51,20 +54,21 @@ public class IncomeService(DatabaseContext _context, IValidator<Income> _validat
 					Amount = e.Amount,
 					CreatedAt = e.CreatedAt,
 					IncomeGroupId = e.IncomeGroupId,
-					IncomeGroup = e.IncomeGroup,
+					IncomeGroup = e.IncomeGroup!,
 					UserId = e.UserId,
 					User = new UserResponse
 					{
-						Username = e.User.Username
+						Username = e.User!.Username
 					}
 				})
+				.OrderByDescending(e => e.CreatedAt)
 				.ToListAsync();
 
-			return new PagedResponse<List<IncomeResponse>>(pagedData, validFilter.PageNumber, validFilter.PageSize);
+			return new PagedResponseDto<List<IncomeResponse>>(pagedData, validFilter.PageNumber, validFilter.PageSize);
 		}
 		catch (Exception ex)
 		{
-			_logger.LogError($"GetIncomesAsync: An error occurred. Error: {ex.Message}");
+			logger.LogError($"GetIncomesAsync: An error occurred. Error: {ex.Message}");
 			throw;
 		}
 	}
@@ -73,37 +77,32 @@ public class IncomeService(DatabaseContext _context, IValidator<Income> _validat
 	{
 		try
 		{
-			return await _context.Incomes
-			.Include(e => e.User)
-			.OrderByDescending(e => e.CreatedAt)
-			.Take(5)
-			.ToListAsync();
+			return await context.Incomes
+				.OrderByDescending(e => e.CreatedAt)
+				.Take(5)
+				.ToListAsync();
 		}
 		catch (Exception ex)
 		{
-			_logger.LogError($"GetLatestIncomesAsync: An error occurred. Error: {ex.Message}");
+			logger.LogError($"GetLatestIncomesAsync: An error occurred. Error: {ex.Message}");
 			throw;
 		}
 	}
-
-	public async Task<Response<Income>?> GetIncomeAsync(int id)
+	public async Task<ActionResult<Income>> GetIncomeAsync(int id)
 	{
 		try
 		{
-			var income = await _context.Incomes
+			var income = await context.Incomes
 				.Where(e => e.Id == id)
 				.FirstOrDefaultAsync();
 
-			if (income == null)
-			{
-				return null;
-			}
+			if (income == null) return null;
 
-			return new Response<Income>(income);
+			return new OkObjectResult(income);
 		}
 		catch (Exception ex)
 		{
-			_logger.LogError($"GetIncomeAsync: An error occurred. Error: {ex.Message}");
+			logger.LogError($"GetIncomeAsync: An error occurred. Error: {ex.Message}");
 			throw;
 		}
 	}
@@ -112,27 +111,25 @@ public class IncomeService(DatabaseContext _context, IValidator<Income> _validat
 	{
 		try
 		{
-			var validationResult = await _validator.ValidateAsync(income);
-			if (!validationResult.IsValid)
-			{
-				return new BadRequestObjectResult(validationResult.Errors);
-			}
+			var validationResult = await validator.ValidateAsync(income);
+			if (!validationResult.IsValid) return new BadRequestObjectResult(validationResult.Errors);
 
-			var incomeGroup = await _context.IncomeGroups.FindAsync(income.IncomeGroupId) ?? throw NotFoundException.Create("IncomeGroupId", "Income group not found.");
+			_ = await context.IncomeGroups.FindAsync(income.IncomeGroupId) ??
+				throw NotFoundException.Create("IncomeGroupId", "Income group not found.");
 
-			var userId = getAuthenticatedUserIdService.GetUserId(controller.User);
+			var userId = getAuthenticatedUserId.GetUserId(controller.User);
 
 			income.UserId = (int)userId!;
 
-			_context.Incomes.Add(income);
+			context.Incomes.Add(income);
 
-			await _context.SaveChangesAsync();
+			await context.SaveChangesAsync();
 
 			return new CreatedAtActionResult("GetIncome", "Income", new { id = income.Id }, income);
 		}
 		catch (Exception ex)
 		{
-			_logger.LogError($"CreateIncomeAsync: An error occurred. Error: {ex.Message}");
+			logger.LogError($"CreateIncomeAsync: An error occurred. Error: {ex.Message}");
 			throw;
 		}
 	}
@@ -143,7 +140,7 @@ public class IncomeService(DatabaseContext _context, IValidator<Income> _validat
 		{
 			if (id != income.Id) return new BadRequestResult();
 
-			int? authenticatedUserId = _getAuthenticatedUserIdService.GetUserId(controller.User);
+			var authenticatedUserId = getAuthenticatedUserId.GetUserId(controller.User);
 
 			// Check if authenticatedUserId has a value
 			if (authenticatedUserId.HasValue)
@@ -151,11 +148,11 @@ public class IncomeService(DatabaseContext _context, IValidator<Income> _validat
 				// Attach authenticated user id
 				income.UserId = authenticatedUserId.Value;
 
-				_context.Entry(income).State = EntityState.Modified;
+				context.Entry(income).State = EntityState.Modified;
 
 				try
 				{
-					await _context.SaveChangesAsync();
+					await context.SaveChangesAsync();
 				}
 				catch (ConflictException)
 				{
@@ -165,14 +162,12 @@ public class IncomeService(DatabaseContext _context, IValidator<Income> _validat
 
 				return new NoContentResult();
 			}
-			else
-			{
-				return new BadRequestResult();
-			}
+
+			return new BadRequestResult();
 		}
 		catch (Exception ex)
 		{
-			_logger.LogError($"UpdateIncomeAsync: An error occurred. Error: {ex.Message}");
+			logger.LogError($"UpdateIncomeAsync: An error occurred. Error: {ex.Message}");
 			throw;
 		}
 	}
@@ -181,21 +176,18 @@ public class IncomeService(DatabaseContext _context, IValidator<Income> _validat
 	{
 		try
 		{
-			var income = await _context.Incomes.FindAsync(id);
+			var income = await context.Incomes.FindAsync(id);
 
-			if (income == null)
-			{
-				return new NotFoundResult();
-			}
+			if (income == null) return new NotFoundResult();
 
-			_context.Incomes.Remove(income);
-			await _context.SaveChangesAsync();
+			context.Incomes.Remove(income);
+			await context.SaveChangesAsync();
 
 			return new NoContentResult();
 		}
 		catch (Exception ex)
 		{
-			_logger.LogError($"DeleteIncomeByIdAsync: An error occurred. Error: {ex.Message}");
+			logger.LogError($"DeleteIncomeByIdAsync: An error occurred. Error: {ex.Message}");
 			throw;
 		}
 	}
@@ -204,11 +196,11 @@ public class IncomeService(DatabaseContext _context, IValidator<Income> _validat
 	{
 		try
 		{
-			return await _context.Incomes.CountAsync();
+			return await context.Incomes.CountAsync();
 		}
 		catch (Exception ex)
 		{
-			_logger.LogError($"GetTotalAmountOfIncomesAsync: An error occurred. Error: {ex.Message}");
+			logger.LogError($"GetTotalAmountOfIncomesAsync: An error occurred. Error: {ex.Message}");
 			throw;
 		}
 	}
@@ -217,16 +209,17 @@ public class IncomeService(DatabaseContext _context, IValidator<Income> _validat
 	{
 		try
 		{
-			return _context.Incomes.Any(e => e.Id == id);
+			return context.Incomes.Any(e => e.Id == id);
 		}
 		catch (Exception ex)
 		{
-			_logger.LogError($"IncomeExists: An error occurred. Error: {ex.Message}");
+			logger.LogError($"IncomeExists: An error occurred. Error: {ex.Message}");
 			throw;
 		}
 	}
 
-	static IQueryable<Income> ApplyFilter(IQueryable<Income> query, Expression<Func<Income, bool>> filter, bool condition)
+	private static IQueryable<Income> ApplyFilter(IQueryable<Income> query, Expression<Func<Income, bool>> filter,
+		bool condition)
 	{
 		return condition ? query.Where(filter) : query;
 	}

@@ -1,7 +1,6 @@
-namespace Contracts.Dto
+namespace Contracts.Dto.Reminders;
+
+public class SingleReminderDto
 {
-    public class SingleReminderDTO
-    {
-        public object? Reminder { get; set; }
-    }
+    public object Reminder { get; set; }
 }

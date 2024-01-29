@@ -1,5 +1,6 @@
-using Contracts.Dto;
+using Contracts.Dto.Blogs;
 using Domain.Exceptions;
+using Domain.Interfaces;
 using Domain.Models;
 using FluentValidation;
 using Infrastructure.Contexts;
@@ -9,202 +10,204 @@ using Microsoft.Extensions.Logging;
 
 namespace Service;
 
-public class BlogService(DatabaseContext _context, IValidator<Blog> _validator, GetAuthenticatedUserIdService _getAuthenticatedUserIdService, ILogger<BlogService> _logger)
+public class BlogService(
+    DatabaseContext context,
+    IValidator<Blog> validator,
+    IGetAuthenticatedUserIdService getAuthenticatedUserId,
+    ILogger<BlogService> logger) : IBlogService
 {
-	private readonly DatabaseContext _context = _context;
-	private readonly IValidator<Blog> _validator = _validator;
-	private readonly ILogger<BlogService> _logger = _logger;
-	private readonly GetAuthenticatedUserIdService _getAuthenticatedUserIdService = _getAuthenticatedUserIdService;
+    public async Task<ActionResult<SingleBlogDto>> GetBlogAsync(int id)
+    {
+        try
+        {
+            var blog = await context.Blogs
+                .Where(b => b.Id == id)
+                .Include(blog => blog.User)
+                .Select(blog => new
+                {
+                    blog.Id,
+                    blog.Description,
+                    blog.Author,
+                    blog.Text,
+                    blog.CreatedAt,
+                    blog.UserId,
+                    User = new
+                    {
+                        blog.User!.Username
+                    }
+                })
+                .SingleOrDefaultAsync();
 
-	public async Task<ActionResult<BlogDTO>> GetBlogsAsync()
-	{
-		try
-		{
-			var blogs = await _context.Blogs
-				.OrderByDescending(e => e.CreatedAt)
-				.Include(blog => blog.User)
-				.Select(blog => new
-				{
-					blog.Id,
-					blog.Description,
-					blog.Author,
-					blog.Text,
-					blog.CreatedAt,
-					blog.UserId,
-					User = new
-					{
-						blog.User.Username
-					}
-				})
-				.ToListAsync();
+            if (blog == null) return new NotFoundResult();
 
-			return new BlogDTO
-			{
-				Blogs = blogs,
-			};
-		}
-		catch (Exception ex)
-		{
-			_logger.LogError($"GetBlogsAsync: An error occurred. Error: {ex.Message}");
-			throw;
-		}
-	}
+            return new SingleBlogDto
+            {
+                Blog = new[] { blog }
+            };
+        }
+        catch (Exception ex)
+        {
+            logger.LogError($"GetBlogAsync: An error occurred. Error: {ex.Message}");
+            throw;
+        }
+    }
 
-	public async Task<ActionResult<SingleBlogDTO>> GetBlogAsync(int id)
-	{
-		try
-		{
-			var blog = await _context.Blogs
-				.Where(b => b.Id == id)
-				.Include(blog => blog.User)
-				.Select(blog => new
-				{
-					blog.Id,
-					blog.Description,
-					blog.Author,
-					blog.Text,
-					blog.CreatedAt,
-					blog.UserId,
-					User = new
-					{
-						blog.User.Username
-					}
-				})
-				.SingleOrDefaultAsync();
+    public async Task<ActionResult<Blog>> CreateBlogAsync(Blog blog, ControllerBase controller)
+    {
+        try
+        {
+            var validationResult = await validator.ValidateAsync(blog);
 
-			if (blog == null) return new NotFoundResult();
+            if (!validationResult.IsValid) return new BadRequestObjectResult(validationResult.Errors);
 
-			return new SingleBlogDTO
-			{
-				Blog = new[] { blog },
-			};
-		}
-		catch (Exception ex)
-		{
-			_logger.LogError($"GetBlogAsync: An error occurred. Error: {ex.Message}");
-			throw;
-		}
-	}
+            var userId = getAuthenticatedUserId.GetUserId(controller.User);
 
-	public async Task<ActionResult<Blog>> CreateBlogAsync(Blog blog, ControllerBase controller)
-	{
-		try
-		{
-			var validationResult = await _validator.ValidateAsync(blog);
+            if (userId == null) return new UnauthorizedResult();
 
-			if (!validationResult.IsValid) return new BadRequestObjectResult(validationResult.Errors);
+            blog.UserId = (int)userId;
 
-			var userId = _getAuthenticatedUserIdService.GetUserId(controller.User);
+            var user = await context.Users.FindAsync(blog.UserId);
 
-			if (userId == null) return new UnauthorizedResult();
+            if (user == null)
+            {
+                return new NotFoundResult();
+            }
 
-			blog.UserId = (int)userId;
+            blog.User = user;
 
-			blog.User = await _context.Users.FindAsync(blog.UserId);
+            context.Blogs.Add(blog);
+            await context.SaveChangesAsync();
 
-			_context.Blogs.Add(blog);
-			await _context.SaveChangesAsync();
+            var responseBlog = new
+            {
+                blog.Id,
+                blog.Description,
+                blog.Author,
+                blog.Text,
+                blog.CreatedAt,
+                blog.UserId,
+                User = new
+                {
+                    blog.User!.Username
+                }
+            };
 
-			var responseBlog = new
-			{
-				blog.Id,
-				blog.Description,
-				blog.Author,
-				blog.Text,
-				blog.CreatedAt,
-				blog.UserId,
-				User = new
-				{
-					blog.User.Username,
-				}
-			};
+            return new CreatedAtActionResult("GetBlog", "Blog", new { id = blog.Id }, responseBlog);
 
-			return new CreatedAtActionResult("GetBlog", "Blog", new { id = blog.Id }, responseBlog);
-		}
-		catch (Exception ex)
-		{
-			_logger.LogError($"CreateBlogAsync: An error occurred. Error: {ex.Message}");
-			throw;
-		}
-	}
+        }
+        catch (Exception ex)
+        {
+            logger.LogError($"CreateBlogAsync: An error occurred. Error: {ex.Message}");
+            throw;
+        }
+    }
 
-	public async Task<IActionResult> UpdateBlogAsync(int id, Blog blog, ControllerBase controller)
-	{
-		try
-		{
-			if (id != blog.Id) return new BadRequestResult();
+    public async Task<IActionResult> UpdateBlogAsync(int id, Blog blog, ControllerBase controller)
+    {
+        try
+        {
+            if (id != blog.Id) return new BadRequestResult();
 
-			if (!BlogExists(id)) return new NotFoundResult();
+            if (!BlogExists(id)) return new NotFoundResult();
 
-			int? authenticatedUserId = _getAuthenticatedUserIdService.GetUserId(controller.User);
+            var authenticatedUserId = getAuthenticatedUserId.GetUserId(controller.User);
 
-			// Check if authenticatedUserId has a value
-			if (authenticatedUserId.HasValue)
-			{
-				// attach authenticated user id
-				blog.UserId = authenticatedUserId.Value;
+            // Check if authenticatedUserId has a value
+            if (authenticatedUserId.HasValue)
+            {
+                // attach authenticated user id
+                blog.UserId = authenticatedUserId.Value;
 
-				_context.Entry(blog).State = EntityState.Modified;
+                context.Entry(blog).State = EntityState.Modified;
 
-				try
-				{
-					await _context.SaveChangesAsync();
-				}
-				catch (Exception)
-				{
-					if (!BlogExists(id))
-					{
-						return new NotFoundResult();
-					}
-					throw new ConflictException("BlogService.cs");
-				}
+                try
+                {
+                    await context.SaveChangesAsync();
+                }
+                catch (Exception)
+                {
+                    if (!BlogExists(id)) return new NotFoundResult();
+                    throw new ConflictException("BlogService.cs");
+                }
 
-				return new NoContentResult();
-			}
-			else
-			{
-				return new BadRequestResult();
-			}
-		}
-		catch (Exception ex)
-		{
-			_logger.LogError($"UpdateBlogAsync: An error occurred. Error: {ex.Message}");
-			throw;
-		}
-	}
-	
-	public async Task<IActionResult> DeleteBlogAsync(int id)
-	{
-		try
-		{
-			var blog = await _context.Blogs.FindAsync(id);
-			if (blog == null)
-			{
-				_logger.LogWarning($"DeleteBlogAsync: Blog with ID {id} not found.");
-				return new NotFoundResult();
-			}
+                return new NoContentResult();
+            }
 
-			_context.Blogs.Remove(blog);
-			await _context.SaveChangesAsync();
+            return new BadRequestResult();
+        }
+        catch (Exception ex)
+        {
+            logger.LogError($"UpdateBlogAsync: An error occurred. Error: {ex.Message}");
+            throw;
+        }
+    }
 
-			_logger.LogInformation($"DeleteBlogAsync: Blog with ID {id} successfully deleted.");
+    public async Task<IActionResult> DeleteBlogAsync(int id)
+    {
+        try
+        {
+            var blog = await context.Blogs.FindAsync(id);
+            if (blog == null)
+            {
+                logger.LogWarning($"DeleteBlogAsync: Blog with ID {id} not found.");
+                return new NotFoundResult();
+            }
 
-			return new NoContentResult();
-		}
-		catch (ConflictException ex)
-		{
-			_logger.LogError($"DeleteBlogAsync: Concurrency conflict occurred. Error: {ex.Message}");
-			throw new ConflictException("BlogService.cs");
-		}
-		catch (Exception ex)
-		{
-			_logger.LogError($"DeleteBlogAsync: An error occurred. Error: {ex.Message}");
-			throw;
-		}
-	}
+            context.Blogs.Remove(blog);
+            await context.SaveChangesAsync();
 
-	private bool BlogExists(int id)
-	{
-		return _context.Blogs.Any(e => e.Id == id);
-	}
+            logger.LogInformation($"DeleteBlogAsync: Blog with ID {id} successfully deleted.");
+
+            return new NoContentResult();
+        }
+        catch (ConflictException ex)
+        {
+            logger.LogError($"DeleteBlogAsync: Concurrency conflict occurred. Error: {ex.Message}");
+            throw new ConflictException("BlogService.cs");
+        }
+        catch (Exception ex)
+        {
+            logger.LogError($"DeleteBlogAsync: An error occurred. Error: {ex.Message}");
+            throw;
+        }
+    }
+
+    public async Task<ActionResult<BlogDto>> GetBlogsAsync()
+    {
+        try
+        {
+            var blogs = await context.Blogs
+                .OrderByDescending(e => e.CreatedAt)
+                .Include(blog => blog.User)
+                .Select(blog => new
+                {
+                    blog.Id,
+                    blog.Description,
+                    blog.Author,
+                    blog.Text,
+                    blog.CreatedAt,
+                    blog.UserId,
+                    User = new
+                    {
+                        blog.User!.Username
+                    }
+                })
+                .ToListAsync();
+
+            return new BlogDto
+            {
+                Blogs = blogs
+            };
+        }
+        catch (Exception ex)
+        {
+            logger.LogError($"GetBlogsAsync: An error occurred. Error: {ex.Message}");
+            throw;
+        }
+    }
+
+    private bool BlogExists(int id)
+    {
+        return context.Blogs.Any(e => e.Id == id);
+    }
 }

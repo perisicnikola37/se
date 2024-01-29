@@ -1,4 +1,5 @@
 using Domain.Exceptions;
+using Domain.Interfaces;
 using Domain.Models;
 using FluentValidation;
 using Infrastructure.Contexts;
@@ -8,31 +9,27 @@ using Microsoft.Extensions.Logging;
 
 namespace Service;
 
-public class IncomeGroupService(DatabaseContext _context, IValidator<IncomeGroup> _validator, GetAuthenticatedUserIdService getAuthenticatedUserIdService, ILogger<IncomeGroupService> _logger)
+public class IncomeGroupService(DatabaseContext context, IValidator<IncomeGroup> validator, ILogger<IncomeGroupService> logger) : IIncomeGroupService
 {
-	private readonly DatabaseContext _context = _context;
-	private readonly IValidator<IncomeGroup> _validator = _validator;
-	private readonly ILogger<IncomeGroupService> _logger = _logger;
-
 	[HttpGet]
 	public async Task<IEnumerable<object>> GetIncomeGroupsAsync()
 	{
 		try
 		{
-			var incomeGroups = await _context.IncomeGroups
-				.Include(e => e.Incomes)
+			var incomeGroups = await context.IncomeGroups
+				.Include(e => e.Incomes)!
 					.ThenInclude(income => income.User)
 				.OrderByDescending(e => e.CreatedAt)
 				.ToListAsync();
 
 			if (incomeGroups.Count != 0)
 			{
-				var simplifiedIncomeGroups = incomeGroups.Select(incomeGroups => new
+				var simplifiedIncomeGroups = incomeGroups.Select(incomeGroupsVariable => new
 				{
-					incomeGroups.Id,
-					incomeGroups.Name,
-					incomeGroups.Description,
-					Incomes = incomeGroups.Incomes?.Select(income => new
+					incomeGroupsVariable.Id,
+					incomeGroupsVariable.Name,
+					incomeGroupsVariable.Description,
+					Incomes = incomeGroupsVariable.Incomes?.Select(income => new
 					{
 						income.Id,
 						income.Description,
@@ -51,7 +48,7 @@ public class IncomeGroupService(DatabaseContext _context, IValidator<IncomeGroup
 		}
 		catch (Exception ex)
 		{
-			_logger.LogError($"GetIncomeGroupsAsync: An error occurred. Error: {ex.Message}");
+			logger.LogError($"GetIncomeGroupsAsync: An error occurred. Error: {ex.Message}");
 			throw;
 		}
 	}
@@ -59,15 +56,12 @@ public class IncomeGroupService(DatabaseContext _context, IValidator<IncomeGroup
 	{
 		try
 		{
-			var incomeGroup = await _context.IncomeGroups
-				.Include(e => e.Incomes)
+			var incomeGroup = await context.IncomeGroups
+				.Include(e => e.Incomes)!
 					.ThenInclude(income => income.User)
 				.FirstOrDefaultAsync(e => e.Id == id);
 
-			if (incomeGroup == null)
-			{
-				return new NotFoundResult();
-			}
+			if (incomeGroup == null) return new NotFoundResult();
 
 			var simplifiedIncomeGroup = new
 			{
@@ -90,7 +84,7 @@ public class IncomeGroupService(DatabaseContext _context, IValidator<IncomeGroup
 		}
 		catch (Exception ex)
 		{
-			_logger.LogError($"GetIncomeGroupAsync: An error occurred. Error: {ex.Message}");
+			logger.LogError($"GetIncomeGroupAsync: An error occurred. Error: {ex.Message}");
 			throw;
 		}
 	}
@@ -99,14 +93,17 @@ public class IncomeGroupService(DatabaseContext _context, IValidator<IncomeGroup
 	{
 		try
 		{
-			_context.IncomeGroups.Add(incomeGroup);
-			await _context.SaveChangesAsync();
+			var validationResult = await validator.ValidateAsync(incomeGroup);
+			if (!validationResult.IsValid) return new BadRequestObjectResult(validationResult.Errors);
 
-			return controller.CreatedAtAction("GetIncomeGroup", new { id = incomeGroup.Id }, incomeGroup);
+			context.IncomeGroups.Add(incomeGroup);
+			await context.SaveChangesAsync();
+
+			return controller.Ok(incomeGroup);
 		}
 		catch (Exception ex)
 		{
-			_logger.LogError($"CreateIncomeGroupAsync: An error occurred. Error: {ex.Message}");
+			logger.LogError($"CreateIncomeGroupAsync: An error occurred. Error: {ex.Message}");
 			throw;
 		}
 	}
@@ -114,23 +111,17 @@ public class IncomeGroupService(DatabaseContext _context, IValidator<IncomeGroup
 	{
 		try
 		{
-			if (id != incomeGroup.Id)
-			{
-				return new BadRequestResult();
-			}
+			if (id != incomeGroup.Id) return new BadRequestResult();
 
-			_context.Entry(incomeGroup).State = EntityState.Modified;
+			context.Entry(incomeGroup).State = EntityState.Modified;
 
 			try
 			{
-				await _context.SaveChangesAsync();
+				await context.SaveChangesAsync();
 			}
 			catch (ConflictException)
 			{
-				if (!IncomeGroupExists(id))
-				{
-					return new NotFoundResult();
-				}
+				if (!IncomeGroupExists(id)) return new NotFoundResult();
 
 				throw new ConflictException("IncomeGroupService.cs");
 			}
@@ -138,7 +129,7 @@ public class IncomeGroupService(DatabaseContext _context, IValidator<IncomeGroup
 		}
 		catch (Exception ex)
 		{
-			_logger.LogError($"UpdateIncomeGroupAsync: An error occurred. Error: {ex.Message}");
+			logger.LogError($"UpdateIncomeGroupAsync: An error occurred. Error: {ex.Message}");
 			throw;
 		}
 	}
@@ -147,27 +138,24 @@ public class IncomeGroupService(DatabaseContext _context, IValidator<IncomeGroup
 	{
 		try
 		{
-			var incomeGroup = await _context.IncomeGroups.FindAsync(id);
+			var incomeGroup = await context.IncomeGroups.FindAsync(id);
 
-			if (incomeGroup == null)
-			{
-				return new NotFoundResult();
-			}
+			if (incomeGroup == null) return new NotFoundResult();
 
-			_context.IncomeGroups.Remove(incomeGroup);
-			await _context.SaveChangesAsync();
+			context.IncomeGroups.Remove(incomeGroup);
+			await context.SaveChangesAsync();
 
 			return new NoContentResult();
 		}
 		catch (Exception ex)
 		{
-			_logger.LogError($"DeleteIncomeGroupByIdAsync: An error occurred. Error: {ex.Message}");
+			logger.LogError($"DeleteIncomeGroupByIdAsync: An error occurred. Error: {ex.Message}");
 			throw;
 		}
 	}
 
 	private bool IncomeGroupExists(int id)
 	{
-		return _context.IncomeGroups.Any(e => e.Id == id);
+		return context.IncomeGroups.Any(e => e.Id == id);
 	}
 }

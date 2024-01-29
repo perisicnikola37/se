@@ -1,4 +1,5 @@
 using Domain.Exceptions;
+using Domain.Interfaces;
 using Domain.Models;
 using FluentValidation;
 using Infrastructure.Contexts;
@@ -8,20 +9,15 @@ using Microsoft.Extensions.Logging;
 
 namespace Service;
 
-public class ExpenseGroupService(DatabaseContext _context, IValidator<ExpenseGroup> _validator, GetAuthenticatedUserIdService getAuthenticatedUserIdService, ILogger<ExpenseGroupService> _logger)
+public class ExpenseGroupService(DatabaseContext context, IValidator<ExpenseGroup> validator, ILogger<ExpenseGroupService> logger) : IExpenseGroupService
 {
-	private readonly DatabaseContext _context = _context;
-	private readonly IValidator<ExpenseGroup> _validator = _validator;
-	private readonly ILogger<ExpenseGroupService> _logger = _logger;
-	private readonly GetAuthenticatedUserIdService getAuthenticatedUserIdService = getAuthenticatedUserIdService;
-
 	[HttpGet]
 	public async Task<IEnumerable<object>> GetExpenseGroupsAsync()
 	{
 		try
 		{
-			var expenseGroups = await _context.ExpenseGroups
-				.Include(e => e.Expenses)
+			var expenseGroups = await context.ExpenseGroups
+				.Include(e => e.Expenses)!
 					.ThenInclude(expense => expense.User)
 				.OrderByDescending(e => e.CreatedAt)
 				.ToListAsync();
@@ -52,7 +48,7 @@ public class ExpenseGroupService(DatabaseContext _context, IValidator<ExpenseGro
 		}
 		catch (Exception ex)
 		{
-			_logger.LogError($"GetExpenseGroupsAsync: An error occurred. Error: {ex.Message}");
+			logger.LogError($"GetExpenseGroupsAsync: An error occurred. Error: {ex.Message}");
 			throw;
 		}
 	}
@@ -60,15 +56,12 @@ public class ExpenseGroupService(DatabaseContext _context, IValidator<ExpenseGro
 	{
 		try
 		{
-			var expenseGroup = await _context.ExpenseGroups
-				.Include(e => e.Expenses)
+			var expenseGroup = await context.ExpenseGroups
+				.Include(e => e.Expenses)!
 					.ThenInclude(expense => expense.User)
 				.FirstOrDefaultAsync(e => e.Id == id);
 
-			if (expenseGroup == null)
-			{
-				return new NotFoundResult();
-			}
+			if (expenseGroup == null) return new NotFoundResult();
 
 			var simplifiedExpenseGroup = new
 			{
@@ -91,7 +84,7 @@ public class ExpenseGroupService(DatabaseContext _context, IValidator<ExpenseGro
 		}
 		catch (Exception ex)
 		{
-			_logger.LogError($"GetExpenseGroupAsync: An error occurred. Error: {ex.Message}");
+			logger.LogError($"GetExpenseGroupAsync: An error occurred. Error: {ex.Message}");
 			throw;
 		}
 	}
@@ -100,14 +93,17 @@ public class ExpenseGroupService(DatabaseContext _context, IValidator<ExpenseGro
 	{
 		try
 		{
-			_context.ExpenseGroups.Add(expenseGroup);
-			await _context.SaveChangesAsync();
+			var validationResult = await validator.ValidateAsync(expenseGroup);
+			if (!validationResult.IsValid) return new BadRequestObjectResult(validationResult.Errors);
 
-			return controller.CreatedAtAction("GetExpenseGroup", new { id = expenseGroup.Id }, expenseGroup);
+			context.ExpenseGroups.Add(expenseGroup);
+			await context.SaveChangesAsync();
+
+			return controller.Ok(expenseGroup);
 		}
 		catch (Exception ex)
 		{
-			_logger.LogError($"CreateExpenseGroupAsync: An error occurred. Error: {ex.Message}");
+			logger.LogError($"CreateExpenseGroupAsync: An error occurred. Error: {ex.Message}");
 			throw;
 		}
 	}
@@ -115,23 +111,17 @@ public class ExpenseGroupService(DatabaseContext _context, IValidator<ExpenseGro
 	{
 		try
 		{
-			if (id != expenseGroup.Id)
-			{
-				return new BadRequestResult();
-			}
+			if (id != expenseGroup.Id) return new BadRequestResult();
 
-			_context.Entry(expenseGroup).State = EntityState.Modified;
+			context.Entry(expenseGroup).State = EntityState.Modified;
 
 			try
 			{
-				await _context.SaveChangesAsync();
+				await context.SaveChangesAsync();
 			}
 			catch (ConflictException)
 			{
-				if (!ExpenseGroupExists(id))
-				{
-					return new NotFoundResult();
-				}
+				if (!ExpenseGroupExists(id)) return new NotFoundResult();
 
 				throw new ConflictException("ExpenseGroupService.cs");
 			}
@@ -139,7 +129,7 @@ public class ExpenseGroupService(DatabaseContext _context, IValidator<ExpenseGro
 		}
 		catch (Exception ex)
 		{
-			_logger.LogError($"UpdateExpenseGroupAsync: An error occurred. Error: {ex.Message}");
+			logger.LogError($"UpdateExpenseGroupAsync: An error occurred. Error: {ex.Message}");
 			throw;
 		}
 	}
@@ -148,27 +138,24 @@ public class ExpenseGroupService(DatabaseContext _context, IValidator<ExpenseGro
 	{
 		try
 		{
-			var expenseGroup = await _context.ExpenseGroups.FindAsync(id);
+			var expenseGroup = await context.ExpenseGroups.FindAsync(id);
 
-			if (expenseGroup == null)
-			{
-				return new NotFoundResult();
-			}
+			if (expenseGroup == null) return new NotFoundResult();
 
-			_context.ExpenseGroups.Remove(expenseGroup);
-			await _context.SaveChangesAsync();
+			context.ExpenseGroups.Remove(expenseGroup);
+			await context.SaveChangesAsync();
 
 			return new NoContentResult();
 		}
 		catch (Exception ex)
 		{
-			_logger.LogError($"DeleteExpenseGroupByIdAsync: An error occurred. Error: {ex.Message}");
+			logger.LogError($"DeleteExpenseGroupByIdAsync: An error occurred. Error: {ex.Message}");
 			throw;
 		}
 	}
 
 	private bool ExpenseGroupExists(int id)
 	{
-		return _context.ExpenseGroups.Any(e => e.Id == id);
+		return context.ExpenseGroups.Any(e => e.Id == id);
 	}
 }

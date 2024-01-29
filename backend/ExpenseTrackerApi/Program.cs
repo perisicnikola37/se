@@ -1,15 +1,16 @@
-using System.Threading.RateLimiting;
 using Domain.Interfaces;
 using Domain.Models;
 using Domain.Validators;
+using ExpenseTrackerApi.conf;
 using ExpenseTrackerApi.Handlers;
 using ExpenseTrackerApi.Middlewares;
 using FluentValidation;
 using Infrastructure.Contexts;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
+using Persistence;
 using Service;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -30,18 +31,11 @@ builder.Services.AddHttpContextAccessor();
 // Policies
 builder.Services.AddAuthorization(options =>
 {
-	options.AddPolicy("BlogOwnerPolicy", policy =>
-	{
-		policy.Requirements.Add(new BlogAuthorizationRequirement());
-	});
-	options.AddPolicy("ExpenseOwnerPolicy", policy =>
-	{
-		policy.Requirements.Add(new ExpenseAuthorizationRequirement());
-	});
-	options.AddPolicy("IncomeOwnerPolicy", policy =>
-	{
-		policy.Requirements.Add(new IncomeAuthorizationRequirement());
-	});
+	options.AddPolicy("BlogOwnerPolicy", policy => { policy.Requirements.Add(new BlogAuthorizationRequirement()); });
+	options.AddPolicy("ExpenseOwnerPolicy",
+		policy => { policy.Requirements.Add(new ExpenseAuthorizationRequirement()); });
+	options.AddPolicy("IncomeOwnerPolicy",
+		policy => { policy.Requirements.Add(new IncomeAuthorizationRequirement()); });
 });
 
 builder.Services.AddScoped<IAuthorizationHandler, BlogAuthorizationHandler>();
@@ -64,8 +58,10 @@ builder.Services.AddAuthentication();
 
 // important for adding routes based on controllers
 builder.Services.AddControllers().AddNewtonsoftJson(options =>
-	options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore
-);
+{
+	options.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+	options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+});
 
 // validators
 builder.Services.AddScoped<IValidator<Blog>, BlogValidator>();
@@ -74,19 +70,31 @@ builder.Services.AddScoped<IValidator<Expense>, ExpenseValidator>();
 builder.Services.AddScoped<IValidator<IncomeGroup>, IncomeGroupValidator>();
 builder.Services.AddScoped<IValidator<Income>, IncomeValidator>();
 builder.Services.AddScoped<IValidator<User>, UserValidator>();
+builder.Services.AddScoped<IValidator<Reminder>, ReminderValidator>();
 
 // services
-builder.Services.AddHttpContextAccessor();
-builder.Services.AddScoped<GetCurrentUserService>();
-builder.Services.AddScoped<IAuthService, AuthService>();
-builder.Services.AddScoped<EmailService>();
+
+// core
+builder.Services.AddScoped<IDatabaseContext, DatabaseContext>();
+builder.Services.AddScoped<IGetAuthenticatedUserIdService, GetAuthenticatedUserIdService>();
+builder.Services.AddScoped<IGetCurrentUserService, GetCurrentUserService>();
 builder.Services.AddScoped<GetAuthenticatedUserIdService>();
-builder.Services.AddScoped<BlogService>();
-builder.Services.AddScoped<ExpenseService>();
-builder.Services.AddScoped<IncomeService>();
-builder.Services.AddScoped<ReminderService>();
-builder.Services.AddScoped<ExpenseGroupService>();
-builder.Services.AddScoped<IncomeGroupService>();
+builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IEmailService, EmailService>();
+
+// main entities
+builder.Services.AddScoped<IExpenseGroupService, ExpenseGroupService>();
+builder.Services.AddScoped<IExpenseService, ExpenseService>();
+
+builder.Services.AddScoped<IIncomeGroupService, IncomeGroupService>();
+builder.Services.AddScoped<IIncomeService, IncomeService>();
+
+// other entitites
+builder.Services.AddScoped<IBlogService, BlogService>();
+builder.Services.AddScoped<IReminderService, ReminderService>();
+
+// repositories
+builder.Services.AddScoped<ReminderRepository>();
 
 // Jwt configuration
 builder.Services.ConfigureJwtAuthentication(builder.Configuration);
@@ -102,6 +110,19 @@ builder.Services.ConfigureRateLimiter();
 var app = builder.Build();
 
 // app.UseHttpLogging();
+
+// handle default route path - redirection to swagger documentation
+app.Use(async (context, next) =>
+{
+	if (context.Request.Path == "/")
+	{
+		context.Response.Redirect("/swagger/index.html");
+		
+		return;
+	}
+
+	await next();
+});
 
 if (app.Environment.IsDevelopment())
 {
@@ -122,6 +143,7 @@ app.MapControllers();
 // this middleware needs to be after .net auth middlewares!
 app.UseMiddleware<ClaimsMiddleware>();
 app.UseGlobalExceptionHandler();
+app.UseMiddleware<TimeTrackingMiddleware>();
 
 app.UseCors();
 
