@@ -14,7 +14,7 @@ using Persistence;
 using Service;
 
 var builder = WebApplication.CreateBuilder(args);
-builder.Services.AddAutoMapper(typeof(Program));
+
 var configuration = builder.Configuration;
 // disabled
 // builder.Services.AddHttpLogging(o => { });
@@ -73,19 +73,25 @@ builder.Services.AddScoped<IValidator<User>, UserValidator>();
 builder.Services.AddScoped<IValidator<Reminder>, ReminderValidator>();
 
 // services
+
+// core
 builder.Services.AddScoped<IDatabaseContext, DatabaseContext>();
 builder.Services.AddScoped<IGetAuthenticatedUserIdService, GetAuthenticatedUserIdService>();
-builder.Services.AddScoped<IBlogService, BlogService>();
-builder.Services.AddScoped<IExpenseService, ExpenseService>();
-builder.Services.AddScoped<IIncomeService, IncomeService>();
-builder.Services.AddScoped<IReminderService, ReminderService>();
-builder.Services.AddScoped<GetCurrentUserService>();
-builder.Services.AddScoped<IAuthService, AuthService>();
-builder.Services.AddScoped<EmailService>();
+builder.Services.AddScoped<IGetCurrentUserService, GetCurrentUserService>();
 builder.Services.AddScoped<GetAuthenticatedUserIdService>();
-builder.Services.AddScoped<ReminderService>();
-builder.Services.AddScoped<ExpenseGroupService>();
-builder.Services.AddScoped<IncomeGroupService>();
+builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IEmailService, EmailService>();
+
+// main entities
+builder.Services.AddScoped<IExpenseGroupService, ExpenseGroupService>();
+builder.Services.AddScoped<IExpenseService, ExpenseService>();
+
+builder.Services.AddScoped<IIncomeGroupService, IncomeGroupService>();
+builder.Services.AddScoped<IIncomeService, IncomeService>();
+
+// other entitites
+builder.Services.AddScoped<IBlogService, BlogService>();
+builder.Services.AddScoped<IReminderService, ReminderService>();
 
 // repositories
 builder.Services.AddScoped<ReminderRepository>();
@@ -104,6 +110,19 @@ builder.Services.ConfigureRateLimiter();
 var app = builder.Build();
 
 // app.UseHttpLogging();
+
+// handle default route path - redirection to swagger documentation
+app.Use(async (context, next) =>
+{
+	if (context.Request.Path == "/")
+	{
+		context.Response.Redirect("/swagger/index.html");
+		
+		return;
+	}
+
+	await next();
+});
 
 if (app.Environment.IsDevelopment())
 {

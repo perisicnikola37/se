@@ -9,7 +9,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Service;
 
-public class ExpenseGroupService(DatabaseContext context, IValidator<ExpenseGroup> validator,ILogger<ExpenseGroupService> logger): IExpenseGroupService
+public class ExpenseGroupService(DatabaseContext context, IValidator<ExpenseGroup> validator, ILogger<ExpenseGroupService> logger) : IExpenseGroupService
 {
 	[HttpGet]
 	public async Task<IEnumerable<object>> GetExpenseGroupsAsync()
@@ -95,11 +95,11 @@ public class ExpenseGroupService(DatabaseContext context, IValidator<ExpenseGrou
 		{
 			var validationResult = await validator.ValidateAsync(expenseGroup);
 			if (!validationResult.IsValid) return new BadRequestObjectResult(validationResult.Errors);
-			
+
 			context.ExpenseGroups.Add(expenseGroup);
 			await context.SaveChangesAsync();
 
-			return controller.CreatedAtAction("GetExpenseGroupsAsync", new { id = expenseGroup.Id }, expenseGroup);
+			return controller.Ok(expenseGroup);
 		}
 		catch (Exception ex)
 		{

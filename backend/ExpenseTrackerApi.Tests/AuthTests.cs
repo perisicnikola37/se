@@ -1,3 +1,4 @@
+using Contracts.Dto;
 using Domain.Interfaces;
 using FluentValidation;
 using Microsoft.AspNetCore.Http;
@@ -22,7 +23,7 @@ public class AuthControllerTests
         var user = new LogInUser { Email = "nikola@e-invoices.online", Password = "06032004" };
 
         // Create a mock user object with a token for the expected result
-        var userWithToken = new LoggedInUser
+        var userWithToken = new UserDto
         {
             Username = "nikola",
             Email = "nikola@e-invoices.online",
@@ -50,7 +51,7 @@ public class AuthControllerTests
         var user = new LogInUser { Email = "nonexistent@e-invoices.online", Password = "password123" };
 
         // Set up the mock AuthService to return null when LogInUserAsync is called for a nonexistent user
-        authServiceMock.Setup(x => x.LogInUserAsync(user)).ReturnsAsync((LoggedInUser)null!);
+        authServiceMock.Setup(x => x.LogInUserAsync(user)).ReturnsAsync((UserDto)null!);
 
         var authController = new AuthController(authServiceMock.Object, validatorMock.Object, logger.Object,
             new GetCurrentUserService(httpContextAccessor.Object, dbContextMock.Object));

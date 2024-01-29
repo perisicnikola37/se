@@ -1,4 +1,5 @@
 using System.IdentityModel.Tokens.Jwt;
+using System.Reflection;
 using System.Text;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
@@ -43,10 +44,14 @@ public class JwtTokenGeneratorTests
         };
 
         // Create an instance of the AuthService with the mock database context and configuration
-        var jwtTokenGenerator = new AuthService(dbContextMock.Object, _configuration);
+        var authService = new AuthService(dbContextMock.Object, _configuration);
+
+        // Use Reflection to get the private method info
+        var methodInfo = typeof(AuthService).GetMethod("GenerateJwtToken", BindingFlags.NonPublic | BindingFlags.Instance);
+        Assert.NotNull(methodInfo);
 
         // Act
-        var token = jwtTokenGenerator.GenerateJwtToken(user);
+        var token = (string)methodInfo.Invoke(authService, new object[] { user });
 
         // Assert
         Assert.NotNull(token);
@@ -77,13 +82,14 @@ public class JwtTokenGeneratorTests
         Assert.Equal(user.Id.ToString(), userIdClaim.Value);
 
         // Example: Check username claim
-        var usernameClaim = jwtToken?.Claims.FirstOrDefault(c => c.Type == "sub");
+        var usernameClaim = jwtToken?.Claims.FirstOrDefault(c => c.Type == JwtRegisteredClaimNames.Sub);
         Assert.NotNull(usernameClaim);
         Assert.Equal(user.Username, usernameClaim.Value);
 
         // Example: Check email claim
-        var emailClaim = jwtToken?.Claims.FirstOrDefault(c => c.Type == "email");
+        var emailClaim = jwtToken?.Claims.FirstOrDefault(c => c.Type == JwtRegisteredClaimNames.Email);
         Assert.NotNull(emailClaim);
         Assert.Equal(user.Email, emailClaim.Value);
     }
+
 }

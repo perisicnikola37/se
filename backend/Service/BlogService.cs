@@ -66,7 +66,14 @@ public class BlogService(
 
             blog.UserId = (int)userId;
 
-            blog.User = await context.Users.FindAsync(blog.UserId);
+            var user = await context.Users.FindAsync(blog.UserId);
+
+            if (user == null)
+            {
+                return new NotFoundResult();
+            }
+
+            blog.User = user;
 
             context.Blogs.Add(blog);
             await context.SaveChangesAsync();
@@ -86,6 +93,7 @@ public class BlogService(
             };
 
             return new CreatedAtActionResult("GetBlog", "Blog", new { id = blog.Id }, responseBlog);
+
         }
         catch (Exception ex)
         {

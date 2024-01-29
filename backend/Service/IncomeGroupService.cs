@@ -9,7 +9,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Service;
 
-public class IncomeGroupService(DatabaseContext context, IValidator<IncomeGroup> validator,  ILogger<IncomeGroupService> logger): IIncomeGroupService
+public class IncomeGroupService(DatabaseContext context, IValidator<IncomeGroup> validator, ILogger<IncomeGroupService> logger) : IIncomeGroupService
 {
 	[HttpGet]
 	public async Task<IEnumerable<object>> GetIncomeGroupsAsync()
@@ -95,11 +95,11 @@ public class IncomeGroupService(DatabaseContext context, IValidator<IncomeGroup>
 		{
 			var validationResult = await validator.ValidateAsync(incomeGroup);
 			if (!validationResult.IsValid) return new BadRequestObjectResult(validationResult.Errors);
-			
+
 			context.IncomeGroups.Add(incomeGroup);
 			await context.SaveChangesAsync();
 
-			return controller.CreatedAtAction("GetIncomeGroup", new { id = incomeGroup.Id }, incomeGroup);
+			return controller.Ok(incomeGroup);
 		}
 		catch (Exception ex)
 		{

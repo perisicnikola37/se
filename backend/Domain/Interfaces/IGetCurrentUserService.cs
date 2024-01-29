@@ -1,10 +1,10 @@
-using Domain.Models;
+using Contracts.Dto;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Domain.Interfaces
 {
     public interface IGetCurrentUserService
     {
-        ActionResult<LoggedInUser> GetCurrentUser();
+        ActionResult<UserDto> GetCurrentUser();
     }
 }

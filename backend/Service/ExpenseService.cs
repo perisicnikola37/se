@@ -78,7 +78,6 @@ public class ExpenseService(
         try
         {
             return await context.Expenses
-                .Include(e => e.User)
                 .Include(e => e.ExpenseGroup)
                 .OrderByDescending(e => e.CreatedAt)
                 .Take(5)
@@ -91,7 +90,7 @@ public class ExpenseService(
         }
     }
 
-    public async Task<Response<Expense>?> GetExpenseAsync(int id)
+   public async Task<ActionResult<Expense>> GetExpenseAsync(int id)
     {
         try
         {
@@ -101,7 +100,7 @@ public class ExpenseService(
 
             if (expense == null) return null;
 
-            return new Response<Expense>(expense);
+            return new OkObjectResult(expense);
         }
         catch (Exception ex)
         {

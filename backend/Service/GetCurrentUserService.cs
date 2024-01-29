@@ -1,3 +1,4 @@
+using Contracts.Dto;
 using Domain.Interfaces;
 using Domain.Models;
 using Infrastructure.Contexts;
@@ -12,7 +13,7 @@ public class GetCurrentUserService(IHttpContextAccessor httpContextAccessor, Dat
 {
     private const string UserIdClaimType = "Id";
 
-    public ActionResult<LoggedInUser> GetCurrentUser()
+    public ActionResult<UserDto> GetCurrentUser()
     {
         foreach (var claim in httpContextAccessor.HttpContext.User.Claims)
             Console.WriteLine($"Claim Type: {claim.Type}, Claim Value: {claim.Value}");
