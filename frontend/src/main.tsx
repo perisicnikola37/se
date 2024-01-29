@@ -13,6 +13,7 @@ import Transactions from "./pages/Transaction.tsx";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import Cookies from "js-cookie";
+import { LoadingProvider } from "./contexts/LoadingContext.tsx";
 
 const darkTheme = createTheme({
     palette: {
@@ -36,7 +37,9 @@ const router = createBrowserRouter([
         element: (
             <ThemeProvider theme={selectedTheme}>
                 <CssBaseline />
-                <App />
+                <LoadingProvider>
+                    <App />
+                </LoadingProvider>
             </ThemeProvider>
         ),
     },

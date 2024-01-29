@@ -13,7 +13,10 @@
                 "url": "/expenses"
             }
         ],
-        "settings": ["Profil", "Odjava"]
+        "settings": ["Profil", "Odjava"],
+        "policyText": "Koristimo kolačiće kako bi poboljšali Vaše iskustvo. Korišćenjem našeg sajta, slažete se sa našim ",
+        "privacyPolicy": "Pravila privatnosti",
+        "acceptButton": "Prihvati"
     },
     "EN": {
         "pages": [{
@@ -29,6 +32,9 @@
                 "url": "/expenses"
             }
         ],
-        "settings": ["Profile", "Logout"]
+        "settings": ["Profile", "Logout"],
+        "policyText": "We use cookies to enhance your experience. By using our website, you agree to our ",
+        "privacyPolicy": "Privacy Policy",
+        "acceptButton": "Accept"
     }
 }

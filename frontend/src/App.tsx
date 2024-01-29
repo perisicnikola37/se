@@ -1,7 +1,6 @@
-import { motion, AnimatePresence, useAnimation } from "framer-motion";
-import { useEffect, useRef, useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { useEffect, useRef } from "react";
 import { Button, Grid, Table } from "@mui/material";
-import logo from "./assets/logo.png";
 import { ThreeDots } from "react-loader-spinner";
 import Swal from "sweetalert2";
 import { Delete } from "@mui/icons-material";
@@ -9,36 +8,20 @@ import FormDialog from "./components/Form";
 import ChartReacharts from "./components/Chart";
 import BlogCard from "./components/BlogCard";
 import NavBar from "./components/NavBar";
+import { useLoading } from "./contexts/LoadingContext";
+import Footer from "./components/Footer";
 
 function App() {
-    const currentYear = new Date().getFullYear();
 
-    const [loading1, setLoading] = useState(true);
+    const { loading, setLoadingState } = useLoading();
 
     useEffect(() => {
         const timeout = setTimeout(() => {
-            setLoading(false);
+            setLoadingState(false);
         }, 600);
 
         return () => clearTimeout(timeout);
     }, []);
-
-    const [showBanner, setShowBanner] = useState(false);
-    const controls = useAnimation();
-
-    useEffect(() => {
-        if (!localStorage.getItem("cookieConsent")) {
-            setShowBanner(true);
-            controls.start({ y: 0 });
-        }
-    }, [controls]);
-
-    const handleAcceptCookies = () => {
-        localStorage.setItem("cookieConsent", "true");
-        controls.start({ y: "100%" }).then(() => {
-            setShowBanner(false);
-        });
-    };
 
     const blogData = [
         { title: "Blog Post 1", content: "Lorem ipsum dolor sit amet..." },
@@ -87,7 +70,7 @@ function App() {
 
     return (
         <>
-            {loading1 ? (
+            {loading ? (
                 <div className="flex justify-center items-center h-screen">
                     <ThreeDots
                         visible={true}
@@ -155,95 +138,7 @@ function App() {
                         </Grid>
                     </center>
 
-                    <footer className="bg-[#1976D2] shadow dark:bg-gray-900">
-                        <div className="w-full max-w-screen-xl mx-auto p-4 md:py-8">
-                            <div className="sm:flex sm:items-center sm:justify-between">
-                                <a
-                                    href="#"
-                                    className="flex items-center mb-4 sm:mb-0 space-x-3 rtl:space-x-reverse"
-                                >
-                                    <img
-                                        src={logo}
-                                        className="h-8"
-                                        alt="Flowbite Logo"
-                                    />
-                                    <span className="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">
-                                        Expense Tracker
-                                    </span>
-                                </a>
-                                <ul className="flex flex-wrap items-center mb-6 text-sm font-medium text-gray-500 sm:mb-0 dark:text-gray-400">
-                                    <li>
-                                        <a
-                                            href="#"
-                                            className="hover:underline me-4 md:me-6"
-                                        >
-                                            About
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a
-                                            href="#"
-                                            className="hover:underline me-4 md:me-6"
-                                        >
-                                            Privacy Policy
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a
-                                            href="#"
-                                            className="hover:underline me-4 md:me-6"
-                                        >
-                                            Licensing
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="#" className="hover:underline">
-                                            Contact
-                                        </a>
-                                    </li>
-                                </ul>
-                            </div>
-                            <hr className="my-6 border-gray-200 sm:mx-auto dark:border-gray-700 lg:my-8" />
-                            <span className="block text-sm text-gray-500 sm:text-center dark:text-gray-400">
-                                &copy; {currentYear}{" "}
-                                <a href="https://git.vegaitsourcing.rs/nikola.perisic/vega-internship-project" className="hover:underline">
-                                    Expense Tracker™
-                                </a>
-                                . All Rights Reserved.
-                            </span>
-
-                        </div>
-
-                        <motion.div
-                            id="cookieConsent"
-                            className={`fixed bottom-0 left-0 right-0 p-4 bg-gray-800 text-white text-center ${showBanner ? "" : "hidden"
-                                }`}
-                            animate={controls}
-                            initial={{ y: "100%" }}
-                            transition={{ duration: 0.5 }}
-                        >
-                            <div className="container mx-auto">
-                                <p className="text-sm">
-                                    We use cookies to enhance your experience.
-                                    By using our website, you agree to our{" "}
-                                    <a
-                                        href="/privacy-policy"
-                                        className="text-blue-500"
-                                    >
-                                        Privacy Policy
-                                    </a>
-                                    .
-                                </p>
-                                <button
-                                    id="acceptCookies"
-                                    className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 text-sm mt-2 rounded-full focus:outline-none"
-                                    onClick={handleAcceptCookies}
-                                >
-                                    Accept
-                                </button>
-                            </div>
-                        </motion.div>
-                    </footer>
+                    <Footer />
                 </>
             )}
         </>
