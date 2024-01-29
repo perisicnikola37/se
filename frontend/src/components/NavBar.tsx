@@ -158,7 +158,7 @@ const NavBar = () => {
                         </Box>
                         <Brightness4Icon className="mr-5" />
                         {!loggedIn ? (<button type="button" className="text-white bg-blue-700 hover:bg-blue-800  font-medium rounded-md text-sm px-3 py-1.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
-                            <a href="#">
+                            <a href="/sign-in">
                                 Sign In
                                 <EastSharpIcon style={iconStyle} />
                             </a>

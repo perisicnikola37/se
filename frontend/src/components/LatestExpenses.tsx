@@ -7,8 +7,8 @@ const LatestExpenses = () => {
     const slider = useRef(null);
 
     const expenses = [
-        { title: 'Expense 1', amount: 50.00 },
-        { title: 'Expense 2', amount: 30.00 },
+        { title: 'Expense 1', amount: -50.00 },
+        { title: 'Expense 2', amount: -30.00 },
     ];
 
     const settings = {
