@@ -15,16 +15,8 @@ public class AuthController(
 	IAuthService authService,
 	IValidator<User> validator,
 	ILogger<AuthController> logger,
-	GetCurrentUserService getCurrentUserService) : ControllerBase
+	IGetCurrentUserService getCurrentUserService) : ControllerBase
 {
-	private readonly IAuthService authService = authService ?? throw new ArgumentNullException(nameof(authService));
-
-	private readonly GetCurrentUserService getCurrentUserService =
-		getCurrentUserService ?? throw new ArgumentNullException(nameof(getCurrentUserService));
-
-	private readonly ILogger<AuthController> logger = logger ?? throw new ArgumentNullException(nameof(logger));
-	private readonly IValidator<User> validator = validator ?? throw new ArgumentNullException(nameof(validator));
-
 	[HttpPost("login")]
 	public async Task<ActionResult<User>> LogInUserAsync(LogInUser user)
 	{
