@@ -61,6 +61,7 @@ public class IncomeService(
 						Username = e.User!.Username
 					}
 				})
+				.OrderByDescending(e => e.CreatedAt)
 				.ToListAsync();
 
 			return new PagedResponseDto<List<IncomeResponse>>(pagedData, validFilter.PageNumber, validFilter.PageSize);
