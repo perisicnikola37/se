@@ -20,7 +20,7 @@ var configuration = builder.Configuration;
 // builder.Services.AddHttpLogging(o => { });
 builder.Services.AddCors(p => p.AddPolicy("cors", builder =>
 {
-	builder.WithOrigins("http://localhost:5174").AllowAnyMethod().AllowAnyHeader();
+	builder.WithOrigins("*").AllowAnyMethod().AllowAnyHeader();
 }));
 
 builder.Services.AddAuthorization();
