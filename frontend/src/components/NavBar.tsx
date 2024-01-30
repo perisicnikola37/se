@@ -22,6 +22,18 @@ const NavBar = () => {
         null
     );
 
+    const handleLogout = () => {
+        localStorage.removeItem('username');
+        localStorage.removeItem('email');
+        localStorage.removeItem('accountType');
+        localStorage.removeItem('cookieConsent');
+        localStorage.removeItem('id');
+        localStorage.removeItem('token');
+        localStorage.removeItem('formattedCreatedAt');
+
+        window.location.href = "/sign-in";
+    };
+
     const pages = pagesData.pages.map(page => ({ ...page }));
     const settings = pagesData.settings || [];
 
@@ -187,7 +199,7 @@ const NavBar = () => {
                                 open={Boolean(anchorElUser)}
                                 onClose={handleCloseUserMenu}
                             >
-                                {settings.map((setting) => (
+                                {/* {settings.map((setting) => (
                                     <MenuItem
                                         key={setting}
                                         onClick={handleCloseUserMenu}
@@ -196,7 +208,19 @@ const NavBar = () => {
                                             {setting}
                                         </Typography>
                                     </MenuItem>
+                                ))} */}
+
+                                {settings.map((setting) => (
+                                    <MenuItem
+                                        key={setting}
+                                        onClick={() => handleLogout()}
+                                    >
+                                        <Typography textAlign="center">
+                                            {setting}
+                                        </Typography>
+                                    </MenuItem>
                                 ))}
+
                             </Menu>
                         </Box>)}
 
