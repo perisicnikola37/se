@@ -74,17 +74,32 @@ public class ExpenseService(
 		}
 	}
 
-	public async Task<List<Expense>> GetLatestExpensesAsync(ControllerBase controller)
+	public async Task<object> GetLatestExpensesAsync(ControllerBase controller)
 	{
 		try
 		{
 			var authenticatedUserId = getAuthenticatedUserId.GetUserId(controller.User);
 
-			return await context.Expenses
+			var highestExpense = await context.Expenses
+							.Where(i => i.CreatedAt >= DateTime.UtcNow.AddDays(-7))
+							.OrderByDescending(i => i.Amount)
+							.Select(i => i.Amount)
+							.FirstOrDefaultAsync();
+
+			var latestExpenses = await context.Expenses
 				.Include(e => e.ExpenseGroup)
 				.OrderByDescending(e => e.CreatedAt)
 				.Take(5)
 				.ToListAsync();
+
+
+			var response = new
+			{
+				highestExpense,
+				expenses = latestExpenses
+			};
+
+			return response;
 		}
 		catch (Exception ex)
 		{

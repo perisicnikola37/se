@@ -9,6 +9,4 @@ const instance: AxiosInstance = axios.create({
     },
 });
 
-console.log(token);
-
 export default instance;

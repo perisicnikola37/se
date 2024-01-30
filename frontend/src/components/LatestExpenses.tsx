@@ -4,24 +4,20 @@ import EastSharpIcon from '@mui/icons-material/EastSharp';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import useLatestExpenses from '../hooks/Expenses/LatestExpensesHook';
+import { formatDate } from '../utils/utils';
 
 const LatestExpenses = () => {
     const slider = useRef<Slider | null>(null);
-    const { loadLatestExpenses } = useLatestExpenses();
-
-    const expenses = [
-        { title: 'Expense 1', amount: -50.00 },
-        { title: 'Expense 2', amount: -30.00 },
-    ];
+    const { expenses, loadLatestExpenses, highestExpense } = useLatestExpenses();
 
     useEffect(() => {
         const fetchData = async () => {
-            const res = loadLatestExpenses();
-            console.log(res);
+            await loadLatestExpenses();
         };
 
-        fetchData();
-
+        setTimeout(() => {
+            fetchData();
+        }, 1000);
     }, []);
 
     const settings = {
@@ -32,35 +28,37 @@ const LatestExpenses = () => {
         slidesToScroll: 1
     };
 
-    const data = [
-        {
-            name: 'Highest expense',
-            $: 5000,
-        },
-        {
-            name: 'This expense',
-            $: 3000,
-        },
+    const expenseData = expenses.map((expense) => [
         {
             name: 'The worst state',
             $: 0,
         },
-    ];
+        {
+            name: 'Highest expense',
+            $: highestExpense,
+        },
+        {
+            name: 'This expense',
+            $: expense.amount,
+        },
+    ]);
 
     return (
         <>
-            <Slider ref={slider} {...settings} className='w-[90%] lg:w-1/2 xs:w-1/2 rounded-lg m-10'>
+            <Slider ref={slider} {...settings} className='w-[90%] lg:w-1/2 xs:w-1/2 rounded-lg m-10 mt-20'>
                 {expenses.map((expense, index) => (
                     <div key={index} className="bg-red-100 p-4 mx-4 flex justify-between items-center w-full">
                         <div>
-                            <div className="text-xl font-bold mb-2">{expense.title}</div>
+                            <div className="text-xl font-bold mb-2">{expense.description}</div>
                             <div className="text-2xl">${expense.amount.toFixed(2)}</div>
+                            <p>{formatDate(expense.createdAt)}</p>
                         </div>
                         <div className="hidden-sm float-right">
                             <LineChart
+                                key={index}
                                 width={500}
                                 height={200}
-                                data={data}
+                                data={expenseData[index]}
                                 margin={{
                                     top: 5,
                                     right: 30,

@@ -15,10 +15,6 @@ const NavBar = () => {
     const iconStyle = { fontSize: 16, marginLeft: "5px" };
     const { isLoggedIn } = useUser();
 
-    useEffect(() => {
-        console.log(location.pathname);
-    }, [location]);
-
     const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(
         null
     );

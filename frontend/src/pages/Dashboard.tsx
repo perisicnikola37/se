@@ -6,8 +6,11 @@ import FeaturedInSection from "../components/FeaturedIn";
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import LatestSection from "../components/Dashboard/LatestSection";
+import { useUser } from "../contexts/UserContext";
 
 const Dashboard = () => {
+    const { isLoggedIn } = useUser();
+
     const h1MotionStyle: MotionStyle = {
         fontFamily: 'Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"',
         fontStyle: 'normal',
@@ -77,7 +80,7 @@ const Dashboard = () => {
                 ></motion.div>
             </AnimatePresence>
 
-            <LatestSection />
+            {isLoggedIn() && <LatestSection />}
 
             <FeaturedInSection />
         </div >

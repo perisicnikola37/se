@@ -73,17 +73,32 @@ public class IncomeService(
 		}
 	}
 
-	public async Task<List<Income>> GetLatestIncomesAsync(ControllerBase controller)
+	public async Task<object> GetLatestIncomesAsync(ControllerBase controller)
 	{
 		try
 		{
 			var authenticatedUserId = getAuthenticatedUserId.GetUserId(controller.User);
 
-			return await context.Incomes
-				.Where(e => e.UserId == authenticatedUserId)
+			var highestIncome = await context.Incomes
+							.Where(i => i.CreatedAt >= DateTime.UtcNow.AddDays(-7))
+							.OrderByDescending(i => i.Amount)
+							.Select(i => i.Amount)
+							.FirstOrDefaultAsync();
+
+			var latestIncomes = await context.Incomes
+				.Include(e => e.IncomeGroup)
 				.OrderByDescending(e => e.CreatedAt)
 				.Take(5)
 				.ToListAsync();
+
+
+			var response = new
+			{
+				highestIncome,
+				incomes = latestIncomes
+			};
+
+			return response;
 		}
 		catch (Exception ex)
 		{

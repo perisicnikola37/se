@@ -4,24 +4,20 @@ import EastSharpIcon from '@mui/icons-material/EastSharp';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import useLatestIncomes from '../hooks/Incomes/LatestIncomesHook';
+import { formatDate } from '../utils/utils';
 
 const LatestIncomes = () => {
     const slider = useRef<Slider | null>(null);
-    const { loadLatestIncomes } = useLatestIncomes();
-
-    const incomes = [
-        { title: 'Income 1', amount: 50.00 },
-        { title: 'Income 2', amount: 30.00 },
-    ];
+    const { incomes, loadLatestIncomes, highestIncome } = useLatestIncomes();
 
     useEffect(() => {
         const fetchData = async () => {
-            const res = await loadLatestIncomes();
-            console.log(res);
+            await loadLatestIncomes();
         };
 
-        fetchData();
-
+        setTimeout(() => {
+            fetchData();
+        }, 1000);
     }, []);
 
     const settings = {
@@ -32,20 +28,20 @@ const LatestIncomes = () => {
         slidesToScroll: 1
     };
 
-    const data = [
+    const incomeData = incomes.map((income) => [
         {
             name: 'Initial state',
             $: 0,
         },
         {
             name: 'Highest income',
-            $: 5000,
+            $: highestIncome,
         },
         {
             name: 'This income',
-            $: 2000,
+            $: income.amount,
         },
-    ];
+    ]);
 
     return (
         <>
@@ -53,14 +49,16 @@ const LatestIncomes = () => {
                 {incomes.map((income, index) => (
                     <div key={index} className="bg-green-100 p-4 mx-4 flex justify-between items-center w-full">
                         <div>
-                            <div className="text-xl font-bold mb-2">{income.title}</div>
+                            <div className="text-xl font-bold mb-2">{income.description}</div>
                             <div className="text-2xl">${income.amount.toFixed(2)}</div>
+                            <p>{formatDate(income.createdAt)}</p>
                         </div>
                         <div className="hidden-sm float-right">
                             <LineChart
+                                key={index}
                                 width={500}
                                 height={200}
-                                data={data}
+                                data={incomeData[index]}
                                 margin={{
                                     top: 5,
                                     right: 30,

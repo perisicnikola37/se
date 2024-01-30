@@ -57,13 +57,10 @@ const useRegistration = () => {
                 const fieldErrors = err.response.data.map((error: any) => error.errorMessage);
                 setFieldErrorMessages(fieldErrors);
                 setErrorMessage('An error occurred during registration.');
-                console.log(err);
             } else if (err instanceof Error) {
                 setErrorMessage('An error occurred during registration.');
-                console.log(err);
             } else {
                 setErrorMessage('An error occurred during registration.');
-                console.log(err);
             }
         }
         finally {

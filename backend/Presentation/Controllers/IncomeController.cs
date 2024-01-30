@@ -21,7 +21,7 @@ public class IncomeController(IIncomeService incomeService) : ControllerBase
 
 	// GET: api/Income/latest/5
 	[HttpGet("latest/5")]
-	public async Task<ActionResult<IEnumerable<Income>>> GetLatestIncomesAsync()
+	public async Task<ActionResult<object>> GetLatestIncomesAsync()
 	{
 		return Ok(await incomeService.GetLatestIncomesAsync(this));
 	}

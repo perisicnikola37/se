@@ -20,7 +20,7 @@ var configuration = builder.Configuration;
 // builder.Services.AddHttpLogging(o => { });
 builder.Services.AddCors(p => p.AddPolicy("cors", builder =>
 {
-	builder.WithOrigins("http://localhost:5173").AllowAnyMethod().AllowAnyHeader();
+	builder.WithOrigins("http://localhost:5174").AllowAnyMethod().AllowAnyHeader();
 }));
 
 builder.Services.AddAuthorization();
@@ -140,7 +140,7 @@ app.UseAuthorization();
 app.MapControllers();
 
 // this middleware needs to be after .net auth middlewares!
-app.UseMiddleware<ClaimsMiddleware>();
+// app.UseMiddleware<ClaimsMiddleware>();
 app.UseGlobalExceptionHandler();
 app.UseMiddleware<TimeTrackingMiddleware>();
 

@@ -10,28 +10,48 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { Alert, FormControl, InputLabel, MenuItem, Select } from "@mui/material";
-import useRegistration from "../hooks/Authentication/RegisterHook";
+import { Alert } from "@mui/material";
+import useLogin from "../hooks/Authentication/LogInHook";
+import { isEmailValid } from "../utils/utils";
 
 const defaultTheme = createTheme();
 
 export default function SignInForm() {
-    const [registrationData, setRegistrationData] = useState({
-        username: "",
+    const [loginData, setLoginData] = useState({
         email: "",
-        accountType: "Administrator",
         password: "",
     });
 
+    const [formError, setFormError] = useState<string | null>(null);
+
+    const { login, fieldErrorMessages, isLoading } = useLogin();
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
 
+        if (!loginData.email || !loginData.password) {
+            setFormError("Please fill in both email and password.");
+            return;
+        }
+
+        if (!isEmailValid(loginData.email)) {
+            setFormError("Please enter a valid email address.");
+            return;
+        }
+
+        if (loginData.password.length < 8) {
+            setFormError("Password must have a minimum of 8 characters.");
+            return;
+        }
+
+        setFormError(null);
+
+        await login(loginData);
     };
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = event.target;
-        setRegistrationData((prevData) => ({
+        setLoginData((prevData) => ({
             ...prevData,
             [name]: value,
         }));
@@ -49,17 +69,20 @@ export default function SignInForm() {
                         alignItems: "center",
                     }}
                 >
-
                     <Typography component="h1" variant="h5">
                         Sign In
                     </Typography>
-
                     <Box
                         component="form"
                         onSubmit={handleSubmit}
                         noValidate
                         sx={{ mt: 1 }}
                     >
+                        {formError && (
+                            <Alert sx={{ mb: 2 }} severity="error">
+                                {formError}
+                            </Alert>
+                        )}
                         {fieldErrorMessages && (
                             <Box sx={{ mb: 2, maxHeight: "130px", overflowY: "auto" }}>
                                 {fieldErrorMessages.map((errorMessage, index) => (
@@ -106,7 +129,6 @@ export default function SignInForm() {
                         >
                             {isLoading ? "LOADING..." : "Sign In"}
                         </Button>
-
                         <Grid container>
                             <Grid item xs>
                                 <Link href="#" variant="body2">
@@ -117,7 +139,6 @@ export default function SignInForm() {
                                 <Link href="/sign-up" variant="body2">
                                     {"Don't have an account? Sign Up"}
                                 </Link>
-
                             </Grid>
                         </Grid>
                     </Box>
