@@ -73,11 +73,14 @@ public class IncomeService(
 		}
 	}
 
-	public async Task<List<Income>> GetLatestIncomesAsync()
+	public async Task<List<Income>> GetLatestIncomesAsync(ControllerBase controller)
 	{
 		try
 		{
+			var authenticatedUserId = getAuthenticatedUserId.GetUserId(controller.User);
+
 			return await context.Incomes
+				.Where(e => e.UserId == authenticatedUserId)
 				.OrderByDescending(e => e.CreatedAt)
 				.Take(5)
 				.ToListAsync();
@@ -88,6 +91,7 @@ public class IncomeService(
 			throw;
 		}
 	}
+
 	public async Task<ActionResult<Income>> GetIncomeAsync(int id)
 	{
 		try

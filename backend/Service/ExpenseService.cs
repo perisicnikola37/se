@@ -74,10 +74,12 @@ public class ExpenseService(
 		}
 	}
 
-	public async Task<List<Expense>> GetLatestExpensesAsync()
+	public async Task<List<Expense>> GetLatestExpensesAsync(ControllerBase controller)
 	{
 		try
 		{
+			var authenticatedUserId = getAuthenticatedUserId.GetUserId(controller.User);
+
 			return await context.Expenses
 				.Include(e => e.ExpenseGroup)
 				.OrderByDescending(e => e.CreatedAt)
@@ -91,7 +93,7 @@ public class ExpenseService(
 		}
 	}
 
-   public async Task<ActionResult<Expense>> GetExpenseAsync(int id)
+	public async Task<ActionResult<Expense>> GetExpenseAsync(int id)
 	{
 		try
 		{

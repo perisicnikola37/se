@@ -23,7 +23,7 @@ public class IncomeController(IIncomeService incomeService) : ControllerBase
 	[HttpGet("latest/5")]
 	public async Task<ActionResult<IEnumerable<Income>>> GetLatestIncomesAsync()
 	{
-		return Ok(await incomeService.GetLatestIncomesAsync());
+		return Ok(await incomeService.GetLatestIncomesAsync(this));
 	}
 
 	// GET: api/Income/total-amount

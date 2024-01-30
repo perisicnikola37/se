@@ -51,8 +51,22 @@ const useRegistration = () => {
 
             setResponse({ data, status });
         } catch (err) {
-            // ... (error handling code)
-        } finally {
+            if (err.response && err.response.status === 409) {
+                setFieldErrorMessages(['Email is already registered']);
+            } else if (err.response && err.response.data) {
+                const fieldErrors = err.response.data.map((error: any) => error.errorMessage);
+                setFieldErrorMessages(fieldErrors);
+                setErrorMessage('An error occurred during registration.');
+                console.log(err);
+            } else if (err instanceof Error) {
+                setErrorMessage('An error occurred during registration.');
+                console.log(err);
+            } else {
+                setErrorMessage('An error occurred during registration.');
+                console.log(err);
+            }
+        }
+        finally {
             setIsLoading(false);
         }
     };

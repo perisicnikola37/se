@@ -49,11 +49,7 @@ const router = createBrowserRouter([
         ),
         children: [
             {
-                index: true, element: (
-                    <UserProvider>
-                        <Dashboard />
-                    </UserProvider>
-                )
+                index: true, element: <Dashboard />
             },
             { path: "incomes", element: <Incomes /> },
             { path: "expenses", element: <Expenses /> },

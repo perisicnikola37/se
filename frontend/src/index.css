@@ -104,3 +104,9 @@ body {
 .contant_box_404 {
     margin-top: -50px;
 }
+
+@media (max-width: 600px) {
+    .hidden-sm {
+        display: none;
+    }
+}

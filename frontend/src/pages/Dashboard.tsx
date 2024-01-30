@@ -1,18 +1,13 @@
-// Dashboard.tsx
 import { AnimatePresence, MotionStyle, motion } from "framer-motion";
 import ChartReacharts from "../components/Chart";
 import { Table } from "@mui/material";
 import ViewInArIcon from '@mui/icons-material/ViewInAr';
 import FeaturedInSection from "../components/FeaturedIn";
-import LatestIncomes from "../components/LatestIncomes";
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
-import LatestExpenses from "../components/LatestExpenses";
-import { useUser } from "../contexts/UserContext";
+import LatestSection from "../components/Dashboard/LatestSection";
 
 const Dashboard = () => {
-    const { user } = useUser();
-
     const h1MotionStyle: MotionStyle = {
         fontFamily: 'Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"',
         fontStyle: 'normal',
@@ -58,9 +53,10 @@ const Dashboard = () => {
                 </button>
             </div>
 
-            <AnimatePresence>te
+            <AnimatePresence>
 
                 <ChartReacharts />
+
                 <motion.div
                     key="table1"
                     initial={{ opacity: 0 }}
@@ -81,8 +77,7 @@ const Dashboard = () => {
                 ></motion.div>
             </AnimatePresence>
 
-            <LatestIncomes />
-            <LatestExpenses />
+            <LatestSection />
 
             <FeaturedInSection />
         </div >

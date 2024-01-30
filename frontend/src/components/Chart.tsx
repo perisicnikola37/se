@@ -42,7 +42,7 @@ export default function ChartReacharts() {
         <>
             <LineChart
                 className="_chart m-auto mt-10"
-                width={500}
+                width={600}
                 height={300}
                 data={data}
                 margin={{

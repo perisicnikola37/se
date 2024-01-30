@@ -34,39 +34,39 @@ public class AuthService(IDatabaseContext context, IConfiguration configuration)
 
 		return userWithToken;
 	}
-	
-	 public async Task<ActionResult<UserDto>> RegisterUserAsync(User userRegistration)
-    {
-        if (await context.Users.AnyAsync(u => u.Email == userRegistration.Email))
-            return new ConflictObjectResult(new { message = "Email is already registered" });
 
-        var newUser = new User
-        {
-            Username = userRegistration.Username,
-            Email = userRegistration.Email,
-            AccountType = userRegistration.AccountType
-        };
+	public async Task<ActionResult<UserDto>> RegisterUserAsync(User userRegistration)
+	{
+		if (await context.Users.AnyAsync(u => u.Email == userRegistration.Email))
+			return new ConflictObjectResult(new { message = "Email is already registered" });
 
-        var token = GenerateJwtToken(newUser);
+		var newUser = new User
+		{
+			Username = userRegistration.Username,
+			Email = userRegistration.Email,
+			AccountType = userRegistration.AccountType
+		};
 
-        var hashedPassword = HashPassword(userRegistration.Password);
-        newUser.Password = hashedPassword;
+		var token = GenerateJwtToken(newUser);
 
-        context.Users.Add(newUser);
-        await context.SaveChangesAsync();
+		var hashedPassword = HashPassword(userRegistration.Password);
+		newUser.Password = hashedPassword;
 
-        var userDto = new UserDto
-        {
-            Id = newUser.Id,
-            Username = newUser.Username,
-            Email = newUser.Email,
-            AccountType = newUser.AccountType,
-            CreatedAt = newUser.CreatedAt,
-            Token = token
-        };
+		context.Users.Add(newUser);
+		await context.SaveChangesAsync();
 
-        return userDto;
-    }
+		var userDto = new UserDto
+		{
+			Id = newUser.Id,
+			Username = newUser.Username,
+			Email = newUser.Email,
+			AccountType = newUser.AccountType,
+			CreatedAt = newUser.CreatedAt,
+			Token = token
+		};
+
+		return userDto;
+	}
 
 	private string GenerateJwtToken(User user)
 	{

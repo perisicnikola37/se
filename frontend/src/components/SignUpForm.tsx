@@ -19,7 +19,7 @@ export default function SignUpForm() {
     const [registrationData, setRegistrationData] = useState({
         username: "",
         email: "",
-        accountType: "Administrator",
+        accountType: "Regular",
         password: "",
     });
 

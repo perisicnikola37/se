@@ -18,11 +18,10 @@ var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
 // disabled
 // builder.Services.AddHttpLogging(o => { });
-builder.Services.AddCors(options =>
+builder.Services.AddCors(p => p.AddPolicy("cors", builder =>
 {
-	options.AddDefaultPolicy(
-		policy => { policy.WithOrigins("https://example.com"); });
-});
+	builder.WithOrigins("http://localhost:5173").AllowAnyMethod().AllowAnyHeader();
+}));
 
 builder.Services.AddAuthorization();
 
@@ -105,7 +104,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.ConfigureSwaggerGen();
 
 // Rate Limiter configuration
-builder.Services.ConfigureRateLimiter();
+// builder.Services.ConfigureRateLimiter();
 
 var app = builder.Build();
 
@@ -117,7 +116,7 @@ app.Use(async (context, next) =>
 	if (context.Request.Path == "/")
 	{
 		context.Response.Redirect("/swagger/index.html");
-		
+
 		return;
 	}
 
@@ -136,7 +135,7 @@ app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.UseRateLimiter();
+// app.UseRateLimiter();
 
 app.MapControllers();
 
@@ -145,6 +144,6 @@ app.UseMiddleware<ClaimsMiddleware>();
 app.UseGlobalExceptionHandler();
 app.UseMiddleware<TimeTrackingMiddleware>();
 
-app.UseCors();
+app.UseCors("cors");
 
 app.Run();

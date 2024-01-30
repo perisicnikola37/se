@@ -1,15 +1,28 @@
-import { useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import Slider from 'react-slick';
 import EastSharpIcon from '@mui/icons-material/EastSharp';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
+import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
+import useLatestExpenses from '../hooks/Expenses/LatestExpensesHook';
 
 const LatestExpenses = () => {
-    const slider = useRef(null);
+    const slider = useRef<Slider | null>(null);
+    const { loadLatestExpenses } = useLatestExpenses();
 
     const expenses = [
         { title: 'Expense 1', amount: -50.00 },
         { title: 'Expense 2', amount: -30.00 },
     ];
+
+    useEffect(() => {
+        const fetchData = async () => {
+            const res = loadLatestExpenses();
+            console.log(res);
+        };
+
+        fetchData();
+
+    }, []);
 
     const settings = {
         dots: true,
@@ -32,19 +45,18 @@ const LatestExpenses = () => {
             name: 'The worst state',
             $: 0,
         },
-
     ];
 
     return (
         <>
-            <Slider ref={slider} {...settings} className='w-1/2 rounded-lg m-10 mt-20'>
+            <Slider ref={slider} {...settings} className='w-[90%] lg:w-1/2 xs:w-1/2 rounded-lg m-10'>
                 {expenses.map((expense, index) => (
                     <div key={index} className="bg-red-100 p-4 mx-4 flex justify-between items-center w-full">
                         <div>
                             <div className="text-xl font-bold mb-2">{expense.title}</div>
                             <div className="text-2xl">${expense.amount.toFixed(2)}</div>
                         </div>
-                        <div className='mr-10 float-right'>
+                        <div className="hidden-sm float-right">
                             <LineChart
                                 width={500}
                                 height={200}
@@ -61,13 +73,16 @@ const LatestExpenses = () => {
                                 <YAxis />
                                 <Tooltip />
                                 <Legend />
-                                <Line type="monotone" dataKey="$" stroke="red" />
+                                <Line type="monotone" dataKey="$" stroke="#2563EB" />
                             </LineChart>
+                        </div>
+                        <div className="sm:hidden float-right">
+                            <AttachMoneyIcon className='text-red-500 mr-2' />
                         </div>
                     </div>
                 ))}
             </Slider>
-            <button className='mb-10' onClick={() => slider?.current?.slickNext()}>Next   <EastSharpIcon onClick={() => slider?.current?.slickNext()} /></button>
+            <button className='mb-10' onClick={() => slider?.current?.slickNext()}>Next <EastSharpIcon onClick={() => slider?.current?.slickNext()} /></button>
         </>
     );
 };
