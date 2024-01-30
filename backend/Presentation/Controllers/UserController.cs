@@ -25,7 +25,8 @@ public class UserController(DatabaseContext context, IEmailService emailService,
             .Include(e => e.Incomes)
             .OrderByDescending(e => e.CreatedAt)
             .ToListAsync();
-
+        
+        // TODO what this check does?
         if (users.Count != 0)
             return users;
         return Ok(users);

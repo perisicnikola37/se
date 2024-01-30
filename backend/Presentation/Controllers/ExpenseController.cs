@@ -12,6 +12,7 @@ namespace Presentation.Controllers;
 [EnableRateLimiting("fixed")]
 public class ExpenseController(IExpenseService expenseService) : ControllerBase
 {
+	//TODO remove comments
 	// GET: api/Expense
 	[HttpGet]
 	public async Task<IActionResult> GetExpensesAsync([FromQuery] PaginationFilterDto filter)

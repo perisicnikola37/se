@@ -33,13 +33,13 @@ public class AuthController(
 			}
 
 			logger.LogInformation("User logged in successfully.");
-
+			
 			return Ok(new { message = "User logged in successfully", user = userWithToken });
 		}
 		catch (Exception ex)
 		{
 			logger.LogError(ex, "An error occurred during login.");
-
+			//TODO database exception? custom exceptions for business logic
 			throw new DatabaseException("AuthController.cs");
 		}
 	}
@@ -66,7 +66,8 @@ public class AuthController(
 		catch (Exception ex)
 		{
 			logger.LogError(ex, "An error occurred during user registration.");
-
+			// TODO same wrong exception
+			// TODO Exception bubbling mechanism in .NET 
 			throw new DatabaseException("AuthController.cs");
 		}
 	}

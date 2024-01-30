@@ -13,6 +13,7 @@ public class ExpenseAuthorizationHandler(IHttpContextAccessor httpContextAccesso
         AuthorizationHandlerContext context,
         ExpenseAuthorizationRequirement requirement)
     {
+        // TODO refactoring technique, if you extract 
         var userIdClaim = context.User.Claims.FirstOrDefault(c => c.Type == "Id");
 
         if (userIdClaim != null)
@@ -52,6 +53,7 @@ public class ExpenseAuthorizationHandler(IHttpContextAccessor httpContextAccesso
 
     private int GetIdFromUrl()
     {
+        // Todo returning -1 is a red flag. it still returns int, throw an exception
         var id = httpContextAccessor.HttpContext?.Request.RouteValues["id"];
         if (id != null && int.TryParse(id.ToString(), out var result)) return result;
 

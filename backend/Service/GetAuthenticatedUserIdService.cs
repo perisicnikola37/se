@@ -5,6 +5,7 @@ namespace Service;
 
 public class GetAuthenticatedUserIdService : IGetAuthenticatedUserIdService
 {
+    //TODO move to auth service, explain how how do we get ClaimsPrincipal
     public int? GetUserId(ClaimsPrincipal user)
     {
         var userIdClaim = user.Claims.FirstOrDefault(c => c.Type == "Id");

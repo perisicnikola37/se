@@ -18,7 +18,8 @@ public class AuthService(IDatabaseContext context, IConfiguration configuration)
 	{
 		var authenticatedUser = await context.Users
 			.FirstOrDefaultAsync(u => u.Email == user.Email);
-
+		
+		// TODO why return null, are there other approches
 		if (authenticatedUser == null || !VerifyPassword(user.Password, authenticatedUser.Password)) return null;
 
 		var jwtToken = GenerateJwtToken(authenticatedUser);

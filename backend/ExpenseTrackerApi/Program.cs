@@ -25,7 +25,7 @@ builder.Services.AddCors(options =>
 });
 
 builder.Services.AddAuthorization();
-
+// todo use this for 
 builder.Services.AddHttpContextAccessor();
 
 // Policies
@@ -141,6 +141,7 @@ app.UseRateLimiter();
 app.MapControllers();
 
 // this middleware needs to be after .net auth middlewares!
+// TODO 
 app.UseMiddleware<ClaimsMiddleware>();
 app.UseGlobalExceptionHandler();
 app.UseMiddleware<TimeTrackingMiddleware>();
@@ -148,3 +149,6 @@ app.UseMiddleware<TimeTrackingMiddleware>();
 app.UseCors();
 
 app.Run();
+
+// TODO ADD README.MD with short description of a project, how to setup, how to authenticate.
+// TODO remove ExpenseTrackerApi.http this is something you use only on TODO your computer as testing something useful to have would be curl in the readme i 

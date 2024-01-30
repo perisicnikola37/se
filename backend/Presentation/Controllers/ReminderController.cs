@@ -12,6 +12,7 @@ namespace Presentation.Controllers;
 [EnableRateLimiting("fixed")]
 public class ReminderController(IReminderService reminderService) : ControllerBase
 {
+	// TODO remove comments
 	// GET: api/Reminder
 	[HttpGet]
 	public async Task<ActionResult<IEnumerable<ReminderDto>>> GetRemindersAsync()

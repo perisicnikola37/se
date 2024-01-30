@@ -9,6 +9,7 @@ namespace ExpenseTrackerApi.Tests;
 
 public class AuthControllerTests
 {
+    // TODO group tests in folders
     private readonly Mock<IAuthService> authServiceMock = new();
     private readonly Mock<DatabaseContext> dbContextMock = new();
     private readonly Mock<IHttpContextAccessor> httpContextAccessor = new();

@@ -36,5 +36,4 @@
         <ProjectReference Include="..\Presentation\Presentation.csproj"/>
         <ProjectReference Include="..\Infrastructure\Infrastructure.csproj"/>
     </ItemGroup>
-
 </Project>

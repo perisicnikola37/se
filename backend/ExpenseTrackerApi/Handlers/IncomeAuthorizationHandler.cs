@@ -57,9 +57,10 @@ public class IncomeAuthorizationHandler(IHttpContextAccessor httpContextAccessor
 
     private int GetIdFromUrl()
     {
+        // todo -1
         var id = _httpContextAccessor.HttpContext?.Request.RouteValues["id"];
         if (id != null && int.TryParse(id.ToString(), out var result)) return result;
-
+        // todo return exception authorization
         return -1;
     }
 }

@@ -1,5 +1,5 @@
 namespace Domain.Models;
-
+// goes to dto
 public class IncomeResponse
 {
     public int Id { get; set; }

@@ -21,7 +21,7 @@ public class ExpenseService(
 	[HttpGet]
 	public async Task<PagedResponseDto<List<ExpenseResponse>>> GetExpensesAsync(
 		PaginationFilterDto filter,
-		ControllerBase controller)
+		ControllerBase controller) // TODO OVO JE PAKAO :) use http context accessor
 	{
 		try
 		{
@@ -31,7 +31,7 @@ public class ExpenseService(
 			string minPrice = controller.HttpContext.Request.Query["minPrice"]!;
 			string maxPrice = controller.HttpContext.Request.Query["maxPrice"]!;
 			string expenseGroupId = controller.HttpContext.Request.Query["expenseGroupId"]!;
-
+			
 			var validFilter = new PaginationFilterDto(filter.PageNumber, filter.PageSize);
 
 			var query = context.Expenses
@@ -56,7 +56,7 @@ public class ExpenseService(
 					CreatedAt = e.CreatedAt,
 					ExpenseGroupId = e.ExpenseGroupId,
 					ExpenseGroup = e.ExpenseGroup!,
-					UserId = e.UserId,
+					UserId = e.UserId,// TODO Map to UserDto if you require username, or just return UserId
 					User = new UserResponse
 					{
 						Username = e.User!.Username
@@ -226,4 +226,33 @@ public class ExpenseService(
 	{
 		return condition ? query.Where(filter) : query;
 	}
+	
+	// TODO USE THIS, calling query. query. query.
+	//   var query = context.Expenses
+	//           .Include(e => e.User)
+	//           .Where(e => e.UserId == authenticatedUserId)
+	//           .ApplyFilter(e => e.Description.Contains(queryParams.Description), 
+	//                        !string.IsNullOrWhiteSpace(queryParams.Description))
+	//           .ApplyFilter(e => e.Amount >= queryParams.MinPrice.Value, 
+	//                        queryParams.MinPrice.HasValue)
+	//           .ApplyFilter(e => e.Amount <= queryParams.MaxPrice.Value, 
+	//                        queryParams.MaxPrice.HasValue)
+	//           .ApplyFilter(e => e.ExpenseGroupId == queryParams.ExpenseGroupId.Value, 
+	//                        queryParams.ExpenseGroupId.HasValue);
+	
+	// public static class QueryableExtensions
+	// {
+	//     public static IQueryable<T> ApplyFilter<T>(this IQueryable<T> query, 
+	//                                                Expression<Func<T, bool>> filter, 
+	//                                                bool condition)
+	//     {
+	//         if (condition)
+	//         {
+	//             return query.Where(filter);
+	//         }
+	// 
+	//         return query;
+	//     }
+	// }
+
 }
