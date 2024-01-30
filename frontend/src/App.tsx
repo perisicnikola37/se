@@ -4,10 +4,21 @@ import { ThreeDots } from "react-loader-spinner";
 import NavBar from "./components/NavBar";
 import { useLoading } from "./contexts/LoadingContext";
 import Footer from "./components/Footer";
-import { Outlet } from "react-router-dom";
+import { Outlet, useLocation, useNavigate } from "react-router-dom";
 
 function App() {
     const { loading, setLoadingState } = useLoading();
+    const navigate = useNavigate();
+    const location = useLocation();
+
+    useEffect(() => {
+        const token = localStorage.getItem('token');
+
+        // Exclude "/" path from redirection
+        if (!token && location.pathname !== "/") {
+            navigate("/sign-in");
+        }
+    }, [navigate, location]);
 
     useEffect(() => {
         const timeout = setTimeout(() => {

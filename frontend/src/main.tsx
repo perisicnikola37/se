@@ -15,6 +15,7 @@ import { LanguageProvider } from "./contexts/GetLanguageKeyContext.tsx";
 import Expenses from "./pages/Expenses.tsx";
 import Incomes from "./pages/Incomes.tsx";
 import NotFoundPage from "./pages/NotFoundPage.tsx";
+import { UserProvider } from "./contexts/UserContext.tsx";
 
 // const darkTheme = createTheme({
 //     palette: {
@@ -37,15 +38,23 @@ const router = createBrowserRouter([
         element: (
             // <ThemeProvider theme={"dark"}>
             // <CssBaseline />
-            <LoadingProvider>
-                <LanguageProvider>
-                    <App />
-                </LanguageProvider>
-            </LoadingProvider>
+            <LoadingProvider >
+                <UserProvider>
+                    <LanguageProvider>
+                        <App />
+                    </LanguageProvider>
+                </UserProvider>
+            </ LoadingProvider>
             // </ThemeProvider>
         ),
         children: [
-            { index: true, element: <Dashboard /> },
+            {
+                index: true, element: (
+                    <UserProvider>
+                        <Dashboard />
+                    </UserProvider>
+                )
+            },
             { path: "incomes", element: <Incomes /> },
             { path: "expenses", element: <Expenses /> },
             { path: "blogs", element: <Blog /> },
@@ -57,7 +66,11 @@ const router = createBrowserRouter([
     },
     {
         path: "/sign-up",
-        element: <SignUp />,
+        element: (
+            <UserProvider>
+                <SignUp />
+            </UserProvider>
+        ),
     },
     {
         path: "/sign-in",
@@ -70,3 +83,5 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
         <RouterProvider router={router} />
     </React.StrictMode>
 );
+
+

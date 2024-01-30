@@ -23,12 +23,10 @@ export default function SignInForm() {
         password: "",
     });
 
-    const { register, fieldErrorMessages, isLoading } = useRegistration();
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
 
-        await register(registrationData);
     };
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {

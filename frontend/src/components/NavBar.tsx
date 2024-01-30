@@ -7,12 +7,13 @@ import config from "../config/config.json";
 import { NavLink, useLocation } from "react-router-dom";
 import SubHeader from "./SubHeader";
 import EastSharpIcon from '@mui/icons-material/EastSharp';
+import { useUser } from "../contexts/UserContext";
 
 const NavBar = () => {
     const pagesData = config["EN"];
     const location = useLocation();
     const iconStyle = { fontSize: 16, marginLeft: "5px" };
-    const loggedIn = false;
+    const { isLoggedIn } = useUser();
 
     useEffect(() => {
         console.log(location.pathname);
@@ -157,7 +158,7 @@ const NavBar = () => {
                             ))}
                         </Box>
                         <Brightness4Icon className="mr-5" />
-                        {!loggedIn ? (<button type="button" className="text-white bg-blue-700 hover:bg-blue-800  font-medium rounded-md text-sm px-3 py-1.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
+                        {!isLoggedIn() ? (<button type="button" className="text-white bg-blue-700 hover:bg-blue-800  font-medium rounded-md text-sm px-3 py-1.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
                             <a href="/sign-in">
                                 Sign In
                                 <EastSharpIcon style={iconStyle} />

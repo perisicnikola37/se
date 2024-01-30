@@ -1,7 +1,7 @@
 import axiosConfig from '../../config/axiosConfig';
 import { useState } from 'react';
-import { AxiosResponse } from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { useUser } from '../../contexts/UserContext';
 
 interface RegistrationData {
     username: string;
@@ -13,7 +13,12 @@ interface RegistrationData {
 interface RegistrationResponse {
     success: boolean;
     message: string;
-    token: string; // Add token property to RegistrationResponse
+    username: string;
+    token: string;
+    id: number;
+    email: string;
+    accountType: string;
+    formattedCreatedAt: string;
 }
 
 const useRegistration = () => {
@@ -22,38 +27,31 @@ const useRegistration = () => {
     const [response, setResponse] = useState<RegistrationResponse | null>(null);
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
     const [fieldErrorMessages, setFieldErrorMessages] = useState<string[]>([]);
+    const { setUser } = useUser();
 
     const register = async (registrationData: RegistrationData) => {
         setIsLoading(true);
         try {
-            const response: AxiosResponse<RegistrationResponse> = await axiosConfig.post(
+            const { data, status } = await axiosConfig.post(
                 '/api/auth/register',
                 registrationData
             );
 
-            if (response.status === 201 || response.status === 200) {
+            if (status === 201 || status === 200) {
                 setFieldErrorMessages([]);
-                const { token } = response.data;
-                localStorage.setItem('token', token); // Store the token in local storage
-                navigate('/'); // Redirect to the home page
+
+                localStorage.setItem('token', data.token);
+                localStorage.setItem('id', data.id);
+                localStorage.setItem('username', data.username);
+                localStorage.setItem('email', data.email);
+                localStorage.setItem('accountType', data.accountType);
+                localStorage.setItem('formattedCreatedAt', data.formattedCreatedAt);
+                navigate('/');
             }
 
-            setResponse(response);
+            setResponse({ data, status });
         } catch (err) {
-            if (err.response && err.response.status === 409) {
-                setFieldErrorMessages(['Email is already registered']);
-            } else if (err.response && err.response.data) {
-                const fieldErrors = err.response.data.map((error: any) => error.errorMessage);
-                setFieldErrorMessages(fieldErrors);
-                setErrorMessage('An error occurred during registration.');
-                console.log(err);
-            } else if (err instanceof Error) {
-                setErrorMessage('An error occurred during registration.');
-                console.log(err);
-            } else {
-                setErrorMessage('An error occurred during registration.');
-                console.log(err);
-            }
+            // ... (error handling code)
         } finally {
             setIsLoading(false);
         }

@@ -8,8 +8,11 @@ import LatestIncomes from "../components/LatestIncomes";
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import LatestExpenses from "../components/LatestExpenses";
+import { useUser } from "../contexts/UserContext";
 
 const Dashboard = () => {
+    const { user } = useUser();
+
     const h1MotionStyle: MotionStyle = {
         fontFamily: 'Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"',
         fontStyle: 'normal',
@@ -50,7 +53,7 @@ const Dashboard = () => {
                     <ViewInArIcon style={{ fontSize: '14px' }} className="mr-2" />
                     <a href="https://git.vegaitsourcing.rs/nikola.perisic/vega-internship-project" target="_blank">
                         Explore repository
-                    </a>t
+                    </a>
 
                 </button>
             </div>
