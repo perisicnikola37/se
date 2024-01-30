@@ -10,7 +10,7 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { Alert, FormControl, InputLabel, MenuItem, Select } from "@mui/material";
+import { Alert, FormControl, InputLabel, MenuItem, Select, SelectChangeEvent } from "@mui/material";
 import useRegistration from "../hooks/Authentication/RegisterHook";
 
 const defaultTheme = createTheme();
@@ -31,13 +31,23 @@ export default function SignUpForm() {
         await register(registrationData);
     };
 
-    const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-        const { name, value } = event.target;
-        setRegistrationData((prevData) => ({
-            ...prevData,
-            [name]: value,
-        }));
+    const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement> | SelectChangeEvent<string>) => {
+        if ("target" in event) {
+            const { name, value } = event.target;
+            setRegistrationData((prevData) => ({
+                ...prevData,
+                [name]: value,
+            }));
+        } else {
+            // Handle SelectChangeEvent
+            const { name, value } = event;
+            setRegistrationData((prevData) => ({
+                ...prevData,
+                [name]: value,
+            }));
+        }
     };
+
 
     return (
         <ThemeProvider theme={defaultTheme}>

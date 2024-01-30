@@ -7,17 +7,28 @@ interface LoginData {
     password: string;
 }
 
+interface User {
+    id: number;
+    username: string;
+    email: string;
+    accountType: string;
+    formattedCreatedAt: string;
+    createdAt: string;
+    token: string;
+}
+
 interface LoginResponse {
     success: boolean;
     message: string;
-    user: {
-        id: number;
-        username: string;
-        email: string;
-        accountType: string;
-        formattedCreatedAt: string;
-        createdAt: string;
-        token: string;
+    user: User;
+}
+
+interface ErrorResponse {
+    response?: {
+        status?: number;
+        data?: {
+            errorMessage: string;
+        }[];
     };
 }
 
@@ -45,12 +56,14 @@ const useLogin = () => {
                 navigate('/');
             }
 
-            setResponse({ data, status });
+            setResponse({ success: data.success, message: data.message, user: data.user });
         } catch (err) {
-            if (err.response && err.response.status === 401) {
+            const errorResponse = err as ErrorResponse;
+
+            if (errorResponse.response && errorResponse.response.status === 401) {
                 setFieldErrorMessages(['Invalid email or password']);
-            } else if (err.response && err.response.data) {
-                const fieldErrors = err.response.data.map((error: any) => error.errorMessage);
+            } else if (errorResponse.response && errorResponse.response.data) {
+                const fieldErrors = errorResponse.response.data.map((error) => error.errorMessage);
                 setFieldErrorMessages(fieldErrors);
                 setErrorMessage('An error occurred during login.');
             } else if (err instanceof Error) {

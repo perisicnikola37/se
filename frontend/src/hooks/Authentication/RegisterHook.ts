@@ -1,7 +1,6 @@
 import axiosConfig from '../../config/axiosConfig';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useUser } from '../../contexts/UserContext';
 
 interface RegistrationData {
     username: string;
@@ -21,13 +20,21 @@ interface RegistrationResponse {
     formattedCreatedAt: string;
 }
 
+interface ErrorResponse {
+    response?: {
+        status?: number;
+        data?: {
+            errorMessage: string;
+        }[];
+    };
+}
+
 const useRegistration = () => {
     const navigate = useNavigate();
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [response, setResponse] = useState<RegistrationResponse | null>(null);
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
     const [fieldErrorMessages, setFieldErrorMessages] = useState<string[]>([]);
-    const { setUser } = useUser();
 
     const register = async (registrationData: RegistrationData) => {
         setIsLoading(true);
@@ -41,7 +48,7 @@ const useRegistration = () => {
                 setFieldErrorMessages([]);
 
                 localStorage.setItem('token', data.token);
-                localStorage.setItem('id', data.id);
+                localStorage.setItem('id', data.id.toString());
                 localStorage.setItem('username', data.username);
                 localStorage.setItem('email', data.email);
                 localStorage.setItem('accountType', data.accountType);
@@ -49,12 +56,16 @@ const useRegistration = () => {
                 navigate('/');
             }
 
-            setResponse({ data, status });
+            setResponse(data);
         } catch (err) {
-            if (err.response && err.response.status === 409) {
+            const errorResponse = err as ErrorResponse;
+
+            if (errorResponse.response && errorResponse.response.status === 409) {
                 setFieldErrorMessages(['Email is already registered']);
-            } else if (err.response && err.response.data) {
-                const fieldErrors = err.response.data.map((error: any) => error.errorMessage);
+            } else if (errorResponse.response && errorResponse.response.data) {
+                const fieldErrors = errorResponse.response.data.map(
+                    (error) => error.errorMessage
+                );
                 setFieldErrorMessages(fieldErrors);
                 setErrorMessage('An error occurred during registration.');
             } else if (err instanceof Error) {
@@ -62,8 +73,7 @@ const useRegistration = () => {
             } else {
                 setErrorMessage('An error occurred during registration.');
             }
-        }
-        finally {
+        } finally {
             setIsLoading(false);
         }
     };
