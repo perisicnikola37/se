@@ -1,7 +1,7 @@
-const SignUp = () => {
-    return (
-        <><h1>Sign Up</h1></>
-    )
-}
+import SignUpForm from "../components/SignUpForm";
 
-export default SignUp;
+export default function SignUp() {
+    return (
+        <SignUpForm />
+    );
+}

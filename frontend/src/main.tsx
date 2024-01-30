@@ -14,6 +14,7 @@ import { LoadingProvider } from "./contexts/LoadingContext.tsx";
 import { LanguageProvider } from "./contexts/GetLanguageKeyContext.tsx";
 import Expenses from "./pages/Expenses.tsx";
 import Incomes from "./pages/Incomes.tsx";
+import NotFoundPage from "./pages/NotFoundPage.tsx";
 
 // const darkTheme = createTheme({
 //     palette: {
@@ -48,6 +49,10 @@ const router = createBrowserRouter([
             { path: "incomes", element: <Incomes /> },
             { path: "expenses", element: <Expenses /> },
             { path: "blogs", element: <Blog /> },
+            {
+                path: "*",
+                element: <NotFoundPage />,
+            },
         ],
     },
     {

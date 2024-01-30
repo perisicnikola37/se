@@ -1,5 +1,9 @@
 {
     "ME": {
+        "info": {
+            "applicationName": "Tracking troškova",
+            "copyright": "Sva prava zadržana."
+        },
         "pages": [{
                 "name": "Početna",
                 "url": "/"
@@ -21,12 +25,33 @@
                 "url": "/faq"
             }
         ],
+        "footerLinks": [{
+                "name": "O nama",
+                "url": "/about"
+            },
+            {
+                "name": "Privatna polisa",
+                "url": "/privacy-policy"
+            },
+            {
+                "name": "Licenca",
+                "url": "/licensing"
+            },
+            {
+                "name": "Kontakt",
+                "url": "/contact"
+            }
+        ],
         "settings": ["Profil", "Odjava"],
         "policyText": "Koristimo kolačiće kako bi poboljšali Vaše iskustvo. Korišćenjem našeg sajta, slažete se sa našim ",
         "privacyPolicy": "Pravila privatnosti",
         "acceptButton": "Potvrdi"
     },
     "EN": {
+        "info": {
+            "applicationName": "Expense Tracker",
+            "copyright": "All rights reserved."
+        },
         "pages": [{
                 "name": "Dashboard",
                 "url": "/"
@@ -46,6 +71,23 @@
             {
                 "name": "FAQ",
                 "url": "/faq"
+            }
+        ],
+        "footerLinks": [{
+                "name": "About",
+                "url": "/about"
+            },
+            {
+                "name": "Privacy Policy",
+                "url": "/privacy-policy"
+            },
+            {
+                "name": "Licensing",
+                "url": "/licensing"
+            },
+            {
+                "name": "Contact",
+                "url": "/contact"
             }
         ],
         "settings": ["Profile", "Logout"],

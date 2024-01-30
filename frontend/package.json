@@ -31,6 +31,7 @@
         "@mui/icons-material": "^5.15.6",
         "@mui/material": "^5.15.6",
         "@mui/x-charts": "^6.19.1",
+        "axios": "^1.6.7",
         "countup.js": "^2.8.0",
         "framer-motion": "^11.0.3",
         "js-cookie": "^3.0.5",

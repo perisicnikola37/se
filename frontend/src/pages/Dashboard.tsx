@@ -21,7 +21,7 @@ const Dashboard = () => {
     };
 
     return (
-        <div className="flex-grow flex flex-col  items-center justify-center">
+        <div className="flex-grow flex flex-col items-center justify-center min-h-screen">
             <div className="_main-text">
                 <motion.h4
                     style={h1MotionStyle}
@@ -50,11 +50,13 @@ const Dashboard = () => {
                     <ViewInArIcon style={{ fontSize: '14px' }} className="mr-2" />
                     <a href="https://git.vegaitsourcing.rs/nikola.perisic/vega-internship-project" target="_blank">
                         Explore repository
-                    </a>
+                    </a>t
+
                 </button>
             </div>
 
-            <AnimatePresence>
+            <AnimatePresence>te
+
                 <ChartReacharts />
                 <motion.div
                     key="table1"
