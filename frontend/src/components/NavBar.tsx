@@ -31,6 +31,7 @@ const NavBar = () => {
         localStorage.removeItem('token');
         localStorage.removeItem('formattedCreatedAt');
 
+
         window.location.href = "/sign-in";
     };
 

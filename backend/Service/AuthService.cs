@@ -84,7 +84,7 @@ public class AuthService(IDatabaseContext context, IConfiguration configuration)
 				new Claim(JwtRegisteredClaimNames.Email, user.Email),
 				new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
 			}),
-			Expires = DateTime.UtcNow.AddSeconds(10),
+			Expires = DateTime.Now.AddHours(1),
 			Issuer = issuer,
 			Audience = audience,
 			SigningCredentials =

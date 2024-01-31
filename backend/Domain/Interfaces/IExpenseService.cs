@@ -15,4 +15,5 @@ public interface IExpenseService
 	Task<IActionResult> UpdateExpenseAsync(int id, Expense updatedExpense, ControllerBase controller);
 	Task<IActionResult> DeleteExpenseByIdAsync(int id);
 	Task<ActionResult<int>> GetTotalAmountOfExpensesAsync();
+	Task<object> GetLast7DaysIncomesAndExpensesAsync(ControllerBase controller);
 }

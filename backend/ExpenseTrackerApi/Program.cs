@@ -131,6 +131,9 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+// Cors had to be before auth
+app.UseCors("cors");
+
 // auth
 app.UseAuthentication();
 app.UseAuthorization();
@@ -140,10 +143,9 @@ app.UseAuthorization();
 app.MapControllers();
 
 // this middleware needs to be after .net auth middlewares!
-// app.UseMiddleware<ClaimsMiddleware>();
+app.UseMiddleware<ClaimsMiddleware>();
 app.UseGlobalExceptionHandler();
 app.UseMiddleware<TimeTrackingMiddleware>();
 
-app.UseCors("cors");
 
 app.Run();
