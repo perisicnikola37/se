@@ -16,6 +16,7 @@ import Expenses from "./pages/Expenses.tsx";
 import Incomes from "./pages/Incomes.tsx";
 import NotFoundPage from "./pages/NotFoundPage.tsx";
 import { UserProvider } from "./contexts/UserContext.tsx";
+import { ModalProvider } from "./contexts/GlobalContext.tsx";
 
 // const darkTheme = createTheme({
 //     palette: {
@@ -39,11 +40,13 @@ const router = createBrowserRouter([
             // <ThemeProvider theme={"dark"}>
             // <CssBaseline />
             <LoadingProvider >
-                <UserProvider>
-                    <LanguageProvider>
-                        <App />
-                    </LanguageProvider>
-                </UserProvider>
+                <ModalProvider>
+                    <UserProvider>
+                        <LanguageProvider>
+                            <App />
+                        </LanguageProvider>
+                    </UserProvider>
+                </ModalProvider>
             </ LoadingProvider>
             // </ThemeProvider>
         ),

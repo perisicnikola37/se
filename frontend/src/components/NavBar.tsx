@@ -8,11 +8,13 @@ import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import SubHeader from "./SubHeader";
 import EastSharpIcon from '@mui/icons-material/EastSharp';
 import { useUser } from "../contexts/UserContext";
+import { useModal } from "../contexts/GlobalContext";
 
 const NavBar = () => {
     const navigate = useNavigate();
     const pagesData = config["EN"];
     const location = useLocation();
+    const { modalState } = useModal();
     const iconStyle = { fontSize: 16, marginLeft: "5px" };
     const { isLoggedIn } = useUser();
 
@@ -79,6 +81,7 @@ const NavBar = () => {
             <AppBar
                 position="sticky"
                 sx={{
+                    zIndex: modalState ? -1 : 'auto',
                     backgroundColor: '#fff',
                     textColor: "#000",
                     boxShadow: "none",
@@ -228,7 +231,7 @@ const NavBar = () => {
 
                     </Toolbar>
                 </Container>
-            </AppBar>
+            </AppBar >
         </>
     )
 }

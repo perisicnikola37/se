@@ -21,6 +21,7 @@ import { visuallyHidden } from "@mui/utils";
 import Skeleton from "@mui/material/Skeleton";
 import { IncomeInterface } from "../interfaces/globalInterfaces";
 import { Edit } from "@mui/icons-material";
+import DeleteModal from "./Modals/DeleteModal";
 
 interface Data {
     id: number;
@@ -113,7 +114,7 @@ const headCells: readonly HeadCell[] = [
         label: "Income group",
     },
     {
-        id: "actions",
+        id: "incomeGroup",
         numeric: true,
         disablePadding: false,
         label: "Actions",
@@ -285,16 +286,8 @@ function EnhancedTable({ incomes }: EnhancedTablePropsWithData) {
     const [rowsPerPage, setRowsPerPage] = React.useState(5);
     const [loading, setLoading] = React.useState(true);
 
-
     const handleEditClick = (id: number) => {
-        event.stopPropagation();
-        // Handle edit action
         console.log(`Edit clicked for ID ${id}`);
-    };
-
-    const handleDeleteClick = (id: number) => {
-        // Handle delete action
-        console.log(`Delete clicked for ID ${id}`);
     };
 
     React.useEffect(() => {
@@ -363,14 +356,12 @@ function EnhancedTable({ incomes }: EnhancedTablePropsWithData) {
     const emptyRows =
         page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
 
-    const visibleRows = React.useMemo(
-        () =>
-            stableSort(rows, getComparator(order, orderBy)).slice(
-                page * rowsPerPage,
-                page * rowsPerPage + rowsPerPage
-            ),
-        [rows, order, orderBy, page, rowsPerPage]
-    );
+    const visibleRows = React.useMemo(() => {
+        return stableSort(rows, getComparator(order, orderBy)).slice(
+            page * rowsPerPage,
+            page * rowsPerPage + rowsPerPage
+        );
+    }, [rows, order, orderBy, page, rowsPerPage]);
 
     return (
         <Box sx={{ width: '100%' }}>
@@ -397,7 +388,7 @@ function EnhancedTable({ incomes }: EnhancedTablePropsWithData) {
                                         <LoadingTableRow key={index} />
                                     )
                                 )
-                                : visibleRows.map((row, index) => (
+                                : visibleRows.map((row) => (
                                     <TableRow
                                         hover
                                         role="checkbox"
@@ -441,14 +432,7 @@ function EnhancedTable({ incomes }: EnhancedTablePropsWithData) {
                                             >
                                                 <Edit />
                                             </IconButton>
-                                            {/* Delete Button */}
-                                            <IconButton
-                                                onClick={() =>
-                                                    handleDeleteClick(row.id)
-                                                }
-                                            >
-                                                <DeleteIcon />
-                                            </IconButton>
+                                            <DeleteModal id={row.id} objectType={"income"} />
                                         </TableCell>
                                     </TableRow>
                                 ))}
