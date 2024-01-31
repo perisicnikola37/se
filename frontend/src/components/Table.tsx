@@ -20,6 +20,7 @@ import FilterListIcon from "@mui/icons-material/FilterList";
 import { visuallyHidden } from "@mui/utils";
 import Skeleton from "@mui/material/Skeleton";
 import { IncomeInterface } from "../interfaces/globalInterfaces";
+import { Edit } from "@mui/icons-material";
 
 interface Data {
     id: number;
@@ -107,9 +108,15 @@ const headCells: readonly HeadCell[] = [
     },
     {
         id: "incomeGroup",
-        numeric: false,
+        numeric: true,
         disablePadding: false,
         label: "Income group",
+    },
+    {
+        id: "actions",
+        numeric: true,
+        disablePadding: false,
+        label: "Actions",
     },
 ];
 
@@ -278,6 +285,18 @@ function EnhancedTable({ incomes }: EnhancedTablePropsWithData) {
     const [rowsPerPage, setRowsPerPage] = React.useState(5);
     const [loading, setLoading] = React.useState(true);
 
+
+    const handleEditClick = (id: number) => {
+        event.stopPropagation();
+        // Handle edit action
+        console.log(`Edit clicked for ID ${id}`);
+    };
+
+    const handleDeleteClick = (id: number) => {
+        // Handle delete action
+        console.log(`Delete clicked for ID ${id}`);
+    };
+
     React.useEffect(() => {
         const newRows = incomes.map((income) =>
             createData(
@@ -326,25 +345,6 @@ function EnhancedTable({ incomes }: EnhancedTablePropsWithData) {
             return;
         }
         setSelected([]);
-    };
-
-    const handleClick = (_event: React.MouseEvent<unknown>, id: number) => {
-        const selectedIndex = selected.indexOf(id);
-        let newSelected: readonly number[] = [];
-
-        if (selectedIndex === -1) {
-            newSelected = newSelected.concat(selected, id);
-        } else if (selectedIndex === 0) {
-            newSelected = newSelected.concat(selected.slice(1));
-        } else if (selectedIndex === selected.length - 1) {
-            newSelected = newSelected.concat(selected.slice(0, -1));
-        } else if (selectedIndex > 0) {
-            newSelected = newSelected.concat(
-                selected.slice(0, selectedIndex),
-                selected.slice(selectedIndex + 1)
-            );
-        }
-        setSelected(newSelected);
     };
 
     const handleChangePage = (_event: unknown, newPage: number) => {
@@ -400,9 +400,6 @@ function EnhancedTable({ incomes }: EnhancedTablePropsWithData) {
                                 : visibleRows.map((row, index) => (
                                     <TableRow
                                         hover
-                                        onClick={(event) =>
-                                            handleClick(event, row.id)
-                                        }
                                         role="checkbox"
                                         aria-checked={isSelected(row.id)}
                                         tabIndex={-1}
@@ -411,13 +408,13 @@ function EnhancedTable({ incomes }: EnhancedTablePropsWithData) {
                                         sx={{ cursor: 'pointer' }}
                                     >
                                         <TableCell padding="checkbox">
-                                            <Checkbox
+                                            {/* <Checkbox
                                                 color="primary"
                                                 checked={isSelected(row.id)}
                                                 inputProps={{
-                                                    'aria-labelledby': `enhanced-table-checkbox-${index}`,
+                                                    'aria-labelledby': `enhanced - table - checkbox - ${index}`,
                                                 }}
-                                            />
+                                            /> */}
                                         </TableCell>
                                         <TableCell
                                             component="th"
@@ -434,6 +431,24 @@ function EnhancedTable({ incomes }: EnhancedTablePropsWithData) {
                                         </TableCell>
                                         <TableCell align="right">
                                             {row.incomeGroup}
+                                        </TableCell>
+                                        <TableCell align="right">
+                                            {/* Edit Button */}
+                                            <IconButton
+                                                onClick={() =>
+                                                    handleEditClick(row.id)
+                                                }
+                                            >
+                                                <Edit />
+                                            </IconButton>
+                                            {/* Delete Button */}
+                                            <IconButton
+                                                onClick={() =>
+                                                    handleDeleteClick(row.id)
+                                                }
+                                            >
+                                                <DeleteIcon />
+                                            </IconButton>
                                         </TableCell>
                                     </TableRow>
                                 ))}
