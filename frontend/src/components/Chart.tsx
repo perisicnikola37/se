@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import {
     LineChart,
     Line,
@@ -7,15 +8,12 @@ import {
     Tooltip,
     Legend,
 } from "recharts";
+import useStatistics from "../hooks/Statistics/StatisticsHook";
+import { DataPoint } from "../interfaces/globalInterfaces";
 
-const mockApiResponse = {
-    Expenses: [1, 2, 3, 0, 2, 6, 3],
-    Incomes: [2, 3, 4, 5, 6, 7, 3],
-};
-
-const generateData = () => {
+const generateData = (expenses: number[], incomes: number[]): DataPoint[] => {
     const currentDate = new Date();
-    const data = [];
+    const data: DataPoint[] = [];
 
     for (let i = 6; i >= 0; i--) {
         const date = new Date(currentDate);
@@ -23,10 +21,10 @@ const generateData = () => {
 
         const dateString = `${date.getDate()}.${date.getMonth() + 1}.`;
 
-        const newDataPoint = {
+        const newDataPoint: DataPoint = {
             name: dateString,
-            Incomes: mockApiResponse.Incomes[i],
-            Expenses: mockApiResponse.Expenses[i],
+            Incomes: incomes[i] || 0,
+            Expenses: expenses[i] || 0,
         };
 
         data.push(newDataPoint);
@@ -35,8 +33,13 @@ const generateData = () => {
     return data;
 };
 
-export default function ChartReacharts() {
-    const data = generateData();
+const Chart = () => {
+    const { expenses, incomes, loadStatistics } = useStatistics();
+    const data = generateData(expenses.map((e) => e.amount), incomes.map((i) => i.amount));
+
+    useEffect(() => {
+        loadStatistics();
+    }, []);
 
     return (
         <>
@@ -68,10 +71,12 @@ export default function ChartReacharts() {
                 <Line
                     type="monotone"
                     dataKey="Expenses"
-                    stroke="#82ca9d"
+                    stroke="#ff6767"
                     activeDot={{ r: 8 }}
                 />
             </LineChart>
         </>
     );
-}
+};
+
+export default Chart;

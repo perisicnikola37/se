@@ -1,5 +1,4 @@
 import { AnimatePresence, MotionStyle, motion } from "framer-motion";
-import ChartReacharts from "../components/Chart";
 import { Table } from "@mui/material";
 import ViewInArIcon from '@mui/icons-material/ViewInAr';
 import FeaturedInSection from "../components/FeaturedIn";
@@ -7,6 +6,8 @@ import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import LatestSection from "../components/Dashboard/LatestSection";
 import { useUser } from "../contexts/UserContext";
+import Chart from "../components/Chart";
+import Newsletter from "../components/Newsletter";
 
 const Dashboard = () => {
     const { isLoggedIn } = useUser();
@@ -26,7 +27,7 @@ const Dashboard = () => {
             <div className="_main-text">
                 <motion.h4
                     style={h1MotionStyle}
-                    className="font-extrabold text-4xl mt-20 tracking-tighter leading-none"
+                    className="font-extrabold text-5xl mt-20 tracking-tighter leading-none"
                     initial={{ opacity: 0, scale: 0.8 }}
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ duration: 0.8 }}
@@ -58,7 +59,7 @@ const Dashboard = () => {
 
             <AnimatePresence>
 
-                <ChartReacharts />
+                <Chart />
 
                 <motion.div
                     key="table1"
@@ -82,7 +83,11 @@ const Dashboard = () => {
 
             {isLoggedIn() && <LatestSection />}
 
+
+
             <FeaturedInSection />
+
+            <Newsletter />
         </div >
     );
 };
