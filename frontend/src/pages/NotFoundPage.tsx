@@ -16,7 +16,7 @@ const NotFoundPage = () => {
 
                                 <p>The page you are looking for is not available!</p>
 
-                                <a href="/" className="link_404">Go to Home</a>
+                                <a href="/" className="link_404">Go back</a>
                             </div>
                         </div>
                     </div>

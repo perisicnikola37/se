@@ -83,8 +83,6 @@ const Dashboard = () => {
 
             {isLoggedIn() && <LatestSection />}
 
-
-
             <FeaturedInSection />
 
             <Newsletter />

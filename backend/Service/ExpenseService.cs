@@ -237,12 +237,12 @@ public class ExpenseService(
 			throw;
 		}
 	}
+
 	public async Task<object> GetLast7DaysIncomesAndExpensesAsync(ControllerBase controller)
 	{
 		try
 		{
 			var authenticatedUserId = getAuthenticatedUserId.GetUserId(controller.User);
-
 
 			var startOfLast7Days = DateTime.UtcNow.AddDays(-6); // for the last 7 days
 
@@ -250,13 +250,13 @@ public class ExpenseService(
 				.ToListAsync();
 
 			var allIncomes = await context.Incomes
-		.Where(i => i.UserId == authenticatedUserId && i.CreatedAt.Date >= startOfLast7Days.Date)
-		.ToListAsync();
-
+				.Where(i => i.UserId == authenticatedUserId && i.CreatedAt.Date >= startOfLast7Days.Date)
+				.ToListAsync();
 
 			var dateList = Enumerable.Range(0, 7)
 				.Select(offset => startOfLast7Days.AddDays(offset))
 				.Select(date => date.ToString("dd.MM"))
+				.Reverse()
 				.ToList();
 
 			var last7DaysExpenses = allExpenses
@@ -267,15 +267,9 @@ public class ExpenseService(
 				.GroupBy(i => i.CreatedAt.Date.ToString("dd.MM"))
 				.ToDictionary(group => group.Key, group => group.OrderByDescending(i => i.Amount).FirstOrDefault()?.Amount ?? 0);
 
-			// Fill zeroes for missing inputs in the last 7 days
-			foreach (var date in dateList)
-			{
-				last7DaysExpenses.TryGetValue(date, out var expenseAmount);
-				last7DaysIncomes.TryGetValue(date, out var incomeAmount);
-
-				last7DaysExpenses[date] = expenseAmount;
-				last7DaysIncomes[date] = incomeAmount;
-			}
+			// Sort dictionaries based on dateList order
+			last7DaysExpenses = dateList.ToDictionary(date => date, date => last7DaysExpenses.GetValueOrDefault(date, 0));
+			last7DaysIncomes = dateList.ToDictionary(date => date, date => last7DaysIncomes.GetValueOrDefault(date, 0));
 
 			var response = new
 			{
@@ -291,6 +285,7 @@ public class ExpenseService(
 			throw;
 		}
 	}
+
 
 	private static IQueryable<Expense> ApplyFilter(IQueryable<Expense> query, Expression<Func<Expense, bool>> filter,
 		bool condition)

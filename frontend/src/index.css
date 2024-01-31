@@ -96,9 +96,14 @@ body {
 .link_404 {
     color: #fff!important;
     padding: 10px 20px;
-    background: #39ac31;
+    background: #3968cd;
     margin: 20px 0;
+    border-radius: 7px;
     display: inline-block;
+}
+
+.link_404:hover {
+    background-color: #2563EB;
 }
 
 .contant_box_404 {
