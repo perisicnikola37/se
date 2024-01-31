@@ -1,9 +1,17 @@
+import { useEffect } from "react";
 import EnhancedTable from "../components/Table";
+import useIncomes from "../hooks/Incomes/AllIncomesHook";
 
 const Incomes = () => {
+    const { incomes, loadIncomes } = useIncomes();
+
+    useEffect(() => {
+        loadIncomes();
+    }, []);
+
     return (
         <div className="w-full max-w-screen-xl h-[45rem] mx-auto p-4 md:py-8">
-            <EnhancedTable />
+            <EnhancedTable incomes={incomes} />
         </div>
     )
 }

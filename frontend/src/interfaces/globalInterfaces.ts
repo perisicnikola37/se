@@ -5,6 +5,23 @@ export interface StatisticsResponse {
 
 export interface DataPoint {
     name: string;
-    Incomes: number;
-    Expenses: number;
+    incomes: number;
+    expenses: number;
+}
+
+export interface IncomeInterface {
+    id: number;
+    description: string;
+    amount: number;
+    createdAt: string;
+    incomeGroup: {
+        id: number;
+        name: string;
+        description: string;
+        createdAt: string;
+        incomes: IncomeInterface[] | null;
+    } | null;
+    user: {
+        username: string;
+    } | null;
 }

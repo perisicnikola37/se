@@ -9,7 +9,12 @@ import {
     Legend,
 } from "recharts";
 import useStatistics from "../hooks/Statistics/StatisticsHook";
-import { DataPoint } from "../interfaces/globalInterfaces";
+
+interface DataPoint {
+    name: string;
+    Incomes: number;
+    Expenses: number;
+}
 
 const generateData = (expenses: number[], incomes: number[]): DataPoint[] => {
     const currentDate = new Date();

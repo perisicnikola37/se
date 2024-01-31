@@ -19,6 +19,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import FilterListIcon from "@mui/icons-material/FilterList";
 import { visuallyHidden } from "@mui/utils";
 import Skeleton from "@mui/material/Skeleton";
+import { IncomeInterface } from "../interfaces/globalInterfaces";
 
 interface Data {
     id: number;
@@ -42,12 +43,6 @@ function createData(
         incomeGroup,
     };
 }
-
-const rows = [
-    createData(1, "Salary - June", 1304.99, "Company"),
-    createData(2, "Salary - July", 1299.99, "Company"),
-    createData(3, "Salary - August", 1168.99, "Company"),
-];
 
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
     if (b[orderBy] < a[orderBy]) {
@@ -112,7 +107,7 @@ const headCells: readonly HeadCell[] = [
     },
     {
         id: "incomeGroup",
-        numeric: true,
+        numeric: false,
         disablePadding: false,
         label: "Income group",
     },
@@ -126,8 +121,12 @@ interface EnhancedTableProps {
     ) => void;
     onSelectAllClick: (event: React.ChangeEvent<HTMLInputElement>) => void;
     order: Order;
-    orderBy: string;
+    orderBy: keyof Data;
     rowCount: number;
+}
+
+interface EnhancedTablePropsWithData {
+    incomes: IncomeInterface[];
 }
 
 function EnhancedTableHead(props: EnhancedTableProps) {
@@ -270,14 +269,36 @@ function LoadingTableRow() {
     );
 }
 
-function EnhancedTable() {
-    const [order, setOrder] = React.useState<Order>("asc");
-    const [orderBy, setOrderBy] = React.useState<keyof Data>("description");
+function EnhancedTable({ incomes }: EnhancedTablePropsWithData) {
+    const [order, setOrder] = React.useState<Order>('desc');
+    const [orderBy, setOrderBy] = React.useState<keyof Data>('id');
     const [selected, setSelected] = React.useState<readonly number[]>([]);
     const [page, setPage] = React.useState(0);
     const [dense] = React.useState(false);
     const [rowsPerPage, setRowsPerPage] = React.useState(5);
     const [loading, setLoading] = React.useState(true);
+
+    React.useEffect(() => {
+        const newRows = incomes.map((income) =>
+            createData(
+                income.id,
+                income.description,
+                income.amount,
+                income.incomeGroup?.name ?? ''
+            )
+        );
+        setRows(newRows);
+
+        // Simulate loading
+        const timeout = setTimeout(() => {
+            setLoading(false);
+        }, 1000);
+
+        return () => clearTimeout(timeout);
+    }, [incomes]);
+
+
+    const [rows, setRows] = React.useState<Data[]>([]);
 
     React.useEffect(() => {
         const timeout = setTimeout(() => {
@@ -291,8 +312,8 @@ function EnhancedTable() {
         _: React.MouseEvent<unknown>,
         property: keyof Data
     ) => {
-        const isAsc = orderBy === property && order === "asc";
-        setOrder(isAsc ? "desc" : "asc");
+        const isAsc = orderBy === property && order === 'asc';
+        setOrder(isAsc ? 'desc' : 'asc');
         setOrderBy(property);
     };
 
@@ -348,18 +369,18 @@ function EnhancedTable() {
                 page * rowsPerPage,
                 page * rowsPerPage + rowsPerPage
             ),
-        [order, orderBy, page, rowsPerPage]
+        [rows, order, orderBy, page, rowsPerPage]
     );
 
     return (
-        <Box sx={{ width: "100%" }}>
-            <Paper sx={{ width: "100%", mb: 2 }}>
+        <Box sx={{ width: '100%' }}>
+            <Paper sx={{ width: '100%', mb: 2 }}>
                 <EnhancedTableToolbar numSelected={selected.length} />
                 <TableContainer>
                     <Table
                         sx={{ minWidth: 750 }}
                         aria-labelledby="tableTitle"
-                        size={dense ? "small" : "medium"}
+                        size={dense ? 'small' : 'medium'}
                     >
                         <EnhancedTableHead
                             numSelected={selected.length}
@@ -387,14 +408,14 @@ function EnhancedTable() {
                                         tabIndex={-1}
                                         key={row.id}
                                         selected={isSelected(row.id)}
-                                        sx={{ cursor: "pointer" }}
+                                        sx={{ cursor: 'pointer' }}
                                     >
                                         <TableCell padding="checkbox">
                                             <Checkbox
                                                 color="primary"
                                                 checked={isSelected(row.id)}
                                                 inputProps={{
-                                                    "aria-labelledby": `enhanced-table-checkbox-${index}`,
+                                                    'aria-labelledby': `enhanced-table-checkbox-${index}`,
                                                 }}
                                             />
                                         </TableCell>

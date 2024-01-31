@@ -8,7 +8,11 @@ export type Expense = {
     amount: number;
 }
 
-export type Income = {
-    date: string;
+export interface Income {
+    id: number;
+    description: string;
     amount: number;
+    incomeGroup: {
+        name: string;
+    };
 }
