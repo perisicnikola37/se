@@ -29,38 +29,64 @@ const Dashboard = () => {
 
     return (
         <div className="flex-grow flex flex-col items-center justify-center min-h-screen">
-            <div className="_main-text">
-                <motion.h4
-                    style={h1MotionStyle}
-                    className="font-extrabold text-5xl mt-20 tracking-tighter leading-none"
-                    initial={{ opacity: 0, scale: 0.8 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ duration: 0.8 }}
-                >
-                    Track expenses even faster with <br /> our brand new Expense Tracker application
-                </motion.h4>
-                <motion.p
-                    className="_main-text_paragraph mt-3 text-gray-500"
-                    initial={{ opacity: 0, scale: 0.8 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ duration: 0.8 }}
-                >
-                    Take advantage of our open-source solution, designed to streamline and enhance your expense tracking experience. Dive into a wealth of features and functionalities that empower you to manage your finances effortlessly.
-                </motion.p>
-            </div>
-            <div className="mt-5">
-                <button type="button" className="text-white bg-blue-700 hover:bg-blue-800  font-medium rounded-md text-sm px-3 py-1.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
-                    <a href="/sign-in">Get started</a>
-                </button>
+            {!isLoggedIn() ? (
+                <>
+                    <div className="_main-text">
+                        <motion.h4
+                            style={h1MotionStyle}
+                            className="font-extrabold text-5xl mt-20 tracking-tighter leading-none"
+                            initial={{ opacity: 0, scale: 0.8 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            transition={{ duration: 0.8 }}
+                        >
+                            Track expenses even faster with <br /> our brand new Expense Tracker application
+                        </motion.h4>
+                        <motion.p
+                            className="_main-text_paragraph mt-3 text-gray-500"
+                            initial={{ opacity: 0, scale: 0.8 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            transition={{ duration: 0.8 }}
+                        >
+                            Take advantage of our open-source solution, designed to streamline and enhance your expense tracking experience. Dive into a wealth of features and functionalities that empower you to manage your finances effortlessly.
+                        </motion.p>
+                    </div>
+                    <div className="mt-5">
+                        <button type="button" className="text-white bg-blue-700 hover:bg-blue-800  font-medium rounded-md text-sm px-3 py-1.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
+                            <a href="/sign-in">Get started</a>
+                        </button>
 
-                <button type="button" className="py-1.5 px-3 me-2 mb-2 text-sm font-medium text-gray-900  bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 ">
-                    <ViewInArIcon style={{ fontSize: '14px' }} className="mr-2" />
-                    <a href="https://git.vegaitsourcing.rs/nikola.perisic/vega-internship-project" target="_blank">
-                        Explore repository
-                    </a>
+                        <button type="button" className="py-1.5 px-3 me-2 mb-2 text-sm font-medium text-gray-900  bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 ">
+                            <ViewInArIcon style={{ fontSize: '14px' }} className="mr-2" />
+                            <a href="https://git.vegaitsourcing.rs/nikola.perisic/vega-internship-project" target="_blank">
+                                Explore repository
+                            </a>
 
-                </button>
-            </div>
+                        </button>
+                    </div>
+                </>
+            ) : (
+                <>
+                    <div className="_main-text">
+                        <motion.h4
+                            style={h1MotionStyle}
+                            className="font-extrabold text-5xl mt-20 tracking-tighter leading-none"
+                            initial={{ opacity: 0, scale: 0.8 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            transition={{ duration: 0.8 }}
+                        >
+                            Your last <span className="text-[#2563EB]">week</span> summary
+                        </motion.h4>
+                        <motion.p
+                            className="_main-text_paragraph mt-3 text-gray-500"
+                            initial={{ opacity: 0, scale: 0.8 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            transition={{ duration: 0.8 }}
+                        >
+                            <u className="font-bold">Chart</u> you can see below provides users with a concise overview of their financial activities over the past seven days. This dynamic and interactive dashboard leverages charts to visually represent the user's expenses and incomes, empowering them with valuable insights into their financial trends.
+                        </motion.p>
+                    </div>
+                </>
+            )}
 
             <AnimatePresence>
 

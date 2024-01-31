@@ -35,7 +35,6 @@ public class ExpenseService(
 			var validFilter = new PaginationFilterDto(filter.PageNumber, filter.PageSize);
 
 			var query = context.Expenses
-				.Include(e => e.User)
 				.Where(e => e.UserId == authenticatedUserId);
 
 			query = ApplyFilter(query, e => e.Description.Contains(description),
@@ -57,10 +56,6 @@ public class ExpenseService(
 					ExpenseGroupId = e.ExpenseGroupId,
 					ExpenseGroup = e.ExpenseGroup!,
 					UserId = e.UserId,
-					User = new UserResponse
-					{
-						Username = e.User!.Username
-					}
 				})
 				.OrderByDescending(e => e.CreatedAt)
 				.ToListAsync();

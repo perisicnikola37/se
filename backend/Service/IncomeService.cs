@@ -34,7 +34,6 @@ public class IncomeService(
 			var validFilter = new PaginationFilterDto(filter.PageNumber, filter.PageSize);
 
 			var query = context.Incomes
-				.Include(e => e.User)
 				.Where(e => e.UserId == authenticatedUserId);
 
 			query = ApplyFilter(query, e => e.Description.Contains(description),
@@ -56,10 +55,6 @@ public class IncomeService(
 					IncomeGroupId = e.IncomeGroupId,
 					IncomeGroup = e.IncomeGroup!,
 					UserId = e.UserId,
-					User = new UserResponse
-					{
-						Username = e.User!.Username
-					}
 				})
 				.OrderByDescending(e => e.CreatedAt)
 				.ToListAsync();

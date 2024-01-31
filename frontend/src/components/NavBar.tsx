@@ -4,12 +4,13 @@ import MenuIcon from "@mui/icons-material/Menu";
 import Brightness4Icon from "@mui/icons-material/Brightness4";
 import logo from "../assets/logo.png";
 import config from "../config/config.json";
-import { NavLink, useLocation } from "react-router-dom";
+import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import SubHeader from "./SubHeader";
 import EastSharpIcon from '@mui/icons-material/EastSharp';
 import { useUser } from "../contexts/UserContext";
 
 const NavBar = () => {
+    const navigate = useNavigate();
     const pagesData = config["EN"];
     const location = useLocation();
     const iconStyle = { fontSize: 16, marginLeft: "5px" };
@@ -32,7 +33,7 @@ const NavBar = () => {
         localStorage.removeItem('formattedCreatedAt');
 
 
-        window.location.href = "/sign-in";
+        navigate("/sign-in");
     };
 
     const pages = pagesData.pages.map(page => ({ ...page }));

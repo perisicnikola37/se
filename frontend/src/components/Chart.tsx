@@ -9,42 +9,17 @@ import {
     Legend,
 } from "recharts";
 import useStatistics from "../hooks/Statistics/StatisticsHook";
-
-interface DataPoint {
-    name: string;
-    Incomes: number;
-    Expenses: number;
-}
-
-const generateData = (expenses: number[], incomes: number[]): DataPoint[] => {
-    const currentDate = new Date();
-    const data: DataPoint[] = [];
-
-    for (let i = 6; i >= 0; i--) {
-        const date = new Date(currentDate);
-        date.setDate(currentDate.getDate() - i);
-
-        const dateString = `${date.getDate()}.${date.getMonth() + 1}.`;
-
-        const newDataPoint: DataPoint = {
-            name: dateString,
-            Incomes: incomes[i] || 0,
-            Expenses: expenses[i] || 0,
-        };
-
-        data.push(newDataPoint);
-    }
-
-    return data;
-};
+import { useUser } from "../contexts/UserContext";
+import { generateData, generateLoremData } from "../utils/generateChartData";
 
 const Chart = () => {
     const { expenses, incomes, loadStatistics } = useStatistics();
-    const data = generateData(expenses.map((e) => e.amount), incomes.map((i) => i.amount));
+    const { isLoggedIn } = useUser();
+    const data = isLoggedIn() ? generateData(expenses.map((e) => e.amount), incomes.map((i) => i.amount)) : generateLoremData();
 
     useEffect(() => {
-        loadStatistics();
-    }, []);
+        if (isLoggedIn()) loadStatistics();
+    }, [isLoggedIn]);
 
     return (
         <>
@@ -65,17 +40,15 @@ const Chart = () => {
                 <YAxis />
                 <Tooltip />
                 <Legend />
-
                 <Line
                     type="monotone"
-                    dataKey="Incomes"
+                    dataKey="incomes"
                     stroke="#8884d8"
                     activeDot={{ r: 8 }}
                 />
-
                 <Line
                     type="monotone"
-                    dataKey="Expenses"
+                    dataKey="expenses"
                     stroke="#ff6767"
                     activeDot={{ r: 8 }}
                 />
