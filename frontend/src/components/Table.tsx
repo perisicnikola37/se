@@ -20,10 +20,10 @@ import FilterListIcon from "@mui/icons-material/FilterList";
 import { visuallyHidden } from "@mui/utils";
 import Skeleton from "@mui/material/Skeleton";
 import { IncomeInterface } from "../interfaces/globalInterfaces";
-import { Edit } from "@mui/icons-material";
 import DeleteModal from "./Modals/DeleteModal";
 import { Alert } from "@mui/material";
 import NewFormModal from "./Modals/NewFormModal";
+import EditModal from "./Modals/EditModal";
 
 interface Data {
     id: number;
@@ -291,10 +291,6 @@ function EnhancedTable({ incomes }: EnhancedTablePropsWithData) {
     const [rowsPerPage, setRowsPerPage] = React.useState(5);
     const [loading, setLoading] = React.useState(true);
 
-    const handleEditClick = (id: number) => {
-        console.log(`Edit clicked for ID ${id}`);
-    };
-
     React.useEffect(() => {
         const newRows = incomes.map((income) =>
             createData(
@@ -441,15 +437,7 @@ function EnhancedTable({ incomes }: EnhancedTablePropsWithData) {
                                                 {row.incomeGroup}
                                             </TableCell>
                                             <TableCell align="right">
-                                                <IconButton
-                                                    onClick={() =>
-                                                        handleEditClick(
-                                                            row.id
-                                                        )
-                                                    }
-                                                >
-                                                    <Edit />
-                                                </IconButton>
+                                                <EditModal id={row.id} objectType={""} />
                                                 <DeleteModal
                                                     id={row.id}
                                                     objectType={
