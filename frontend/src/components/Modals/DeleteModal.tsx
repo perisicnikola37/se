@@ -1,7 +1,7 @@
 import Swal from 'sweetalert2';
 import { Delete } from '@mui/icons-material';
 import { Button } from '@mui/material';
-import useDeleteObject from '../../hooks/Incomes/DeleteIncomeHook';
+import useDeleteObject from '../../hooks/GlobalHooks/DeleteObjectHook';
 import { useModal } from '../../contexts/GlobalContext';
 
 const DeleteModal = ({ id, objectType }: { id: number; objectType: string }) => {

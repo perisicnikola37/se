@@ -22,6 +22,8 @@ import Skeleton from "@mui/material/Skeleton";
 import { IncomeInterface } from "../interfaces/globalInterfaces";
 import { Edit } from "@mui/icons-material";
 import DeleteModal from "./Modals/DeleteModal";
+import { Alert } from "@mui/material";
+import NewFormModal from "./Modals/NewFormModal";
 
 interface Data {
     id: number;
@@ -242,11 +244,14 @@ function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
                     </IconButton>
                 </Tooltip>
             ) : (
-                <Tooltip title="Filter list">
-                    <IconButton>
-                        <FilterListIcon />
-                    </IconButton>
-                </Tooltip>
+                <div className="w-[18%] flex">
+                    <NewFormModal />
+                    <Tooltip title="Filter list">
+                        <IconButton>
+                            <FilterListIcon />
+                        </IconButton>
+                    </Tooltip>
+                </div>
             )}
         </Toolbar>
     );
@@ -309,7 +314,6 @@ function EnhancedTable({ incomes }: EnhancedTablePropsWithData) {
         return () => clearTimeout(timeout);
     }, [incomes]);
 
-
     const [rows, setRows] = React.useState<Data[]>([]);
 
     React.useEffect(() => {
@@ -365,100 +369,125 @@ function EnhancedTable({ incomes }: EnhancedTablePropsWithData) {
 
     return (
         <Box sx={{ width: '100%' }}>
-            <Paper sx={{ width: '100%', mb: 2 }}>
-                <EnhancedTableToolbar numSelected={selected.length} />
-                <TableContainer>
-                    <Table
-                        sx={{ minWidth: 750 }}
-                        aria-labelledby="tableTitle"
-                        size={dense ? 'small' : 'medium'}
-                    >
-                        <EnhancedTableHead
-                            numSelected={selected.length}
-                            order={order}
-                            orderBy={orderBy}
-                            onSelectAllClick={handleSelectAllClick}
-                            onRequestSort={handleRequestSort}
-                            rowCount={rows.length}
-                        />
-                        <TableBody>
-                            {loading
-                                ? Array.from({ length: rowsPerPage }).map(
-                                    (_, index) => (
+            {incomes.length === 0 ? (
+                <>
+                    <Alert sx={{ marginBottom: "5px" }} variant="outlined" severity="info">
+                        There are no incomes at the moment.
+                    </Alert>
+                    <NewFormModal />
+                </>
+            ) : (
+                <Paper sx={{ width: '100%', mb: 2 }}>
+                    <EnhancedTableToolbar numSelected={selected.length} />
+                    <TableContainer>
+                        <Table
+                            sx={{ minWidth: 750 }}
+                            aria-labelledby="tableTitle"
+                            size={dense ? 'small' : 'medium'}
+                        >
+                            <EnhancedTableHead
+                                numSelected={selected.length}
+                                order={order}
+                                orderBy={orderBy}
+                                onSelectAllClick={handleSelectAllClick}
+                                onRequestSort={handleRequestSort}
+                                rowCount={rows.length}
+                            />
+                            <TableBody>
+                                {loading
+                                    ? Array.from({
+                                        length: rowsPerPage,
+                                    }).map((_, index) => (
                                         <LoadingTableRow key={index} />
-                                    )
-                                )
-                                : visibleRows.map((row) => (
-                                    <TableRow
-                                        hover
-                                        role="checkbox"
-                                        aria-checked={isSelected(row.id)}
-                                        tabIndex={-1}
-                                        key={row.id}
-                                        selected={isSelected(row.id)}
-                                        sx={{ cursor: 'pointer' }}
-                                    >
-                                        <TableCell padding="checkbox">
-                                            {/* <Checkbox
-                                                color="primary"
-                                                checked={isSelected(row.id)}
-                                                inputProps={{
-                                                    'aria-labelledby': `enhanced - table - checkbox - ${index}`,
-                                                }}
-                                            /> */}
-                                        </TableCell>
-                                        <TableCell
-                                            component="th"
-                                            scope="row"
-                                            padding="none"
+                                    ))
+                                    : visibleRows.map((row) => (
+                                        <TableRow
+                                            hover
+                                            role="checkbox"
+                                            aria-checked={isSelected(
+                                                row.id
+                                            )}
+                                            tabIndex={-1}
+                                            key={row.id}
+                                            selected={isSelected(row.id)}
+                                            sx={{ cursor: 'pointer' }}
                                         >
-                                            {row.id}
-                                        </TableCell>
-                                        <TableCell align="right">
-                                            {row.description}
-                                        </TableCell>
-                                        <TableCell align="right">
-                                            {row.amount}
-                                        </TableCell>
-                                        <TableCell align="right">
-                                            {row.incomeGroup}
-                                        </TableCell>
-                                        <TableCell align="right">
-                                            {/* Edit Button */}
-                                            <IconButton
-                                                onClick={() =>
-                                                    handleEditClick(row.id)
-                                                }
+                                            <TableCell padding="checkbox">
+                                                {/* <Checkbox
+                                                     color="primary"
+                                                     checked={isSelected(
+                                                         row.id
+                                                     )}
+                                                     inputProps={{
+                                                         'aria-labelledby':
+                                                             `enhanced-table-checkbox-${index}`,
+                                                     }}
+                                                 /> */}
+                                            </TableCell>
+                                            <TableCell
+                                                component="th"
+                                                scope="row"
+                                                padding="none"
                                             >
-                                                <Edit />
-                                            </IconButton>
-                                            <DeleteModal id={row.id} objectType={"income"} />
-                                        </TableCell>
+                                                {row.id}
+                                            </TableCell>
+                                            <TableCell align="right">
+                                                {row.description}
+                                            </TableCell>
+                                            <TableCell align="right">
+                                                {row.amount}
+                                            </TableCell>
+                                            <TableCell align="right">
+                                                {row.incomeGroup}
+                                            </TableCell>
+                                            <TableCell align="right">
+                                                <IconButton
+                                                    onClick={() =>
+                                                        handleEditClick(
+                                                            row.id
+                                                        )
+                                                    }
+                                                >
+                                                    <Edit />
+                                                </IconButton>
+                                                <DeleteModal
+                                                    id={row.id}
+                                                    objectType={
+                                                        'income'
+                                                    }
+                                                />
+                                            </TableCell>
+                                        </TableRow>
+                                    ))}
+                                {emptyRows > 0 && !loading && (
+                                    <TableRow
+                                        style={{
+                                            height:
+                                                (dense ? 33 : 53) *
+                                                emptyRows,
+                                        }}
+                                    >
+                                        <TableCell colSpan={6} />
                                     </TableRow>
-                                ))}
-                            {emptyRows > 0 && !loading && (
-                                <TableRow
-                                    style={{
-                                        height: (dense ? 33 : 53) * emptyRows,
-                                    }}
-                                >
-                                    <TableCell colSpan={6} />
-                                </TableRow>
-                            )}
-                        </TableBody>
-                    </Table>
-                </TableContainer>
-                <TablePagination
-                    rowsPerPageOptions={[5, 10, 25]}
-                    component="div"
-                    count={rows.length}
-                    rowsPerPage={rowsPerPage}
-                    page={page}
-                    onPageChange={handleChangePage}
-                    onRowsPerPageChange={handleChangeRowsPerPage}
-                />
-            </Paper>
-        </Box>
+                                )}
+                            </TableBody>
+                        </Table>
+                    </TableContainer>
+                    <TablePagination
+                        rowsPerPageOptions={[5, 10, 25]}
+                        component="div"
+                        count={rows.length}
+                        rowsPerPage={rowsPerPage}
+                        page={page}
+                        onPageChange={handleChangePage}
+                        onRowsPerPageChange={
+                            handleChangeRowsPerPage
+                        }
+                    />
+                </Paper>
+            )
+            }
+        </Box >
     );
 }
 

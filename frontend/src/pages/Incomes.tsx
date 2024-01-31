@@ -8,6 +8,10 @@ const Incomes = () => {
     const { actionChange } = useModal();
 
     useEffect(() => {
+        document.title = 'Incomes | Expense Tracker';
+    }, []);
+
+    useEffect(() => {
         loadIncomes();
     }, [actionChange]);
 

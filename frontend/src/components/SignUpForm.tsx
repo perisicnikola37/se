@@ -48,7 +48,6 @@ export default function SignUpForm() {
         }
     };
 
-
     return (
         <ThemeProvider theme={defaultTheme}>
             <Container component="main" maxWidth="xs" sx={{ height: "100vh", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center" }}>

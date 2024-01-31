@@ -217,6 +217,7 @@ const NavBar = () => {
 
                                 {settings.map((setting) => (
                                     <MenuItem
+                                        sx={{ width: "200px", marginLeft: "10px" }}
                                         key={setting}
                                         onClick={() => handleLogout()}
                                     >
