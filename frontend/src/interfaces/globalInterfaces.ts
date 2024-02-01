@@ -25,3 +25,21 @@ export interface IncomeInterface {
         username: string;
     } | null;
 }
+
+
+export interface ExpenseInterface {
+    id: number;
+    description: string;
+    amount: number;
+    createdAt: string;
+    expenseGroup: {
+        id: number;
+        name: string;
+        description: string;
+        createdAt: string;
+        expenses: ExpenseInterface[] | null;
+    } | null;
+    user: {
+        username: string;
+    } | null;
+}

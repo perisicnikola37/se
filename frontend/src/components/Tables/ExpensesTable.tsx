@@ -19,21 +19,21 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import FilterListIcon from "@mui/icons-material/FilterList";
 import { visuallyHidden } from "@mui/utils";
 import Skeleton from "@mui/material/Skeleton";
-import { IncomeInterface } from "../interfaces/globalInterfaces";
-import DeleteModal from "./Modals/DeleteModal";
+import { ExpenseInterface } from "../../interfaces/globalInterfaces";
+import DeleteModal from "../Modals/DeleteModal";
 import { Autocomplete, Popover, TextField } from "@mui/material";
-import NewFormModal from "./Modals/NewFormModal";
-import EditModal from "./Modals/EditModal";
-import useObjectGroups from "../hooks/GlobalHooks/GetObjectsHook";
-import { useModal } from "../contexts/GlobalContext";
-import useDeleteAllObjects from "../hooks/GlobalHooks/DeleteAllObjectsHook";
-import useObjects from "../hooks/GlobalHooks/AllObjectsHook";
+import NewFormModal from "../Modals/NewFormModal";
+import EditModal from "../Modals/EditModal";
+import useObjectGroups from "../../hooks/GlobalHooks/GetObjectsHook";
+import { useModal } from "../../contexts/GlobalContext";
+import useDeleteAllObjects from "../../hooks/GlobalHooks/DeleteAllObjectsHook";
+import useObjects from "../../hooks/GlobalHooks/AllObjectsHook";
 
 interface Data {
     id: number;
     description: string;
     amount: number;
-    incomeGroup: string;
+    expenseGroup: string;
 }
 
 type Order = "asc" | "desc";
@@ -42,13 +42,13 @@ function createData(
     id: number,
     description: string,
     amount: number,
-    incomeGroup: string
+    expenseGroup: string
 ): Data {
     return {
         id,
         description,
         amount,
-        incomeGroup,
+        expenseGroup,
     };
 }
 
@@ -114,13 +114,13 @@ const headCells: readonly HeadCell[] = [
         label: "Amount",
     },
     {
-        id: "incomeGroup",
+        id: "expenseGroup",
         numeric: true,
         disablePadding: false,
-        label: "Income group",
+        label: "Expense group",
     },
     {
-        id: "incomeGroup",
+        id: "expenseGroup",
         numeric: true,
         disablePadding: false,
         label: "Actions",
@@ -140,7 +140,7 @@ interface EnhancedTableProps {
 }
 
 interface EnhancedTablePropsWithData {
-    incomes: IncomeInterface[];
+    expenses: ExpenseInterface[];
     rowsPerPage: number;
 }
 
@@ -216,9 +216,11 @@ function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
     const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null);
     const [minAmount, setMinAmount] = React.useState<number | null>(null);
     const [maxAmount, setMaxAmount] = React.useState<number | null>(null);
-    const [selectedIncomeGroup, setSelectedIncomeGroup] = React.useState<string>('');
-    const { fetchObjectGroups, objectGroups } = useObjectGroups('income');
-    const { setActionChanged, setAppliedFilters, getAppliedFilters } = useModal()
+    const [selectedExpenseGroup, setSelectedExpenseGroup] = React.useState<string>('');
+    const { fetchObjectGroups, objectGroups } = useObjectGroups('expense');
+    const { setActionChanged, setAppliedFilters, getAppliedFilters, setFilterType } = useModal();
+    setFilterType('expense');
+
     const [searchTerm, setSearchTerm] = React.useState('');
     const { deleteAllObjects } = useDeleteAllObjects()
 
@@ -258,14 +260,14 @@ function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
         setAnchorEl(null);
     };
 
-    const handleIncomeGroupChange = (_event: React.ChangeEvent<unknown>, newValue: ObjectGroup | null) => {
-        setSelectedIncomeGroup((newValue?.id || '') as string);
+    const handleExpenseGroupChange = (_event: React.ChangeEvent<unknown>, newValue: ObjectGroup | null) => {
+        setSelectedExpenseGroup((newValue?.id || '') as string);
         setActionChanged();
-        setAppliedFilters({ ...getAppliedFilters(), incomeGroupId: (newValue?.id || '') as string });
+        setAppliedFilters({ ...getAppliedFilters(), expenseGroupId: (newValue?.id || '') as string });
     };
 
-    const handleDeleteAllIncomes = async () => {
-        await deleteAllObjects('income');
+    const handleDeleteAllExpenses = async () => {
+        await deleteAllObjects('expense');
         setActionChanged();
     };
 
@@ -302,13 +304,13 @@ function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
                     id="tableTitle"
                     component="div"
                 >
-                    Incomes
+                    Expenses
                 </Typography>
             )}
             {numSelected > 0 ? (
                 <Tooltip title="Delete">
                     <IconButton>
-                        <DeleteIcon onClick={handleDeleteAllIncomes} />
+                        <DeleteIcon onClick={handleDeleteAllExpenses} />
                     </IconButton>
                 </Tooltip>
             ) : (
@@ -394,10 +396,10 @@ function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
                                 getOptionLabel={(option) => option.name}
                                 sx={{ width: '100%', marginTop: '20px' }}
                                 renderInput={(params) => (
-                                    <TextField {...params} label="Income group" required />
+                                    <TextField {...params} label="Expense group" required />
                                 )}
-                                value={objectGroups.find((group) => group.id === Number(selectedIncomeGroup))}
-                                onChange={handleIncomeGroupChange}
+                                value={objectGroups.find((group) => group.id === Number(selectedExpenseGroup))}
+                                onChange={handleExpenseGroupChange}
                             />
                         </Popover>
                     </div>
@@ -434,7 +436,7 @@ function LoadingTableRow() {
     );
 }
 
-function EnhancedTable({ incomes }: EnhancedTablePropsWithData) {
+function EnhancedTable({ expenses }: EnhancedTablePropsWithData) {
     const [order, setOrder] = React.useState<Order>('desc');
     const [orderBy, setOrderBy] = React.useState<keyof Data>('id');
     const [selected, setSelected] = React.useState<readonly number[]>([]);
@@ -446,12 +448,12 @@ function EnhancedTable({ incomes }: EnhancedTablePropsWithData) {
     const { getAppliedFilters, setAppliedFilters, totalRecords } = useModal()
 
     React.useEffect(() => {
-        const newRows = incomes.map((income) =>
+        const newRows = expenses.map((expense) =>
             createData(
-                income.id,
-                income.description,
-                income.amount,
-                income.incomeGroup?.name ?? ''
+                expense.id,
+                expense.description,
+                expense.amount,
+                expense.expenseGroup?.name ?? ''
             )
         );
         setRows(newRows);
@@ -461,7 +463,7 @@ function EnhancedTable({ incomes }: EnhancedTablePropsWithData) {
         }, 1000);
 
         return () => clearTimeout(timeout);
-    }, [incomes]);
+    }, [expenses]);
 
     const [rows, setRows] = React.useState<Data[]>([]);
 
@@ -523,8 +525,6 @@ function EnhancedTable({ incomes }: EnhancedTablePropsWithData) {
         totalRecords > 0
             ? Math.max(0, rowsPerPage - visibleRows.length)
             : rowsPerPage * (Math.max(0, totalRecords - page * rowsPerPage));
-
-
 
     return (
         <Box sx={{ width: '100%' }}>
@@ -589,14 +589,14 @@ function EnhancedTable({ incomes }: EnhancedTablePropsWithData) {
                                             {row.amount}
                                         </TableCell>
                                         <TableCell align="right">
-                                            {row.incomeGroup}
+                                            {row.expenseGroup}
                                         </TableCell>
                                         <TableCell align="right">
                                             <EditModal id={row.id} objectType={""} />
                                             <DeleteModal
                                                 id={row.id}
                                                 objectType={
-                                                    'income'
+                                                    'expense'
                                                 }
                                             />
                                         </TableCell>

@@ -1,7 +1,7 @@
 import { useEffect } from "react";
-import EnhancedTable from "../components/Table";
 import { useModal } from "../contexts/GlobalContext";
 import useObjects from "../hooks/GlobalHooks/AllObjectsHook";
+import EnhancedTable from "../components/Tables/IncomesTable";
 
 const Incomes = () => {
     const { objects, loadObjects } = useObjects();

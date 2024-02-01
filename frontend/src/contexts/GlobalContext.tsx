@@ -8,6 +8,14 @@ interface FetchIncomesParams {
     maxAmount?: number | null;
     incomeGroupId?: string | null;
 }
+interface FetchExpensesParams {
+    pageNumber: number;
+    pageSize: number;
+    description?: string | null;
+    minAmount?: number | null;
+    maxAmount?: number | null;
+    incomeGroupId?: string | null;
+}
 
 interface ModalContextProps {
     modalState: boolean;
