@@ -511,16 +511,18 @@ function EnhancedTable({ incomes }: EnhancedTablePropsWithData) {
     };
 
     const isSelected = (id: number) => selected.indexOf(id) !== -1;
-
-    const emptyRows =
-        page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
-
     const visibleRows = React.useMemo(() => {
         return stableSort(rows, getComparator(order, orderBy)).slice(
-            page * rowsPerPage,
-            page * rowsPerPage + rowsPerPage
+            // page * rowsPerPage,
+            // page * rowsPerPage + rowsPerPage
         );
     }, [rows, order, orderBy, page, rowsPerPage]);
+    const emptyRows =
+        totalRecords > 0
+            ? Math.max(0, rowsPerPage - visibleRows.length)
+            : rowsPerPage * (Math.max(0, totalRecords - page * rowsPerPage));
+
+
 
     return (
         <Box sx={{ width: '100%' }}>
