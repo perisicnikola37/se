@@ -20,7 +20,7 @@ public class IncomeService(
 {
 	[HttpGet]
 	public async Task<PagedResponseDto<List<IncomeResponse>>> GetIncomesAsync(PaginationFilterDto filter,
-		ControllerBase controller)
+	ControllerBase controller)
 	{
 		try
 		{
@@ -43,6 +43,9 @@ public class IncomeService(
 			query = ApplyFilter(query, e => e.IncomeGroupId == int.Parse(incomeGroupId),
 				!string.IsNullOrWhiteSpace(incomeGroupId));
 
+			var totalRecords = await query.CountAsync();
+			var totalPages = (int)Math.Ceiling((double)totalRecords / validFilter.PageSize);
+
 			var pagedData = await query
 				.Skip((validFilter.PageNumber - 1) * validFilter.PageSize)
 				.Take(validFilter.PageSize)
@@ -59,7 +62,23 @@ public class IncomeService(
 				.OrderByDescending(e => e.CreatedAt)
 				.ToListAsync();
 
-			return new PagedResponseDto<List<IncomeResponse>>(pagedData, validFilter.PageNumber, validFilter.PageSize);
+
+			var baseUri = new Uri(controller.Request.Scheme + "://" + controller.Request.Host.Value);
+			var currentPageUri = new Uri(controller.Request.Path, UriKind.Relative);
+			var nextPageUri = new Uri(baseUri, $"{currentPageUri}?pageNumber={validFilter.PageNumber + 1}&pageSize={validFilter.PageSize}");
+			var previousPageUri = new Uri(baseUri, $"{currentPageUri}?pageNumber={validFilter.PageNumber - 1}&pageSize={validFilter.PageSize}");
+
+			return new PagedResponseDto<List<IncomeResponse>>(pagedData, validFilter.PageNumber, validFilter.PageSize)
+			{
+				PageNumber = validFilter.PageNumber,
+				PageSize = validFilter.PageSize,
+				FirstPage = new Uri(baseUri, $"{currentPageUri}?pageNumber=1&pageSize={validFilter.PageSize}"),
+				LastPage = new Uri(baseUri, $"{currentPageUri}?pageNumber={totalPages}&pageSize={validFilter.PageSize}"),
+				TotalPages = totalPages,
+				TotalRecords = totalRecords,
+				NextPage = validFilter.PageNumber < totalPages ? nextPageUri : null,
+				PreviousPage = validFilter.PageNumber > 1 ? previousPageUri : null
+			};
 		}
 		catch (Exception ex)
 		{
