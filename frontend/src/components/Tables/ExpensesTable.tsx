@@ -218,8 +218,7 @@ function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
     const [maxAmount, setMaxAmount] = React.useState<number | null>(null);
     const [selectedExpenseGroup, setSelectedExpenseGroup] = React.useState<string>('');
     const { fetchObjectGroups, objectGroups } = useObjectGroups('expense');
-    const { setActionChanged, setAppliedFilters, getAppliedFilters, setFilterType } = useModal();
-    setFilterType('expense');
+    const { setActionChanged, setAppliedFilters, getAppliedFilters } = useModal();
 
     const [searchTerm, setSearchTerm] = React.useState('');
     const { deleteAllObjects } = useDeleteAllObjects()
