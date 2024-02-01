@@ -11,12 +11,13 @@ import { useModal } from '../../contexts/GlobalContext';
 import useObjectGroups from '../../hooks/GlobalHooks/GetObjectsHook';
 import useGetObjectById from '../../hooks/GlobalHooks/GetObjectHook';
 import useEditObject from '../../hooks/GlobalHooks/EditObjectHook';
+import Swal from 'sweetalert2';
 
 const NewFormModal = ({ id }: { id: number; objectType: string }) => {
     const { fetchObjectGroups, objectGroups } = useObjectGroups('income');
     const [open, setOpen] = useState(false);
     const { isLoading, editObject } = useEditObject();
-    const { setActionChanged } = useModal();
+    const { setActionChanged, actionChange } = useModal();
     const [errorMessage, setErrorMessage] = useState("");
     const [selectedIncomeGroup, setSelectedIncomeGroup] = useState("");
 
@@ -29,7 +30,7 @@ const NewFormModal = ({ id }: { id: number; objectType: string }) => {
 
     useEffect(() => {
         getObjectById();
-    }, []);
+    }, [actionChange]);
 
     useEffect(() => {
         if (object) {
@@ -88,6 +89,15 @@ const NewFormModal = ({ id }: { id: number; objectType: string }) => {
         await editObject(id, "income", incomeData);
         setActionChanged();
         handleClose();
+
+        await Swal.fire({
+            position: "center",
+            icon: "success",
+            title: "Your work has been saved",
+            showConfirmButton: false,
+            timer: 1500
+        });
+        setActionChanged()
     };
 
     const handleAutocompleteChange = (

@@ -13,6 +13,10 @@ body {
     width: 0.4rem;
 }
 
+.swal2-popup .swal2-styled:focus {
+    box-shadow: none !important;
+}
+
 ::-webkit-scrollbar-track {
     background: #fff;
 }

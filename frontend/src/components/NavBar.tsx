@@ -81,7 +81,7 @@ const NavBar = () => {
             <AppBar
                 position="sticky"
                 sx={{
-                    zIndex: modalState ? -1 : 'auto',
+                    zIndex: modalState ? 11 : 1,
                     backgroundColor: '#fff',
                     textColor: "#000",
                     boxShadow: "none",

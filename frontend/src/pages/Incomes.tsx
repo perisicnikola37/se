@@ -5,15 +5,15 @@ import { useModal } from "../contexts/GlobalContext";
 
 const Incomes = () => {
     const { incomes, loadIncomes } = useIncomes();
-    const { actionChange } = useModal();
+    const { actionChange, appliedFilters } = useModal();
 
     useEffect(() => {
         document.title = 'Incomes | Expense Tracker';
     }, []);
 
     useEffect(() => {
-        loadIncomes();
-    }, [actionChange]);
+        loadIncomes(appliedFilters);
+    }, [actionChange, appliedFilters]);
 
     return (
         <div className="w-full max-w-screen-xl min-h-[48rem] mx-auto p-4 md:py-8">

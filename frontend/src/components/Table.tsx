@@ -21,9 +21,12 @@ import { visuallyHidden } from "@mui/utils";
 import Skeleton from "@mui/material/Skeleton";
 import { IncomeInterface } from "../interfaces/globalInterfaces";
 import DeleteModal from "./Modals/DeleteModal";
-import { Alert } from "@mui/material";
+import { Autocomplete, Popover, TextField } from "@mui/material";
 import NewFormModal from "./Modals/NewFormModal";
 import EditModal from "./Modals/EditModal";
+import useObjectGroups from "../hooks/GlobalHooks/GetObjectsHook";
+import useIncomes from "../hooks/Incomes/AllIncomesHook";
+import { useModal } from "../contexts/GlobalContext";
 
 interface Data {
     id: number;
@@ -201,8 +204,60 @@ interface EnhancedTableToolbarProps {
     numSelected: number;
 }
 
+interface ObjectGroup {
+    id: number;
+    name: string;
+}
+
 function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
     const { numSelected } = props;
+    const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null);
+    const [minAmount, setMinAmount] = React.useState<number | null>(null);
+    const [maxAmount, setMaxAmount] = React.useState<number | null>(null);
+    const [selectedIncomeGroup, setSelectedIncomeGroup] = React.useState<string>('');
+    const { fetchObjectGroups, objectGroups } = useObjectGroups('income');
+    const { loadIncomes } = useIncomes();
+    const { setActionChanged, setAppliedFilters, getAppliedFilters } = useModal()
+
+    const handleMinAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const newMinAmount = Number(e.target.value) || null;
+        setMinAmount(newMinAmount);
+        setActionChanged();
+        setAppliedFilters({ ...getAppliedFilters(), minAmount: newMinAmount });
+    };
+
+    const handleMaxAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const newMaxAmount = Number(e.target.value) || null;
+        setMaxAmount(newMaxAmount);
+        setActionChanged();
+        setAppliedFilters({ ...getAppliedFilters(), maxAmount: newMaxAmount });
+    };
+
+    React.useEffect(() => {
+        fetchObjectGroups()
+    }, [])
+
+    const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+        setAnchorEl(event.currentTarget);
+    };
+
+    const handleClose = () => {
+        setAnchorEl(null);
+    };
+
+    const handleIncomeGroupChange = (event: React.ChangeEvent<unknown>, newValue: ObjectGroup | null) => {
+        setSelectedIncomeGroup((newValue?.id || '') as string);
+        setActionChanged();
+        setAppliedFilters({ ...getAppliedFilters(), incomeGroupId: (newValue?.id || '') as string });
+    };
+
+    React.useEffect(() => {
+        loadIncomes({ pageSize: 50, description: null, minAmount, maxAmount, incomeGroupId: selectedIncomeGroup });
+    }, [minAmount, maxAmount, selectedIncomeGroup]);
+
+
+    const open = Boolean(anchorEl);
+    const id = open ? 'simple-popover' : undefined;
 
     return (
         <Toolbar
@@ -245,12 +300,59 @@ function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
                 </Tooltip>
             ) : (
                 <div className="w-[18%] flex">
+                    {/* Assuming NewFormModal is a valid component */}
                     <NewFormModal />
                     <Tooltip title="Filter list">
-                        <IconButton>
+                        <IconButton onClick={handleClick}>
                             <FilterListIcon />
                         </IconButton>
                     </Tooltip>
+
+                    <Popover
+                        id={id}
+                        open={open}
+                        anchorEl={anchorEl}
+                        onClose={handleClose}
+                        anchorOrigin={{
+                            vertical: 'bottom',
+                            horizontal: 'right',
+                        }}
+                        transformOrigin={{
+                            vertical: 'top',
+                            horizontal: 'right',
+                        }}
+                    >
+                        <div className="p-3">
+                            <TextField
+                                label="Min Amount"
+                                type="number"
+                                variant="standard"
+                                value={minAmount || ''}
+                                onChange={handleMinAmountChange}
+                            />
+                        </div>
+                        <div className="p-3">
+                            <TextField
+                                label="Max Amount"
+                                type="number"
+                                variant="standard"
+                                value={maxAmount || ''}
+                                onChange={handleMaxAmountChange}
+                            />
+                        </div>
+                        <Autocomplete
+                            style={{ padding: "10px" }}
+                            // onOpen={handleAutocompleteOpen}
+                            options={objectGroups}
+                            getOptionLabel={(option) => option.name}
+                            sx={{ width: '100%', marginTop: '20px' }}
+                            renderInput={(params) => (
+                                <TextField {...params} label="Income group" required />
+                            )}
+                            value={objectGroups.find((group) => group.id === Number(selectedIncomeGroup))}
+                            onChange={handleIncomeGroupChange}
+                        />
+                    </Popover>
                 </div>
             )}
         </Toolbar>
@@ -302,7 +404,6 @@ function EnhancedTable({ incomes }: EnhancedTablePropsWithData) {
         );
         setRows(newRows);
 
-        // Simulate loading
         const timeout = setTimeout(() => {
             setLoading(false);
         }, 1000);
@@ -365,51 +466,43 @@ function EnhancedTable({ incomes }: EnhancedTablePropsWithData) {
 
     return (
         <Box sx={{ width: '100%' }}>
-            {incomes.length === 0 ? (
-                <>
-                    <Alert sx={{ marginBottom: "5px" }} variant="outlined" severity="info">
-                        There are no incomes at the moment.
-                    </Alert>
-                    <NewFormModal />
-                </>
-            ) : (
-                <Paper sx={{ width: '100%', mb: 2 }}>
-                    <EnhancedTableToolbar numSelected={selected.length} />
-                    <TableContainer>
-                        <Table
-                            sx={{ minWidth: 750 }}
-                            aria-labelledby="tableTitle"
-                            size={dense ? 'small' : 'medium'}
-                        >
-                            <EnhancedTableHead
-                                numSelected={selected.length}
-                                order={order}
-                                orderBy={orderBy}
-                                onSelectAllClick={handleSelectAllClick}
-                                onRequestSort={handleRequestSort}
-                                rowCount={rows.length}
-                            />
-                            <TableBody>
-                                {loading
-                                    ? Array.from({
-                                        length: rowsPerPage,
-                                    }).map((_, index) => (
-                                        <LoadingTableRow key={index} />
-                                    ))
-                                    : visibleRows.map((row) => (
-                                        <TableRow
-                                            hover
-                                            role="checkbox"
-                                            aria-checked={isSelected(
-                                                row.id
-                                            )}
-                                            tabIndex={-1}
-                                            key={row.id}
-                                            selected={isSelected(row.id)}
-                                            sx={{ cursor: 'pointer' }}
-                                        >
-                                            <TableCell padding="checkbox">
-                                                {/* <Checkbox
+            <Paper sx={{ width: '100%', mb: 2 }}>
+                <EnhancedTableToolbar numSelected={selected.length} />
+                <TableContainer>
+                    <Table
+                        sx={{ minWidth: 750 }}
+                        aria-labelledby="tableTitle"
+                        size={dense ? 'small' : 'medium'}
+                    >
+                        <EnhancedTableHead
+                            numSelected={selected.length}
+                            order={order}
+                            orderBy={orderBy}
+                            onSelectAllClick={handleSelectAllClick}
+                            onRequestSort={handleRequestSort}
+                            rowCount={rows.length}
+                        />
+                        <TableBody>
+                            {loading
+                                ? Array.from({
+                                    length: rowsPerPage,
+                                }).map((_, index) => (
+                                    <LoadingTableRow key={index} />
+                                ))
+                                : visibleRows.map((row) => (
+                                    <TableRow
+                                        hover
+                                        role="checkbox"
+                                        aria-checked={isSelected(
+                                            row.id
+                                        )}
+                                        tabIndex={-1}
+                                        key={row.id}
+                                        selected={isSelected(row.id)}
+                                        sx={{ cursor: 'pointer' }}
+                                    >
+                                        <TableCell padding="checkbox">
+                                            {/* <Checkbox
                                                      color="primary"
                                                      checked={isSelected(
                                                          row.id
@@ -419,62 +512,58 @@ function EnhancedTable({ incomes }: EnhancedTablePropsWithData) {
                                                              `enhanced-table-checkbox-${index}`,
                                                      }}
                                                  /> */}
-                                            </TableCell>
-                                            <TableCell
-                                                component="th"
-                                                scope="row"
-                                                padding="none"
-                                            >
-                                                {row.id}
-                                            </TableCell>
-                                            <TableCell align="right">
-                                                {row.description}
-                                            </TableCell>
-                                            <TableCell align="right">
-                                                {row.amount}
-                                            </TableCell>
-                                            <TableCell align="right">
-                                                {row.incomeGroup}
-                                            </TableCell>
-                                            <TableCell align="right">
-                                                <EditModal id={row.id} objectType={""} />
-                                                <DeleteModal
-                                                    id={row.id}
-                                                    objectType={
-                                                        'income'
-                                                    }
-                                                />
-                                            </TableCell>
-                                        </TableRow>
-                                    ))}
-                                {emptyRows > 0 && !loading && (
-                                    <TableRow
-                                        style={{
-                                            height:
-                                                (dense ? 33 : 53) *
-                                                emptyRows,
-                                        }}
-                                    >
-                                        <TableCell colSpan={6} />
+                                        </TableCell>
+                                        <TableCell
+                                            component="th"
+                                            scope="row"
+                                            padding="none"
+                                        >
+                                            {row.id}
+                                        </TableCell>
+                                        <TableCell align="right">
+                                            {row.description}
+                                        </TableCell>
+                                        <TableCell align="right">
+                                            {row.amount}
+                                        </TableCell>
+                                        <TableCell align="right">
+                                            {row.incomeGroup}
+                                        </TableCell>
+                                        <TableCell align="right">
+                                            <EditModal id={row.id} objectType={""} />
+                                            <DeleteModal
+                                                id={row.id}
+                                                objectType={
+                                                    'income'
+                                                }
+                                            />
+                                        </TableCell>
                                     </TableRow>
-                                )}
-                            </TableBody>
-                        </Table>
-                    </TableContainer>
-                    <TablePagination
-                        rowsPerPageOptions={[5, 10, 25]}
-                        component="div"
-                        count={rows.length}
-                        rowsPerPage={rowsPerPage}
-                        page={page}
-                        onPageChange={handleChangePage}
-                        onRowsPerPageChange={
-                            handleChangeRowsPerPage
-                        }
-                    />
-                </Paper>
-            )
-            }
+                                ))}
+                            <TableRow
+                                style={{
+                                    height:
+                                        (dense ? 33 : 53) *
+                                        emptyRows,
+                                }}
+                            >
+                                <TableCell colSpan={6} />
+                            </TableRow>
+                        </TableBody>
+                    </Table>
+                </TableContainer>
+                <TablePagination
+                    rowsPerPageOptions={[5, 10, 25]}
+                    component="div"
+                    count={rows.length}
+                    rowsPerPage={rowsPerPage}
+                    page={page}
+                    onPageChange={handleChangePage}
+                    onRowsPerPageChange={
+                        handleChangeRowsPerPage
+                    }
+                />
+            </Paper>
         </Box >
     );
 }
