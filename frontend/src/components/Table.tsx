@@ -25,9 +25,9 @@ import { Autocomplete, Popover, TextField } from "@mui/material";
 import NewFormModal from "./Modals/NewFormModal";
 import EditModal from "./Modals/EditModal";
 import useObjectGroups from "../hooks/GlobalHooks/GetObjectsHook";
-import useIncomes from "../hooks/Incomes/AllIncomesHook";
 import { useModal } from "../contexts/GlobalContext";
 import useDeleteAllObjects from "../hooks/GlobalHooks/DeleteAllObjectsHook";
+import useObjects from "../hooks/GlobalHooks/AllObjectsHook";
 
 interface Data {
     id: number;
@@ -141,6 +141,7 @@ interface EnhancedTableProps {
 
 interface EnhancedTablePropsWithData {
     incomes: IncomeInterface[];
+    rowsPerPage: number;
 }
 
 function EnhancedTableHead(props: EnhancedTableProps) {
@@ -257,7 +258,7 @@ function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
         setAnchorEl(null);
     };
 
-    const handleIncomeGroupChange = (event: React.ChangeEvent<unknown>, newValue: ObjectGroup | null) => {
+    const handleIncomeGroupChange = (_event: React.ChangeEvent<unknown>, newValue: ObjectGroup | null) => {
         setSelectedIncomeGroup((newValue?.id || '') as string);
         setActionChanged();
         setAppliedFilters({ ...getAppliedFilters(), incomeGroupId: (newValue?.id || '') as string });
@@ -441,8 +442,8 @@ function EnhancedTable({ incomes }: EnhancedTablePropsWithData) {
     const [dense] = React.useState(false);
     const [loading, setLoading] = React.useState(true);
     const { setActionChanged } = useModal()
-    const { rowsPerPage, setRowsPerPage } = useIncomes();
-    const { getAppliedFilters, setAppliedFilters, totalRecords, pageNumber } = useModal()
+    const { rowsPerPage, setRowsPerPage } = useObjects();
+    const { getAppliedFilters, setAppliedFilters, totalRecords } = useModal()
 
     React.useEffect(() => {
         const newRows = incomes.map((income) =>
@@ -517,6 +518,7 @@ function EnhancedTable({ incomes }: EnhancedTablePropsWithData) {
             // page * rowsPerPage + rowsPerPage
         );
     }, [rows, order, orderBy, page, rowsPerPage]);
+
     const emptyRows =
         totalRecords > 0
             ? Math.max(0, rowsPerPage - visibleRows.length)
