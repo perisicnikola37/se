@@ -29,7 +29,7 @@ interface ModalProviderProps {
 export const ModalProvider: React.FC<ModalProviderProps> = ({ children }) => {
     const [modalState, setModalState] = useState(false);
     const [actionChange, setActionChange] = useState({ counter: 0, value: false });
-    const [appliedFilters, internalSetAppliedFilters] = useState<FetchIncomesParams>({ pageSize: 50 });
+    const [appliedFilters, internalSetAppliedFilters] = useState<FetchIncomesParams>({ pageSize: 5 });
 
     const openModal = () => {
         setModalState(true);

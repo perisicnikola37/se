@@ -217,7 +217,6 @@ function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
     const [maxAmount, setMaxAmount] = React.useState<number | null>(null);
     const [selectedIncomeGroup, setSelectedIncomeGroup] = React.useState<string>('');
     const { fetchObjectGroups, objectGroups } = useObjectGroups('income');
-    const { loadIncomes } = useIncomes();
     const { setActionChanged, setAppliedFilters, getAppliedFilters } = useModal()
     const [searchTerm, setSearchTerm] = React.useState('');
     const { deleteAllObjects } = useDeleteAllObjects()
@@ -268,9 +267,9 @@ function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
         await deleteAllObjects('income');
         setActionChanged();
     };
-    React.useEffect(() => {
-        loadIncomes({ pageSize: 50, description: null, minAmount, maxAmount, incomeGroupId: selectedIncomeGroup });
-    }, [minAmount, maxAmount, selectedIncomeGroup]);
+    // React.useEffect(() => {
+    //     loadIncomes({ pageSize: 5, description: null, minAmount, maxAmount, incomeGroupId: selectedIncomeGroup });
+    // }, [minAmount, maxAmount, selectedIncomeGroup]);
 
 
     const open = Boolean(anchorEl);
@@ -444,8 +443,10 @@ function EnhancedTable({ incomes }: EnhancedTablePropsWithData) {
     const [selected, setSelected] = React.useState<readonly number[]>([]);
     const [page, setPage] = React.useState(0);
     const [dense] = React.useState(false);
-    const [rowsPerPage, setRowsPerPage] = React.useState(5);
     const [loading, setLoading] = React.useState(true);
+    const { setActionChanged } = useModal()
+    const { totalRecords, rowsPerPage, totalPages, currentPage, setRowsPerPage } = useIncomes();
+    const { getAppliedFilters, setAppliedFilters } = useModal()
 
     React.useEffect(() => {
         const newRows = incomes.map((income) =>
@@ -502,7 +503,10 @@ function EnhancedTable({ incomes }: EnhancedTablePropsWithData) {
     const handleChangeRowsPerPage = (
         event: React.ChangeEvent<HTMLInputElement>
     ) => {
-        setRowsPerPage(parseInt(event.target.value, 10));
+        setRowsPerPage(parseInt(event.target.value));
+        // ovdje su rows setovani
+        setAppliedFilters({ ...getAppliedFilters(), pageSize: parseInt(event.target.value) });
+        setActionChanged()
         setPage(0);
     };
 
