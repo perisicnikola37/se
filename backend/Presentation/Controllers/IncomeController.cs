@@ -55,6 +55,12 @@ public class IncomeController(IIncomeService incomeService) : ControllerBase
 		return await incomeService.CreateIncomeAsync(income, this);
 	}
 
+	[HttpDelete]
+	public async Task<IActionResult> DeleteAllIncomesAsync()
+	{
+		return await incomeService.DeleteAllIncomesAsync(this);
+	}
+
 	// DELETE: api/Income/5
 	[HttpDelete("{id}")]
 	[Authorize("IncomeOwnerPolicy")]

@@ -27,6 +27,7 @@ import EditModal from "./Modals/EditModal";
 import useObjectGroups from "../hooks/GlobalHooks/GetObjectsHook";
 import useIncomes from "../hooks/Incomes/AllIncomesHook";
 import { useModal } from "../contexts/GlobalContext";
+import useDeleteAllObjects from "../hooks/GlobalHooks/DeleteAllObjectsHook";
 
 interface Data {
     id: number;
@@ -218,6 +219,8 @@ function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
     const { fetchObjectGroups, objectGroups } = useObjectGroups('income');
     const { loadIncomes } = useIncomes();
     const { setActionChanged, setAppliedFilters, getAppliedFilters } = useModal()
+    const [searchTerm, setSearchTerm] = React.useState('');
+    const { deleteAllObjects } = useDeleteAllObjects()
 
     const handleMinAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const newMinAmount = Number(e.target.value) || null;
@@ -231,6 +234,16 @@ function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
         setMaxAmount(newMaxAmount);
         setActionChanged();
         setAppliedFilters({ ...getAppliedFilters(), maxAmount: newMaxAmount });
+    }
+
+    const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const newSearchTerm = event.target.value;
+        setSearchTerm(newSearchTerm);
+
+        setTimeout(() => {
+            setActionChanged();
+            setAppliedFilters({ ...getAppliedFilters(), description: newSearchTerm });
+        }, 0);
     };
 
     React.useEffect(() => {
@@ -251,6 +264,10 @@ function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
         setAppliedFilters({ ...getAppliedFilters(), incomeGroupId: (newValue?.id || '') as string });
     };
 
+    const handleDeleteAllIncomes = async () => {
+        await deleteAllObjects('income');
+        setActionChanged();
+    };
     React.useEffect(() => {
         loadIncomes({ pageSize: 50, description: null, minAmount, maxAmount, incomeGroupId: selectedIncomeGroup });
     }, [minAmount, maxAmount, selectedIncomeGroup]);
@@ -295,7 +312,7 @@ function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
             {numSelected > 0 ? (
                 <Tooltip title="Delete">
                     <IconButton>
-                        <DeleteIcon />
+                        <DeleteIcon onClick={handleDeleteAllIncomes} />
                     </IconButton>
                 </Tooltip>
             ) : (
@@ -329,6 +346,8 @@ function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
                                 className="block w-full p-4 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg outline-none "
                                 placeholder="Search..."
                                 required
+                                value={searchTerm}
+                                onChange={handleSearchChange}
                             />
                         </div>
                     </div>

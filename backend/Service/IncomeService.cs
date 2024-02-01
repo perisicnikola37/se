@@ -219,6 +219,38 @@ public class IncomeService(
 		}
 	}
 
+	public async Task<IActionResult> DeleteAllIncomesAsync(ControllerBase controller)
+	{
+		try
+		{
+			var authenticatedUserId = getAuthenticatedUserId.GetUserId(controller.User);
+
+			if (!authenticatedUserId.HasValue)
+			{
+				return new BadRequestResult();
+			}
+
+			var incomesToDelete = await context.Incomes
+				.Where(e => e.UserId == authenticatedUserId.Value)
+				.ToListAsync();
+
+			if (incomesToDelete == null || incomesToDelete.Count == 0)
+			{
+				return new NotFoundResult();
+			}
+
+			context.Incomes.RemoveRange(incomesToDelete);
+			await context.SaveChangesAsync();
+
+			return new NoContentResult();
+		}
+		catch (Exception ex)
+		{
+			logger.LogError($"DeleteAllIncomesByUserIdAsync: An error occurred. Error: {ex.Message}");
+			throw;
+		}
+	}
+
 	private bool IncomeExists(int id)
 	{
 		try

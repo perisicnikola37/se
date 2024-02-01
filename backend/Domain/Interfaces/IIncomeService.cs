@@ -15,4 +15,5 @@ public interface IIncomeService
 	Task<IActionResult> UpdateIncomeAsync(int id, Income income, ControllerBase controller);
 	Task<IActionResult> DeleteIncomeByIdAsync(int id);
 	Task<ActionResult<int>> GetTotalAmountOfIncomesAsync();
+	Task<IActionResult> DeleteAllIncomesAsync(ControllerBase controller);
 }
