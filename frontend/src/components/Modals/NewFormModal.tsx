@@ -73,7 +73,7 @@ const NewFormModal = () => {
 
     return (
         <>
-            <Button className='_add_object' variant="outlined" onClick={handleClickOpen}>
+            <Button sx={{ marginRight: "10px" }} variant="outlined" onClick={handleClickOpen}>
                 New income
             </Button>
             <Dialog

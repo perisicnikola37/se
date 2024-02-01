@@ -299,60 +299,95 @@ function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
                     </IconButton>
                 </Tooltip>
             ) : (
-                <div className="w-[18%] flex">
-                    {/* Assuming NewFormModal is a valid component */}
+                <div className="w-[340%] flex justify-end">
                     <NewFormModal />
-                    <Tooltip title="Filter list">
-                        <IconButton onClick={handleClick}>
-                            <FilterListIcon />
-                        </IconButton>
-                    </Tooltip>
+                    <div>
+                        <label htmlFor="default-search" className="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">
+                            Search
+                        </label>
+                        <div className="relative">
+                            <div className="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+                                <svg
+                                    className="w-4 h-4 text-gray-500 dark:text-gray-400"
+                                    aria-hidden="true"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    fill="none"
+                                    viewBox="0 0 20 20"
+                                >
+                                    <path
+                                        stroke="currentColor"
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        strokeWidth="2"
+                                        d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
+                                    />
+                                </svg>
+                            </div>
+                            <input
+                                type="search"
+                                id="default-search"
+                                className="block w-full p-4 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg outline-none "
+                                placeholder="Search..."
+                                required
+                            />
+                        </div>
+                    </div>
 
-                    <Popover
-                        id={id}
-                        open={open}
-                        anchorEl={anchorEl}
-                        onClose={handleClose}
-                        anchorOrigin={{
-                            vertical: 'bottom',
-                            horizontal: 'right',
-                        }}
-                        transformOrigin={{
-                            vertical: 'top',
-                            horizontal: 'right',
-                        }}
-                    >
-                        <div className="p-3">
-                            <TextField
-                                label="Min Amount"
-                                type="number"
-                                variant="standard"
-                                value={minAmount || ''}
-                                onChange={handleMinAmountChange}
+                    <div>
+                        <Tooltip title="Filter list">
+                            <IconButton onClick={handleClick}>
+                                <FilterListIcon />
+                            </IconButton>
+                        </Tooltip>
+
+                        <Popover
+                            id={id}
+                            open={open}
+                            anchorEl={anchorEl}
+                            onClose={handleClose}
+                            anchorOrigin={{
+                                vertical: 'bottom',
+                                horizontal: 'right',
+                            }}
+                            transformOrigin={{
+                                vertical: 'top',
+                                horizontal: 'right',
+                            }}
+                        >
+                            <div className="p-3">
+                                <TextField
+                                    label="Min Amount"
+                                    type="number"
+                                    variant="standard"
+                                    value={minAmount || ''}
+                                    onChange={handleMinAmountChange}
+                                />
+                            </div>
+                            <div className="p-3">
+                                <TextField
+                                    label="Max Amount"
+                                    type="number"
+                                    variant="standard"
+                                    value={maxAmount || ''}
+                                    onChange={handleMaxAmountChange}
+                                />
+                            </div>
+                            <Autocomplete
+                                style={{ padding: "10px" }}
+                                // onOpen={handleAutocompleteOpen}
+                                options={objectGroups}
+                                getOptionLabel={(option) => option.name}
+                                sx={{ width: '100%', marginTop: '20px' }}
+                                renderInput={(params) => (
+                                    <TextField {...params} label="Income group" required />
+                                )}
+                                value={objectGroups.find((group) => group.id === Number(selectedIncomeGroup))}
+                                onChange={handleIncomeGroupChange}
                             />
-                        </div>
-                        <div className="p-3">
-                            <TextField
-                                label="Max Amount"
-                                type="number"
-                                variant="standard"
-                                value={maxAmount || ''}
-                                onChange={handleMaxAmountChange}
-                            />
-                        </div>
-                        <Autocomplete
-                            style={{ padding: "10px" }}
-                            // onOpen={handleAutocompleteOpen}
-                            options={objectGroups}
-                            getOptionLabel={(option) => option.name}
-                            sx={{ width: '100%', marginTop: '20px' }}
-                            renderInput={(params) => (
-                                <TextField {...params} label="Income group" required />
-                            )}
-                            value={objectGroups.find((group) => group.id === Number(selectedIncomeGroup))}
-                            onChange={handleIncomeGroupChange}
-                        />
-                    </Popover>
+                        </Popover>
+                    </div>
+
+
                 </div>
             )}
         </Toolbar>
