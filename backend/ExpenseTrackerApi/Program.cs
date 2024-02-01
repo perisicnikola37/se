@@ -1,6 +1,9 @@
+using DinkToPdf;
+using DinkToPdf.Contracts;
 using Domain.Interfaces;
 using Domain.Models;
 using Domain.Validators;
+using ExpenseTrackerApi;
 using ExpenseTrackerApi.conf;
 using ExpenseTrackerApi.Handlers;
 using ExpenseTrackerApi.Middlewares;
@@ -11,6 +14,7 @@ using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using Persistence;
+using Presentation;
 using Service;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -22,6 +26,9 @@ builder.Services.AddCors(p => p.AddPolicy("cors", builder =>
 {
 	builder.WithOrigins("*").AllowAnyMethod().AllowAnyHeader();
 }));
+
+builder.Services.AddSingleton(typeof(IConverter), new SynchronizedConverter(new PdfTools()));
+builder.Services.AddScoped<PdfGenerator>();
 
 builder.Services.AddAuthorization();
 
