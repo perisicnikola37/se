@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, ReactNode } from 'react';
 
 interface FetchIncomesParams {
+    pageNumber: number;
     pageSize: number;
     description?: string | null;
     minAmount?: number | null;
@@ -10,6 +11,14 @@ interface FetchIncomesParams {
 
 interface ModalContextProps {
     modalState: boolean;
+
+    // pagination
+    totalRecords: number;
+    setTotalRecords: (number: number) => void;
+
+    pageNumber: number;
+    setPageNumber: (number: number) => void;
+
     actionChange: { counter: number; value: boolean };
     appliedFilters: FetchIncomesParams;
     openModal: () => void;
@@ -28,11 +37,21 @@ interface ModalProviderProps {
 
 export const ModalProvider: React.FC<ModalProviderProps> = ({ children }) => {
     const [modalState, setModalState] = useState(false);
+    const [totalRecords, setTotalRecordsState] = useState(0);
+    const [pageNumber, setPageNumberState] = useState(0);
     const [actionChange, setActionChange] = useState({ counter: 0, value: false });
-    const [appliedFilters, internalSetAppliedFilters] = useState<FetchIncomesParams>({ pageSize: 5 });
+    const [appliedFilters, internalSetAppliedFilters] = useState<FetchIncomesParams>({ pageSize: 5, pageNumber: 1 });
 
     const openModal = () => {
         setModalState(true);
+    };
+
+    const setTotalRecords = (number: number) => {
+        setTotalRecordsState(number);
+    };
+
+    const setPageNumber = (number: number) => {
+        setPageNumberState(number);
     };
 
     const closeModal = () => {
@@ -65,6 +84,10 @@ export const ModalProvider: React.FC<ModalProviderProps> = ({ children }) => {
         resetActionChange,
         setAppliedFilters,
         getAppliedFilters,
+        totalRecords: totalRecords,
+        setTotalRecords,
+        pageNumber: pageNumber,
+        setPageNumber
     };
 
     return (
@@ -73,6 +96,7 @@ export const ModalProvider: React.FC<ModalProviderProps> = ({ children }) => {
         </ModalContext.Provider>
     );
 };
+
 export const useModal = (): ModalContextProps => {
     const context = useContext(ModalContext);
 

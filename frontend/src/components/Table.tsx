@@ -267,10 +267,6 @@ function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
         await deleteAllObjects('income');
         setActionChanged();
     };
-    // React.useEffect(() => {
-    //     loadIncomes({ pageSize: 5, description: null, minAmount, maxAmount, incomeGroupId: selectedIncomeGroup });
-    // }, [minAmount, maxAmount, selectedIncomeGroup]);
-
 
     const open = Boolean(anchorEl);
     const id = open ? 'simple-popover' : undefined;
@@ -445,8 +441,8 @@ function EnhancedTable({ incomes }: EnhancedTablePropsWithData) {
     const [dense] = React.useState(false);
     const [loading, setLoading] = React.useState(true);
     const { setActionChanged } = useModal()
-    const { totalRecords, rowsPerPage, totalPages, currentPage, setRowsPerPage } = useIncomes();
-    const { getAppliedFilters, setAppliedFilters } = useModal()
+    const { rowsPerPage, setRowsPerPage } = useIncomes();
+    const { getAppliedFilters, setAppliedFilters, totalRecords, pageNumber } = useModal()
 
     React.useEffect(() => {
         const newRows = incomes.map((income) =>
@@ -498,13 +494,17 @@ function EnhancedTable({ incomes }: EnhancedTablePropsWithData) {
 
     const handleChangePage = (_event: unknown, newPage: number) => {
         setPage(newPage);
+        setAppliedFilters({
+            ...getAppliedFilters(),
+            pageNumber: newPage + 1,
+        });
+        setActionChanged();
     };
 
     const handleChangeRowsPerPage = (
         event: React.ChangeEvent<HTMLInputElement>
     ) => {
         setRowsPerPage(parseInt(event.target.value));
-        // ovdje su rows setovani
         setAppliedFilters({ ...getAppliedFilters(), pageSize: parseInt(event.target.value) });
         setActionChanged()
         setPage(0);
@@ -613,7 +613,7 @@ function EnhancedTable({ incomes }: EnhancedTablePropsWithData) {
                 <TablePagination
                     rowsPerPageOptions={[5, 10, 25]}
                     component="div"
-                    count={rows.length}
+                    count={totalRecords}
                     rowsPerPage={rowsPerPage}
                     page={page}
                     onPageChange={handleChangePage}
