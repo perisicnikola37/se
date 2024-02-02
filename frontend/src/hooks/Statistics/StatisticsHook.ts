@@ -17,7 +17,7 @@ const useStatistics = () => {
         };
 
         try {
-            const response = await axiosConfig.get('/api/expenses/statistics');
+            const response = await axiosConfig.get('/api/summary/last-week');
             const data: StatisticsResponse = response.data;
 
             result.expenses = Object.entries(data.expenses).map(([date, amount]) => ({ date, amount }));

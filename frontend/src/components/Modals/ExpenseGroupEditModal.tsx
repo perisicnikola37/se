@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Dialog from '@mui/material/Dialog';
@@ -8,13 +8,23 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import { Alert } from '@mui/material';
 import { useModal } from '../../contexts/GlobalContext';
-import useCreateObjectGroup from '../../hooks/GlobalHooks/CreateObjectGroup';
+import Swal from 'sweetalert2';
+import useEditObjectGroup from '../../hooks/GlobalHooks/EditObjectGroupHook';
+import useGetObjectGroupById from '../../hooks/GlobalHooks/GetObjectGroupHook';
 
-const IncomeGroupCreateModal = () => {
+const ExpenseGroupEditModal = ({ id }: { id: number; objectType: string }) => {
     const [open, setOpen] = useState(false);
-    const { createObjectGroup, isLoading } = useCreateObjectGroup("income")
-    const { setActionChanged } = useModal()
-    const [errorMessage, setErrorMessage] = useState("")
+    const { setActionChanged, actionChange } = useModal();
+
+    const { isLoading, editObjectGroup } = useEditObjectGroup();
+
+    const [errorMessage, setErrorMessage] = useState("");
+
+    const { getObjectGroupById, object } = useGetObjectGroupById(id, 'expense');
+
+    useEffect(() => {
+        getObjectGroupById();
+    }, [actionChange]);
 
     const handleClickOpen = () => {
         setOpen(true);
@@ -24,7 +34,7 @@ const IncomeGroupCreateModal = () => {
         setOpen(false);
     };
 
-    const handleCreateIncomeGroup = async (event: React.FormEvent<HTMLFormElement>) => {
+    const handleCreateExpenseGroup = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         const formData = new FormData(event.currentTarget);
 
@@ -41,33 +51,44 @@ const IncomeGroupCreateModal = () => {
             return;
         }
 
-        const incomeGroupData = {
-            name: nameValue,
+        const expenseGroupData = {
+            id: id,
             description: descriptionValue,
+            name: nameValue
         };
 
-        await createObjectGroup(incomeGroupData);
+        // Call the correct function
+        await editObjectGroup(id, "expense", expenseGroupData);
         setActionChanged();
         handleClose();
+
+        await Swal.fire({
+            position: "center",
+            icon: "success",
+            title: "Your work has been saved",
+            showConfirmButton: false,
+            timer: 1500
+        });
+        setActionChanged()
     };
 
     return (
         <>
-            <Button sx={{ marginRight: "10px" }} variant="outlined" onClick={handleClickOpen}>
-                New income group
+            <Button className='_add_object' sx={{ marginRight: "10px" }} variant="outlined" onClick={handleClickOpen}>
+                Edit expense group
             </Button>
             <Dialog
                 open={open}
                 onClose={handleClose}
                 PaperProps={{
                     component: 'form',
-                    onSubmit: handleCreateIncomeGroup,
+                    onSubmit: handleCreateExpenseGroup,
                 }}
             >
-                <DialogTitle>New income group</DialogTitle>
+                <DialogTitle>Edit expense group</DialogTitle>
                 <DialogContent>
                     <DialogContentText>
-                        Enter the details of your new income group below, and we'll help you keep track of your financial success. Your prosperity is our priority!
+                        Enter the details of your updated expense group below, and we'll help you keep track of your financial success. Your prosperity is our priority!
                     </DialogContentText>
                     {errorMessage && (
                         <>
@@ -82,31 +103,33 @@ const IncomeGroupCreateModal = () => {
                         margin="dense"
                         id="name"
                         name="name"
-                        label="Name"
+                        label="Expense group name"
                         type="text"
                         fullWidth
                         variant="standard"
+                        defaultValue={object?.name || ""}
                     />
+
                     <TextField
                         autoFocus
                         required
                         margin="dense"
                         id="description"
                         name="description"
-                        label="Description"
+                        label="Expense description"
                         type="text"
                         fullWidth
                         variant="standard"
+                        defaultValue={object?.description || ""}
                     />
-
                 </DialogContent>
                 <DialogActions className="m-2">
                     <Button onClick={handleClose}>Cancel</Button>
-                    <Button type="submit" disabled={isLoading}>Create</Button>
+                    <Button type="submit" disabled={isLoading}>Update</Button>
                 </DialogActions>
             </Dialog>
         </>
     );
 };
 
-export default IncomeGroupCreateModal;
+export default ExpenseGroupEditModal;

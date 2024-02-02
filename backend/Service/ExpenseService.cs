@@ -252,54 +252,6 @@ public class ExpenseService(
 		}
 	}
 
-	public async Task<object> GetLast7DaysIncomesAndExpensesAsync(ControllerBase controller)
-	{
-		try
-		{
-			var authenticatedUserId = getAuthenticatedUserId.GetUserId(controller.User);
-
-			var startOfLast7Days = DateTime.UtcNow.AddDays(-6); // for the last 7 days
-
-			var allExpenses = await context.Expenses
-				.ToListAsync();
-
-			var allIncomes = await context.Incomes
-				.Where(i => i.UserId == authenticatedUserId && i.CreatedAt.Date >= startOfLast7Days.Date)
-				.ToListAsync();
-
-			var dateList = Enumerable.Range(0, 7)
-				.Select(offset => startOfLast7Days.AddDays(offset))
-				.Select(date => date.ToString("dd.MM"))
-				.Reverse()
-				.ToList();
-
-			var last7DaysExpenses = allExpenses
-				.GroupBy(e => e.CreatedAt.Date.ToString("dd.MM"))
-				.ToDictionary(group => group.Key, group => group.OrderByDescending(e => e.Amount).FirstOrDefault()?.Amount ?? 0);
-
-			var last7DaysIncomes = allIncomes
-				.GroupBy(i => i.CreatedAt.Date.ToString("dd.MM"))
-				.ToDictionary(group => group.Key, group => group.OrderByDescending(i => i.Amount).FirstOrDefault()?.Amount ?? 0);
-
-			// Sort dictionaries based on dateList order
-			last7DaysExpenses = dateList.ToDictionary(date => date, date => last7DaysExpenses.GetValueOrDefault(date, 0));
-			last7DaysIncomes = dateList.ToDictionary(date => date, date => last7DaysIncomes.GetValueOrDefault(date, 0));
-
-			var response = new
-			{
-				expenses = last7DaysExpenses,
-				incomes = last7DaysIncomes
-			};
-
-			return response;
-		}
-		catch (Exception ex)
-		{
-			logger.LogError($"GetLast7DaysIncomesAndExpensesAsync: An error occurred. Error: {ex.Message}");
-			throw;
-		}
-	}
-
 	public async Task<IActionResult> DeleteAllExpensesAsync(ControllerBase controller)
 	{
 		try

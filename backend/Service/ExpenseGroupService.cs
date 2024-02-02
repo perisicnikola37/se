@@ -114,11 +114,19 @@ public class ExpenseGroupService(DatabaseContext context, IValidator<ExpenseGrou
 			throw;
 		}
 	}
-	public async Task<IActionResult> UpdateExpenseGroupAsync(int id, ExpenseGroup expenseGroup)
+	public async Task<IActionResult> UpdateExpenseGroupAsync(int id, ExpenseGroup expenseGroup, ControllerBase controller)
 	{
 		try
 		{
 			if (id != expenseGroup.Id) return new BadRequestResult();
+
+			var authenticatedUserId = getAuthenticatedUserId.GetUserId(controller.User);
+
+			// Check if authenticatedUserId has a value
+			if (authenticatedUserId.HasValue)
+			{
+				expenseGroup.UserId = authenticatedUserId.Value;
+			}
 
 			context.Entry(expenseGroup).State = EntityState.Modified;
 

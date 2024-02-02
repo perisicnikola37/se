@@ -23,9 +23,9 @@ import { useModal } from "../../contexts/GlobalContext";
 import useDeleteAllObjects from "../../hooks/GlobalHooks/DeleteAllObjectsHook";
 import useObjects from "../../hooks/GlobalHooks/AllObjectsHook";
 import { ObjectGroupInterface } from "../../interfaces/globalInterfaces";
-import IncomeGroupCreateModal from "../Modals/IncomeGroupCreateModal";
-import IncomeGroupEditModal from "../Modals/IncomeGroupEditModal";
 import DeleteObjectGroupModal from "../Modals/DeleteObjectGroupModal";
+import ExpenseGroupCreateModal from "../Modals/ExpenseGroupCreateModal";
+import ExpenseGroupEditModal from "../Modals/ExpenseGroupEditModal";
 
 interface Data {
     id: number;
@@ -65,7 +65,6 @@ function getComparator<Key extends keyof Data>(
         ? (a, b) => descendingComparator(a, b, orderBy)
         : (a, b) => -descendingComparator(a, b, orderBy);
 }
-
 
 function stableSort<T>(
     array: readonly T[],
@@ -129,7 +128,7 @@ interface EnhancedTableProps {
 }
 
 interface EnhancedTablePropsWithData<T> {
-    incomeGroups: T[];
+    expenseGroups: T[];
 }
 
 function EnhancedTableHead(props: EnhancedTableProps) {
@@ -204,8 +203,8 @@ function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
         fetchObjectGroups()
     }, [])
 
-    const handleDeleteAllIncomeGroups = async () => {
-        await deleteAllObjects('income');
+    const handleDeleteAllExpenseGroups = async () => {
+        await deleteAllObjects('expense');
         setActionChanged();
     };
 
@@ -239,18 +238,18 @@ function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
                     id="tableTitle"
                     component="div"
                 >
-                    Income groups
+                    Expense groups
                 </Typography>
             )}
             {numSelected > 0 ? (
                 <Tooltip title="Delete">
                     <IconButton>
-                        <DeleteIcon onClick={handleDeleteAllIncomeGroups} />
+                        <DeleteIcon onClick={handleDeleteAllExpenseGroups} />
                     </IconButton>
                 </Tooltip>
             ) : (
                 <div className="w-[340%] flex justify-end">
-                    <IncomeGroupCreateModal />
+                    <ExpenseGroupCreateModal />
                 </div>
             )}
         </Toolbar>
@@ -282,7 +281,7 @@ function LoadingTableRow() {
     );
 }
 
-function EnhancedTable({ incomeGroups }: EnhancedTablePropsWithData<ObjectGroupInterface>) {
+function EnhancedTable({ expenseGroups }: EnhancedTablePropsWithData<ObjectGroupInterface>) {
     const [order, setOrder] = React.useState<Order>('desc');
     const [orderBy, setOrderBy] = React.useState<keyof Data>('id');
     const [selected, setSelected] = React.useState<readonly number[]>([]);
@@ -292,11 +291,11 @@ function EnhancedTable({ incomeGroups }: EnhancedTablePropsWithData<ObjectGroupI
     const { rowsPerPage, setRowsPerPage } = useObjects();
 
     React.useEffect(() => {
-        const newRows = incomeGroups.map((incomeGroup) =>
+        const newRows = expenseGroups.map((expenseGroup) =>
             createData(
-                incomeGroup.id,
-                incomeGroup.name,
-                incomeGroup.description,
+                expenseGroup.id,
+                expenseGroup.name,
+                expenseGroup.description,
             )
         );
         setRows(newRows);
@@ -306,7 +305,7 @@ function EnhancedTable({ incomeGroups }: EnhancedTablePropsWithData<ObjectGroupI
         }, 1000);
 
         return () => clearTimeout(timeout);
-    }, [incomeGroups]);
+    }, [expenseGroups]);
 
     const [rows, setRows] = React.useState<Data[]>([]);
 
@@ -362,8 +361,6 @@ function EnhancedTable({ incomeGroups }: EnhancedTablePropsWithData<ObjectGroupI
             ? Math.max(0, rowsPerPage - visibleRows.length)
             : rowsPerPage * (Math.max(0, visibleRows.length - page * rowsPerPage));
 
-
-
     return (
         <Box sx={{ width: '100%' }}>
             <Paper sx={{ width: '100%', mb: 2 }}>
@@ -417,11 +414,11 @@ function EnhancedTable({ incomeGroups }: EnhancedTablePropsWithData<ObjectGroupI
                                             {row.description}
                                         </TableCell>
                                         <TableCell align="right">
-                                            <IncomeGroupEditModal id={row.id} objectType={""} />
+                                            <ExpenseGroupEditModal id={row.id} objectType={""} />
                                             <DeleteObjectGroupModal
                                                 id={row.id}
                                                 objectType={
-                                                    'income'
+                                                    'expense'
                                                 }
                                             />
                                         </TableCell>
@@ -442,7 +439,7 @@ function EnhancedTable({ incomeGroups }: EnhancedTablePropsWithData<ObjectGroupI
                 <TablePagination
                     rowsPerPageOptions={[5, 10, 25]}
                     component="div"
-                    count={incomeGroups.length}
+                    count={expenseGroups.length}
                     rowsPerPage={rowsPerPage}
                     page={page}
                     onPageChange={handleChangePage}

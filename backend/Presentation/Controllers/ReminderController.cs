@@ -1,7 +1,6 @@
 using Contracts.Dto.Reminders;
 using Domain.Interfaces;
 using Domain.Models;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
 

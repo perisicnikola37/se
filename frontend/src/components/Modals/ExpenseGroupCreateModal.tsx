@@ -10,9 +10,9 @@ import { Alert } from '@mui/material';
 import { useModal } from '../../contexts/GlobalContext';
 import useCreateObjectGroup from '../../hooks/GlobalHooks/CreateObjectGroup';
 
-const IncomeGroupCreateModal = () => {
+const ExpenseGroupCreateModal = () => {
     const [open, setOpen] = useState(false);
-    const { createObjectGroup, isLoading } = useCreateObjectGroup("income")
+    const { createObjectGroup, isLoading } = useCreateObjectGroup("expense")
     const { setActionChanged } = useModal()
     const [errorMessage, setErrorMessage] = useState("")
 
@@ -24,7 +24,7 @@ const IncomeGroupCreateModal = () => {
         setOpen(false);
     };
 
-    const handleCreateIncomeGroup = async (event: React.FormEvent<HTMLFormElement>) => {
+    const handleCreateExpenseGroup = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         const formData = new FormData(event.currentTarget);
 
@@ -41,12 +41,12 @@ const IncomeGroupCreateModal = () => {
             return;
         }
 
-        const incomeGroupData = {
+        const expenseGroupData = {
             name: nameValue,
             description: descriptionValue,
         };
 
-        await createObjectGroup(incomeGroupData);
+        await createObjectGroup(expenseGroupData);
         setActionChanged();
         handleClose();
     };
@@ -54,17 +54,17 @@ const IncomeGroupCreateModal = () => {
     return (
         <>
             <Button sx={{ marginRight: "10px" }} variant="outlined" onClick={handleClickOpen}>
-                New income group
+                New expense group
             </Button>
             <Dialog
                 open={open}
                 onClose={handleClose}
                 PaperProps={{
                     component: 'form',
-                    onSubmit: handleCreateIncomeGroup,
+                    onSubmit: handleCreateExpenseGroup,
                 }}
             >
-                <DialogTitle>New income group</DialogTitle>
+                <DialogTitle>New expense group</DialogTitle>
                 <DialogContent>
                     <DialogContentText>
                         Enter the details of your new income group below, and we'll help you keep track of your financial success. Your prosperity is our priority!
@@ -109,4 +109,4 @@ const IncomeGroupCreateModal = () => {
     );
 };
 
-export default IncomeGroupCreateModal;
+export default ExpenseGroupCreateModal;

@@ -51,6 +51,8 @@ builder.Services.AddAuthorization(options =>
 builder.Services.AddScoped<IAuthorizationHandler, BlogAuthorizationHandler>();
 builder.Services.AddScoped<IAuthorizationHandler, ExpenseAuthorizationHandler>();
 builder.Services.AddScoped<IAuthorizationHandler, IncomeAuthorizationHandler>();
+builder.Services.AddScoped<IAuthorizationHandler, IncomeGroupAuthorizationHandler>();
+builder.Services.AddScoped<IAuthorizationHandler, ExpenseGroupAuthorizationHandler>();
 
 var connectionString = configuration["DefaultConnection"];
 if (connectionString == null) throw new ArgumentNullException(nameof(connectionString), "DefaultConnection is null");
@@ -102,6 +104,7 @@ builder.Services.AddScoped<IIncomeService, IncomeService>();
 // other entitites
 builder.Services.AddScoped<IBlogService, BlogService>();
 builder.Services.AddScoped<IReminderService, ReminderService>();
+builder.Services.AddScoped<ISummaryService, SummaryService>();
 
 // repositories
 builder.Services.AddScoped<ReminderRepository>();
