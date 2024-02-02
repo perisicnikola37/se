@@ -22,6 +22,7 @@ import Reminders from "./pages/Reminders.tsx";
 import Blogs from "./pages/Blogs.tsx";
 import IncomeGroupDetail from "./pages/IncomeGroupDetail.tsx";
 import ExpenseGroupDetail from "./pages/ExpenseGroupDetail.tsx";
+import ForgotPassword from "./pages/ForgotPassword.tsx";
 
 // const darkTheme = createTheme({
 //     palette: {
@@ -84,6 +85,10 @@ const router = createBrowserRouter([
     {
         path: "/sign-in",
         element: <SignIn />,
+    },
+    {
+        path: "/forgot/password",
+        element: <ForgotPassword />,
     },
 ]);
 
