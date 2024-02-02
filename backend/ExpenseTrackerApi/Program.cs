@@ -3,7 +3,6 @@ using DinkToPdf.Contracts;
 using Domain.Interfaces;
 using Domain.Models;
 using Domain.Validators;
-using ExpenseTrackerApi;
 using ExpenseTrackerApi.conf;
 using ExpenseTrackerApi.Handlers;
 using ExpenseTrackerApi.Middlewares;
@@ -14,7 +13,6 @@ using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using Persistence;
-using Presentation;
 using Service;
 
 var builder = WebApplication.CreateBuilder(args);

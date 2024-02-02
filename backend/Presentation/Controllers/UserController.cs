@@ -90,25 +90,6 @@ public class UserController(DatabaseContext context, IEmailService emailService,
 		return NoContent();
 	}
 
-	// POST: api/User/SendEmail
-	// [HttpPost("email/send")]
-	// public async Task<IActionResult> SendEmail([FromBody] EmailRequestDto emailRequest)
-	// {
-	//     try
-	//     {
-	//         var isEmailSent = await emailService.SendEmail(emailRequest, "subject", "body");
-
-	//         if (isEmailSent)
-	//             return Ok("Email sent successfully");
-	//         return BadRequest("Failed to send email");
-	//     }
-	//     catch (Exception e)
-	//     {
-	//         Console.WriteLine(e);
-	//         throw;
-	//     }
-	// }
-
 
 	[HttpPost("email/send")]
 	public async Task<IActionResult> SendEmail([FromBody] EmailRequestDto emailRequest)
@@ -134,7 +115,7 @@ public class UserController(DatabaseContext context, IEmailService emailService,
         <html dir=""ltr"" lang=""en"">
           <head>
             <meta content=""text/html; charset=UTF-8"" http-equiv=""Content-Type"" />
-            <link href=""https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"" rel=""stylesheet"">
+            <link href=""https://cdn.jsdelivr.net/npm/tailwindcss@3.4.1/base.min.css"" rel=""stylesheet"">
           </head>
           <div style=""display:none;overflow:hidden;line-height:1px;opacity:0;max-height:0;max-width:0"">Your login code for Linear<div></div>
           </div>
@@ -174,9 +155,6 @@ public class UserController(DatabaseContext context, IEmailService emailService,
 			throw;
 		}
 	}
-
-
-
 
 	private bool UserExists(int id)
 	{

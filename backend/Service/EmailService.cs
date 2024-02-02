@@ -44,7 +44,6 @@ public class EmailService(IConfiguration configuration) : IEmailService
 		}
 	}
 
-
 	public async Task<bool> SendEmailWithAttachment(EmailRequestDto emailRequest, string subject, string body, string attachmentFileName, byte[] attachmentContent, string attachmentContentType)
 	{
 		try

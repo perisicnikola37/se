@@ -21,14 +21,14 @@ import { visuallyHidden } from "@mui/utils";
 import Skeleton from "@mui/material/Skeleton";
 import { IncomeInterface } from "../../interfaces/globalInterfaces";
 import DeleteModal from "../Modals/DeleteModal";
-import { Autocomplete, Chip, Popover, TextField } from "@mui/material";
+import { Autocomplete, Button, Chip, Popover, TextField } from "@mui/material";
 import useObjectGroups from "../../hooks/GlobalHooks/GetObjectsHook";
 import { useModal } from "../../contexts/GlobalContext";
 import useDeleteAllObjects from "../../hooks/GlobalHooks/DeleteAllObjectsHook";
 import useObjects from "../../hooks/GlobalHooks/AllObjectsHook";
 import IncomeCreateModal from "../Modals/IncomeCreateModal";
 import IncomeEditModal from "../Modals/IncomeEditModal";
-
+import SendIcon from '@mui/icons-material/Send';
 interface Data {
     id: number;
     description: string;
@@ -524,7 +524,9 @@ function EnhancedTable({ incomes }: EnhancedTablePropsWithData<IncomeInterface>)
             ? Math.max(0, rowsPerPage - visibleRows.length)
             : rowsPerPage * (Math.max(0, totalRecords - page * rowsPerPage));
 
-
+    const handleExport = () => {
+        alert('dwdd')
+    }
 
     return (
         <Box sx={{ width: '100%' }}>
@@ -614,17 +616,22 @@ function EnhancedTable({ incomes }: EnhancedTablePropsWithData<IncomeInterface>)
                         </TableBody>
                     </Table>
                 </TableContainer>
-                <TablePagination
-                    rowsPerPageOptions={[5, 10, 25]}
-                    component="div"
-                    count={totalRecords}
-                    rowsPerPage={rowsPerPage}
-                    page={page}
-                    onPageChange={handleChangePage}
-                    onRowsPerPageChange={
-                        handleChangeRowsPerPage
-                    }
-                />
+                <div className="flex justify-between">
+                    <Button onClick={handleExport} variant="contained" size="small" sx={{ margin: "10px", fontSize: "12px", background: "#3C70ED" }} endIcon={<SendIcon />}>
+                        Export to email
+                    </Button>
+                    <TablePagination
+                        rowsPerPageOptions={[5, 10, 25]}
+                        component="div"
+                        count={totalRecords}
+                        rowsPerPage={rowsPerPage}
+                        page={page}
+                        onPageChange={handleChangePage}
+                        onRowsPerPageChange={
+                            handleChangeRowsPerPage
+                        }
+                    />
+                </div>
             </Paper>
         </Box >
     );
