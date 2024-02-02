@@ -13,15 +13,15 @@ import useGetObjectById from '../../hooks/GlobalHooks/GetObjectHook';
 import useEditObject from '../../hooks/GlobalHooks/EditObjectHook';
 import Swal from 'sweetalert2';
 
-const NewFormModal = ({ id }: { id: number; objectType: string }) => {
-    const { fetchObjectGroups, objectGroups } = useObjectGroups('income');
+const ExpenseEditModal = ({ id }: { id: number; objectType: string }) => {
+    const { fetchObjectGroups, objectGroups } = useObjectGroups('expense');
     const [open, setOpen] = useState(false);
     const { isLoading, editObject } = useEditObject();
     const { setActionChanged, actionChange } = useModal();
     const [errorMessage, setErrorMessage] = useState("");
-    const [selectedIncomeGroup, setSelectedIncomeGroup] = useState("");
+    const [selectedExpenseGroup, setSelectedExpenseGroup] = useState("");
 
-    const { getObjectById, object } = useGetObjectById(id, 'income');
+    const { getObjectById, object } = useGetObjectById(id, 'expense');
 
     type ObjectGroup = {
         id: number;
@@ -34,7 +34,7 @@ const NewFormModal = ({ id }: { id: number; objectType: string }) => {
 
     useEffect(() => {
         if (object) {
-            setSelectedIncomeGroup(String(object.incomeGroupId));
+            setSelectedExpenseGroup(String(object.expenseGroupId));
         }
     }, [object]);
 
@@ -50,7 +50,7 @@ const NewFormModal = ({ id }: { id: number; objectType: string }) => {
         fetchObjectGroups();
     };
 
-    const handleCreateIncome = async (event: React.FormEvent<HTMLFormElement>) => {
+    const handleCreateExpense = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         const formData = new FormData(event.currentTarget);
 
@@ -79,14 +79,14 @@ const NewFormModal = ({ id }: { id: number; objectType: string }) => {
 
         const amount = parseFloat(amountValue);
 
-        const incomeData = {
+        const expenseData = {
             id: id,
             description: descriptionValue,
             amount,
-            incomeGroupId: Number(selectedIncomeGroup),
+            expenseGroupId: Number(selectedExpenseGroup),
         };
 
-        await editObject(id, "income", incomeData);
+        await editObject(id, "expense", expenseData);
         setActionChanged();
         handleClose();
 
@@ -104,26 +104,26 @@ const NewFormModal = ({ id }: { id: number; objectType: string }) => {
         _event: React.SyntheticEvent<Element, Event>,
         newValue: ObjectGroup | null
     ) => {
-        setSelectedIncomeGroup(newValue?.id.toString() || "");
+        setSelectedExpenseGroup(newValue?.id.toString() || "");
     };
 
     return (
         <>
             <Button className='_add_object' sx={{ marginRight: "10px" }} variant="outlined" onClick={handleClickOpen}>
-                Edit income
+                Edit expense
             </Button>
             <Dialog
                 open={open}
                 onClose={handleClose}
                 PaperProps={{
                     component: 'form',
-                    onSubmit: handleCreateIncome,
+                    onSubmit: handleCreateExpense,
                 }}
             >
-                <DialogTitle>Edit income</DialogTitle>
+                <DialogTitle>Edit expense</DialogTitle>
                 <DialogContent>
                     <DialogContentText>
-                        Enter the details of your updated income below, and we'll help you keep track of your financial success. Your prosperity is our priority!
+                        Enter the details of your updated expense below, and we'll help you keep track of your financial success. Your prosperity is our priority!
                     </DialogContentText>
                     {errorMessage && (
                         <>
@@ -138,7 +138,7 @@ const NewFormModal = ({ id }: { id: number; objectType: string }) => {
                         margin="dense"
                         id="description"
                         name="description"
-                        label="Income description"
+                        label="Expense description"
                         type="text"
                         fullWidth
                         variant="standard"
@@ -170,11 +170,11 @@ const NewFormModal = ({ id }: { id: number; objectType: string }) => {
                         renderInput={(params) => (
                             <TextField
                                 {...params}
-                                label="Income group"
+                                label="Expense group"
                                 required
                             />
                         )}
-                        value={objectGroups.find(group => group.id === Number(selectedIncomeGroup))}
+                        value={objectGroups.find(group => group.id === Number(selectedExpenseGroup))}
                         onChange={handleAutocompleteChange}
                     />
 
@@ -188,6 +188,6 @@ const NewFormModal = ({ id }: { id: number; objectType: string }) => {
     );
 };
 
-export default NewFormModal;
+export default ExpenseEditModal;
 
 

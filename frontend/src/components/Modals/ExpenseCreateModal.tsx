@@ -11,13 +11,13 @@ import useCreateObject from '../../hooks/GlobalHooks/CreateObjectHook';
 import { useModal } from '../../contexts/GlobalContext';
 import useObjectGroups from '../../hooks/GlobalHooks/GetObjectsHook';
 
-const NewFormModal = () => {
-    const { fetchObjectGroups, objectGroups } = useObjectGroups('income');
+const ExpenseCreateModal = () => {
+    const { fetchObjectGroups, objectGroups } = useObjectGroups('expense');
     const [open, setOpen] = useState(false);
-    const { isLoading, createObject } = useCreateObject('income');
+    const { isLoading, createObject } = useCreateObject('expense');
     const { setActionChanged } = useModal()
     const [errorMessage, setErrorMessage] = useState("")
-    const [selectedIncomeGroup, setSelectedIncomeGroup] = useState("");
+    const [selectedExpenseGroup, setSelectedExpenseGroup] = useState("");
 
     const handleClickOpen = () => {
         setOpen(true);
@@ -31,7 +31,7 @@ const NewFormModal = () => {
         fetchObjectGroups();
     };
 
-    const handleCreateIncome = async (event: React.FormEvent<HTMLFormElement>) => {
+    const handleCreateExpense = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         const formData = new FormData(event.currentTarget);
 
@@ -60,13 +60,13 @@ const NewFormModal = () => {
 
         const amount = parseFloat(amountValue);
 
-        const incomeData = {
+        const expenseData = {
             description: descriptionValue,
             amount,
-            incomeGroupId: Number(selectedIncomeGroup),
+            expenseGroupId: Number(selectedExpenseGroup),
         };
 
-        await createObject(incomeData);
+        await createObject(expenseData);
         setActionChanged();
         handleClose();
     };
@@ -74,20 +74,20 @@ const NewFormModal = () => {
     return (
         <>
             <Button sx={{ marginRight: "10px" }} variant="outlined" onClick={handleClickOpen}>
-                New income
+                New expense
             </Button>
             <Dialog
                 open={open}
                 onClose={handleClose}
                 PaperProps={{
                     component: 'form',
-                    onSubmit: handleCreateIncome,
+                    onSubmit: handleCreateExpense,
                 }}
             >
-                <DialogTitle>New income</DialogTitle>
+                <DialogTitle>New expense</DialogTitle>
                 <DialogContent>
                     <DialogContentText>
-                        Enter the details of your new income below, and we'll help you keep track of your financial success. Your prosperity is our priority!
+                        Enter the details of your new expense below, and we'll help you keep track of your financial success. Your prosperity is our priority!
                     </DialogContentText>
                     {errorMessage && (
                         <>
@@ -102,7 +102,7 @@ const NewFormModal = () => {
                         margin="dense"
                         id="description"
                         name="description"
-                        label="Income description"
+                        label="Expense description"
                         type="text"
                         fullWidth
                         variant="standard"
@@ -132,12 +132,12 @@ const NewFormModal = () => {
                         renderInput={(params) => (
                             <TextField
                                 {...params}
-                                label="Income group"
+                                label="Expense group"
                                 required
                             />
                         )}
-                        value={objectGroups.find(group => group.id === Number(selectedIncomeGroup))}
-                        onChange={(_, newValue) => setSelectedIncomeGroup((newValue?.id || "") as string)}
+                        value={objectGroups.find(group => group.id === Number(selectedExpenseGroup))}
+                        onChange={(_, newValue) => setSelectedExpenseGroup((newValue?.id || "") as string)}
                     />
                 </DialogContent>
                 <DialogActions className="m-2">
@@ -149,4 +149,4 @@ const NewFormModal = () => {
     );
 };
 
-export default NewFormModal;
+export default ExpenseCreateModal;

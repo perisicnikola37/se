@@ -4,7 +4,8 @@ import axiosConfig from '../../config/axiosConfig';
 type ObjectType = {
     description: string;
     amount: number;
-    incomeGroupId: number;
+    incomeGroupId?: number;
+    expenseGroupId?: number;
 };
 
 const fetchObjectById = async (objectId: number, objectType: string, setObject: (data: ObjectType | null) => void, setIsLoading: (loading: boolean) => void, setError: (error: string | null) => void) => {

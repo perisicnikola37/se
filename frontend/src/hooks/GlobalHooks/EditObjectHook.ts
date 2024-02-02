@@ -5,7 +5,8 @@ type UpdatedData = {
     id: number;
     description: string;
     amount: number;
-    incomeGroupId: number;
+    incomeGroupId?: number;
+    expenseGroupId?: number;
 };
 
 const useEditObject = () => {

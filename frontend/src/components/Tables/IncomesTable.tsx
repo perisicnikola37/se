@@ -22,12 +22,12 @@ import Skeleton from "@mui/material/Skeleton";
 import { IncomeInterface } from "../../interfaces/globalInterfaces";
 import DeleteModal from "../Modals/DeleteModal";
 import { Autocomplete, Popover, TextField } from "@mui/material";
-import NewFormModal from "../Modals/NewFormModal";
-import EditModal from "../Modals/EditModal";
 import useObjectGroups from "../../hooks/GlobalHooks/GetObjectsHook";
 import { useModal } from "../../contexts/GlobalContext";
 import useDeleteAllObjects from "../../hooks/GlobalHooks/DeleteAllObjectsHook";
 import useObjects from "../../hooks/GlobalHooks/AllObjectsHook";
+import IncomeCreateModal from "../Modals/IncomeCreateModal";
+import IncomeEditModal from "../Modals/IncomeEditModal";
 
 interface Data {
     id: number;
@@ -313,7 +313,7 @@ function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
                 </Tooltip>
             ) : (
                 <div className="w-[340%] flex justify-end">
-                    <NewFormModal />
+                    <IncomeCreateModal />
                     <div>
                         <label htmlFor="default-search" className="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">
                             Search
@@ -592,7 +592,7 @@ function EnhancedTable({ incomes }: EnhancedTablePropsWithData) {
                                             {row.incomeGroup}
                                         </TableCell>
                                         <TableCell align="right">
-                                            <EditModal id={row.id} objectType={""} />
+                                            <IncomeEditModal id={row.id} objectType={""} />
                                             <DeleteModal
                                                 id={row.id}
                                                 objectType={
