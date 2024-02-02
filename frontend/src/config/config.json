@@ -106,7 +106,7 @@
                 "url": "/contact"
             }
         ],
-        "settings": ["Profile", "Logout"],
+        "settings": ["Profile", "Log out"],
         "policyText": "We use cookies to enhance your experience. By using our website, you agree to our ",
         "privacyPolicy": "Privacy Policy",
         "acceptButton": "Accept"

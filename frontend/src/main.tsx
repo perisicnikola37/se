@@ -6,7 +6,6 @@ import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import SignUp from "./pages/SignUp.tsx";
 import SignIn from "./pages/SignIn.tsx";
 import Dashboard from "./pages/Dashboard.tsx";
-import Blog from "./pages/Blog.tsx";
 // import { ThemeProvider } from "@mui/material/styles";
 // import CssBaseline from "@mui/material/CssBaseline";
 // import Cookies from "js-cookie";
@@ -19,6 +18,8 @@ import { UserProvider } from "./contexts/UserContext.tsx";
 import { ModalProvider } from "./contexts/GlobalContext.tsx";
 import IncomeGroups from "./pages/IncomeGroups.tsx";
 import ExpenseGroups from "./pages/ExpenseGroups.tsx";
+import Reminders from "./pages/Reminders.tsx";
+import Blogs from "./pages/Blogs.tsx";
 
 // const darkTheme = createTheme({
 //     palette: {
@@ -60,7 +61,8 @@ const router = createBrowserRouter([
             { path: "incomes/groups", element: <IncomeGroups /> },
             { path: "expenses", element: <Expenses /> },
             { path: "expenses/groups", element: <ExpenseGroups /> },
-            { path: "blogs", element: <Blog /> },
+            { path: "blogs", element: <Blogs /> },
+            { path: "reminders", element: <Reminders /> },
             {
                 path: "*",
                 element: <NotFoundPage />,

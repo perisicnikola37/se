@@ -24,10 +24,10 @@ public class IncomeGroupController(IIncomeGroupService incomeGroupService) : Con
 	}
 
 	[HttpPut("{id}")]
-	[Authorize("IncomeGroupOwnerPolicy")]
+	// [Authorize("IncomeGroupOwnerPolicy")]
 	public async Task<IActionResult> PutIncomeGroupAsync(int id, IncomeGroup incomeGroup)
 	{
-		return await incomeGroupService.UpdateIncomeGroupAsync(id, incomeGroup);
+		return await incomeGroupService.UpdateIncomeGroupAsync(id, incomeGroup, this);
 	}
 
 	[HttpPost]
@@ -37,7 +37,7 @@ public class IncomeGroupController(IIncomeGroupService incomeGroupService) : Con
 	}
 
 	[HttpDelete("{id}")]
-	[Authorize("IncomeGroupOwnerPolicy")]
+	// [Authorize("IncomeGroupOwnerPolicy")]
 	public async Task<IActionResult> DeleteIncomeGroupByIdAsync(int id)
 	{
 		return await incomeGroupService.DeleteIncomeGroupByIdAsync(id);

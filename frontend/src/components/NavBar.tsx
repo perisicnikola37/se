@@ -27,14 +27,12 @@ const NavBar = () => {
     );
 
     const handleLogout = () => {
+        localStorage.removeItem('id');
         localStorage.removeItem('username');
         localStorage.removeItem('email');
         localStorage.removeItem('accountType');
-        localStorage.removeItem('cookieConsent');
-        localStorage.removeItem('id');
         localStorage.removeItem('token');
         localStorage.removeItem('formattedCreatedAt');
-
 
         navigate("/sign-in");
     };
@@ -232,6 +230,16 @@ const NavBar = () => {
                                         </Typography>
                                     </MenuItem>
                                 ))}
+                                {/* only visible to "Administrators" */}
+
+                                <MenuItem
+                                    sx={{ width: "200px", marginLeft: "10px" }}
+                                >
+                                    <NavLink to="reminders">
+                                        Reminders
+                                    </NavLink>
+                                </MenuItem>
+
                             </Menu>
                         </Box>)}
 

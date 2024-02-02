@@ -20,7 +20,7 @@ import FilterListIcon from "@mui/icons-material/FilterList";
 import { visuallyHidden } from "@mui/utils";
 import Skeleton from "@mui/material/Skeleton";
 import DeleteModal from "../Modals/DeleteModal";
-import { Autocomplete, Popover, TextField } from "@mui/material";
+import { Autocomplete, Chip, Popover, TextField } from "@mui/material";
 import useObjectGroups from "../../hooks/GlobalHooks/GetObjectsHook";
 import { useModal } from "../../contexts/GlobalContext";
 import useDeleteAllObjects from "../../hooks/GlobalHooks/DeleteAllObjectsHook";
@@ -585,7 +585,7 @@ function EnhancedTable({ expenses }: EnhancedTablePropsWithData<ExpenseInterface
                                             {row.description}
                                         </TableCell>
                                         <TableCell align="right">
-                                            {row.amount}
+                                            <Chip size="small" label={`$${row.amount}`} sx={{ background: "#e1243e", color: "#fff" }} />
                                         </TableCell>
                                         <TableCell align="right">
                                             {row.expenseGroup}

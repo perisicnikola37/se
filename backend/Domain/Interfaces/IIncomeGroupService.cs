@@ -8,7 +8,7 @@ namespace Domain.Interfaces
         Task<IEnumerable<object>> GetIncomeGroupsAsync(ControllerBase controller);
         Task<ActionResult<IncomeGroup>> GetIncomeGroupAsync(int id);
         Task<ActionResult<IncomeGroup>> CreateIncomeGroupAsync(IncomeGroup incomeGroup, ControllerBase controller);
-        Task<IActionResult> UpdateIncomeGroupAsync(int id, IncomeGroup incomeGroup);
+        Task<IActionResult> UpdateIncomeGroupAsync(int id, IncomeGroup incomeGroup, ControllerBase controller);
         Task<IActionResult> DeleteIncomeGroupByIdAsync(int id);
     }
 }

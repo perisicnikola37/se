@@ -94,12 +94,13 @@ public class ExpenseService(
 			var authenticatedUserId = getAuthenticatedUserId.GetUserId(controller.User);
 
 			var highestExpense = await context.Expenses
-							.Where(i => i.CreatedAt >= DateTime.UtcNow.AddDays(-7))
+						 	.Where(i => i.CreatedAt >= DateTime.UtcNow.AddDays(-7) && i.UserId == authenticatedUserId)
 							.OrderByDescending(i => i.Amount)
 							.Select(i => i.Amount)
 							.FirstOrDefaultAsync();
 
 			var latestExpenses = await context.Expenses
+				.Where(i => i.UserId == authenticatedUserId)
 				.Include(e => e.ExpenseGroup)
 				.OrderByDescending(e => e.CreatedAt)
 				.Take(5)

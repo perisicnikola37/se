@@ -4,6 +4,7 @@ using Domain.Models;
 using FluentValidation;
 using Infrastructure.Contexts;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
@@ -116,11 +117,19 @@ public class IncomeGroupService(DatabaseContext context, IValidator<IncomeGroup>
 		}
 	}
 
-	public async Task<IActionResult> UpdateIncomeGroupAsync(int id, IncomeGroup incomeGroup)
+	public async Task<IActionResult> UpdateIncomeGroupAsync(int id, IncomeGroup incomeGroup, ControllerBase controller)
 	{
 		try
 		{
 			if (id != incomeGroup.Id) return new BadRequestResult();
+
+			var authenticatedUserId = getAuthenticatedUserId.GetUserId(controller.User);
+
+			// Check if authenticatedUserId has a value
+			if (authenticatedUserId.HasValue)
+			{
+				incomeGroup.UserId = authenticatedUserId.Value;
+			}
 
 			context.Entry(incomeGroup).State = EntityState.Modified;
 

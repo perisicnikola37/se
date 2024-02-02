@@ -42,3 +42,21 @@ export interface ExpenseInterface {
         username: string;
     } | null;
 }
+
+
+export interface SimplifiedObjectInterface {
+    id: number;
+    description: string;
+    amount: number;
+    createdAt: string;
+    incomeGroupId: number;
+    userId: number;
+    userUsername: string;
+}
+
+export interface ObjectGroupInterface {
+    id: number;
+    name: string;
+    description: string;
+    incomes: SimplifiedObjectInterface[] | null;
+}

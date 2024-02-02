@@ -16,39 +16,34 @@ import Checkbox from "@mui/material/Checkbox";
 import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
 import DeleteIcon from "@mui/icons-material/Delete";
-import FilterListIcon from "@mui/icons-material/FilterList";
 import { visuallyHidden } from "@mui/utils";
 import Skeleton from "@mui/material/Skeleton";
-import { IncomeInterface } from "../../interfaces/globalInterfaces";
-import DeleteModal from "../Modals/DeleteModal";
-import { Autocomplete, Chip, Popover, TextField } from "@mui/material";
 import useObjectGroups from "../../hooks/GlobalHooks/GetObjectsHook";
 import { useModal } from "../../contexts/GlobalContext";
 import useDeleteAllObjects from "../../hooks/GlobalHooks/DeleteAllObjectsHook";
 import useObjects from "../../hooks/GlobalHooks/AllObjectsHook";
-import IncomeCreateModal from "../Modals/IncomeCreateModal";
-import IncomeEditModal from "../Modals/IncomeEditModal";
+import { ObjectGroupInterface } from "../../interfaces/globalInterfaces";
+import IncomeGroupCreateModal from "../Modals/IncomeGroupCreateModal";
+import IncomeGroupEditModal from "../Modals/IncomeGroupEditModal";
+import DeleteObjectGroupModal from "../Modals/DeleteObjectGroupModal";
 
 interface Data {
     id: number;
+    name: string;
     description: string;
-    amount: number;
-    incomeGroup: string;
 }
 
 type Order = "asc" | "desc";
 
 function createData(
     id: number,
+    name: string,
     description: string,
-    amount: number,
-    incomeGroup: string
 ): Data {
     return {
         id,
+        name,
         description,
-        amount,
-        incomeGroup,
     };
 }
 
@@ -102,25 +97,19 @@ const headCells: readonly HeadCell[] = [
         label: "ID",
     },
     {
+        id: "name",
+        numeric: true,
+        disablePadding: false,
+        label: "Name",
+    },
+    {
         id: "description",
         numeric: true,
         disablePadding: false,
         label: "Description",
     },
     {
-        id: "amount",
-        numeric: true,
-        disablePadding: false,
-        label: "Amount",
-    },
-    {
-        id: "incomeGroup",
-        numeric: true,
-        disablePadding: false,
-        label: "Income group",
-    },
-    {
-        id: "incomeGroup",
+        id: "description",
         numeric: true,
         disablePadding: false,
         label: "Actions",
@@ -140,8 +129,7 @@ interface EnhancedTableProps {
 }
 
 interface EnhancedTablePropsWithData<T> {
-    incomes: T[];
-    rowsPerPage: number;
+    incomeGroups: T[];
 }
 
 function EnhancedTableHead(props: EnhancedTableProps) {
@@ -206,71 +194,20 @@ interface EnhancedTableToolbarProps {
     numSelected: number;
 }
 
-interface ObjectGroup {
-    id: number;
-    name: string;
-}
-
 function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
     const { numSelected } = props;
-    const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null);
-    const [minAmount, setMinAmount] = React.useState<number | null>(null);
-    const [maxAmount, setMaxAmount] = React.useState<number | null>(null);
-    const [selectedIncomeGroup, setSelectedIncomeGroup] = React.useState<string>('');
-    const { fetchObjectGroups, objectGroups } = useObjectGroups('income');
-    const { setActionChanged, setAppliedFilters, getAppliedFilters } = useModal()
-    const [searchTerm, setSearchTerm] = React.useState('');
+    const { fetchObjectGroups } = useObjectGroups('income');
+    const { setActionChanged } = useModal()
     const { deleteAllObjects } = useDeleteAllObjects()
-
-    const handleMinAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const newMinAmount = Number(e.target.value) || null;
-        setMinAmount(newMinAmount);
-        setActionChanged();
-        setAppliedFilters({ ...getAppliedFilters(), minAmount: newMinAmount });
-    };
-
-    const handleMaxAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const newMaxAmount = Number(e.target.value) || null;
-        setMaxAmount(newMaxAmount);
-        setActionChanged();
-        setAppliedFilters({ ...getAppliedFilters(), maxAmount: newMaxAmount });
-    }
-
-    const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const newSearchTerm = event.target.value;
-        setSearchTerm(newSearchTerm);
-
-        setTimeout(() => {
-            setActionChanged();
-            setAppliedFilters({ ...getAppliedFilters(), description: newSearchTerm });
-        }, 0);
-    };
 
     React.useEffect(() => {
         fetchObjectGroups()
     }, [])
 
-    const handleClick = (event: React.MouseEvent<HTMLElement>) => {
-        setAnchorEl(event.currentTarget);
-    };
-
-    const handleClose = () => {
-        setAnchorEl(null);
-    };
-
-    const handleIncomeGroupChange = (_event: React.ChangeEvent<unknown>, newValue: ObjectGroup | null) => {
-        setSelectedIncomeGroup((newValue?.id || '') as string);
-        setActionChanged();
-        setAppliedFilters({ ...getAppliedFilters(), incomeGroupId: (newValue?.id || '') as string });
-    };
-
     const handleDeleteAllIncomes = async () => {
         await deleteAllObjects('income');
         setActionChanged();
     };
-
-    const open = Boolean(anchorEl);
-    const id = open ? 'simple-popover' : undefined;
 
     return (
         <Toolbar
@@ -302,7 +239,7 @@ function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
                     id="tableTitle"
                     component="div"
                 >
-                    Incomes
+                    Income groups
                 </Typography>
             )}
             {numSelected > 0 ? (
@@ -313,96 +250,7 @@ function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
                 </Tooltip>
             ) : (
                 <div className="w-[340%] flex justify-end">
-                    <IncomeCreateModal />
-                    <div>
-                        <label htmlFor="default-search" className="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">
-                            Search
-                        </label>
-                        <div className="relative">
-                            <div className="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
-                                <svg
-                                    className="w-4 h-4 text-gray-500 dark:text-gray-400"
-                                    aria-hidden="true"
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    fill="none"
-                                    viewBox="0 0 20 20"
-                                >
-                                    <path
-                                        stroke="currentColor"
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        strokeWidth="2"
-                                        d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
-                                    />
-                                </svg>
-                            </div>
-                            <input
-                                type="search"
-                                id="default-search"
-                                className="block w-full p-4 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg outline-none "
-                                placeholder="Search..."
-                                required
-                                value={searchTerm}
-                                onChange={handleSearchChange}
-                            />
-                        </div>
-                    </div>
-
-                    <div>
-                        <Tooltip title="Filter list">
-                            <IconButton onClick={handleClick}>
-                                <FilterListIcon />
-                            </IconButton>
-                        </Tooltip>
-
-                        <Popover
-                            id={id}
-                            open={open}
-                            anchorEl={anchorEl}
-                            onClose={handleClose}
-                            anchorOrigin={{
-                                vertical: 'bottom',
-                                horizontal: 'right',
-                            }}
-                            transformOrigin={{
-                                vertical: 'top',
-                                horizontal: 'right',
-                            }}
-                        >
-                            <div className="p-3">
-                                <TextField
-                                    label="Min Amount"
-                                    type="number"
-                                    variant="standard"
-                                    value={minAmount || ''}
-                                    onChange={handleMinAmountChange}
-                                />
-                            </div>
-                            <div className="p-3">
-                                <TextField
-                                    label="Max Amount"
-                                    type="number"
-                                    variant="standard"
-                                    value={maxAmount || ''}
-                                    onChange={handleMaxAmountChange}
-                                />
-                            </div>
-                            <Autocomplete
-                                style={{ padding: "10px" }}
-                                // onOpen={handleAutocompleteOpen}
-                                options={objectGroups}
-                                getOptionLabel={(option) => option.name}
-                                sx={{ width: '100%', marginTop: '20px' }}
-                                renderInput={(params) => (
-                                    <TextField {...params} label="Income group" required />
-                                )}
-                                value={objectGroups.find((group) => group.id === Number(selectedIncomeGroup))}
-                                onChange={handleIncomeGroupChange}
-                            />
-                        </Popover>
-                    </div>
-
-
+                    <IncomeGroupCreateModal />
                 </div>
             )}
         </Toolbar>
@@ -434,24 +282,21 @@ function LoadingTableRow() {
     );
 }
 
-function EnhancedTable({ incomes }: EnhancedTablePropsWithData<IncomeInterface>) {
+function EnhancedTable({ incomeGroups }: EnhancedTablePropsWithData<ObjectGroupInterface>) {
     const [order, setOrder] = React.useState<Order>('desc');
     const [orderBy, setOrderBy] = React.useState<keyof Data>('id');
     const [selected, setSelected] = React.useState<readonly number[]>([]);
     const [page, setPage] = React.useState(0);
     const [dense] = React.useState(false);
     const [loading, setLoading] = React.useState(true);
-    const { setActionChanged } = useModal()
     const { rowsPerPage, setRowsPerPage } = useObjects();
-    const { getAppliedFilters, setAppliedFilters, totalRecords } = useModal()
 
     React.useEffect(() => {
-        const newRows = incomes.map((income) =>
+        const newRows = incomeGroups.map((incomeGroup) =>
             createData(
-                income.id,
-                income.description,
-                income.amount,
-                income.incomeGroup?.name ?? ''
+                incomeGroup.id,
+                incomeGroup.name,
+                incomeGroup.description,
             )
         );
         setRows(newRows);
@@ -461,7 +306,7 @@ function EnhancedTable({ incomes }: EnhancedTablePropsWithData<IncomeInterface>)
         }, 1000);
 
         return () => clearTimeout(timeout);
-    }, [incomes]);
+    }, [incomeGroups]);
 
     const [rows, setRows] = React.useState<Data[]>([]);
 
@@ -495,34 +340,27 @@ function EnhancedTable({ incomes }: EnhancedTablePropsWithData<IncomeInterface>)
 
     const handleChangePage = (_event: unknown, newPage: number) => {
         setPage(newPage);
-        setAppliedFilters({
-            ...getAppliedFilters(),
-            pageNumber: newPage + 1,
-        });
-        setActionChanged();
     };
 
     const handleChangeRowsPerPage = (
         event: React.ChangeEvent<HTMLInputElement>
     ) => {
         setRowsPerPage(parseInt(event.target.value));
-        setAppliedFilters({ ...getAppliedFilters(), pageSize: parseInt(event.target.value) });
-        setActionChanged()
         setPage(0);
     };
 
     const isSelected = (id: number) => selected.indexOf(id) !== -1;
     const visibleRows = React.useMemo(() => {
         return stableSort(rows, getComparator(order, orderBy)).slice(
-            // page * rowsPerPage,
-            // page * rowsPerPage + rowsPerPage
+            page * rowsPerPage,
+            page * rowsPerPage + rowsPerPage
         );
     }, [rows, order, orderBy, page, rowsPerPage]);
 
     const emptyRows =
-        totalRecords > 0
+        visibleRows.length > 0
             ? Math.max(0, rowsPerPage - visibleRows.length)
-            : rowsPerPage * (Math.max(0, totalRecords - page * rowsPerPage));
+            : rowsPerPage * (Math.max(0, visibleRows.length - page * rowsPerPage));
 
 
 
@@ -583,17 +421,14 @@ function EnhancedTable({ incomes }: EnhancedTablePropsWithData<IncomeInterface>)
                                             {row.id}
                                         </TableCell>
                                         <TableCell align="right">
+                                            {row.name}
+                                        </TableCell>
+                                        <TableCell align="right">
                                             {row.description}
                                         </TableCell>
                                         <TableCell align="right">
-                                            <Chip size="small" label={`$${row.amount}`} sx={{ background: "#5dc983", color: "#fff" }} />
-                                        </TableCell>
-                                        <TableCell align="right">
-                                            {row.incomeGroup}
-                                        </TableCell>
-                                        <TableCell align="right">
-                                            <IncomeEditModal id={row.id} objectType={""} />
-                                            <DeleteModal
+                                            <IncomeGroupEditModal id={row.id} objectType={""} />
+                                            <DeleteObjectGroupModal
                                                 id={row.id}
                                                 objectType={
                                                     'income'
@@ -617,7 +452,7 @@ function EnhancedTable({ incomes }: EnhancedTablePropsWithData<IncomeInterface>)
                 <TablePagination
                     rowsPerPageOptions={[5, 10, 25]}
                     component="div"
-                    count={totalRecords}
+                    count={incomeGroups.length}
                     rowsPerPage={rowsPerPage}
                     page={page}
                     onPageChange={handleChangePage}
