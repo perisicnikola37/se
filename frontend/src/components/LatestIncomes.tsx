@@ -53,7 +53,7 @@ const LatestIncomes = () => {
 
     return (
         <>
-            {incomes.length > 1 ? (
+            {incomes.length > 1 && (
                 <>
                     <Slider
                         ref={slider}
@@ -106,8 +106,6 @@ const LatestIncomes = () => {
                         Next <EastSharpIcon onClick={() => slider?.current?.slickNext()} />
                     </button>
                 </>
-            ) : (
-                <p>sss</p>
             )}
         </>
     );

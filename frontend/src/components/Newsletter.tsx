@@ -1,29 +1,11 @@
-import Swal from 'sweetalert2';
+import useMailchimpSubscribe from "../hooks/ThirdPartyServices/MailchimpSubscribeHook";
 
 const Newsletter = () => {
+    const { subscribeToMailchimp } = useMailchimpSubscribe()
+
     const toggleAlert = () => {
-        let timerInterval: number;
-        Swal.fire({
-            title: 'Not implemented yet!',
-            timer: 2000,
-            timerProgressBar: true,
-            didOpen: () => {
-                Swal.showLoading();
-                const timer = Swal.getPopup()!.querySelector('b');
-                timerInterval = setInterval(() => {
-                    if (timer) {
-                        timer.textContent = `${Swal.getTimerLeft()}`;
-                    }
-                }, 100);
-            },
-            willClose: () => {
-                clearInterval(timerInterval);
-            },
-        }).then((result) => {
-            if (result.dismiss === Swal.DismissReason.timer) {
-                console.log('I was closed by the timer');
-            }
-        });
+        subscribeToMailchimp("vega@gmail.com")
+        subscribeToMailchimp("vega@gmail.com")
     };
 
     return (

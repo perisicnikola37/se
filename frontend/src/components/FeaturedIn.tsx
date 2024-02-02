@@ -1,6 +1,6 @@
 const FeaturedInSection = () => {
     return (
-        <div className="_featured-in max-w-4xl mt-40 mx-auto text-center select-none">
+        <div className="_featured-in max-w-4xl mt-28 mx-auto text-center select-none">
             <h2 className="text-xl font-semibold -tracking-tight mb-4 text-gray-500 uppercase">
                 Featured in
             </h2>

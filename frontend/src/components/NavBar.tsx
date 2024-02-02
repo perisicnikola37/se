@@ -4,11 +4,12 @@ import MenuIcon from "@mui/icons-material/Menu";
 import Brightness4Icon from "@mui/icons-material/Brightness4";
 import logo from "../assets/logo.png";
 import config from "../config/config.json";
-import { NavLink, useLocation, useNavigate } from "react-router-dom";
+import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
 import SubHeader from "./SubHeader";
 import EastSharpIcon from '@mui/icons-material/EastSharp';
 import { useUser } from "../contexts/UserContext";
 import { useModal } from "../contexts/GlobalContext";
+import userPicture from "../../src/assets/profile_image.jpg"
 
 const NavBar = () => {
     const navigate = useNavigate();
@@ -91,13 +92,15 @@ const NavBar = () => {
             >
                 <Container maxWidth="xl">
                     <Toolbar disableGutters>
-                        <img
-                            height={40}
-                            width={40}
-                            src={logo}
-                            alt=""
-                            className="mr-2"
-                        />
+                        <Link to="/">
+                            <img
+                                height={40}
+                                width={40}
+                                src={logo}
+                                alt=""
+                                className="mr-2"
+                            />
+                        </Link>
                         <Box
                             sx={{
                                 flexGrow: 1,
@@ -170,7 +173,7 @@ const NavBar = () => {
                                 </NavLink>
                             ))}
                         </Box>
-                        <Brightness4Icon className="mr-5" />
+                        <Brightness4Icon className="mr-5 text-[#1b2a4b]" />
                         {!isLoggedIn() ? (<button type="button" className="text-white bg-blue-700 hover:bg-blue-800  font-medium rounded-md text-sm px-3 py-1.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
                             <a href="/sign-in">
                                 Sign In
@@ -184,7 +187,7 @@ const NavBar = () => {
                                 >
                                     <Avatar
                                         alt="Remy Sharp"
-                                        src="/static/images/avatar/2.jpg"
+                                        src={userPicture}
                                     />
                                 </IconButton>
                             </Tooltip>
