@@ -12,7 +12,7 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace Service;
 
-public class AuthService(IDatabaseContext context, IConfiguration configuration) : IAuthService
+public class AuthService(IDatabaseContext context, IConfiguration configuration, IEmailService emailService) : IAuthService
 {
 	public async Task<UserDto?> LogInUserAsync(LogInUser user)
 	{
@@ -117,4 +117,57 @@ public class AuthService(IDatabaseContext context, IConfiguration configuration)
 
 		return string.Equals(inputHashedPassword, hashedPassword, StringComparison.OrdinalIgnoreCase);
 	}
+
+	private static string GenerateResetToken()
+	{
+		var tokenLength = 32;
+		var randomBytes = new byte[tokenLength];
+
+		using (var rng = new RNGCryptoServiceProvider())
+		{
+			rng.GetBytes(randomBytes);
+		}
+
+		return Convert.ToBase64String(randomBytes);
+	}
+
+	public async Task<bool> ForgotPasswordAsync(string userEmail)
+	{
+		var user = await context.Users.FirstOrDefaultAsync(u => u.Email == userEmail);
+
+		if (user == null)
+			return false;
+
+		var resetToken = GenerateResetToken();
+		user.ResetToken = resetToken;
+		user.ResetTokenExpiration = DateTime.UtcNow.AddHours(1);
+
+		await context.SaveChangesAsync();
+
+		var resetLink = $"{configuration["AppUrl"]}/reset-password?token={resetToken}&email={userEmail}";
+
+		var subject = "Password Reset";
+		var body = $"Click the following link to reset your password: {resetLink}";
+
+		await emailService.SendEmail(new EmailRequestDto { ToEmail = userEmail }, subject, body);
+
+		return true;
+	}
+
+	public async Task<bool> ResetPasswordAsync(string userEmail, string token, string newPassword)
+	{
+		var user = await context.Users.FirstOrDefaultAsync(u => u.Email == userEmail && u.ResetToken == token && u.ResetTokenExpiration > DateTime.UtcNow);
+
+		if (user == null)
+			return false;
+
+		user.Password = HashPassword(newPassword);
+		user.ResetToken = null;
+		user.ResetTokenExpiration = null;
+
+		await context.SaveChangesAsync();
+
+		return true;
+	}
+
 }

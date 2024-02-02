@@ -85,4 +85,66 @@ public class AuthController(
 			throw new DatabaseException("AuthController.cs");
 		}
 	}
+
+	[HttpPost("forgot/password")]
+	public async Task<IActionResult> ForgotPasswordAsync([FromBody] ForgotPasswordRequestDto forgotPasswordRequest)
+	{
+		try
+		{
+			var isEmailSent = await authService.ForgotPasswordAsync(forgotPasswordRequest.UserEmail);
+
+			if (isEmailSent)
+			{
+				logger.LogInformation("Password reset email sent successfully.");
+				return Ok(new { message = "Password reset email sent successfully" });
+			}
+
+			logger.LogWarning("User not found for password reset.");
+			return NotFound(new { message = "User not found for password reset" });
+		}
+		catch (Exception ex)
+		{
+			logger.LogError(ex, "An error occurred during forgot password request.");
+			throw new DatabaseException("AuthController.cs");
+		}
+	}
+
+	[HttpPost("reset/password")]
+	public async Task<IActionResult> ResetPasswordAsync([FromBody] ResetPasswordRequestDto resetPasswordRequest)
+	{
+		try
+		{
+			var isPasswordReset = await authService.ResetPasswordAsync(
+				resetPasswordRequest.UserEmail,
+				resetPasswordRequest.ResetToken,
+				resetPasswordRequest.NewPassword);
+
+			if (isPasswordReset)
+			{
+				logger.LogInformation("Password reset successfully.");
+				return Ok(new { message = "Password reset successfully" });
+			}
+
+			logger.LogWarning("Invalid or expired token for password reset.");
+			return BadRequest(new { message = "Invalid or expired token for password reset" });
+		}
+		catch (Exception ex)
+		{
+			logger.LogError(ex, "An error occurred during password reset.");
+			throw new DatabaseException("AuthController.cs");
+		}
+	}
+}
+
+public class ForgotPasswordRequestDto
+{
+	public string UserEmail { get; set; }
+}
+
+
+public class ResetPasswordRequestDto
+{
+	public string UserEmail { get; set; }
+	public string ResetToken { get; set; }
+	public string NewPassword { get; set; }
 }

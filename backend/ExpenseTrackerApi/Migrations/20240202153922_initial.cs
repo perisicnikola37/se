@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace ExpenseTrackerApi.Migrations
 {
     /// <inheritdoc />
-    public partial class Initial : Migration
+    public partial class initial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -50,7 +50,10 @@ namespace ExpenseTrackerApi.Migrations
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Password = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false)
+                    CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    ResetToken = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    ResetTokenExpiration = table.Column<DateTime>(type: "datetime(6)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -199,8 +202,8 @@ namespace ExpenseTrackerApi.Migrations
 
             migrationBuilder.InsertData(
                 table: "Users",
-                columns: new[] { "Id", "AccountType", "AccountTypeEnum", "CreatedAt", "Email", "Password", "Username" },
-                values: new object[] { 1, "Administrator", 1, new DateTime(2024, 2, 2, 14, 17, 10, 814, DateTimeKind.Local).AddTicks(7921), "admin@gmail.com", "5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8", "Administrator" });
+                columns: new[] { "Id", "AccountType", "AccountTypeEnum", "CreatedAt", "Email", "Password", "ResetToken", "ResetTokenExpiration", "Username" },
+                values: new object[] { 1, "Administrator", 1, new DateTime(2024, 2, 2, 16, 39, 21, 444, DateTimeKind.Local).AddTicks(1823), "admin@gmail.com", "5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8", null, null, "Administrator" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Blogs_UserId",

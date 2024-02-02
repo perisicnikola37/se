@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ExpenseTrackerApi.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20240202131711_Initial")]
-    partial class Initial
+    [Migration("20240202153922_initial")]
+    partial class initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -221,6 +221,12 @@ namespace ExpenseTrackerApi.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
+                    b.Property<string>("ResetToken")
+                        .HasColumnType("longtext");
+
+                    b.Property<DateTime?>("ResetTokenExpiration")
+                        .HasColumnType("datetime(6)");
+
                     b.Property<string>("Username")
                         .IsRequired()
                         .HasColumnType("longtext");
@@ -235,7 +241,7 @@ namespace ExpenseTrackerApi.Migrations
                             Id = 1,
                             AccountType = "Administrator",
                             AccountTypeEnum = 1,
-                            CreatedAt = new DateTime(2024, 2, 2, 14, 17, 10, 814, DateTimeKind.Local).AddTicks(7921),
+                            CreatedAt = new DateTime(2024, 2, 2, 16, 39, 21, 444, DateTimeKind.Local).AddTicks(1823),
                             Email = "admin@gmail.com",
                             Password = "5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8",
                             Username = "Administrator"

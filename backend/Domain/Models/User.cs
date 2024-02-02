@@ -52,4 +52,6 @@ public class User
 	public List<IncomeGroup>? IncomeGroups { get; set; }
 	public List<ExpenseGroup>? ExpenseGroups { get; set; }
 	public List<Blog>? Blogs { get; set; }
+	public string? ResetToken { get; set; }
+	public DateTime? ResetTokenExpiration { get; set; }
 }
