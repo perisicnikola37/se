@@ -1,5 +1,6 @@
 using Domain.Interfaces;
 using Domain.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
 
@@ -23,7 +24,7 @@ public class ExpenseGroupController(IExpenseGroupService expenseGroupService) : 
 	}
 
 	[HttpPut("{id}")]
-	// [Authorize("ExpenseGroupOwnerPolicy")]
+	[Authorize("ExpenseGroupOwnerPolicy")]
 	public async Task<IActionResult> PutExpenseGroupAsync(int id, ExpenseGroup expenseGroup)
 	{
 		return await expenseGroupService.UpdateExpenseGroupAsync(id, expenseGroup, this);
@@ -36,7 +37,7 @@ public class ExpenseGroupController(IExpenseGroupService expenseGroupService) : 
 	}
 
 	[HttpDelete("{id}")]
-	// [Authorize("ExpenseGroupOwnerPolicy")]
+	[Authorize("ExpenseGroupOwnerPolicy")]
 	public async Task<IActionResult> DeleteExpenseGroupByIdAsync(int id)
 	{
 		return await expenseGroupService.DeleteExpenseGroupByIdAsync(id);

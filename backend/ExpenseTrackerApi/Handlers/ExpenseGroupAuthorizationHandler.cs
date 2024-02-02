@@ -7,7 +7,7 @@ namespace ExpenseTrackerApi.Handlers;
 public class ExpenseGroupAuthorizationRequirement : IAuthorizationRequirement;
 
 public class ExpenseGroupAuthorizationHandler(IHttpContextAccessor httpContextAccessor, DatabaseContext dbContext)
-    : AuthorizationHandler<ExpenseAuthorizationRequirement>
+    : AuthorizationHandler<ExpenseGroupAuthorizationRequirement>
 {
     private readonly DatabaseContext _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
 
@@ -16,7 +16,7 @@ public class ExpenseGroupAuthorizationHandler(IHttpContextAccessor httpContextAc
 
     protected override async Task HandleRequirementAsync(
         AuthorizationHandlerContext context,
-        ExpenseAuthorizationRequirement requirement)
+        ExpenseGroupAuthorizationRequirement requirement)
     {
         var userIdClaim = context.User.Claims.FirstOrDefault(c => c.Type == "Id");
 

@@ -27,6 +27,9 @@ namespace ExpenseTrackerApi.Handlers
 				if (incomeGroup != null)
 				{
 					Console.WriteLine("Entering the condition");
+
+					_dbContext.Entry(incomeGroup).State = EntityState.Detached;
+
 					context.Succeed(requirement);
 				}
 				else
