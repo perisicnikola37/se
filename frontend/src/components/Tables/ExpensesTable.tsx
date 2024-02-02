@@ -19,7 +19,6 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import FilterListIcon from "@mui/icons-material/FilterList";
 import { visuallyHidden } from "@mui/utils";
 import Skeleton from "@mui/material/Skeleton";
-import { ExpenseInterface } from "../../interfaces/globalInterfaces";
 import DeleteModal from "../Modals/DeleteModal";
 import { Autocomplete, Popover, TextField } from "@mui/material";
 import useObjectGroups from "../../hooks/GlobalHooks/GetObjectsHook";
@@ -28,6 +27,7 @@ import useDeleteAllObjects from "../../hooks/GlobalHooks/DeleteAllObjectsHook";
 import useObjects from "../../hooks/GlobalHooks/AllObjectsHook";
 import ExpenseCreateModal from "../Modals/ExpenseCreateModal";
 import ExpenseEditModal from "../Modals/ExpenseEditModal";
+import { ExpenseInterface } from "../../interfaces/globalInterfaces";
 
 interface Data {
     id: number;
@@ -139,8 +139,8 @@ interface EnhancedTableProps {
     rowCount: number;
 }
 
-interface EnhancedTablePropsWithData {
-    expenses: ExpenseInterface[];
+interface EnhancedTablePropsWithData<T> {
+    expenses: T[];
     rowsPerPage: number;
 }
 
@@ -435,7 +435,7 @@ function LoadingTableRow() {
     );
 }
 
-function EnhancedTable({ expenses }: EnhancedTablePropsWithData) {
+function EnhancedTable({ expenses }: EnhancedTablePropsWithData<ExpenseInterface>) {
     const [order, setOrder] = React.useState<Order>('desc');
     const [orderBy, setOrderBy] = React.useState<keyof Data>('id');
     const [selected, setSelected] = React.useState<readonly number[]>([]);

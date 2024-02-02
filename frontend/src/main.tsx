@@ -17,6 +17,8 @@ import Incomes from "./pages/Incomes.tsx";
 import NotFoundPage from "./pages/NotFoundPage.tsx";
 import { UserProvider } from "./contexts/UserContext.tsx";
 import { ModalProvider } from "./contexts/GlobalContext.tsx";
+import IncomeGroups from "./pages/IncomeGroups.tsx";
+import ExpenseGroups from "./pages/ExpenseGroups.tsx";
 
 // const darkTheme = createTheme({
 //     palette: {
@@ -55,7 +57,9 @@ const router = createBrowserRouter([
                 index: true, element: <Dashboard />
             },
             { path: "incomes", element: <Incomes /> },
+            { path: "incomes/groups", element: <IncomeGroups /> },
             { path: "expenses", element: <Expenses /> },
+            { path: "expenses/groups", element: <ExpenseGroups /> },
             { path: "blogs", element: <Blog /> },
             {
                 path: "*",

@@ -2,9 +2,10 @@ import { useEffect } from "react";
 import { useModal } from "../contexts/GlobalContext";
 import useObjects from "../hooks/GlobalHooks/AllObjectsHook";
 import EnhancedTable from "../components/Tables/ExpensesTable";
+import { ExpenseInterface } from "../interfaces/globalInterfaces";
 
 const Expenses = () => {
-    const { objects, loadObjects } = useObjects();
+    const { objects, loadObjects } = useObjects<ExpenseInterface>();
     const { actionChange, appliedFilters } = useModal();
 
     useEffect(() => {

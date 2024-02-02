@@ -138,14 +138,15 @@ const NavBar = () => {
                                     },
                                 }}
                             >
-                                {pages.map((page) => (
+                                {pages.map((page, index) => (
                                     <MenuItem
                                         key={page.url}
                                         onClick={handleCloseNavMenu}
+                                        className={`transition duration-300 ${index >= pages.length - 2 ? "ml-auto" : ""}`}
                                     >
-                                        <Typography textAlign="center">
+                                        <NavLink to={page.url} className={`text-black hover:text-blue-500 ${page.url === location.pathname ? "text-blue-500" : ""}`}>
                                             {page.name}
-                                        </Typography>
+                                        </NavLink>
                                     </MenuItem>
                                 ))}
                             </Menu>
@@ -156,22 +157,24 @@ const NavBar = () => {
                                 display: { xs: "none", md: "flex" },
                             }}
                         >
-                            {pages.map((page) => (
-                                <NavLink
-                                    key={page.url}
-                                    to={page.url}
-                                    className={`text-black m-3 inline-block transition duration-300 border-b-2 border-transparent hover:border-blue-500 ${page.url === location.pathname ? "border-blue-300" : ""
-                                        }`}
-                                    onClick={handleCloseNavMenu}
-                                >
-                                    <span
-                                        className={`my-2 ${page.url === location.pathname ? "text-blue-500" : "text-black"
-                                            }`}
+                            <div className="w-[150%]">
+                                {pages.map((page, index) => (
+                                    <NavLink
+                                        key={page.url}
+                                        to={page.url}
+                                        className={`text-black m-3 inline-block transition duration-300 border-b-2 border-transparent hover:border-blue-500 ${page.url === location.pathname ? "border-blue-300" : ""
+                                            } ${index >= pages.length - 2 ? "float-right" : ""}`}
+                                        onClick={handleCloseNavMenu}
                                     >
-                                        {page.name}
-                                    </span>
-                                </NavLink>
-                            ))}
+                                        <span
+                                            className={`my-2 ${page.url === location.pathname ? "text-blue-500" : "text-black"
+                                                }`}
+                                        >
+                                            {page.name}
+                                        </span>
+                                    </NavLink>
+                                ))}
+                            </div>
                         </Box>
                         <Brightness4Icon className="mr-5 text-[#1b2a4b]" />
                         {!isLoggedIn() ? (<button type="button" className="text-white bg-blue-700 hover:bg-blue-800  font-medium rounded-md text-sm px-3 py-1.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
@@ -229,7 +232,6 @@ const NavBar = () => {
                                         </Typography>
                                     </MenuItem>
                                 ))}
-
                             </Menu>
                         </Box>)}
 

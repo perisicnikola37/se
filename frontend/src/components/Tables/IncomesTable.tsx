@@ -139,8 +139,8 @@ interface EnhancedTableProps {
     rowCount: number;
 }
 
-interface EnhancedTablePropsWithData {
-    incomes: IncomeInterface[];
+interface EnhancedTablePropsWithData<T> {
+    incomes: T[];
     rowsPerPage: number;
 }
 
@@ -434,7 +434,7 @@ function LoadingTableRow() {
     );
 }
 
-function EnhancedTable({ incomes }: EnhancedTablePropsWithData) {
+function EnhancedTable({ incomes }: EnhancedTablePropsWithData<IncomeInterface>) {
     const [order, setOrder] = React.useState<Order>('desc');
     const [orderBy, setOrderBy] = React.useState<keyof Data>('id');
     const [selected, setSelected] = React.useState<readonly number[]>([]);

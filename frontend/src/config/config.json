@@ -17,12 +17,20 @@
                 "url": "/expenses"
             },
             {
-                "name": "Blogovi",
-                "url": "/blogs"
+                "name": "Grupe prihoda",
+                "url": "/incomes/groups"
+            },
+            {
+                "name": "Grupe rashoda",
+                "url": "/expenses/groups"
             },
             {
                 "name": "FAQ",
                 "url": "/faq"
+            },
+            {
+                "name": "Blogovi",
+                "url": "/blogs"
             }
         ],
         "footerLinks": [{
@@ -65,12 +73,20 @@
                 "url": "/expenses"
             },
             {
-                "name": "Blogs",
-                "url": "/blogs"
+                "name": "Income groups",
+                "url": "/incomes/groups"
+            },
+            {
+                "name": "Expense groups",
+                "url": "/expenses/groups"
             },
             {
                 "name": "FAQ",
                 "url": "/faq"
+            },
+            {
+                "name": "Blogs",
+                "url": "/blogs"
             }
         ],
         "footerLinks": [{
