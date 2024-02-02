@@ -20,6 +20,8 @@ import IncomeGroups from "./pages/IncomeGroups.tsx";
 import ExpenseGroups from "./pages/ExpenseGroups.tsx";
 import Reminders from "./pages/Reminders.tsx";
 import Blogs from "./pages/Blogs.tsx";
+import IncomeGroupDetail from "./pages/IncomeGroupDetail.tsx";
+import ExpenseGroupDetail from "./pages/ExpenseGroupDetail.tsx";
 
 // const darkTheme = createTheme({
 //     palette: {
@@ -59,7 +61,9 @@ const router = createBrowserRouter([
             },
             { path: "incomes", element: <Incomes /> },
             { path: "incomes/groups", element: <IncomeGroups /> },
+            { path: "incomes/groups/:id", element: <IncomeGroupDetail /> },
             { path: "expenses", element: <Expenses /> },
+            { path: "expenses/groups/:id", element: <ExpenseGroupDetail /> },
             { path: "expenses/groups", element: <ExpenseGroups /> },
             { path: "blogs", element: <Blogs /> },
             { path: "reminders", element: <Reminders /> },

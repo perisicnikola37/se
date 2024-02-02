@@ -129,6 +129,7 @@ public class IncomeGroupService(DatabaseContext context, IValidator<IncomeGroup>
 			if (authenticatedUserId.HasValue)
 			{
 				incomeGroup.UserId = authenticatedUserId.Value;
+
 			}
 
 			context.Entry(incomeGroup).State = EntityState.Modified;

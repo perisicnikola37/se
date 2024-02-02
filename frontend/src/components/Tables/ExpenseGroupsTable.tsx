@@ -26,6 +26,7 @@ import { ObjectGroupInterface } from "../../interfaces/globalInterfaces";
 import DeleteObjectGroupModal from "../Modals/DeleteObjectGroupModal";
 import ExpenseGroupCreateModal from "../Modals/ExpenseGroupCreateModal";
 import ExpenseGroupEditModal from "../Modals/ExpenseGroupEditModal";
+import { Link } from "react-router-dom";
 
 interface Data {
     id: number;
@@ -408,7 +409,9 @@ function EnhancedTable({ expenseGroups }: EnhancedTablePropsWithData<ObjectGroup
                                             {row.id}
                                         </TableCell>
                                         <TableCell align="right">
-                                            {row.name}
+                                            <Link to={`${row.id}`} className="hover:text-[#2563EB] transition-colors duration-300">
+                                                {row.name}
+                                            </Link>
                                         </TableCell>
                                         <TableCell align="right">
                                             {row.description}
