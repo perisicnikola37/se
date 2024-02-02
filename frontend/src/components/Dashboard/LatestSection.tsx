@@ -6,7 +6,7 @@ const LatestSection = () => {
 
     return (
         <>
-            <Suspense fallback={<div>Loading...</div>}>
+            <Suspense>
                 <LatestIncomes />
                 <LatestExpenses />
             </Suspense>

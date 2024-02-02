@@ -13,6 +13,7 @@ import {
 import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
 import useLatestIncomes from "../hooks/Incomes/LatestIncomesHook";
 import { formatDate } from "../utils/utils";
+import { motion } from "framer-motion";
 
 const LatestIncomes = () => {
     const slider = useRef<Slider | null>(null);
@@ -61,8 +62,12 @@ const LatestIncomes = () => {
                         className="w-[90%] lg:w-1/2 xs:w-1/2 rounded-lg m-10 mt-20"
                     >
                         {incomes.map((income, index) => (
-                            <div
+                            <motion.div
                                 key={index}
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                exit={{ opacity: 0 }}
+                                transition={{ duration: 0.5 }}
                                 className="bg-green-100 p-4 mx-4 flex justify-between items-center w-full"
                             >
                                 <div>
@@ -96,15 +101,19 @@ const LatestIncomes = () => {
                                 <div className="sm:hidden float-right">
                                     <AttachMoneyIcon className="text-green-500 mr-2" />
                                 </div>
-                            </div>
+                            </motion.div>
                         ))}
                     </Slider>
-                    <button
+                    <motion.button
                         className="mb-10"
                         onClick={() => slider?.current?.slickNext()}
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 0.5 }}
                     >
                         Next <EastSharpIcon onClick={() => slider?.current?.slickNext()} />
-                    </button>
+                    </motion.button>
                 </>
             )}
         </>
