@@ -49,5 +49,7 @@ public class User
 	public DateTime CreatedAt { get; set; } = DateTime.Now;
 	public List<Expense>? Expenses { get; set; }
 	public List<Income>? Incomes { get; set; }
+	public List<IncomeGroup>? IncomeGroups { get; set; }
+	public List<ExpenseGroup>? ExpenseGroups { get; set; }
 	public List<Blog>? Blogs { get; set; }
 }

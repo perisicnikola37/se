@@ -26,7 +26,6 @@ export interface IncomeInterface {
     } | null;
 }
 
-
 export interface ExpenseInterface {
     id: number;
     description: string;

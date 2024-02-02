@@ -9,14 +9,17 @@ using Microsoft.Extensions.Logging;
 
 namespace Service;
 
-public class ExpenseGroupService(DatabaseContext context, IValidator<ExpenseGroup> validator, ILogger<ExpenseGroupService> logger) : IExpenseGroupService
+public class ExpenseGroupService(DatabaseContext context, IValidator<ExpenseGroup> validator, ILogger<ExpenseGroupService> logger, IGetAuthenticatedUserIdService getAuthenticatedUserId) : IExpenseGroupService
 {
 	[HttpGet]
-	public async Task<IEnumerable<object>> GetExpenseGroupsAsync()
+	public async Task<IEnumerable<object>> GetExpenseGroupsAsync(ControllerBase controller)
 	{
 		try
 		{
+			var authenticatedUserId = getAuthenticatedUserId.GetUserId(controller.User);
+
 			var expenseGroups = await context.ExpenseGroups
+				.Where(ig => ig.UserId == authenticatedUserId)
 				.Include(e => e.Expenses)!
 					.ThenInclude(expense => expense.User)
 				.OrderByDescending(e => e.CreatedAt)
@@ -95,6 +98,10 @@ public class ExpenseGroupService(DatabaseContext context, IValidator<ExpenseGrou
 		{
 			var validationResult = await validator.ValidateAsync(expenseGroup);
 			if (!validationResult.IsValid) return new BadRequestObjectResult(validationResult.Errors);
+
+			var userId = getAuthenticatedUserId.GetUserId(controller.User);
+
+			expenseGroup.UserId = (int)userId!;
 
 			context.ExpenseGroups.Add(expenseGroup);
 			await context.SaveChangesAsync();

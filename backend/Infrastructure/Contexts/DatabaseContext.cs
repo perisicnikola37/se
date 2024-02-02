@@ -87,6 +87,20 @@ public class DatabaseContext : DbContext, IDatabaseContext
 				.WithMany(g => g.Incomes)
 				.HasForeignKey(i => i.IncomeGroupId)
 				.OnDelete(DeleteBehavior.Cascade);
+
+			modelBuilder.Entity<IncomeGroup>()
+	  			.HasOne(ig => ig.User)
+	  			.WithMany(u => u.IncomeGroups)
+				.HasForeignKey(ig => ig.UserId)
+	 			.IsRequired()
+	  			.OnDelete(DeleteBehavior.Cascade);
+
+			modelBuilder.Entity<ExpenseGroup>()
+			 	.HasOne(ig => ig.User)
+			 	.WithMany(u => u.ExpenseGroups)
+		 	 	.HasForeignKey(ig => ig.UserId)
+				.IsRequired()
+				.OnDelete(DeleteBehavior.Cascade);
 		}
 		catch (Exception ex)
 		{

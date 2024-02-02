@@ -1,20 +1,13 @@
 import React, { createContext, useContext, useState, ReactNode } from 'react';
 
-interface FetchIncomesParams {
+interface FetchObjectParams {
     pageNumber: number;
     pageSize: number;
     description?: string | null;
     minAmount?: number | null;
     maxAmount?: number | null;
     incomeGroupId?: string | null;
-}
-interface FetchExpensesParams {
-    pageNumber: number;
-    pageSize: number;
-    description?: string | null;
-    minAmount?: number | null;
-    maxAmount?: number | null;
-    incomeGroupId?: string | null;
+    expenseGroupId?: string | null;
 }
 
 interface ModalContextProps {
@@ -28,13 +21,13 @@ interface ModalContextProps {
     setPageNumber: (number: number) => void;
 
     actionChange: { counter: number; value: boolean };
-    appliedFilters: FetchIncomesParams;
+    appliedFilters: FetchObjectParams;
     openModal: () => void;
     closeModal: () => void;
     setActionChanged: () => void;
     resetActionChange: () => void;
-    setAppliedFilters: (filters: FetchIncomesParams) => void;
-    getAppliedFilters: () => FetchIncomesParams;
+    setAppliedFilters: (filters: FetchObjectParams) => void;
+    getAppliedFilters: () => FetchObjectParams;
 }
 
 const ModalContext = createContext<ModalContextProps | undefined>(undefined);
@@ -48,7 +41,7 @@ export const ModalProvider: React.FC<ModalProviderProps> = ({ children }) => {
     const [totalRecords, setTotalRecordsState] = useState(0);
     const [pageNumber, setPageNumberState] = useState(0);
     const [actionChange, setActionChange] = useState({ counter: 0, value: false });
-    const [appliedFilters, internalSetAppliedFilters] = useState<FetchIncomesParams>({ pageSize: 5, pageNumber: 1 });
+    const [appliedFilters, internalSetAppliedFilters] = useState<FetchObjectParams>({ pageSize: 5, pageNumber: 1 });
 
     const openModal = () => {
         setModalState(true);
@@ -74,7 +67,7 @@ export const ModalProvider: React.FC<ModalProviderProps> = ({ children }) => {
         setActionChange((prevState) => ({ ...prevState, value: false }));
     };
 
-    const setAppliedFilters = (filters: FetchIncomesParams) => {
+    const setAppliedFilters = (filters: FetchObjectParams) => {
         internalSetAppliedFilters(filters);
     };
 

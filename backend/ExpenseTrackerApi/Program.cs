@@ -42,6 +42,10 @@ builder.Services.AddAuthorization(options =>
 		policy => { policy.Requirements.Add(new ExpenseAuthorizationRequirement()); });
 	options.AddPolicy("IncomeOwnerPolicy",
 		policy => { policy.Requirements.Add(new IncomeAuthorizationRequirement()); });
+	options.AddPolicy("IncomeGroupOwnerPolicy",
+		policy => { policy.Requirements.Add(new IncomeGroupAuthorizationRequirement()); });
+	options.AddPolicy("ExpenseGroupOwnerPolicy",
+		policy => { policy.Requirements.Add(new ExpenseGroupAuthorizationRequirement()); });
 });
 
 builder.Services.AddScoped<IAuthorizationHandler, BlogAuthorizationHandler>();

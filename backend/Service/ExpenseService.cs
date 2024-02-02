@@ -281,6 +281,37 @@ public class ExpenseService(
 		}
 	}
 
+	public async Task<IActionResult> DeleteAllExpensesAsync(ControllerBase controller)
+	{
+		try
+		{
+			var authenticatedUserId = getAuthenticatedUserId.GetUserId(controller.User);
+
+			if (!authenticatedUserId.HasValue)
+			{
+				return new BadRequestResult();
+			}
+
+			var expensesToDelete = await context.Expenses
+				.Where(e => e.UserId == authenticatedUserId.Value)
+				.ToListAsync();
+
+			if (expensesToDelete == null || expensesToDelete.Count == 0)
+			{
+				return new NotFoundResult();
+			}
+
+			context.Expenses.RemoveRange(expensesToDelete);
+			await context.SaveChangesAsync();
+
+			return new NoContentResult();
+		}
+		catch (Exception ex)
+		{
+			logger.LogError($"DeleteAllExpensesAsync: An error occurred. Error: {ex.Message}");
+			throw;
+		}
+	}
 
 	private static IQueryable<Expense> ApplyFilter(IQueryable<Expense> query, Expression<Func<Expense, bool>> filter,
 		bool condition)

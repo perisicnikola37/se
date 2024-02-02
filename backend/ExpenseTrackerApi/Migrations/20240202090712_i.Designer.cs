@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ExpenseTrackerApi.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20240131144011_i")]
+    [Migration("20240202090712_i")]
     partial class i
     {
         /// <inheritdoc />
@@ -101,7 +101,12 @@ namespace ExpenseTrackerApi.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("ExpenseGroups");
                 });
@@ -154,7 +159,12 @@ namespace ExpenseTrackerApi.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("IncomeGroups");
                 });
@@ -225,7 +235,7 @@ namespace ExpenseTrackerApi.Migrations
                             Id = 1,
                             AccountType = "Administrator",
                             AccountTypeEnum = 1,
-                            CreatedAt = new DateTime(2024, 1, 31, 15, 40, 10, 481, DateTimeKind.Local).AddTicks(4960),
+                            CreatedAt = new DateTime(2024, 2, 2, 10, 7, 11, 760, DateTimeKind.Local).AddTicks(8250),
                             Email = "admin@gmail.com",
                             Password = "5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8",
                             Username = "Administrator"
@@ -261,6 +271,17 @@ namespace ExpenseTrackerApi.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("Domain.Models.ExpenseGroup", b =>
+                {
+                    b.HasOne("Domain.Models.User", "User")
+                        .WithMany("ExpenseGroups")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("Domain.Models.Income", b =>
                 {
                     b.HasOne("Domain.Models.IncomeGroup", "IncomeGroup")
@@ -280,6 +301,17 @@ namespace ExpenseTrackerApi.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("Domain.Models.IncomeGroup", b =>
+                {
+                    b.HasOne("Domain.Models.User", "User")
+                        .WithMany("IncomeGroups")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("Domain.Models.ExpenseGroup", b =>
                 {
                     b.Navigation("Expenses");
@@ -294,7 +326,11 @@ namespace ExpenseTrackerApi.Migrations
                 {
                     b.Navigation("Blogs");
 
+                    b.Navigation("ExpenseGroups");
+
                     b.Navigation("Expenses");
+
+                    b.Navigation("IncomeGroups");
 
                     b.Navigation("Incomes");
                 });

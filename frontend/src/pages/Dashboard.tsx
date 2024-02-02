@@ -9,6 +9,8 @@ import { useUser } from "../contexts/UserContext";
 import Chart from "../components/Chart";
 import Newsletter from "../components/Newsletter";
 import { useEffect } from "react";
+import MailChimp from "../components/Dashboard/Mailchimp";
+import EmailExport from "../components/Dashboard/EmailExport";
 
 const Dashboard = () => {
     const { isLoggedIn } = useUser();
@@ -115,6 +117,9 @@ const Dashboard = () => {
             {isLoggedIn() && <LatestSection />}
 
             <FeaturedInSection />
+
+            <MailChimp imageUrl="https://1000logos.net/wp-content/uploads/2023/04/Mailchimp-logo.png" />
+            <EmailExport imageUrl="https://i.postimg.cc/d098fSsM/removed.png" />
 
             <Newsletter />
         </div >

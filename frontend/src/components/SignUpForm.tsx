@@ -10,7 +10,14 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { Alert, FormControl, InputLabel, MenuItem, Select, SelectChangeEvent } from "@mui/material";
+import {
+    Alert,
+    FormControl,
+    InputLabel,
+    MenuItem,
+    Select,
+    SelectChangeEvent,
+} from "@mui/material";
 import useRegistration from "../hooks/Authentication/RegisterHook";
 
 const defaultTheme = createTheme();
@@ -31,7 +38,11 @@ export default function SignUpForm() {
         await register(registrationData);
     };
 
-    const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement> | SelectChangeEvent<string>) => {
+    const handleChange = (
+        event:
+            | React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+            | SelectChangeEvent<string>
+    ) => {
         if ("target" in event) {
             const { name, value } = event.target;
             setRegistrationData((prevData) => ({
@@ -50,7 +61,17 @@ export default function SignUpForm() {
 
     return (
         <ThemeProvider theme={defaultTheme}>
-            <Container component="main" maxWidth="xs" sx={{ height: "100vh", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center" }}>
+            <Container
+                component="main"
+                maxWidth="xs"
+                sx={{
+                    height: "100vh",
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "center",
+                    alignItems: "center",
+                }}
+            >
                 <CssBaseline />
                 <Box
                     sx={{
@@ -60,7 +81,6 @@ export default function SignUpForm() {
                         alignItems: "center",
                     }}
                 >
-
                     <Typography component="h1" variant="h5">
                         Sign Up
                     </Typography>
@@ -133,16 +153,14 @@ export default function SignUpForm() {
                                 id="demo-simple-select"
                                 name="accountType"
                                 value={registrationData.accountType}
-                                onChange={handleChange}
+                                onChange={(e) => handleChange(e)}
                             >
-                                <MenuItem value="Default">Default</MenuItem>
+                                <MenuItem value="Regular">Regular</MenuItem>
                                 <MenuItem value="Administrator">Administrator</MenuItem>
                             </Select>
                         </FormControl>
                         <FormControlLabel
-                            control={
-                                <Checkbox value="remember" color="primary" />
-                            }
+                            control={<Checkbox value="remember" color="primary" />}
                             label="Remember me"
                         />
                         <Button
@@ -152,7 +170,7 @@ export default function SignUpForm() {
                             sx={{ mt: 3, mb: 2 }}
                             disabled={isLoading}
                         >
-                            {isLoading ? "LOADING..." : "Sign In"}
+                            {isLoading ? "Loading..." : "Sign In"}
                         </Button>
 
                         <Grid container>
@@ -165,7 +183,6 @@ export default function SignUpForm() {
                                 <Link href="/sign-in" variant="body2">
                                     {"Already have an account? Sign In"}
                                 </Link>
-
                             </Grid>
                         </Grid>
                     </Box>

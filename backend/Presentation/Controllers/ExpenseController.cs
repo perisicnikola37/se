@@ -63,6 +63,12 @@ public class ExpenseController(IExpenseService expenseService) : ControllerBase
 		return await expenseService.DeleteExpenseByIdAsync(id);
 	}
 
+	[HttpDelete]
+	public async Task<IActionResult> DeleteAllExpensesAsync()
+	{
+		return await expenseService.DeleteAllExpensesAsync(this);
+	}
+
 	[HttpGet("statistics")]
 	public async Task<IActionResult> GetLast7DaysIncomesAndExpensesAsync()
 	{

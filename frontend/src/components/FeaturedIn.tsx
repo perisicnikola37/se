@@ -1,7 +1,9 @@
 const FeaturedInSection = () => {
     return (
-        <div className="_featured-in max-w-4xl mt-10 mx-auto text-center select-none">
-            <h2 className="text-xs font-semibold mb-4 text-gray-500 uppercase">Featured in</h2>
+        <div className="_featured-in max-w-4xl mt-40 mx-auto text-center select-none">
+            <h2 className="text-xl font-semibold -tracking-tight mb-4 text-gray-500 uppercase">
+                Featured in
+            </h2>
 
             <div className="flex flex-col items-center space-y-4 md:flex-row md:space-y-0 md:space-x-4">
                 <img
@@ -35,7 +37,7 @@ const FeaturedInSection = () => {
                     title="Facebook"
                     className="max-w-xs h-auto filter grayscale hover:filter-none hover:brightness-110 transition-all duration-300"
                 />
-                < img
+                <img
                     width={60}
                     src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e1/Logo_of_YouTube_%282015-2017%29.svg/2560px-Logo_of_YouTube_%282015-2017%29.svg.png"
                     alt="YouTube"

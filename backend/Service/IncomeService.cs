@@ -94,17 +94,17 @@ public class IncomeService(
 			var authenticatedUserId = getAuthenticatedUserId.GetUserId(controller.User);
 
 			var highestIncome = await context.Incomes
-							.Where(i => i.CreatedAt >= DateTime.UtcNow.AddDays(-7))
-							.OrderByDescending(i => i.Amount)
-							.Select(i => i.Amount)
-							.FirstOrDefaultAsync();
+				.Where(i => i.CreatedAt >= DateTime.UtcNow.AddDays(-7) && i.UserId == authenticatedUserId)
+				.OrderByDescending(i => i.Amount)
+				.Select(i => i.Amount)
+				.FirstOrDefaultAsync();
 
 			var latestIncomes = await context.Incomes
+				.Where(i => i.UserId == authenticatedUserId)
 				.Include(e => e.IncomeGroup)
 				.OrderByDescending(e => e.CreatedAt)
 				.Take(5)
 				.ToListAsync();
-
 
 			var response = new
 			{
@@ -155,7 +155,6 @@ public class IncomeService(
 			income.UserId = (int)userId!;
 
 			context.Incomes.Add(income);
-
 			await context.SaveChangesAsync();
 
 			return new CreatedAtActionResult("GetIncome", "Income", new { id = income.Id }, income);
@@ -265,7 +264,7 @@ public class IncomeService(
 		}
 		catch (Exception ex)
 		{
-			logger.LogError($"DeleteAllIncomesByUserIdAsync: An error occurred. Error: {ex.Message}");
+			logger.LogError($"DeleteAllIncomesAsync: An error occurred. Error: {ex.Message}");
 			throw;
 		}
 	}

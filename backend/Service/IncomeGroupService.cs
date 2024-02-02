@@ -9,27 +9,30 @@ using Microsoft.Extensions.Logging;
 
 namespace Service;
 
-public class IncomeGroupService(DatabaseContext context, IValidator<IncomeGroup> validator, ILogger<IncomeGroupService> logger) : IIncomeGroupService
+public class IncomeGroupService(DatabaseContext context, IValidator<IncomeGroup> validator, ILogger<IncomeGroupService> logger, IGetAuthenticatedUserIdService getAuthenticatedUserId) : IIncomeGroupService
 {
 	[HttpGet]
-	public async Task<IEnumerable<object>> GetIncomeGroupsAsync()
+	public async Task<IEnumerable<object>> GetIncomeGroupsAsync(ControllerBase controller)
 	{
 		try
 		{
+			var authenticatedUserId = getAuthenticatedUserId.GetUserId(controller.User);
+
 			var incomeGroups = await context.IncomeGroups
-				.Include(e => e.Incomes)!
+			 	.Where(ig => ig.UserId == authenticatedUserId)
+				.Include(e => e.Incomes)
 					.ThenInclude(income => income.User)
 				.OrderByDescending(e => e.CreatedAt)
 				.ToListAsync();
 
 			if (incomeGroups.Count != 0)
 			{
-				var simplifiedIncomeGroups = incomeGroups.Select(incomeGroupsVariable => new
+				var simplifiedIncomeGroups = incomeGroups.Select(incomeGroup => new
 				{
-					incomeGroupsVariable.Id,
-					incomeGroupsVariable.Name,
-					incomeGroupsVariable.Description,
-					Incomes = incomeGroupsVariable.Incomes?.Select(income => new
+					incomeGroup.Id,
+					incomeGroup.Name,
+					incomeGroup.Description,
+					Incomes = incomeGroup.Incomes?.Select(income => new
 					{
 						income.Id,
 						income.Description,
@@ -52,6 +55,7 @@ public class IncomeGroupService(DatabaseContext context, IValidator<IncomeGroup>
 			throw;
 		}
 	}
+
 	public async Task<ActionResult<IncomeGroup>> GetIncomeGroupAsync(int id)
 	{
 		try
@@ -96,6 +100,10 @@ public class IncomeGroupService(DatabaseContext context, IValidator<IncomeGroup>
 			var validationResult = await validator.ValidateAsync(incomeGroup);
 			if (!validationResult.IsValid) return new BadRequestObjectResult(validationResult.Errors);
 
+			var userId = getAuthenticatedUserId.GetUserId(controller.User);
+
+			incomeGroup.UserId = (int)userId!;
+
 			context.IncomeGroups.Add(incomeGroup);
 			await context.SaveChangesAsync();
 
@@ -107,6 +115,7 @@ public class IncomeGroupService(DatabaseContext context, IValidator<IncomeGroup>
 			throw;
 		}
 	}
+
 	public async Task<IActionResult> UpdateIncomeGroupAsync(int id, IncomeGroup incomeGroup)
 	{
 		try

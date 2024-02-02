@@ -47,13 +47,21 @@ public class AuthService(IDatabaseContext context, IConfiguration configuration)
 			AccountType = userRegistration.AccountType
 		};
 
-		var token = GenerateJwtToken(newUser);
-
 		var hashedPassword = HashPassword(userRegistration.Password);
 		newUser.Password = hashedPassword;
 
 		context.Users.Add(newUser);
 		await context.SaveChangesAsync();
+
+		var claims = new List<Claim>
+		{
+			new Claim("Id", newUser.Id.ToString()),
+			new Claim(JwtRegisteredClaimNames.Sub, newUser.Username),
+			new Claim(JwtRegisteredClaimNames.Email, newUser.Email),
+			new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+		};
+
+		var token = GenerateJwtToken(newUser);
 
 		var userDto = new UserDto
 		{
