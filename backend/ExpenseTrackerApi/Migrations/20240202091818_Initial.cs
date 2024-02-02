@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace ExpenseTrackerApi.Migrations
 {
     /// <inheritdoc />
-    public partial class i : Migration
+    public partial class Initial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -200,7 +200,7 @@ namespace ExpenseTrackerApi.Migrations
             migrationBuilder.InsertData(
                 table: "Users",
                 columns: new[] { "Id", "AccountType", "AccountTypeEnum", "CreatedAt", "Email", "Password", "Username" },
-                values: new object[] { 1, "Administrator", 1, new DateTime(2024, 2, 2, 10, 7, 11, 760, DateTimeKind.Local).AddTicks(8250), "admin@gmail.com", "5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8", "Administrator" });
+                values: new object[] { 1, "Administrator", 1, new DateTime(2024, 2, 2, 10, 18, 18, 8, DateTimeKind.Local).AddTicks(8888), "admin@gmail.com", "5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8", "Administrator" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Blogs_UserId",

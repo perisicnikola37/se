@@ -19,17 +19,16 @@ public class ExpenseService(
 	ILogger<ExpenseService> logger) : IExpenseService
 {
 	[HttpGet]
-	public async Task<PagedResponseDto<List<ExpenseResponse>>> GetExpensesAsync(
-		PaginationFilterDto filter,
-		ControllerBase controller)
+	public async Task<PagedResponseDto<List<ExpenseResponse>>> GetExpensesAsync(PaginationFilterDto filter,
+	ControllerBase controller)
 	{
 		try
 		{
 			var authenticatedUserId = getAuthenticatedUserId.GetUserId(controller.User);
 
 			string description = controller.HttpContext.Request.Query["description"]!;
-			string minPrice = controller.HttpContext.Request.Query["minPrice"]!;
-			string maxPrice = controller.HttpContext.Request.Query["maxPrice"]!;
+			string minAmount = controller.HttpContext.Request.Query["minAmount"]!;
+			string maxAmount = controller.HttpContext.Request.Query["maxAmount"]!;
 			string expenseGroupId = controller.HttpContext.Request.Query["expenseGroupId"]!;
 
 			var validFilter = new PaginationFilterDto(filter.PageNumber, filter.PageSize);
@@ -39,10 +38,13 @@ public class ExpenseService(
 
 			query = ApplyFilter(query, e => e.Description.Contains(description),
 				!string.IsNullOrWhiteSpace(description));
-			query = ApplyFilter(query, e => e.Amount >= float.Parse(minPrice), !string.IsNullOrWhiteSpace(minPrice));
-			query = ApplyFilter(query, e => e.Amount <= float.Parse(maxPrice), !string.IsNullOrWhiteSpace(maxPrice));
+			query = ApplyFilter(query, e => e.Amount >= float.Parse(minAmount), !string.IsNullOrWhiteSpace(minAmount));
+			query = ApplyFilter(query, e => e.Amount <= float.Parse(maxAmount), !string.IsNullOrWhiteSpace(maxAmount));
 			query = ApplyFilter(query, e => e.ExpenseGroupId == int.Parse(expenseGroupId),
 				!string.IsNullOrWhiteSpace(expenseGroupId));
+
+			var totalRecords = await query.CountAsync();
+			var totalPages = (int)Math.Ceiling((double)totalRecords / validFilter.PageSize);
 
 			var pagedData = await query
 				.Skip((validFilter.PageNumber - 1) * validFilter.PageSize)
@@ -60,7 +62,23 @@ public class ExpenseService(
 				.OrderByDescending(e => e.CreatedAt)
 				.ToListAsync();
 
-			return new PagedResponseDto<List<ExpenseResponse>>(pagedData, validFilter.PageNumber, validFilter.PageSize);
+
+			var baseUri = new Uri(controller.Request.Scheme + "://" + controller.Request.Host.Value);
+			var currentPageUri = new Uri(controller.Request.Path, UriKind.Relative);
+			var nextPageUri = new Uri(baseUri, $"{currentPageUri}?pageNumber={validFilter.PageNumber + 1}&pageSize={validFilter.PageSize}");
+			var previousPageUri = new Uri(baseUri, $"{currentPageUri}?pageNumber={validFilter.PageNumber - 1}&pageSize={validFilter.PageSize}");
+
+			return new PagedResponseDto<List<ExpenseResponse>>(pagedData, validFilter.PageNumber, validFilter.PageSize)
+			{
+				PageNumber = validFilter.PageNumber,
+				PageSize = validFilter.PageSize,
+				FirstPage = new Uri(baseUri, $"{currentPageUri}?pageNumber=1&pageSize={validFilter.PageSize}"),
+				LastPage = new Uri(baseUri, $"{currentPageUri}?pageNumber={totalPages}&pageSize={validFilter.PageSize}"),
+				TotalPages = totalPages,
+				TotalRecords = totalRecords,
+				NextPage = validFilter.PageNumber < totalPages ? nextPageUri : null,
+				PreviousPage = validFilter.PageNumber > 1 ? previousPageUri : null
+			};
 		}
 		catch (Exception ex)
 		{
