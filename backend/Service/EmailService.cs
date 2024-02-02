@@ -17,7 +17,7 @@ public class EmailService(IConfiguration configuration) : IEmailService
 			{
 				Port = 587,
 				Credentials =
-					new NetworkCredential("perisicnikola37@gmail.com", configuration["Mail:Secret"] ?? "secret"),
+					new NetworkCredential("perisicnikola37@gmail.com", configuration["Mail:Secret"] ?? "cqzy dvds ngoo pdqm"),
 				EnableSsl = true
 			};
 
@@ -40,7 +40,6 @@ public class EmailService(IConfiguration configuration) : IEmailService
 			Console.WriteLine(e);
 
 			throw new EmailException("EmailService.cs");
-			throw;
 		}
 	}
 
@@ -66,11 +65,9 @@ public class EmailService(IConfiguration configuration) : IEmailService
 			mailMessage.To.Add(emailRequest.ToEmail);
 
 			// Attach the PDF file
-			using (var stream = new MemoryStream(attachmentContent))
-			{
-				mailMessage.Attachments.Add(new Attachment(stream, attachmentFileName, attachmentContentType));
-				await smtpClient.SendMailAsync(mailMessage);
-			}
+			using var stream = new MemoryStream(attachmentContent);
+			mailMessage.Attachments.Add(new Attachment(stream, attachmentFileName, attachmentContentType));
+			await smtpClient.SendMailAsync(mailMessage);
 
 			return true;
 		}
@@ -79,7 +76,6 @@ public class EmailService(IConfiguration configuration) : IEmailService
 			Console.WriteLine(e);
 
 			throw new EmailException("EmailService.cs");
-			throw;
 		}
 	}
 

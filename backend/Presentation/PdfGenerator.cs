@@ -1,6 +1,8 @@
 using DinkToPdf;
 using DinkToPdf.Contracts;
 
+namespace Presentation;
+
 public class PdfGenerator
 {
 	private readonly IConverter _converter;

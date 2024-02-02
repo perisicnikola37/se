@@ -29,6 +29,8 @@ import useObjects from "../../hooks/GlobalHooks/AllObjectsHook";
 import IncomeCreateModal from "../Modals/IncomeCreateModal";
 import IncomeEditModal from "../Modals/IncomeEditModal";
 import SendIcon from '@mui/icons-material/Send';
+import useExportToEmail from "../../hooks/ThirdPartyServices/ExportToEmailHook";
+import Swal from "sweetalert2";
 interface Data {
     id: number;
     description: string;
@@ -444,6 +446,8 @@ function EnhancedTable({ incomes }: EnhancedTablePropsWithData<IncomeInterface>)
     const { setActionChanged } = useModal()
     const { rowsPerPage, setRowsPerPage } = useObjects();
     const { getAppliedFilters, setAppliedFilters, totalRecords } = useModal()
+    const { exportToEmail } = useExportToEmail()
+    const [exportButtonDisabled, setExportButtonDisabled] = React.useState(false);
 
     React.useEffect(() => {
         const newRows = incomes.map((income) =>
@@ -524,9 +528,23 @@ function EnhancedTable({ incomes }: EnhancedTablePropsWithData<IncomeInterface>)
             ? Math.max(0, rowsPerPage - visibleRows.length)
             : rowsPerPage * (Math.max(0, totalRecords - page * rowsPerPage));
 
-    const handleExport = () => {
-        alert('dwdd')
-    }
+    const handleExport = async () => {
+        if (!exportButtonDisabled) {
+            setExportButtonDisabled(true);
+
+            await exportToEmail(localStorage.getItem('email') || "null");
+
+            setTimeout(() => {
+                setExportButtonDisabled(false);
+
+                Swal.fire({
+                    title: "Operation successfully!",
+                    text: "PDF sent to your email address!",
+                    icon: "success"
+                });
+            }, 2000);
+        }
+    };
 
     return (
         <Box sx={{ width: '100%' }}>
@@ -617,7 +635,7 @@ function EnhancedTable({ incomes }: EnhancedTablePropsWithData<IncomeInterface>)
                     </Table>
                 </TableContainer>
                 <div className="flex justify-between">
-                    <Button onClick={handleExport} variant="contained" size="small" sx={{ margin: "10px", fontSize: "12px", background: "#3C70ED" }} endIcon={<SendIcon />}>
+                    <Button disabled={exportButtonDisabled} onClick={handleExport} variant="contained" size="small" sx={{ margin: "10px", fontSize: "12px", background: "#3C70ED" }} endIcon={<SendIcon />}>
                         Export to email
                     </Button>
                     <TablePagination
