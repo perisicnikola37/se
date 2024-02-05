@@ -6,6 +6,7 @@ import useCurrentUser from '../hooks/Authentication/GetUserHook';
 import useDeleteAccount from '../hooks/Authentication/DeleteAccountHook';
 import BorderLinearProgress from '../components/Progress';
 import { Button } from '@mui/material';
+import CountUp from 'react-countup';
 
 const Profile = () => {
     const { loadCurrentUser, user } = useCurrentUser()
@@ -50,15 +51,21 @@ const Profile = () => {
                     <div className="grid grid-cols-1 md:grid-cols-3">
                         <div className="grid grid-cols-3 text-center order-last md:order-first mt-20 md:mt-0">
                             <div>
-                                <p className="font-bold text-red-500 text-xl">{user?.expenses.length}</p>
+                                <p className="font-bold text-red-500 text-xl">
+                                    <CountUp end={user?.expenses ? user.expenses.length : 0} />
+                                </p>
                                 <p className="text-gray-400">Expenses</p>
                             </div>
                             <div>
-                                <p className="font-bold text-green-500 text-xl">{user?.incomes.length}</p>
+                                <p className="font-bold text-green-500 text-xl">
+                                    <CountUp end={user?.incomes ? user.incomes.length : 0} />
+                                </p>
                                 <p className="text-gray-400">Incomes</p>
                             </div>
                             <div>
-                                <p className="font-bold text-[#2563EB] text-xl">${totalIncome}</p>
+                                <p className="font-bold text-[#2563EB] text-xl">
+                                    $<CountUp end={totalIncome} />
+                                </p>
                                 <p className="text-gray-400">Total revenue</p>
                             </div>
                         </div>
