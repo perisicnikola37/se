@@ -67,7 +67,7 @@ namespace ExpenseTrackerApi.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    Description = table.Column<string>(type: "longtext", nullable: false)
+                    Description = table.Column<string>(type: "varchar(1500)", maxLength: 1500, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Author = table.Column<string>(type: "longtext", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
@@ -203,7 +203,7 @@ namespace ExpenseTrackerApi.Migrations
             migrationBuilder.InsertData(
                 table: "Users",
                 columns: new[] { "Id", "AccountType", "AccountTypeEnum", "CreatedAt", "Email", "Password", "ResetToken", "ResetTokenExpiration", "Username" },
-                values: new object[] { 1, "Administrator", 1, new DateTime(2024, 2, 5, 9, 31, 18, 401, DateTimeKind.Local).AddTicks(6510), "admin@gmail.com", "5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8", null, null, "Administrator" });
+                values: new object[] { 1, "Administrator", 1, new DateTime(2024, 2, 5, 9, 48, 15, 247, DateTimeKind.Local).AddTicks(9065), "admin@gmail.com", "5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8", null, null, "Administrator" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Blogs_UserId",

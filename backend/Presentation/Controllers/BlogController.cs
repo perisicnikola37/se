@@ -19,7 +19,7 @@ public class BlogController(IBlogService blogService) : ControllerBase
 	}
 
 	[HttpGet("{id}")]
-	public async Task<ActionResult<SingleBlogDto>> GetBlogAsync(int id)
+	public async Task<ActionResult<object>> GetBlogAsync(int id)
 	{
 		return await blogService.GetBlogAsync(id);
 	}

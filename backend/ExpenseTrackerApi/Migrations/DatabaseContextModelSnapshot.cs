@@ -33,7 +33,8 @@ namespace ExpenseTrackerApi.Migrations
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasMaxLength(1500)
+                        .HasColumnType("varchar(1500)");
 
                     b.Property<string>("Text")
                         .IsRequired()
@@ -237,7 +238,7 @@ namespace ExpenseTrackerApi.Migrations
                             Id = 1,
                             AccountType = "Administrator",
                             AccountTypeEnum = 1,
-                            CreatedAt = new DateTime(2024, 2, 5, 9, 31, 18, 401, DateTimeKind.Local).AddTicks(6510),
+                            CreatedAt = new DateTime(2024, 2, 5, 9, 48, 15, 247, DateTimeKind.Local).AddTicks(9065),
                             Email = "admin@gmail.com",
                             Password = "5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8",
                             Username = "Administrator"

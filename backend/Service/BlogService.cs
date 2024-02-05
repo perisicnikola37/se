@@ -47,7 +47,7 @@ public class BlogService(
 		}
 	}
 
-	public async Task<ActionResult<SingleBlogDto>> GetBlogAsync(int id)
+	public async Task<ActionResult<object>> GetBlogAsync(int id)
 	{
 		try
 		{
@@ -62,19 +62,12 @@ public class BlogService(
 					blog.Text,
 					blog.CreatedAt,
 					blog.UserId,
-					User = new
-					{
-						blog.User!.Username
-					}
 				})
 				.SingleOrDefaultAsync();
 
 			if (blog == null) return new NotFoundResult();
 
-			return new SingleBlogDto
-			{
-				Blog = new[] { blog }
-			};
+			return blog;
 		}
 		catch (Exception ex)
 		{
