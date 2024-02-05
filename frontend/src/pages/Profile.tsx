@@ -1,4 +1,5 @@
 import { Helmet } from 'react-helmet';
+import { motion } from 'framer-motion';
 import userPicture from "../../src/assets/profile_image.jpg";
 import { useEffect } from 'react';
 import useCurrentUser from '../hooks/Authentication/GetUserHook';
@@ -24,12 +25,28 @@ const Profile = () => {
     const totalProgress = totalIncomes + totalExpenses;
 
     return (
-        <div className="w-full max-w-screen-xl min-h-[48rem] mx-auto p-4 md:py-8">
+        <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 20 }}
+            transition={{ duration: 0.5 }}
+            className="w-full max-w-screen-xl min-h-[48rem] mx-auto p-4 md:py-8"
+        >
             <Helmet>
                 <title>User profile | Expense Tracker</title>
             </Helmet>
-            <div className="p-16">
-                <div className="p-8 bg-white shadow mt-24">
+            <motion.div
+                initial={{ opacity: 0, y: -20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5 }}
+                className="p-16"
+            >
+                <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 0.5 }}
+                    className="p-8 bg-white shadow mt-24"
+                >
                     <div className="grid grid-cols-1 md:grid-cols-3">
                         <div className="grid grid-cols-3 text-center order-last md:order-first mt-20 md:mt-0">
                             <div>
@@ -57,9 +74,17 @@ const Profile = () => {
                         </div>
 
                         <div className="space-x-8 flex justify-between mt-32 md:mt-0 md:justify-center">
-                            <Button onClick={handleDeleteAccount} variant="outlined" color="error">
-                                Delete account
-                            </Button>
+                            <motion.button
+                                onClick={handleDeleteAccount}
+                                initial={{ opacity: 0, y: -20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ duration: 0.5 }}
+                                color="error"
+                            >
+                                <Button onClick={handleDeleteAccount} variant="outlined" color="error">
+                                    Delete account
+                                </Button>
+                            </motion.button>
                         </div>
                     </div>
 
@@ -80,9 +105,9 @@ const Profile = () => {
                             </p>
                         </div>
                     </div>
-                </div>
-            </div>
-        </div >
+                </motion.div>
+            </motion.div>
+        </motion.div>
     );
 };
 
