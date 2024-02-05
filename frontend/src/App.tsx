@@ -6,8 +6,8 @@ import { useLoading } from "./contexts/LoadingContext";
 import Footer from "./components/Footer";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import { useUser } from "./contexts/UserContext";
-import { CssBaseline, ThemeProvider, createTheme } from "@mui/material";
 import { useDarkMode } from "./contexts/DarkModeContext";
+import { CssBaseline, ThemeProvider, createTheme } from "@mui/material";
 
 function App() {
     const { loading, setLoadingState } = useLoading();

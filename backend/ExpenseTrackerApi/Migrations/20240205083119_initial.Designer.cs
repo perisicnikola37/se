@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ExpenseTrackerApi.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20240202153922_initial")]
+    [Migration("20240205083119_initial")]
     partial class initial
     {
         /// <inheritdoc />
@@ -29,7 +29,6 @@ namespace ExpenseTrackerApi.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Author")
-                        .IsRequired()
                         .HasColumnType("longtext");
 
                     b.Property<DateTime>("CreatedAt")
@@ -241,7 +240,7 @@ namespace ExpenseTrackerApi.Migrations
                             Id = 1,
                             AccountType = "Administrator",
                             AccountTypeEnum = 1,
-                            CreatedAt = new DateTime(2024, 2, 2, 16, 39, 21, 444, DateTimeKind.Local).AddTicks(1823),
+                            CreatedAt = new DateTime(2024, 2, 5, 9, 31, 18, 401, DateTimeKind.Local).AddTicks(6510),
                             Email = "admin@gmail.com",
                             Password = "5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8",
                             Username = "Administrator"

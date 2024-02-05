@@ -12,40 +12,35 @@ namespace Presentation.Controllers;
 [EnableRateLimiting("fixed")]
 public class BlogController(IBlogService blogService) : ControllerBase
 {
-    // GET: api/Blog
-    [HttpGet]
-    public async Task<ActionResult<IEnumerable<BlogDto>>> GetBlogsAsync()
-    {
-        return Ok(await blogService.GetBlogsAsync());
-    }
+	[HttpGet]
+	public async Task<ActionResult<IEnumerable<BlogDto>>> GetBlogsAsync()
+	{
+		return Ok(await blogService.GetBlogsAsync(this));
+	}
 
-    // GET: api/Blog/5
-    [HttpGet("{id}")]
-    public async Task<ActionResult<SingleBlogDto>> GetBlogAsync(int id)
-    {
-        return await blogService.GetBlogAsync(id);
-    }
+	[HttpGet("{id}")]
+	public async Task<ActionResult<SingleBlogDto>> GetBlogAsync(int id)
+	{
+		return await blogService.GetBlogAsync(id);
+	}
 
-    // PUT: api/Blog/5
-    [HttpPut("{id}")]
-    [Authorize("BlogOwnerPolicy")]
-    public async Task<IActionResult> PutBlogAsync(int id, Blog blog)
-    {
-        return await blogService.UpdateBlogAsync(id, blog, this);
-    }
+	[HttpPut("{id}")]
+	[Authorize("BlogOwnerPolicy")]
+	public async Task<IActionResult> PutBlogAsync(int id, Blog blog)
+	{
+		return await blogService.UpdateBlogAsync(id, blog, this);
+	}
 
-    // POST: api/Blog
-    [HttpPost]
-    public async Task<ActionResult<Blog>> PostBlogAsync(Blog blog)
-    {
-        return await blogService.CreateBlogAsync(blog, this);
-    }
+	[HttpPost]
+	public async Task<ActionResult<Blog>> PostBlogAsync(Blog blog)
+	{
+		return await blogService.CreateBlogAsync(blog, this);
+	}
 
-    // DELETE: api/Blog/5
-    [HttpDelete("{id}")]
-    [Authorize("BlogOwnerPolicy")]
-    public async Task<IActionResult> DeleteBlogAsync(int id)
-    {
-        return await blogService.DeleteBlogAsync(id);
-    }
+	[HttpDelete("{id}")]
+	[Authorize("BlogOwnerPolicy")]
+	public async Task<IActionResult> DeleteBlogAsync(int id)
+	{
+		return await blogService.DeleteBlogAsync(id);
+	}
 }

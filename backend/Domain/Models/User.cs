@@ -37,10 +37,8 @@ public class User
 				throw new ArgumentException("Invalid AccountType");
 		}
 	}
-
 	public int Id { get; set; }
 	public string Username { get; set; }
-
 	// old custom validation
 	// [EmailValidation(ErrorMessage = "Please enter a valid email address.")]
 	public string Email { get; set; }

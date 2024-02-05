@@ -21,6 +21,7 @@ import IncomeGroupDetail from "./pages/IncomeGroupDetail.tsx";
 import ExpenseGroupDetail from "./pages/ExpenseGroupDetail.tsx";
 import ForgotPassword from "./pages/ForgotPassword.tsx";
 import { DarkModeProvider } from "./contexts/DarkModeContext.tsx";
+import BlogDetail from "./pages/BlogDetail.tsx";
 
 const router = createBrowserRouter([
     {
@@ -49,6 +50,7 @@ const router = createBrowserRouter([
             { path: "expenses/groups/:id", element: <ExpenseGroupDetail /> },
             { path: "expenses/groups", element: <ExpenseGroups /> },
             { path: "blogs", element: <Blogs /> },
+            { path: "blogs/:id", element: <BlogDetail /> },
             { path: "reminders", element: <Reminders /> },
             {
                 path: "*",
