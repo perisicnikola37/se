@@ -1,11 +1,11 @@
 const FeaturedInSection = () => {
     return (
-        <div className="_featured-in max-w-4xl mt-28 mx-auto text-center select-none">
+        <div className="max-w-4xl mt-10 lg:mt-28 mx-auto text-center select-none">
             <h2 className="text-xl font-semibold -tracking-tight mb-4 text-gray-500 uppercase">
                 Featured in
             </h2>
 
-            <div className="flex flex-col items-center space-y-4 md:flex-row md:space-y-0 md:space-x-4">
+            <div className="flex flex-col items-center space-y-4 sm:flex-row sm:space-y-0 sm:space-x-4">
                 <img
                     width={100}
                     src="https://www.globalemancipation.ngo/wp-content/uploads/2017/09/github-logo.png"
