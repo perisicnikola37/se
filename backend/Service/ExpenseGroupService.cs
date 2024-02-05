@@ -1,3 +1,4 @@
+using Contracts.Dto;
 using Domain.Exceptions;
 using Domain.Interfaces;
 using Domain.Models;
@@ -12,7 +13,7 @@ namespace Service;
 public class ExpenseGroupService(DatabaseContext context, IValidator<ExpenseGroup> validator, ILogger<ExpenseGroupService> logger, IGetAuthenticatedUserIdService getAuthenticatedUserId) : IExpenseGroupService
 {
 	[HttpGet]
-	public async Task<IEnumerable<object>> GetExpenseGroupsAsync(ControllerBase controller)
+	public async Task<IEnumerable<ExpenseGroupDto>> GetExpenseGroupsAsync(ControllerBase controller)
 	{
 		try
 		{
@@ -20,34 +21,34 @@ public class ExpenseGroupService(DatabaseContext context, IValidator<ExpenseGrou
 
 			var expenseGroups = await context.ExpenseGroups
 				.Where(ig => ig.UserId == authenticatedUserId)
-				.Include(e => e.Expenses)!
+				.Include(e => e.Expenses!)
 					.ThenInclude(expense => expense.User)
 				.OrderByDescending(e => e.CreatedAt)
 				.ToListAsync();
 
 			if (expenseGroups.Count != 0)
 			{
-				var simplifiedExpenseGroups = expenseGroups.Select(expenseGroup => new
+				var simplifiedExpenseGroups = expenseGroups.Select(expenseGroup => new ExpenseGroupDto
 				{
-					expenseGroup.Id,
-					expenseGroup.Name,
-					expenseGroup.Description,
-					Expenses = expenseGroup.Expenses?.Select(expense => new
+					Id = expenseGroup.Id,
+					Name = expenseGroup.Name,
+					Description = expenseGroup.Description,
+					Expenses = expenseGroup.Expenses?.Select(expense => new ExpenseDto
 					{
-						expense.Id,
-						expense.Description,
-						expense.Amount,
-						expense.CreatedAt,
-						expense.ExpenseGroupId,
+						Id = expense.Id,
+						Description = expense.Description,
+						Amount = expense.Amount,
+						CreatedAt = expense.CreatedAt,
+						ExpenseGroupId = expense.ExpenseGroupId,
 						UserId = expense.User?.Id,
-						UserUsername = expense.User?.Username
+						Username = expense.User?.Username
 					})
 				});
 
 				return simplifiedExpenseGroups;
 			}
 
-			return expenseGroups;
+			return [];
 		}
 		catch (Exception ex)
 		{
@@ -55,6 +56,7 @@ public class ExpenseGroupService(DatabaseContext context, IValidator<ExpenseGrou
 			throw;
 		}
 	}
+
 	public async Task<ActionResult<ExpenseGroup>> GetExpenseGroupAsync(int id)
 	{
 		try

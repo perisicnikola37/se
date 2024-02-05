@@ -13,13 +13,13 @@ namespace Presentation.Controllers;
 public class BlogController(IBlogService blogService) : ControllerBase
 {
 	[HttpGet]
-	public async Task<ActionResult<IEnumerable<BlogDto>>> GetBlogsAsync()
+	public async Task<ActionResult<IEnumerable<Blog>>> GetBlogsAsync()
 	{
 		return Ok(await blogService.GetBlogsAsync(this));
 	}
 
 	[HttpGet("{id}")]
-	public async Task<ActionResult<object>> GetBlogAsync(int id)
+	public async Task<ActionResult<Blog>> GetBlogAsync(int id)
 	{
 		return await blogService.GetBlogAsync(id);
 	}

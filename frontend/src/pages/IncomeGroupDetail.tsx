@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
 import useGetObjectGroupById from "../hooks/GlobalHooks/GetObjectGroupHook";
 import { Breadcrumbs, Typography } from "@mui/material";
+import { motion } from "framer-motion";
 
 const IncomeGroupDetail = () => {
     const { id } = useParams();
@@ -14,7 +15,13 @@ const IncomeGroupDetail = () => {
     }, [id]);
 
     return (
-        <div className="w-full max-w-screen-xl min-h-[48rem] mx-auto p-4 md:py-8">
+        <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 20 }}
+            transition={{ duration: 0.5 }}
+            className="w-full max-w-screen-xl min-h-[48rem] mx-auto p-4 md:py-8"
+        >
             <Breadcrumbs aria-label="breadcrumb" sx={{ marginBottom: "30px" }}>
                 <Link to="/" className="hover:text-[#2563EB] transition-colors duration-300">
                     Dashboard
@@ -26,29 +33,56 @@ const IncomeGroupDetail = () => {
             </Breadcrumbs>
 
             {object && (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="bg-white rounded-md shadow-md p-6">
+                <motion.div
+                    initial={{ opacity: 0, y: -20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5 }}
+                    className="grid grid-cols-1 md:grid-cols-2 gap-4"
+                >
+                    <motion.div
+                        initial={{ opacity: 0, y: -20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.5 }}
+                        className="bg-white rounded-md shadow-md p-6"
+                    >
                         <h2 className="text-2xl font-bold mb-4">Income group details</h2>
                         <p className="text-lg mb-2">Name: {object.name}</p>
                         <p className="text-base">Description: {object.description}</p>
-                    </div>
+                    </motion.div>
 
-                    <div className="bg-[#cbffc0] rounded-md shadow-md p-6">
+                    <motion.div
+                        initial={{ opacity: 0, y: -20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.5 }}
+                        className="bg-[#cbffc0] rounded-md shadow-md p-6"
+                    >
                         <h2 className="text-2xl font-bold mb-4">Incomes</h2>
-                        {object.incomes ? (
+                        {object.incomes && object.incomes.length > 0 ? (
                             object.incomes.map((income) => (
-                                <div key={income.id} className="mb-4">
-                                    <p className="text-lg">{income.name}</p>
+                                <motion.div
+                                    key={income.id}
+                                    initial={{ opacity: 0, y: -20 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    transition={{ duration: 0.5 }}
+                                    className="mb-4"
+                                >
+                                    <p className="text-lg">Name: {income.description}</p>
                                     <p className="text-base">Amount: ${income.amount}</p>
-                                </div>
+                                </motion.div>
                             ))
                         ) : (
-                            <p>No incomes available.</p>
+                            <motion.p
+                                initial={{ opacity: 0, y: -20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ duration: 0.5 }}
+                            >
+                                No incomes found for this particular group.
+                            </motion.p>
                         )}
-                    </div>
-                </div>
+                    </motion.div>
+                </motion.div>
             )}
-        </div>
+        </motion.div>
     );
 };
 

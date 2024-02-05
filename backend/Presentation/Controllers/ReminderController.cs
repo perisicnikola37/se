@@ -13,7 +13,7 @@ public class ReminderController(IReminderService reminderService) : ControllerBa
 {
 	// GET: api/Reminder
 	[HttpGet]
-	public async Task<ActionResult<IEnumerable<object>>> GetRemindersAsync()
+	public async Task<ActionResult<IEnumerable<Reminder>>> GetRemindersAsync()
 	{
 		return Ok(await reminderService.GetRemindersAsync());
 	}

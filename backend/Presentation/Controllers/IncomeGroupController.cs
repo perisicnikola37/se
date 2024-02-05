@@ -1,3 +1,4 @@
+using Contracts.Dto;
 using Domain.Interfaces;
 using Domain.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -12,7 +13,7 @@ namespace Presentation.Controllers;
 public class IncomeGroupController(IIncomeGroupService incomeGroupService) : ControllerBase
 {
 	[HttpGet]
-	public async Task<ActionResult<IEnumerable<object>>> GetIncomeGroupsAsync()
+	public async Task<ActionResult<IEnumerable<IncomeGroupDto>>> GetIncomeGroupsAsync()
 	{
 		return Ok(await incomeGroupService.GetIncomeGroupsAsync(this));
 	}

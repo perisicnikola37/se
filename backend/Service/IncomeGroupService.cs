@@ -1,3 +1,4 @@
+using Contracts.Dto;
 using Domain.Exceptions;
 using Domain.Interfaces;
 using Domain.Models;
@@ -13,7 +14,7 @@ namespace Service;
 public class IncomeGroupService(DatabaseContext context, IValidator<IncomeGroup> validator, ILogger<IncomeGroupService> logger, IGetAuthenticatedUserIdService getAuthenticatedUserId) : IIncomeGroupService
 {
 	[HttpGet]
-	public async Task<IEnumerable<object>> GetIncomeGroupsAsync(ControllerBase controller)
+	public async Task<IEnumerable<IncomeGroupDto>> GetIncomeGroupsAsync(ControllerBase controller)
 	{
 		try
 		{
@@ -21,34 +22,33 @@ public class IncomeGroupService(DatabaseContext context, IValidator<IncomeGroup>
 
 			var incomeGroups = await context.IncomeGroups
 			 	.Where(ig => ig.UserId == authenticatedUserId)
-				.Include(e => e.Incomes)
+				.Include(e => e.Incomes!)
 					.ThenInclude(income => income.User)
 				.OrderByDescending(e => e.CreatedAt)
 				.ToListAsync();
 
 			if (incomeGroups.Count != 0)
 			{
-				var simplifiedIncomeGroups = incomeGroups.Select(incomeGroup => new
+				var simplifiedIncomeGroups = incomeGroups.Select(incomeGroup => new IncomeGroupDto
 				{
-					incomeGroup.Id,
-					incomeGroup.Name,
-					incomeGroup.Description,
-					Incomes = incomeGroup.Incomes?.Select(income => new
+					Id = incomeGroup.Id,
+					Name = incomeGroup.Name,
+					Description = incomeGroup.Description,
+					Incomes = incomeGroup.Incomes?.Select(expense => new IncomeDto
 					{
-						income.Id,
-						income.Description,
-						income.Amount,
-						income.CreatedAt,
-						income.IncomeGroupId,
-						UserId = income.User?.Id,
-						UserUsername = income.User?.Username
+						Id = expense.Id,
+						Description = expense.Description,
+						Amount = expense.Amount,
+						CreatedAt = expense.CreatedAt,
+						IncomeGroupId = expense.IncomeGroupId,
+						UserId = expense.User?.Id,
+						Username = expense.User?.Username
 					})
 				});
 
 				return simplifiedIncomeGroups;
 			}
-
-			return incomeGroups;
+			return [];
 		}
 		catch (Exception ex)
 		{

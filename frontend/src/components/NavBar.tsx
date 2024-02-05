@@ -29,6 +29,7 @@ const NavBar = () => {
     const pagesData = config["EN"];
     const location = useLocation();
     const { modalState } = useModal();
+    const { user } = useUser();
     const iconStyle = { fontSize: 16, marginLeft: "5px" };
     const { isLoggedIn } = useUser();
     const { toggleDarkMode, darkMode } = useDarkMode();
@@ -165,23 +166,26 @@ const NavBar = () => {
                         >
                             <div className="w-[150%]">
                                 {pages.map((page, index) => (
-                                    <NavLink
-                                        key={page.url}
-                                        to={page.url}
-                                        className={`text-black m-3 inline-block transition duration-300 border-b-2 border-transparent hover:border-blue-500 ${page.url === location.pathname ? "border-blue-300" : ""
-                                            } ${index >= pages.length - 1 ? "float-right" : ""}`}
-                                        onClick={handleCloseNavMenu}
-                                    >
-                                        <span
-                                            className={`my-2 ${page.url === location.pathname
-                                                ? "text-blue-500"
-                                                : "text-black"
+                                    index !== pages.length && (
+                                        <NavLink
+                                            key={page.url}
+                                            to={page.url}
+                                            className={`text-black m-3 inline-block transition duration-300 border-b-2 border-transparent hover:border-blue-500 ${page.url === location.pathname ? "border-blue-300" : ""
                                                 }`}
+                                            onClick={handleCloseNavMenu}
                                         >
-                                            {page.name}
-                                        </span>
-                                    </NavLink>
+                                            <span
+                                                className={`my-2 ${page.url === location.pathname
+                                                    ? "text-blue-500"
+                                                    : "text-black"
+                                                    }`}
+                                            >
+                                                {page.name}
+                                            </span>
+                                        </NavLink>
+                                    )
                                 ))}
+
                             </div>
                         </Box>
                         {!darkMode ? (
@@ -248,11 +252,16 @@ const NavBar = () => {
                                             <Typography textAlign="center">{setting}</Typography>
                                         </MenuItem>
                                     ))}
-                                    {/* only visible to "Administrators" */}
-
-                                    <MenuItem sx={{ width: "200px", marginLeft: "10px" }}>
-                                        <NavLink to="reminders">Reminders</NavLink>
-                                    </MenuItem>
+                                    {user.accountType === "Administrator" && (
+                                        <>
+                                            <MenuItem sx={{ width: "200px", marginLeft: "10px" }}>
+                                                <NavLink to="blogs">Blogs</NavLink>
+                                            </MenuItem>
+                                            <MenuItem sx={{ width: "200px", marginLeft: "10px" }}>
+                                                <NavLink to="reminders">Reminders</NavLink>
+                                            </MenuItem>
+                                        </>
+                                    )}
                                 </Menu>
                             </Box>
                         )}

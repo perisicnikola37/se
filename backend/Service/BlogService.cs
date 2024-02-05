@@ -1,4 +1,3 @@
-using Contracts.Dto.Blogs;
 using Domain.Exceptions;
 using Domain.Interfaces;
 using Domain.Models;
@@ -16,24 +15,24 @@ public class BlogService(
 	IGetAuthenticatedUserIdService getAuthenticatedUserId,
 	ILogger<BlogService> logger) : IBlogService
 {
-	public async Task<IEnumerable<object>> GetBlogsAsync(ControllerBase controller)
+	public async Task<IEnumerable<Blog>> GetBlogsAsync(ControllerBase controller)
 	{
 		try
 		{
 			var blogs = await context.Blogs
 				.OrderByDescending(e => e.CreatedAt)
 				.Include(blog => blog.User)
-				.Select(blog => new
+				.Select(blog => new Blog
 				{
-					blog.Id,
-					blog.Description,
-					blog.Author,
-					blog.Text,
-					blog.CreatedAt,
-					blog.UserId,
-					User = new
+					Id = blog.Id,
+					Description = blog.Description,
+					Author = blog.Author,
+					Text = blog.Text,
+					CreatedAt = blog.CreatedAt,
+					UserId = blog.UserId,
+					User = new User
 					{
-						blog.User!.Username
+						Username = blog.User!.Username
 					}
 				})
 				.ToListAsync();
@@ -46,22 +45,25 @@ public class BlogService(
 			throw;
 		}
 	}
-
-	public async Task<ActionResult<object>> GetBlogAsync(int id)
+	public async Task<ActionResult<Blog>> GetBlogAsync(int id)
 	{
 		try
 		{
 			var blog = await context.Blogs
 				.Where(b => b.Id == id)
 				.Include(blog => blog.User)
-				.Select(blog => new
+				.Select(blog => new Blog
 				{
-					blog.Id,
-					blog.Description,
-					blog.Author,
-					blog.Text,
-					blog.CreatedAt,
-					blog.UserId,
+					Id = blog.Id,
+					Description = blog.Description,
+					Author = blog.Author,
+					Text = blog.Text,
+					CreatedAt = blog.CreatedAt,
+					UserId = blog.UserId,
+					User = new User
+					{
+						Username = blog.User!.Username
+					}
 				})
 				.SingleOrDefaultAsync();
 

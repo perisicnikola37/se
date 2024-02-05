@@ -135,7 +135,6 @@ public class AuthService(IDatabaseContext context, IConfiguration configuration,
 		return urlSafeToken;
 	}
 
-
 	public async Task<bool> ForgotPasswordAsync(string userEmail)
 	{
 		var user = await context.Users.FirstOrDefaultAsync(u => u.Email == userEmail);

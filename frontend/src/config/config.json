@@ -23,10 +23,6 @@
             {
                 "name": "Grupe rashoda",
                 "url": "/expenses/groups"
-            },
-            {
-                "name": "Blogovi",
-                "url": "/blogs"
             }
         ],
         "footerLinks": [{
@@ -75,10 +71,6 @@
             {
                 "name": "Expense groups",
                 "url": "/expenses/groups"
-            },
-            {
-                "name": "Blogs",
-                "url": "/blogs"
             }
         ],
         "footerLinks": [{

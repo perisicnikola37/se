@@ -13,10 +13,12 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { Alert } from "@mui/material";
 import useLogin from "../hooks/Authentication/LogInHook";
 import { isEmailValid } from "../utils/utils";
+import { useUser } from "../contexts/UserContext";
 
 const defaultTheme = createTheme();
 
 export default function SignInForm() {
+    const { setUser } = useUser()
     const [loginData, setLoginData] = useState({
         email: "",
         password: "",
@@ -24,7 +26,7 @@ export default function SignInForm() {
 
     const [formError, setFormError] = useState<string | null>(null);
 
-    const { login, fieldErrorMessages, isLoading } = useLogin();
+    const { login, fieldErrorMessages, isLoading, response } = useLogin();
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
@@ -47,6 +49,21 @@ export default function SignInForm() {
         setFormError(null);
 
         await login(loginData);
+        setUser(prev => {
+            if (response && response.user) {
+                return {
+                    ...prev,
+                    id: response.user.id ?? prev.id,
+                    accountType: response.user.accountType ?? prev.accountType,
+                    email: response.user.email ?? prev.email,
+                    formattedCreatedAt: response.user.formattedCreatedAt ?? prev.formattedCreatedAt,
+                    token: response.user.token ?? prev.token,
+                    username: response.user.username ?? prev.username,
+                };
+            } else {
+                return prev;
+            }
+        });
     };
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {

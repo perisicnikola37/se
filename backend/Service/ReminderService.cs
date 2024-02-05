@@ -15,7 +15,7 @@ public class ReminderService(
     IValidator<Reminder> validator,
     ReminderRepository reminderRepository) : IReminderService
 {
-    public async Task<IEnumerable<object>> GetRemindersAsync()
+    public async Task<IEnumerable<Reminder>> GetRemindersAsync()
     {
         try
         {

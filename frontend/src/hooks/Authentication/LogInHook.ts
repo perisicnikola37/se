@@ -32,6 +32,12 @@ interface ErrorResponse {
     };
 }
 
+interface LoginResult {
+    user: User | null;
+    success: boolean;
+    message: string;
+}
+
 const useLogin = () => {
     const navigate = useNavigate();
     const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -39,7 +45,7 @@ const useLogin = () => {
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
     const [fieldErrorMessages, setFieldErrorMessages] = useState<string[]>([]);
 
-    const login = async (loginData: LoginData) => {
+    const login = async (loginData: LoginData): Promise<LoginResult> => {
         setIsLoading(true);
         try {
             const { data, status } = await axiosConfig.post('/api/auth/login', loginData);
@@ -57,6 +63,7 @@ const useLogin = () => {
             }
 
             setResponse({ success: data.success, message: data.message, user: data.user });
+            return { user: data.user, success: data.success, message: data.message };
         } catch (err) {
             const errorResponse = err as ErrorResponse;
 
@@ -71,6 +78,8 @@ const useLogin = () => {
             } else {
                 setErrorMessage('An error occurred during login.');
             }
+
+            return { user: null, success: false, message: errorMessage || 'An error occurred during login.' };
         } finally {
             setIsLoading(false);
         }
