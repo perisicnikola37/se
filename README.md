@@ -1,11 +1,12 @@
-<div>
-<h1> Expense Tracker Project </h2>
-<img src="https://assets.materialup.com/uploads/1eae3002-ea83-4b83-bb8c-e844400e7f83/preview.jpg" width="128"/>
+<div style="display: flex; justify-content: space-between; align-items: center;">
+  <h1>Expense Tracker</h1>
+  <img src="https://i.postimg.cc/VsKQJpRb/logo.png" width="38" />
 </div>
+
 
 ### Overview
 
-This .NET-based application is designed to help users manage and track their expenses and incomes effectively. The goal is to provide a comprehensive solution for organizing financial transactions, generating reports, and offering additional premium features for enhanced user experience.
+This .NET and React-based application is designed to help users manage and track their expenses and incomes effectively. The goal is to provide a comprehensive solution for organizing financial transactions, generating reports, and offering additional premium features for an enhanced user experience.
 
 ## Postman API documentation
 <a href="https://documenter.getpostman.com/view/21619259/2s9YsRd9TF#757dd6bd-9a08-40fd-b5f9-7b19dfaf9b81" target="_blank">Click here</a>

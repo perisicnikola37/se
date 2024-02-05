@@ -10,6 +10,7 @@ image:
 
 before_script:
   - 'dotnet restore $SOLUTION_PATH_BACKEND'
+  - 'apt-get update -qy && apt-get install -y nodejs npm'
   - 'cd $SOLUTION_PATH_FRONTEND && npm install'
 
 test:
