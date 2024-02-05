@@ -117,7 +117,7 @@ const NavBar = () => {
                                 onClick={handleOpenNavMenu}
                                 color="inherit"
                             >
-                                <MenuIcon className="text-gray-500 dark:text-white" />
+                                <MenuIcon className="text-gray-500" />
                             </IconButton>
                             <Menu
                                 id="menu-appbar"
@@ -149,7 +149,7 @@ const NavBar = () => {
                                     >
                                         <NavLink
                                             to={page.url}
-                                            className={`text-black dark:text-white hover:text-blue-500 ${page.url === location.pathname ? "text-blue-500" : ""
+                                            className={`text-black  hover:text-blue-500 ${page.url === location.pathname ? "text-blue-500" : ""
                                                 }`}
                                         >
                                             {page.name}

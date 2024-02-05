@@ -3,13 +3,13 @@ import { Link } from "react-router-dom";
 import useAllBlogs from "../hooks/Blogs/AllBlogsHook";
 import { truncateString } from "../utils/utils";
 import { Skeleton } from "@mui/material";
+import { Helmet } from "react-helmet";
 
 const Blogs = () => {
     const { loadBlogs, blogs } = useAllBlogs();
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
-        document.title = "Blogs | Expense Tracker";
         loadBlogs();
         setTimeout(() => {
             setIsLoading(false);
@@ -20,6 +20,9 @@ const Blogs = () => {
 
     return (
         <div className="w-full max-w-screen-xl min-h-[48rem] mx-auto p-4 md:py-8">
+            <Helmet>
+                <title>Blogs | Expense Tracker</title>
+            </Helmet>
             <h1 className="text-3xl font-semibold mb-4">Blogs</h1>
             {isLoading ? (
                 <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">

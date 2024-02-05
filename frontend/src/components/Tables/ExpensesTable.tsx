@@ -315,7 +315,7 @@ function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
             ) : (
                 <div className="w-[340%] flex justify-end">
                     <ExpenseCreateModal />
-                    <div className="search">
+                    <div className="_search">
                         <label htmlFor="default-search" className="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">
                             Search
                         </label>

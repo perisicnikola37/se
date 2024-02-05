@@ -316,7 +316,7 @@ function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
             ) : (
                 <div className="w-[340%] flex justify-end">
                     <IncomeCreateModal />
-                    <div className="search">
+                    <div className="_search">
                         <label htmlFor="default-search" className="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">
                             Search
                         </label>
@@ -635,9 +635,11 @@ function EnhancedTable({ incomes }: EnhancedTablePropsWithData<IncomeInterface>)
                     </Table>
                 </TableContainer>
                 <div className="flex justify-between">
-                    <Button disabled={exportButtonDisabled} onClick={handleExport} variant="contained" size="small" sx={{ margin: "10px", fontSize: "12px", background: "#3C70ED" }} endIcon={<SendIcon />}>
-                        Export to email
-                    </Button>
+                    <div className="_export-button">
+                        <Button disabled={exportButtonDisabled} onClick={handleExport} variant="contained" size="small" sx={{ margin: "10px", fontSize: "12px", background: "#3C70ED" }} endIcon={<SendIcon />}>
+                            Export to email
+                        </Button>
+                    </div>
                     <TablePagination
                         rowsPerPageOptions={[5, 10, 25]}
                         component="div"

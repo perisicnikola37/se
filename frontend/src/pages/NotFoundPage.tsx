@@ -1,6 +1,11 @@
+import { Helmet } from "react-helmet";
+
 const NotFoundPage = () => {
     return (
         <section className="page_404">
+            <Helmet>
+                <title>Not found | Expense Tracker</title>
+            </Helmet>
             <div className="container">
                 <div className="row">
                     <div className="col-sm-12">

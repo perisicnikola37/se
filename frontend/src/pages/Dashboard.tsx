@@ -8,12 +8,12 @@ import LatestSection from "../components/Dashboard/LatestSection";
 import { useUser } from "../contexts/UserContext";
 import Chart from "../components/Chart";
 import Newsletter from "../components/Newsletter";
-import { useEffect } from "react";
 import MailChimp from "../components/Dashboard/Mailchimp";
 import EmailExport from "../components/Dashboard/EmailExport";
 import FAQ from "../components/FAQ";
 import Pricing from "../components/Pricing";
 import Testimonials from "../components/Testimonials";
+import { Helmet } from "react-helmet";
 
 const Dashboard = () => {
     const { isLoggedIn } = useUser();
@@ -29,12 +29,11 @@ const Dashboard = () => {
         fontWeight: "800",
     };
 
-    useEffect(() => {
-        document.title = "Dashboard | Expense Tracker";
-    }, []);
-
     return (
         <div className="flex-grow flex flex-col items-center justify-center min-h-screen">
+            <Helmet>
+                <title>Dashboard | Expense Tracker</title>
+            </Helmet>
             {!isLoggedIn() ? (
                 <>
                     <div className="_main-text">

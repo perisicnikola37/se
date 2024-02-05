@@ -10,7 +10,7 @@ body {
 }
 
 ::-webkit-scrollbar {
-    width: 0.4rem;
+    width: 7px;
 }
 
 .swal2-popup .swal2-styled:focus {
@@ -71,10 +71,10 @@ body {
     .search {
         display: none;
     }
-    .export-button {
+    ._export-button {
         display: none;
     }
-    .search {
+    ._search {
         display: none;
     }
 }
