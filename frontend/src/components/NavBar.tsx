@@ -1,15 +1,27 @@
 import { useEffect, useState } from "react";
-import { AppBar, Avatar, Box, Container, IconButton, Menu, MenuItem, Toolbar, Tooltip, Typography } from "@mui/material";
+import {
+    AppBar,
+    Avatar,
+    Box,
+    Container,
+    IconButton,
+    Menu,
+    MenuItem,
+    Toolbar,
+    Tooltip,
+    Typography,
+} from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import Brightness4Icon from "@mui/icons-material/Brightness4";
 import logo from "../assets/logo.png";
 import config from "../config/config.json";
 import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
 import SubHeader from "./SubHeader";
-import EastSharpIcon from '@mui/icons-material/EastSharp';
+import EastSharpIcon from "@mui/icons-material/EastSharp";
 import { useUser } from "../contexts/UserContext";
 import { useModal } from "../contexts/GlobalContext";
-import userPicture from "../../src/assets/profile_image.jpg"
+import userPicture from "../../src/assets/profile_image.jpg";
+import { useDarkMode } from "../contexts/DarkModeContext";
 
 const NavBar = () => {
     const navigate = useNavigate();
@@ -18,26 +30,23 @@ const NavBar = () => {
     const { modalState } = useModal();
     const iconStyle = { fontSize: 16, marginLeft: "5px" };
     const { isLoggedIn } = useUser();
+    const { toggleDarkMode } = useDarkMode();
 
-    const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(
-        null
-    );
-    const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(
-        null
-    );
+    const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
+    const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
 
     const handleLogout = () => {
-        localStorage.removeItem('id');
-        localStorage.removeItem('username');
-        localStorage.removeItem('email');
-        localStorage.removeItem('accountType');
-        localStorage.removeItem('token');
-        localStorage.removeItem('formattedCreatedAt');
+        localStorage.removeItem("id");
+        localStorage.removeItem("username");
+        localStorage.removeItem("email");
+        localStorage.removeItem("accountType");
+        localStorage.removeItem("token");
+        localStorage.removeItem("formattedCreatedAt");
 
         navigate("/sign-in");
     };
 
-    const pages = pagesData.pages.map(page => ({ ...page }));
+    const pages = pagesData.pages.map((page) => ({ ...page }));
     const settings = pagesData.settings || [];
 
     const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
@@ -81,7 +90,7 @@ const NavBar = () => {
                 position="sticky"
                 sx={{
                     zIndex: modalState ? 11 : 1,
-                    backgroundColor: '#fff',
+                    backgroundColor: "#fff",
                     textColor: "#000",
                     boxShadow: "none",
                     borderBottom: scrolled ? "1px solid #ddd" : "none",
@@ -91,13 +100,7 @@ const NavBar = () => {
                 <Container maxWidth="xl">
                     <Toolbar disableGutters>
                         <Link to="/">
-                            <img
-                                height={40}
-                                width={40}
-                                src={logo}
-                                alt=""
-                                className="mr-2"
-                            />
+                            <img height={40} width={40} src={logo} alt="" className="mr-2" />
                         </Link>
                         <Box
                             sx={{
@@ -140,9 +143,14 @@ const NavBar = () => {
                                     <MenuItem
                                         key={page.url}
                                         onClick={handleCloseNavMenu}
-                                        className={`transition duration-300 ${index >= pages.length - 2 ? "ml-auto" : ""}`}
+                                        className={`transition duration-300 ${index >= pages.length - 2 ? "ml-auto" : ""
+                                            }`}
                                     >
-                                        <NavLink to={page.url} className={`text-black hover:text-blue-500 ${page.url === location.pathname ? "text-blue-500" : ""}`}>
+                                        <NavLink
+                                            to={page.url}
+                                            className={`text-black hover:text-blue-500 ${page.url === location.pathname ? "text-blue-500" : ""
+                                                }`}
+                                        >
                                             {page.name}
                                         </NavLink>
                                     </MenuItem>
@@ -165,7 +173,9 @@ const NavBar = () => {
                                         onClick={handleCloseNavMenu}
                                     >
                                         <span
-                                            className={`my-2 ${page.url === location.pathname ? "text-blue-500" : "text-black"
+                                            className={`my-2 ${page.url === location.pathname
+                                                    ? "text-blue-500"
+                                                    : "text-black"
                                                 }`}
                                         >
                                             {page.name}
@@ -174,41 +184,44 @@ const NavBar = () => {
                                 ))}
                             </div>
                         </Box>
-                        <Brightness4Icon className="mr-5 text-[#1b2a4b]" />
-                        {!isLoggedIn() ? (<button type="button" className="text-white bg-blue-700 hover:bg-blue-800  font-medium rounded-md text-sm px-3 py-1.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
-                            <a href="/sign-in">
-                                Sign In
-                                <EastSharpIcon style={iconStyle} />
-                            </a>
-                        </button>) : (<Box sx={{ flexGrow: 0 }}>
-                            <Tooltip title="Open settings">
-                                <IconButton
-                                    onClick={handleOpenUserMenu}
-                                    sx={{ p: 0 }}
-                                >
-                                    <Avatar
-                                        alt="Remy Sharp"
-                                        src={userPicture}
-                                    />
-                                </IconButton>
-                            </Tooltip>
-                            <Menu
-                                sx={{ mt: "45px" }}
-                                id="menu-appbar"
-                                anchorEl={anchorElUser}
-                                anchorOrigin={{
-                                    vertical: "top",
-                                    horizontal: "right",
-                                }}
-                                keepMounted
-                                transformOrigin={{
-                                    vertical: "top",
-                                    horizontal: "right",
-                                }}
-                                open={Boolean(anchorElUser)}
-                                onClose={handleCloseUserMenu}
+                        <Brightness4Icon
+                            onClick={() => toggleDarkMode((prev) => !prev)}
+                            className="mr-5 text-[#1b2a4b] cursor-pointer hover:scale-105 duration-300"
+                        />
+                        {!isLoggedIn() ? (
+                            <button
+                                type="button"
+                                className="text-white bg-blue-700 hover:bg-blue-800  font-medium rounded-md text-sm px-3 py-1.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
                             >
-                                {/* {settings.map((setting) => (
+                                <a href="/sign-in">
+                                    Sign In
+                                    <EastSharpIcon style={iconStyle} />
+                                </a>
+                            </button>
+                        ) : (
+                            <Box sx={{ flexGrow: 0 }}>
+                                <Tooltip title="Open settings">
+                                    <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                                        <Avatar alt="Remy Sharp" src={userPicture} />
+                                    </IconButton>
+                                </Tooltip>
+                                <Menu
+                                    sx={{ mt: "45px" }}
+                                    id="menu-appbar"
+                                    anchorEl={anchorElUser}
+                                    anchorOrigin={{
+                                        vertical: "top",
+                                        horizontal: "right",
+                                    }}
+                                    keepMounted
+                                    transformOrigin={{
+                                        vertical: "top",
+                                        horizontal: "right",
+                                    }}
+                                    open={Boolean(anchorElUser)}
+                                    onClose={handleCloseUserMenu}
+                                >
+                                    {/* {settings.map((setting) => (
                                     <MenuItem
                                         key={setting}
                                         onClick={handleCloseUserMenu}
@@ -219,35 +232,28 @@ const NavBar = () => {
                                     </MenuItem>
                                 ))} */}
 
-                                {settings.map((setting) => (
-                                    <MenuItem
-                                        sx={{ width: "200px", marginLeft: "10px" }}
-                                        key={setting}
-                                        onClick={() => handleLogout()}
-                                    >
-                                        <Typography textAlign="center">
-                                            {setting}
-                                        </Typography>
+                                    {settings.map((setting) => (
+                                        <MenuItem
+                                            sx={{ width: "200px", marginLeft: "10px" }}
+                                            key={setting}
+                                            onClick={() => handleLogout()}
+                                        >
+                                            <Typography textAlign="center">{setting}</Typography>
+                                        </MenuItem>
+                                    ))}
+                                    {/* only visible to "Administrators" */}
+
+                                    <MenuItem sx={{ width: "200px", marginLeft: "10px" }}>
+                                        <NavLink to="reminders">Reminders</NavLink>
                                     </MenuItem>
-                                ))}
-                                {/* only visible to "Administrators" */}
-
-                                <MenuItem
-                                    sx={{ width: "200px", marginLeft: "10px" }}
-                                >
-                                    <NavLink to="reminders">
-                                        Reminders
-                                    </NavLink>
-                                </MenuItem>
-
-                            </Menu>
-                        </Box>)}
-
+                                </Menu>
+                            </Box>
+                        )}
                     </Toolbar>
                 </Container>
-            </AppBar >
+            </AppBar>
         </>
-    )
-}
+    );
+};
 
 export default NavBar;

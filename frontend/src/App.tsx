@@ -5,20 +5,33 @@ import NavBar from "./components/NavBar";
 import { useLoading } from "./contexts/LoadingContext";
 import Footer from "./components/Footer";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
+import { useUser } from "./contexts/UserContext";
+import { CssBaseline, ThemeProvider, createTheme } from "@mui/material";
+import { useDarkMode } from "./contexts/DarkModeContext";
 
 function App() {
     const { loading, setLoadingState } = useLoading();
     const navigate = useNavigate();
     const location = useLocation();
+    const { isLoggedIn } = useUser();
+    const { darkMode } = useDarkMode();
+
+    const theme = createTheme({
+        palette: {
+            mode: darkMode ? "dark" : "light",
+        },
+    });
 
     useEffect(() => {
-        const token = localStorage.getItem('token');
+        // Check if the URL contains "reset-password"
+        const isResetPasswordRoute =
+            window.location.pathname.includes("reset-password");
 
-        // Exclude "/" path from redirection
-        if (!token && location.pathname !== "/") {
+        // Exclude "/" path and "reset-password" route from redirection
+        if (!isLoggedIn() && location.pathname !== "/" && !isResetPasswordRoute) {
             navigate("/sign-in");
         }
-    }, [navigate, location]);
+    }, [navigate, location, isLoggedIn]);
 
     useEffect(() => {
         const timeout = setTimeout(() => {
@@ -45,9 +58,12 @@ function App() {
                     </div>
                 ) : (
                     <div className="flex flex-col min-h-full">
-                        <NavBar />
-                        <Outlet />
-                        <Footer />
+                        <ThemeProvider theme={theme}>
+                            <CssBaseline />
+                            <NavBar />
+                            <Outlet />
+                            <Footer />
+                        </ThemeProvider>
                     </div>
                 )}
             </div>
