@@ -38,13 +38,7 @@ const NavBar = () => {
     const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
 
     const handleLogout = () => {
-        localStorage.removeItem("id");
-        localStorage.removeItem("username");
-        localStorage.removeItem("email");
-        localStorage.removeItem("accountType");
-        localStorage.removeItem("token");
-        localStorage.removeItem("formattedCreatedAt");
-
+        handleLogout()
         navigate("/sign-in");
     };
 

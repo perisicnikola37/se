@@ -118,30 +118,28 @@ public class UserController(DatabaseContext context, IEmailService emailService,
 			string emailBody = $@"<!DOCTYPE html PUBLIC ""-//W3C//DTD XHTML 1.0 Transitional//EN"" ""http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"">
 			<html dir=""ltr"" lang=""en"">
 			<head>
-			    <meta content=""text/html; charset=UTF-8"" http-equiv=""Content-Type"" />
-			    <link href=""https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"" rel=""stylesheet"">
+				<meta content=""text/html; charset=UTF-8"" http-equiv=""Content-Type"" />
+				<link href=""https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"" rel=""stylesheet"">
 			</head>
 			<body style=""background-color:#ffffff;font-family:'Inter', 'ui-sans-serif', 'system-ui', '-apple-system', 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif"">
-			    <div class='max-w-2xl mx-auto p-4'>
-			        <img src='https://i.postimg.cc/VsKQJpRb/logo.png' alt='Linear Logo' class='block mx-auto mb-4' style='width: 42px; height: 42px;'>
-			        <h1 class='text-2xl font-semibold text-gray-800 mb-6'>Expense Tracker</h1>
-			        <hr class='border-t border-gray-300 my-8'>
-			        <p class='text-gray-700 text-sm mb-4'>Incomes:</p>
-			        {incomesHtml}
-			        <div class=""mt-10"">
+				<div class='max-w-2xl mx-auto p-4'>
+					<img src='https://i.postimg.cc/VsKQJpRb/logo.png' alt='Linear Logo' class='block mx-auto mb-4' style='width: 42px; height: 42px;'>
+					<h1 class='text-2xl font-semibold text-gray-800 mb-6'>Expense Tracker</h1>
+					<hr class='border-t border-gray-300 my-8'>
+					<p class='text-gray-700 text-sm mb-4'>Incomes:</p>
+					{incomesHtml}
+					<div class=""mt-10"">
 					<p class='text-gray-700 text-sm mb-4'>Stats ID: {statsId}</p>
-			        <p class='text-gray-700 text-sm mb-4'>Stats creation date: {statsDate}</p>
-			        <p class='text-gray-700 text-sm'>Thank you for using Expense Tracker&trade;</p>
+					<p class='text-gray-700 text-sm mb-4'>Stats creation date: {statsDate}</p>
+					<p class='text-gray-700 text-sm'>Thank you for using Expense Tracker&trade;</p>
 					</div>
-			    </div>
+				</div>
 			</body>
 			</html>";
 
-			var isEmailSent = await emailService.SendEmail(emailRequest, "Expense Tracker", emailBody);
-
 			byte[] pdfBytes = pdfGenerator.GeneratePdf(emailBody);
 
-			await emailService.SendEmailWithAttachment(emailRequest, "Expense Tracker", emailBody, "expense_tracker.pdf", pdfBytes, "application/pdf");
+			var isEmailSent = await emailService.SendEmailWithAttachment(emailRequest, "Expense Tracker", emailBody, "expense_tracker.pdf", pdfBytes, "application/pdf");
 
 			if (isEmailSent)
 				return Ok("Invoice sent successfully");
@@ -151,6 +149,31 @@ public class UserController(DatabaseContext context, IEmailService emailService,
 		catch (Exception e)
 		{
 			Console.WriteLine(e);
+			throw;
+		}
+	}
+
+	[HttpDelete("delete/account")]
+	public async Task<IActionResult> DeleteAuthenticatedUser()
+	{
+		try
+		{
+			var userId = getAuthenticatedUserId.GetUserId(User);
+
+			var user = await context.Users.FindAsync(userId);
+			if (user == null)
+			{
+				return NotFound();
+			}
+
+			context.Users.Remove(user);
+			await context.SaveChangesAsync();
+
+			return NoContent();
+		}
+		catch (Exception ex)
+		{
+			Console.WriteLine(ex);
 			throw;
 		}
 	}

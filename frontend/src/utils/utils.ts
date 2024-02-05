@@ -116,3 +116,12 @@ export const validateLoginForm = async (
         }
     });
 };
+
+export const handleLogout = () => {
+    localStorage.removeItem("id");
+    localStorage.removeItem("username");
+    localStorage.removeItem("email");
+    localStorage.removeItem("accountType");
+    localStorage.removeItem("token");
+    localStorage.removeItem("formattedCreatedAt");
+};

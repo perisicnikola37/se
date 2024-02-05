@@ -2,19 +2,25 @@ import { Helmet } from 'react-helmet';
 import userPicture from "../../src/assets/profile_image.jpg";
 import { useEffect } from 'react';
 import useCurrentUser from '../hooks/Authentication/GetUserHook';
+import useDeleteAccount from '../hooks/Authentication/DeleteAccountHook';
 
 const Profile = () => {
     const { loadCurrentUser, user } = useCurrentUser()
+    const { deleteAccount } = useDeleteAccount()
 
     useEffect(() => {
         loadCurrentUser();
     }, []);
 
+    const handleDeleteAccount = () => {
+        deleteAccount()
+    }
 
     const totalIncome = user?.incomes.reduce((total, income) => total + income.amount, 0) || 0;
 
     return (
         <div className="w-full max-w-screen-xl min-h-[48rem] mx-auto p-4 md:py-8">
+
             <Helmet>
                 <title>User profile | Expense Tracker</title>
             </Helmet>
@@ -48,7 +54,7 @@ const Profile = () => {
                         </div>
 
                         <div className="space-x-8 flex justify-between mt-32 md:mt-0 md:justify-center">
-                            <button className="text-white py-2 px-4 uppercase rounded bg-red-500 hover:bg-red-600 shadow hover:shadow-lg font-medium transition transform">
+                            <button onClick={handleDeleteAccount} className="text-white py-2 px-4 uppercase rounded bg-red-500 hover:bg-red-600 shadow hover:shadow-lg font-medium transition transform">
                                 Delete account
                             </button>
                         </div>
