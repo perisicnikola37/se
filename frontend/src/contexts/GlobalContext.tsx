@@ -12,14 +12,11 @@ interface FetchObjectParams {
 
 interface ModalContextProps {
     modalState: boolean;
-
     // pagination
     totalRecords: number;
     setTotalRecords: (number: number) => void;
-
     pageNumber: number;
     setPageNumber: (number: number) => void;
-
     actionChange: { counter: number; value: boolean };
     appliedFilters: FetchObjectParams;
     openModal: () => void;
