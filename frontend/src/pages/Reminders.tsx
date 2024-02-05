@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import DeleteModal from "../components/Modals/DeleteModal";
 import useAllReminders from "../hooks/Reminders/AllRemindersHook";
-import { Alert, Skeleton } from "@mui/material"; // Import Skeleton component
+import { Alert, Skeleton } from "@mui/material";
 import ReminderCreateModal from "../components/Modals/ReminderCreateModal";
 import { useModal } from "../contexts/GlobalContext";
 

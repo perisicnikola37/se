@@ -6,18 +6,23 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
-import { Alert, Autocomplete } from "@mui/material";
-import useCreateObject from "../../hooks/GlobalHooks/CreateObjectHook";
+import { Alert, Select, MenuItem, FormControl, InputLabel, Checkbox } from "@mui/material";
 import { useModal } from "../../contexts/GlobalContext";
-import useObjectGroups from "../../hooks/GlobalHooks/GetObjectsHook";
+import useCreateReminder from "../../hooks/Reminders/CreateReminderHook";
 
 const ReminderCreateModal = () => {
-    const { fetchObjectGroups, objectGroups } = useObjectGroups("income");
+    const { createReminder, isLoading } = useCreateReminder();
     const [open, setOpen] = useState(false);
-    const { isLoading, createObject } = useCreateObject("income");
     const { setActionChanged } = useModal();
     const [errorMessage, setErrorMessage] = useState("");
-    const [selectedIncomeGroup, setSelectedIncomeGroup] = useState("");
+    const [selectedReminderDay, setSelectedReminderDay] = useState("");
+    const [selectedActive, setSelectedActive] = useState(false);
+
+    const resetFields = () => {
+        setErrorMessage("");
+        setSelectedReminderDay("");
+        setSelectedActive(false);
+    };
 
     const handleClickOpen = () => {
         setOpen(true);
@@ -25,50 +30,27 @@ const ReminderCreateModal = () => {
 
     const handleClose = () => {
         setOpen(false);
+        resetFields();
     };
 
-    const handleAutocompleteOpen = () => {
-        fetchObjectGroups();
-    };
-
-    const handleCreateIncome = async (
-        event: React.FormEvent<HTMLFormElement>
-    ) => {
+    const handleCreateIncome = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         const formData = new FormData(event.currentTarget);
 
-        const descriptionValue = formData.get("description");
-        let amountValue = formData.get("amount");
+        const nameValue = formData.get("name");
 
-        if (typeof descriptionValue !== "string" || descriptionValue.length < 8) {
-            setErrorMessage("Description must be at least 8 characters long");
+        if (typeof nameValue !== "string" || nameValue.length < 2) {
+            setErrorMessage("Name must be at least 2 characters long");
             return;
         }
 
-        // Check if amountValue is null or undefined
-        if (amountValue === null || amountValue === undefined) {
-            setErrorMessage("Amount is required");
-            return;
-        }
-
-        // Convert amountValue to string
-        amountValue = amountValue.toString();
-
-        // Check if amountValue is a valid number and greater than 0
-        if (isNaN(parseFloat(amountValue)) || parseFloat(amountValue) <= 0) {
-            setErrorMessage("Amount must be a valid number greater than 0");
-            return;
-        }
-
-        const amount = parseFloat(amountValue);
-
-        const incomeData = {
-            description: descriptionValue,
-            amount,
-            incomeGroupId: Number(selectedIncomeGroup),
+        const reminderData = {
+            ReminderDay: selectedReminderDay,
+            Type: nameValue,
+            Active: selectedActive,
         };
 
-        await createObject(incomeData);
+        await createReminder(reminderData);
         setActionChanged();
         handleClose();
     };
@@ -93,8 +75,7 @@ const ReminderCreateModal = () => {
                 <DialogTitle>New reminder</DialogTitle>
                 <DialogContent>
                     <DialogContentText>
-                        Enter the details of your new income below, and we'll help you keep
-                        track of your financial success. Your prosperity is our priority!
+                        Enter the details of your new reminder below.
                     </DialogContentText>
                     {errorMessage && (
                         <>
@@ -112,44 +93,36 @@ const ReminderCreateModal = () => {
                         autoFocus
                         required
                         margin="dense"
-                        id="description"
-                        name="description"
-                        label="Income description"
+                        id="name"
+                        name="name"
+                        label="Name"
                         type="text"
                         fullWidth
                         variant="standard"
                     />
-                    <TextField
-                        autoFocus
-                        required
-                        margin="dense"
-                        id="amount"
-                        name="amount"
-                        label="Amount"
-                        type="text"
-                        fullWidth
-                        variant="standard"
-                        inputProps={{
-                            pattern: "^[0-9]+(.[0-9]+)?$",
-                            title: "Please enter a valid number",
-                        }}
-                    />
-
-                    <Autocomplete
-                        onOpen={handleAutocompleteOpen}
-                        id="combo-box-demo"
-                        options={objectGroups}
-                        getOptionLabel={(option) => option.name}
-                        sx={{ width: "100%", marginTop: "20px" }}
-                        renderInput={(params) => (
-                            <TextField {...params} label="Income group" required />
-                        )}
-                        value={objectGroups.find(
-                            (group) => group.id === Number(selectedIncomeGroup)
-                        )}
-                        onChange={(_, newValue) =>
-                            setSelectedIncomeGroup((newValue?.id || "") as string)
-                        }
+                    <FormControl fullWidth sx={{ mt: "5%", mb: "5%" }}>
+                        <InputLabel id="demo-simple-select-label">Day</InputLabel>
+                        <Select
+                            labelId="demo-simple-select-label"
+                            id="demo-simple-select"
+                            value={selectedReminderDay}
+                            onChange={(e) => setSelectedReminderDay(e.target.value as string)}
+                            label="Day"
+                        >
+                            <MenuItem value="Monday">Monday</MenuItem>
+                            <MenuItem value="Tuesday">Tuesday</MenuItem>
+                            <MenuItem value="Wednesday">Wednesday</MenuItem>
+                            <MenuItem value="Thursday">Thursday</MenuItem>
+                            <MenuItem value="Friday">Friday</MenuItem>
+                            <MenuItem value="Saturday">Saturday</MenuItem>
+                            <MenuItem value="Sunday">Sunday</MenuItem>
+                        </Select>
+                    </FormControl>
+                    Active
+                    <Checkbox
+                        checked={selectedActive}
+                        onChange={(e) => setSelectedActive(e.target.checked)}
+                        inputProps={{ 'aria-label': 'controlled' }}
                     />
                 </DialogContent>
                 <DialogActions className="m-2">
