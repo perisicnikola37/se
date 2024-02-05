@@ -272,3 +272,11 @@ export interface MailchimpSubscribeHookResult {
     error: string | null;
     subscribeToMailchimp: (email: string) => Promise<void>;
 }
+
+export interface MailChimpProps {
+    imageUrl: string;
+}
+
+export interface EmailExportProps {
+    imageUrl: string;
+}
