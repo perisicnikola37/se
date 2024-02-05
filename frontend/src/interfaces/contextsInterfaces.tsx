@@ -44,6 +44,8 @@ export interface FetchObjectParams {
 }
 
 export interface ModalContextProps {
+    language: string;
+    setLanguage: Dispatch<SetStateAction<string>>;
     modalState: boolean;
     // pagination
     totalRecords: number;

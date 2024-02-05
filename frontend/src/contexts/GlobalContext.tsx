@@ -1,14 +1,15 @@
 import React, { createContext, useContext, useState, ReactNode } from 'react';
 import { FetchObjectParams, ModalContextProps } from '../interfaces/contextsInterfaces';
 
-const ModalContext = createContext<ModalContextProps | undefined>(undefined);
-
 interface ModalProviderProps {
     children: ReactNode;
 }
 
+const ModalContext = createContext<ModalContextProps | undefined>(undefined);
+
 export const ModalProvider: React.FC<ModalProviderProps> = ({ children }) => {
     const [modalState, setModalState] = useState(false);
+    const [language, setLanguage] = useState(localStorage.getItem('defaultLanguage') || 'EN');
     const [totalRecords, setTotalRecordsState] = useState(0);
     const [pageNumber, setPageNumberState] = useState(0);
     const [actionChange, setActionChange] = useState({ counter: 0, value: false });
@@ -56,10 +57,12 @@ export const ModalProvider: React.FC<ModalProviderProps> = ({ children }) => {
         resetActionChange,
         setAppliedFilters,
         getAppliedFilters,
-        totalRecords: totalRecords,
+        totalRecords,
         setTotalRecords,
-        pageNumber: pageNumber,
-        setPageNumber
+        pageNumber,
+        setPageNumber,
+        language,
+        setLanguage,
     };
 
     return (

@@ -23,6 +23,7 @@ import { useModal } from "../contexts/GlobalContext";
 import userPicture from "../../src/assets/profile_image.jpg";
 import { useDarkMode } from "../contexts/DarkModeContext";
 import NightlightIcon from '@mui/icons-material/Nightlight';
+import { handleLogout } from "../utils/utils";
 
 const NavBar = () => {
     const navigate = useNavigate();
@@ -33,11 +34,11 @@ const NavBar = () => {
     const iconStyle = { fontSize: 16, marginLeft: "5px" };
     const { isLoggedIn } = useUser();
     const { toggleDarkMode, darkMode } = useDarkMode();
-
+    const { setLanguage } = useModal()
     const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
     const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
 
-    const handleLogout = () => {
+    const handleLogoutOperation = () => {
         handleLogout()
         navigate("/sign-in");
     };
@@ -46,6 +47,11 @@ const NavBar = () => {
 
     const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorElNav(event.currentTarget);
+    };
+
+    const handleLanguageClick = (language: string) => {
+        localStorage.setItem('defaultLanguage', language);
+        setLanguage(language);
     };
 
     const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
@@ -194,6 +200,23 @@ const NavBar = () => {
                                 className="mr-5 text-[#fff] cursor-pointer hover:scale-105 duration-300"
                             />
                         )}
+
+                        <div className="text-black mr-5">
+                            <span
+                                className="cursor-pointer hover:text-[#2563EB] duration-300"
+                                onClick={() => handleLanguageClick('EN')}
+                            >
+                                eng
+                            </span>
+                            {' / '}
+                            <span
+                                className="cursor-pointer hover:text-red-500 duration-300"
+                                onClick={() => handleLanguageClick('ME')}
+                            >
+                                mne
+                            </span>
+                        </div>
+
                         {!isLoggedIn() ? (
                             <button
                                 type="button"
@@ -251,7 +274,7 @@ const NavBar = () => {
                                     )}
                                     <MenuItem
                                         sx={{ width: "200px", marginLeft: "10px" }}
-                                        onClick={() => handleLogout()}
+                                        onClick={() => handleLogoutOperation()}
                                     >
                                         <Typography textAlign="center">Log out</Typography>
                                     </MenuItem>
