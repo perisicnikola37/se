@@ -1,5 +1,6 @@
 stages:
   - test
+  - build_frontend
 
 variables:
   SOLUTION_PATH_BACKEND: "backend/Solution.sln"
@@ -9,17 +10,24 @@ image:
   name: mcr.microsoft.com/dotnet/sdk:latest
 
 before_script:
-  - 'dotnet restore $SOLUTION_PATH_BACKEND'
   - 'apt-get update -qy && apt-get install -y nodejs npm'
-  - 'cd $SOLUTION_PATH_FRONTEND && npm install'
 
-test:
+test_backend:
   stage: test
   only:
     - main
   script:
-    - 'dotnet test $SOLUTION_PATH_BACKEND'
-    - 'cd $SOLUTION_PATH_FRONTEND && npm run build'
-  artifacts:
-    paths:
-      - frontend/dist/
+    - 'cd $SOLUTION_PATH_BACKEND'
+    - 'dotnet restore'
+    - 'dotnet test'
+
+build_frontend:
+  stage: build_frontend
+  only:
+    - main
+  script:
+    - 'cd $SOLUTION_PATH_FRONTEND'
+    - 'npm install'
+    - 'npm run build'
+  dependencies:
+    - test_backend 
