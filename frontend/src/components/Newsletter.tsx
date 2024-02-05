@@ -1,10 +1,12 @@
 import { useState, useEffect } from "react";
 import useMailchimpSubscribe from "../hooks/ThirdPartyServices/MailchimpSubscribeHook";
+import { validateEmail } from "../utils/utils";
 
 const Newsletter = () => {
     const { subscribeToMailchimp } = useMailchimpSubscribe();
     const [isSubscribed, setIsSubscribed] = useState(false);
     const [email, setEmail] = useState("");
+    const [isEmailValid, setIsEmailValid] = useState(true);
 
     useEffect(() => {
         const storedSubscriptionStatus = localStorage.getItem("isSubscribed");
@@ -14,11 +16,13 @@ const Newsletter = () => {
     }, []);
 
     const toggleAlert = () => {
-        subscribeToMailchimp(email);
-        subscribeToMailchimp(email);
-
-        localStorage.setItem("isSubscribed", "true");
-        setIsSubscribed(true);
+        if (validateEmail(email)) {
+            subscribeToMailchimp(email);
+            localStorage.setItem("isSubscribed", "true");
+            setIsSubscribed(true);
+        } else {
+            setIsEmailValid(false);
+        }
     };
 
     return (
@@ -53,12 +57,16 @@ const Newsletter = () => {
                                         ></svg>
                                     </div>
                                     <input
-                                        className="block p-3 lg:pl-10 sm:pl-3 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 sm:rounded-none sm:rounded-l-lg outline-none"
+                                        className={`block p-3 lg:pl-10 sm:pl-3 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 sm:rounded-none sm:rounded-l-lg outline-none ${isEmailValid ? "" : "border-red-500"
+                                            }`}
                                         placeholder="Enter your email"
                                         type="email"
                                         id="email"
                                         value={email}
-                                        onChange={(e) => setEmail(e.target.value)}
+                                        onChange={(e) => {
+                                            setEmail(e.target.value);
+                                            setIsEmailValid(true);
+                                        }}
                                         required
                                     />
                                 </div>
@@ -84,7 +92,6 @@ const Newsletter = () => {
                     )}
                 </div>
             </div>
-            {/* Button for smaller screens */}
             {!isSubscribed && (
                 <div className="mx-auto mb-5 text-center max-w-screen-sm sm:hidden">
                     <button

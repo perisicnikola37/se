@@ -5,11 +5,13 @@ import { Breadcrumbs, Typography } from "@mui/material";
 
 const ExpenseGroupDetail = () => {
     const { id } = useParams();
-    const { object, getObjectGroupById } = useGetObjectGroupById(parseInt(id), "expense");
+    const { object, getObjectGroupById } = useGetObjectGroupById(id ? parseInt(id) : 0, "expense");
 
     useEffect(() => {
-        getObjectGroupById();
-    }, []);
+        if (id) {
+            getObjectGroupById();
+        }
+    }, [id]);
 
     return (
         <div className="w-full max-w-screen-xl min-h-[48rem] mx-auto p-4 md:py-8">
@@ -33,12 +35,16 @@ const ExpenseGroupDetail = () => {
 
                     <div className="bg-[#cbffc0] rounded-md shadow-md p-6">
                         <h2 className="text-2xl font-bold mb-4">Expenses</h2>
-                        {object.expenses.map((expense) => (
-                            <div key={expense.id} className="mb-4">
-                                <p className="text-lg">{expense.name}</p>
-                                <p className="text-base">Amount: ${expense.amount}</p>
-                            </div>
-                        ))}
+                        {object.expenses ? (
+                            object.expenses.map((expense) => (
+                                <div key={expense.id} className="mb-4">
+                                    <p className="text-lg">{expense.name}</p>
+                                    <p className="text-base">Amount: ${expense.amount}</p>
+                                </div>
+                            ))
+                        ) : (
+                            <p>No expenses available.</p>
+                        )}
                     </div>
                 </div>
             )}

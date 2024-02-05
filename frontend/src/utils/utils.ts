@@ -64,3 +64,8 @@ export const validatePassword = (newPassword: string, confirmNewPassword: string
 
     return errors;
 };
+
+export const validateEmail = (email: string) => {
+    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return regex.test(email);
+};

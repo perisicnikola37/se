@@ -1,15 +1,19 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useState, ReactNode } from "react";
 
 type DarkModeContextProps = {
     darkMode: boolean;
-    toggleDarkMode: () => void;
+    toggleDarkMode: (prev: boolean) => void;
 };
 
 const DarkModeContext = createContext<DarkModeContextProps | undefined>(
     undefined
 );
 
-const DarkModeProvider = ({ children }: any) => {
+type DarkModeProviderProps = {
+    children: ReactNode;
+};
+
+const DarkModeProvider = ({ children }: DarkModeProviderProps) => {
     const [darkMode, setDarkMode] = useState<boolean>(false);
 
     const toggleDarkMode = () => {

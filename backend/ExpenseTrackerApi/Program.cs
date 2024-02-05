@@ -160,5 +160,4 @@ app.UseMiddleware<ClaimsMiddleware>();
 app.UseGlobalExceptionHandler();
 app.UseMiddleware<TimeTrackingMiddleware>();
 
-
 app.Run();

@@ -6,7 +6,7 @@ import { Breadcrumbs, Typography } from "@mui/material";
 
 const BlogDetail = () => {
     const { id } = useParams();
-    const { blog, getBlogById } = useGetBlogById(parseInt(id));
+    const { blog, getBlogById } = useGetBlogById(id ? parseInt(id) : 0);
 
     useEffect(() => {
         getBlogById();

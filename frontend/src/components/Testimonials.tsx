@@ -1,5 +1,3 @@
-import React from "react";
-
 export default function Testimonials() {
   return (
     <section className="py-12  sm:py-16 lg:py-20">

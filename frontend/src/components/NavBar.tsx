@@ -186,12 +186,12 @@ const NavBar = () => {
                         </Box>
                         {!darkMode ? (
                             <NightlightIcon
-                                onClick={() => toggleDarkMode((prev) => !prev)}
+                                onClick={() => toggleDarkMode(darkMode)}
                                 className="mr-5 text-[#6B7280] cursor-pointer hover:scale-105 duration-300"
                             />
                         ) : (
                             <Brightness4Icon
-                                onClick={() => toggleDarkMode((prev) => !prev)}
+                                onClick={() => toggleDarkMode(darkMode)}
                                 className="mr-5 text-[#fff] cursor-pointer hover:scale-105 duration-300"
                             />
                         )}
