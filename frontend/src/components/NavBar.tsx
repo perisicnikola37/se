@@ -228,19 +228,26 @@ const NavBar = () => {
                                     open={Boolean(anchorElUser)}
                                     onClose={handleCloseUserMenu}
                                 >
-                                    <MenuItem
-                                        sx={{ width: "200px", marginLeft: "10px" }}
-                                    >
-                                        <NavLink to="profile">Profile</NavLink>
-                                    </MenuItem>
+                                    <NavLink to="profile">
+                                        <MenuItem
+                                            onClick={handleCloseNavMenu}
+                                            sx={{ width: "200px", marginLeft: "10px" }}
+                                        >
+                                            Profile
+                                        </MenuItem>
+                                    </NavLink>
                                     {user.accountType === "Administrator" && (
                                         <>
-                                            <MenuItem sx={{ width: "200px", marginLeft: "10px" }}>
-                                                <NavLink to="blogs">Blogs</NavLink>
-                                            </MenuItem>
-                                            <MenuItem sx={{ width: "200px", marginLeft: "10px" }}>
-                                                <NavLink to="reminders">Reminders</NavLink>
-                                            </MenuItem>
+                                            <NavLink to="blogs">
+                                                <MenuItem sx={{ width: "200px", marginLeft: "10px" }}>
+                                                    Blogs
+                                                </MenuItem>
+                                            </NavLink>
+                                            <NavLink to="reminders">
+                                                <MenuItem sx={{ width: "200px", marginLeft: "10px" }}>
+                                                    Reminders
+                                                </MenuItem>
+                                            </NavLink>
                                         </>
                                     )}
                                     <MenuItem

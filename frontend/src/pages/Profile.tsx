@@ -3,6 +3,7 @@ import userPicture from "../../src/assets/profile_image.jpg";
 import { useEffect } from 'react';
 import useCurrentUser from '../hooks/Authentication/GetUserHook';
 import useDeleteAccount from '../hooks/Authentication/DeleteAccountHook';
+import BorderLinearProgress from '../components/Progress';
 
 const Profile = () => {
     const { loadCurrentUser, user } = useCurrentUser()
@@ -17,6 +18,9 @@ const Profile = () => {
     }
 
     const totalIncome = user?.incomes.reduce((total, income) => total + income.amount, 0) || 0;
+    const totalIncomes = user?.incomes.length || 0;
+    const totalExpenses = user?.expenses.length || 0;
+    const totalProgress = totalIncomes + totalExpenses;
 
     return (
         <div className="w-full max-w-screen-xl min-h-[48rem] mx-auto p-4 md:py-8">
@@ -66,8 +70,16 @@ const Profile = () => {
                         </h1>
                         <a className='hover:text-[#3363EB] duration-300' href={`mailto:${user?.email}`}>{user?.email}</a>
                         <p className="font-light text-gray-600 mt-3">Podgorica, Montenegro</p>
-                        <p className="mt-8 text-gray-500">Solution Manager - Creative Tim Officer</p>
-                        <p className="mt-2 text-gray-500">University of Computer Science</p>
+                        <div className="mt-10 text-center">
+                            <h3 className="mb-3 text-2xl font-semibold text-gray-700">Basic Plan</h3>
+                            <p className="text-gray-600 mb-2">
+                                You can add up to {100 - totalProgress} more expenses/incomes
+                            </p>
+                            <BorderLinearProgress variant="determinate" value={totalProgress} />
+                            <p className="mt-2 text-lg font-medium text-gray-700">
+                                {totalProgress}% Complete
+                            </p>
+                        </div>
                     </div>
                 </div>
             </div>
