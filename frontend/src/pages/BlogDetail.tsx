@@ -1,6 +1,6 @@
 import { Link, useParams } from "react-router-dom";
 import { useEffect } from "react";
-import { motion } from "framer-motion"; // Import motion from framer-motion
+import { motion } from "framer-motion";
 import useGetBlogById from "../hooks/Blogs/GetBlogHook";
 import { Breadcrumbs, Typography } from "@mui/material";
 
@@ -14,7 +14,7 @@ const BlogDetail = () => {
 
     return (
         <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 20 }}
             transition={{ duration: 0.5 }}
@@ -31,14 +31,14 @@ const BlogDetail = () => {
             </Breadcrumbs>
 
             <motion.div
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 0, y: -20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5 }}
                 className="w-full max-w-screen-xl mx-auto p-4 md:py-8"
             >
                 <h1 className="text-3xl font-semibold mb-4">{blog?.text}</h1>
                 <motion.img
-                    initial={{ opacity: 0, y: 20 }}
+                    initial={{ opacity: 0, y: -20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5 }}
                     src="https://assets-global.website-files.com/63e56114746188c54e2936e0/6488d32675e24027363f61f0_Spend%20Management-4.png"
@@ -46,7 +46,7 @@ const BlogDetail = () => {
                     className="w-full h-64 object-cover mb-4 rounded-md"
                 />
                 <motion.p
-                    initial={{ opacity: 0, y: 20 }}
+                    initial={{ opacity: 0, y: -20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5 }}
                     className="text-gray-600 mb-2"
@@ -54,7 +54,7 @@ const BlogDetail = () => {
                     Author: {blog?.author}
                 </motion.p>
                 <motion.p
-                    initial={{ opacity: 0, y: 20 }}
+                    initial={{ opacity: 0, y: -20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5 }}
                     className="text-gray-600"
@@ -62,7 +62,7 @@ const BlogDetail = () => {
                     {blog?.createdAt && `Created at: ${new Date(blog.createdAt).toLocaleString()}`}
                 </motion.p>
                 <motion.p
-                    initial={{ opacity: 0, y: 20 }}
+                    initial={{ opacity: 0, y: -20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5 }}
                     className="text-gray-600 mt-5"

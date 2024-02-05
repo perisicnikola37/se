@@ -1,22 +1,38 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import useAllBlogs from "../hooks/Blogs/AllBlogsHook";
 import { truncateString } from "../utils/utils";
+import { Skeleton } from "@mui/material";
 
 const Blogs = () => {
-    const { loadBlogs, blogs } = useAllBlogs()
+    const { loadBlogs, blogs } = useAllBlogs();
+    const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
         document.title = "Blogs | Expense Tracker";
-
-        loadBlogs()
+        loadBlogs();
+        setTimeout(() => {
+            setIsLoading(false);
+        }, 700);
     }, []);
+
+    const skeletonCount = blogs.length > 0 ? blogs.length : 0;
 
     return (
         <div className="w-full max-w-screen-xl min-h-[48rem] mx-auto p-4 md:py-8">
             <h1 className="text-3xl font-semibold mb-4">Blogs</h1>
-            {blogs.length === 0 ? (
-                <p>No blogs available.</p>
+            {isLoading ? (
+                <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {[...Array(skeletonCount)].map((_, index) => (
+                        <li key={index} className="bg-white p-6 rounded-md shadow-md">
+                            <Skeleton variant="rectangular" width="100%" height={200} />
+                            <Skeleton variant="text" width="80%" height={20} />
+                            <Skeleton variant="text" width="60%" height={16} />
+                            <Skeleton variant="text" width="70%" height={16} />
+                            <Skeleton variant="text" width="90%" height={60} />
+                        </li>
+                    ))}
+                </ul>
             ) : (
                 <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                     {blogs.map((blog) => (

@@ -6,7 +6,7 @@ type BlogType = {
     text: string;
     author: string;
     createdAt?: Date;
-    description: Text;
+    description: string;
 };
 
 const fetchBlogById = async (objectId: number, setBlog: (data: BlogType | null) => void, setIsLoading: (loading: boolean) => void, setError: (error: string | null) => void) => {
