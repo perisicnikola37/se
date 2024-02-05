@@ -1,3 +1,4 @@
+using Contracts.Dto;
 using Domain.Exceptions;
 using Domain.Interfaces;
 using Domain.Models;
@@ -9,42 +10,45 @@ using Microsoft.Extensions.Logging;
 
 namespace Service;
 
-public class ExpenseGroupService(DatabaseContext context, IValidator<ExpenseGroup> validator, ILogger<ExpenseGroupService> logger) : IExpenseGroupService
+public class ExpenseGroupService(DatabaseContext context, IValidator<ExpenseGroup> validator, ILogger<ExpenseGroupService> logger, IGetAuthenticatedUserIdService getAuthenticatedUserId) : IExpenseGroupService
 {
 	[HttpGet]
-	public async Task<IEnumerable<object>> GetExpenseGroupsAsync()
+	public async Task<IEnumerable<ExpenseGroupDto>> GetExpenseGroupsAsync(ControllerBase controller)
 	{
 		try
 		{
+			var authenticatedUserId = getAuthenticatedUserId.GetUserId(controller.User);
+
 			var expenseGroups = await context.ExpenseGroups
-				.Include(e => e.Expenses)!
+				.Where(ig => ig.UserId == authenticatedUserId)
+				.Include(e => e.Expenses!)
 					.ThenInclude(expense => expense.User)
 				.OrderByDescending(e => e.CreatedAt)
 				.ToListAsync();
 
 			if (expenseGroups.Count != 0)
 			{
-				var simplifiedExpenseGroups = expenseGroups.Select(expenseGroup => new
+				var simplifiedExpenseGroups = expenseGroups.Select(expenseGroup => new ExpenseGroupDto
 				{
-					expenseGroup.Id,
-					expenseGroup.Name,
-					expenseGroup.Description,
-					Expenses = expenseGroup.Expenses?.Select(expense => new
+					Id = expenseGroup.Id,
+					Name = expenseGroup.Name,
+					Description = expenseGroup.Description,
+					Expenses = expenseGroup.Expenses?.Select(expense => new ExpenseDto
 					{
-						expense.Id,
-						expense.Description,
-						expense.Amount,
-						expense.CreatedAt,
-						expense.ExpenseGroupId,
+						Id = expense.Id,
+						Description = expense.Description,
+						Amount = expense.Amount,
+						CreatedAt = expense.CreatedAt,
+						ExpenseGroupId = expense.ExpenseGroupId,
 						UserId = expense.User?.Id,
-						UserUsername = expense.User?.Username
+						Username = expense.User?.Username
 					})
 				});
 
 				return simplifiedExpenseGroups;
 			}
 
-			return expenseGroups;
+			return [];
 		}
 		catch (Exception ex)
 		{
@@ -52,6 +56,7 @@ public class ExpenseGroupService(DatabaseContext context, IValidator<ExpenseGrou
 			throw;
 		}
 	}
+
 	public async Task<ActionResult<ExpenseGroup>> GetExpenseGroupAsync(int id)
 	{
 		try
@@ -96,6 +101,10 @@ public class ExpenseGroupService(DatabaseContext context, IValidator<ExpenseGrou
 			var validationResult = await validator.ValidateAsync(expenseGroup);
 			if (!validationResult.IsValid) return new BadRequestObjectResult(validationResult.Errors);
 
+			var userId = getAuthenticatedUserId.GetUserId(controller.User);
+
+			expenseGroup.UserId = (int)userId!;
+
 			context.ExpenseGroups.Add(expenseGroup);
 			await context.SaveChangesAsync();
 
@@ -107,11 +116,19 @@ public class ExpenseGroupService(DatabaseContext context, IValidator<ExpenseGrou
 			throw;
 		}
 	}
-	public async Task<IActionResult> UpdateExpenseGroupAsync(int id, ExpenseGroup expenseGroup)
+	public async Task<IActionResult> UpdateExpenseGroupAsync(int id, ExpenseGroup expenseGroup, ControllerBase controller)
 	{
 		try
 		{
 			if (id != expenseGroup.Id) return new BadRequestResult();
+
+			var authenticatedUserId = getAuthenticatedUserId.GetUserId(controller.User);
+
+			// Check if authenticatedUserId has a value
+			if (authenticatedUserId.HasValue)
+			{
+				expenseGroup.UserId = authenticatedUserId.Value;
+			}
 
 			context.Entry(expenseGroup).State = EntityState.Modified;
 

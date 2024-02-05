@@ -1,3 +1,5 @@
+using DinkToPdf;
+using DinkToPdf.Contracts;
 using Domain.Interfaces;
 using Domain.Models;
 using Domain.Validators;
@@ -11,6 +13,7 @@ using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using Persistence;
+using Presentation;
 using Service;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -18,11 +21,13 @@ var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
 // disabled
 // builder.Services.AddHttpLogging(o => { });
-builder.Services.AddCors(options =>
+builder.Services.AddCors(p => p.AddPolicy("cors", builder =>
 {
-	options.AddDefaultPolicy(
-		policy => { policy.WithOrigins("https://example.com"); });
-});
+	builder.WithOrigins("*").AllowAnyMethod().AllowAnyHeader();
+}));
+
+builder.Services.AddSingleton(typeof(IConverter), new SynchronizedConverter(new PdfTools()));
+builder.Services.AddScoped<PdfGenerator>();
 
 builder.Services.AddAuthorization();
 
@@ -36,11 +41,17 @@ builder.Services.AddAuthorization(options =>
 		policy => { policy.Requirements.Add(new ExpenseAuthorizationRequirement()); });
 	options.AddPolicy("IncomeOwnerPolicy",
 		policy => { policy.Requirements.Add(new IncomeAuthorizationRequirement()); });
+	options.AddPolicy("IncomeGroupOwnerPolicy",
+		policy => { policy.Requirements.Add(new IncomeGroupAuthorizationRequirement()); });
+	options.AddPolicy("ExpenseGroupOwnerPolicy",
+		policy => { policy.Requirements.Add(new ExpenseGroupAuthorizationRequirement()); });
 });
 
 builder.Services.AddScoped<IAuthorizationHandler, BlogAuthorizationHandler>();
 builder.Services.AddScoped<IAuthorizationHandler, ExpenseAuthorizationHandler>();
 builder.Services.AddScoped<IAuthorizationHandler, IncomeAuthorizationHandler>();
+builder.Services.AddScoped<IAuthorizationHandler, IncomeGroupAuthorizationHandler>();
+builder.Services.AddScoped<IAuthorizationHandler, ExpenseGroupAuthorizationHandler>();
 
 var connectionString = configuration["DefaultConnection"];
 if (connectionString == null) throw new ArgumentNullException(nameof(connectionString), "DefaultConnection is null");
@@ -92,6 +103,7 @@ builder.Services.AddScoped<IIncomeService, IncomeService>();
 // other entitites
 builder.Services.AddScoped<IBlogService, BlogService>();
 builder.Services.AddScoped<IReminderService, ReminderService>();
+builder.Services.AddScoped<ISummaryService, SummaryService>();
 
 // repositories
 builder.Services.AddScoped<ReminderRepository>();
@@ -105,7 +117,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.ConfigureSwaggerGen();
 
 // Rate Limiter configuration
-builder.Services.ConfigureRateLimiter();
+// builder.Services.ConfigureRateLimiter();
 
 var app = builder.Build();
 
@@ -117,7 +129,7 @@ app.Use(async (context, next) =>
 	if (context.Request.Path == "/")
 	{
 		context.Response.Redirect("/swagger/index.html");
-		
+
 		return;
 	}
 
@@ -132,11 +144,14 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+// Cors had to be before auth
+app.UseCors("cors");
+
 // auth
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.UseRateLimiter();
+// app.UseRateLimiter();
 
 app.MapControllers();
 
@@ -144,7 +159,5 @@ app.MapControllers();
 app.UseMiddleware<ClaimsMiddleware>();
 app.UseGlobalExceptionHandler();
 app.UseMiddleware<TimeTrackingMiddleware>();
-
-app.UseCors();
 
 app.Run();

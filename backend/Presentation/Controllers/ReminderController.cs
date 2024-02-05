@@ -1,7 +1,6 @@
 using Contracts.Dto.Reminders;
 using Domain.Interfaces;
 using Domain.Models;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
 
@@ -14,7 +13,7 @@ public class ReminderController(IReminderService reminderService) : ControllerBa
 {
 	// GET: api/Reminder
 	[HttpGet]
-	public async Task<ActionResult<IEnumerable<ReminderDto>>> GetRemindersAsync()
+	public async Task<ActionResult<IEnumerable<Reminder>>> GetRemindersAsync()
 	{
 		return Ok(await reminderService.GetRemindersAsync());
 	}

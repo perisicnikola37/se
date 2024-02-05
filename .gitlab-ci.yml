@@ -2,17 +2,22 @@ stages:
   - test
 
 variables:
-  SOLUTION_PATH: backend/Solution.sln
+  SOLUTION_PATH_BACKEND: "backend/Solution.sln"
+  SOLUTION_PATH_FRONTEND: "frontend"
+
+image:
+  name: mcr.microsoft.com/dotnet/sdk:latest
 
 before_script:
-  - 'dotnet restore $SOLUTION_PATH'
+  - 'dotnet restore $SOLUTION_PATH_BACKEND'
 
 test:
   stage: test
   only:
-  - main
+    - main
   script:
-    - 'dotnet test $SOLUTION_PATH'
-
-image:
-  name: mcr.microsoft.com/dotnet/sdk:latest
+    - 'dotnet test $SOLUTION_PATH_BACKEND'
+    - 'npm run build $SOLUTION_PATH_FRONTEND'
+  artifacts:
+    paths:
+      - frontend/dist/ 

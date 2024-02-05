@@ -23,7 +23,7 @@ public class ExpenseController(IExpenseService expenseService) : ControllerBase
 	[HttpGet("latest/5")]
 	public async Task<ActionResult<IEnumerable<Expense>>> GetLatestExpensesAsync()
 	{
-		return Ok(await expenseService.GetLatestExpensesAsync());
+		return Ok(await expenseService.GetLatestExpensesAsync(this));
 	}
 
 	// GET: api/Expense/total-amount
@@ -61,5 +61,11 @@ public class ExpenseController(IExpenseService expenseService) : ControllerBase
 	public async Task<IActionResult> DeleteExpenseAsync(int id)
 	{
 		return await expenseService.DeleteExpenseByIdAsync(id);
+	}
+
+	[HttpDelete]
+	public async Task<IActionResult> DeleteAllExpensesAsync()
+	{
+		return await expenseService.DeleteAllExpensesAsync(this);
 	}
 }

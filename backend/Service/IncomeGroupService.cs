@@ -1,50 +1,54 @@
+using Contracts.Dto;
 using Domain.Exceptions;
 using Domain.Interfaces;
 using Domain.Models;
 using FluentValidation;
 using Infrastructure.Contexts;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace Service;
 
-public class IncomeGroupService(DatabaseContext context, IValidator<IncomeGroup> validator, ILogger<IncomeGroupService> logger) : IIncomeGroupService
+public class IncomeGroupService(DatabaseContext context, IValidator<IncomeGroup> validator, ILogger<IncomeGroupService> logger, IGetAuthenticatedUserIdService getAuthenticatedUserId) : IIncomeGroupService
 {
 	[HttpGet]
-	public async Task<IEnumerable<object>> GetIncomeGroupsAsync()
+	public async Task<IEnumerable<IncomeGroupDto>> GetIncomeGroupsAsync(ControllerBase controller)
 	{
 		try
 		{
+			var authenticatedUserId = getAuthenticatedUserId.GetUserId(controller.User);
+
 			var incomeGroups = await context.IncomeGroups
-				.Include(e => e.Incomes)!
+			 	.Where(ig => ig.UserId == authenticatedUserId)
+				.Include(e => e.Incomes!)
 					.ThenInclude(income => income.User)
 				.OrderByDescending(e => e.CreatedAt)
 				.ToListAsync();
 
 			if (incomeGroups.Count != 0)
 			{
-				var simplifiedIncomeGroups = incomeGroups.Select(incomeGroupsVariable => new
+				var simplifiedIncomeGroups = incomeGroups.Select(incomeGroup => new IncomeGroupDto
 				{
-					incomeGroupsVariable.Id,
-					incomeGroupsVariable.Name,
-					incomeGroupsVariable.Description,
-					Incomes = incomeGroupsVariable.Incomes?.Select(income => new
+					Id = incomeGroup.Id,
+					Name = incomeGroup.Name,
+					Description = incomeGroup.Description,
+					Incomes = incomeGroup.Incomes?.Select(expense => new IncomeDto
 					{
-						income.Id,
-						income.Description,
-						income.Amount,
-						income.CreatedAt,
-						income.IncomeGroupId,
-						UserId = income.User?.Id,
-						UserUsername = income.User?.Username
+						Id = expense.Id,
+						Description = expense.Description,
+						Amount = expense.Amount,
+						CreatedAt = expense.CreatedAt,
+						IncomeGroupId = expense.IncomeGroupId,
+						UserId = expense.User?.Id,
+						Username = expense.User?.Username
 					})
 				});
 
 				return simplifiedIncomeGroups;
 			}
-
-			return incomeGroups;
+			return [];
 		}
 		catch (Exception ex)
 		{
@@ -52,6 +56,7 @@ public class IncomeGroupService(DatabaseContext context, IValidator<IncomeGroup>
 			throw;
 		}
 	}
+
 	public async Task<ActionResult<IncomeGroup>> GetIncomeGroupAsync(int id)
 	{
 		try
@@ -96,6 +101,10 @@ public class IncomeGroupService(DatabaseContext context, IValidator<IncomeGroup>
 			var validationResult = await validator.ValidateAsync(incomeGroup);
 			if (!validationResult.IsValid) return new BadRequestObjectResult(validationResult.Errors);
 
+			var userId = getAuthenticatedUserId.GetUserId(controller.User);
+
+			incomeGroup.UserId = (int)userId!;
+
 			context.IncomeGroups.Add(incomeGroup);
 			await context.SaveChangesAsync();
 
@@ -107,11 +116,21 @@ public class IncomeGroupService(DatabaseContext context, IValidator<IncomeGroup>
 			throw;
 		}
 	}
-	public async Task<IActionResult> UpdateIncomeGroupAsync(int id, IncomeGroup incomeGroup)
+
+	public async Task<IActionResult> UpdateIncomeGroupAsync(int id, IncomeGroup incomeGroup, ControllerBase controller)
 	{
 		try
 		{
 			if (id != incomeGroup.Id) return new BadRequestResult();
+
+			var authenticatedUserId = getAuthenticatedUserId.GetUserId(controller.User);
+
+			// Check if authenticatedUserId has a value
+			if (authenticatedUserId.HasValue)
+			{
+				incomeGroup.UserId = authenticatedUserId.Value;
+
+			}
 
 			context.Entry(incomeGroup).State = EntityState.Modified;
 

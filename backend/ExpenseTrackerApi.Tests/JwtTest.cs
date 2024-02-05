@@ -34,6 +34,7 @@ public class JwtTokenGeneratorTests
     {
         // Arrange
         var dbContextMock = new Mock<DatabaseContext>();
+        var emailServiceMock = new Mock<EmailService>(_configuration);
 
         // Create a mock user object
         var user = new User
@@ -44,7 +45,7 @@ public class JwtTokenGeneratorTests
         };
 
         // Create an instance of the AuthService with the mock database context and configuration
-        var authService = new AuthService(dbContextMock.Object, _configuration);
+        var authService = new AuthService(dbContextMock.Object, _configuration, emailServiceMock.Object);
 
         // Use Reflection to get the private method info
         var methodInfo = typeof(AuthService).GetMethod("GenerateJwtToken", BindingFlags.NonPublic | BindingFlags.Instance);

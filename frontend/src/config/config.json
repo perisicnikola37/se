@@ -1,0 +1,98 @@
+{
+    "ME": {
+        "info": {
+            "applicationName": "Tracking troškova",
+            "copyright": "Sva prava zadržana."
+        },
+        "pages": [{
+                "name": "Početna",
+                "url": "/"
+            },
+            {
+                "name": "Prihodi",
+                "url": "/incomes"
+            },
+            {
+                "name": "Rashodi",
+                "url": "/expenses"
+            },
+            {
+                "name": "Grupe prihoda",
+                "url": "/incomes/groups"
+            },
+            {
+                "name": "Grupe rashoda",
+                "url": "/expenses/groups"
+            }
+        ],
+        "footerLinks": [{
+                "name": "O nama",
+                "url": "/about"
+            },
+            {
+                "name": "Privatna polisa",
+                "url": "/privacy-policy"
+            },
+            {
+                "name": "Licenca",
+                "url": "/licensing"
+            },
+            {
+                "name": "Kontakt",
+                "url": "/contact"
+            }
+        ],
+        "settings": ["Profil", "Odjava"],
+        "policyText": "Koristimo kolačiće kako bi poboljšali Vaše iskustvo. Korišćenjem našeg sajta, slažete se sa našim ",
+        "privacyPolicy": "Pravila privatnosti",
+        "acceptButton": "Potvrdi"
+    },
+    "EN": {
+        "info": {
+            "applicationName": "Expense Tracker",
+            "copyright": "All rights reserved."
+        },
+        "pages": [{
+                "name": "Dashboard",
+                "url": "/"
+            },
+            {
+                "name": "Incomes",
+                "url": "/incomes"
+            },
+            {
+                "name": "Expenses",
+                "url": "/expenses"
+            },
+            {
+                "name": "Income groups",
+                "url": "/incomes/groups"
+            },
+            {
+                "name": "Expense groups",
+                "url": "/expenses/groups"
+            }
+        ],
+        "footerLinks": [{
+                "name": "About",
+                "url": "/about"
+            },
+            {
+                "name": "Privacy Policy",
+                "url": "/privacy-policy"
+            },
+            {
+                "name": "Licensing",
+                "url": "/licensing"
+            },
+            {
+                "name": "Contact",
+                "url": "/contact"
+            }
+        ],
+        "settings": ["Profile", "Log out"],
+        "policyText": "We use cookies to enhance your experience. By using our website, you agree to our ",
+        "privacyPolicy": "Privacy Policy",
+        "acceptButton": "Accept"
+    }
+}

@@ -37,10 +37,8 @@ public class User
 				throw new ArgumentException("Invalid AccountType");
 		}
 	}
-
 	public int Id { get; set; }
 	public string Username { get; set; }
-
 	// old custom validation
 	// [EmailValidation(ErrorMessage = "Please enter a valid email address.")]
 	public string Email { get; set; }
@@ -49,5 +47,9 @@ public class User
 	public DateTime CreatedAt { get; set; } = DateTime.Now;
 	public List<Expense>? Expenses { get; set; }
 	public List<Income>? Incomes { get; set; }
+	public List<IncomeGroup>? IncomeGroups { get; set; }
+	public List<ExpenseGroup>? ExpenseGroups { get; set; }
 	public List<Blog>? Blogs { get; set; }
+	public string? ResetToken { get; set; }
+	public DateTime? ResetTokenExpiration { get; set; }
 }

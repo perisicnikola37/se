@@ -7,20 +7,23 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="AspNetCoreRateLimit" Version="5.0.0"/>
-        <PackageReference Include="FluentValidation" Version="11.9.0"/>
-        <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.2.0"/>
-        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.1"/>
-        <PackageReference Include="System.Data.Common" Version="4.3.0"/>
+        <PackageReference Include="AspNetCoreRateLimit" Version="5.0.0" />
+        <PackageReference Include="DinkToPdf" Version="1.0.8" />
+        <PackageReference Include="FluentValidation" Version="11.9.0" />
+        <PackageReference Include="LibWkHtmlToX-32" Version="0.12.6.1" />
+        <PackageReference Include="MailChimp.Net.V3" Version="5.5.0" />
+        <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.2.0" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.1" />
+        <PackageReference Include="System.Data.Common" Version="4.3.0" />
         <PackageReference Include="System.Net.Mail" Version="1.0.0-rtm-00002">
             <NoWarn>NU1603</NoWarn>
         </PackageReference>
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\Domain\Domain.csproj"/>
-        <ProjectReference Include="..\Infrastructure\Infrastructure.csproj"/>
-        <ProjectReference Include="..\Service\Service.csproj"/>
+        <ProjectReference Include="..\Domain\Domain.csproj" />
+        <ProjectReference Include="..\Infrastructure\Infrastructure.csproj" />
+        <ProjectReference Include="..\Service\Service.csproj" />
     </ItemGroup>
 
     <ItemGroup>

@@ -12,35 +12,30 @@ namespace Presentation.Controllers;
 [EnableRateLimiting("fixed")]
 public class IncomeController(IIncomeService incomeService) : ControllerBase
 {
-	// GET: api/Income
 	[HttpGet]
 	public async Task<IActionResult> GetIncomesAsync([FromQuery] PaginationFilterDto filter)
 	{
 		return Ok(await incomeService.GetIncomesAsync(filter, this));
 	}
 
-	// GET: api/Income/latest/5
 	[HttpGet("latest/5")]
-	public async Task<ActionResult<IEnumerable<Income>>> GetLatestIncomesAsync()
+	public async Task<ActionResult<object>> GetLatestIncomesAsync()
 	{
-		return Ok(await incomeService.GetLatestIncomesAsync());
+		return Ok(await incomeService.GetLatestIncomesAsync(this));
 	}
 
-	// GET: api/Income/total-amount
 	[HttpGet("total-amount")]
 	public ActionResult<int> GetTotalAmountOfIncomesAsync()
 	{
 		return Ok(incomeService.GetTotalAmountOfIncomesAsync());
 	}
 
-	// GET: api/Income/5
 	[HttpGet("{id}")]
 	public async Task<ActionResult<Income>> GetIncomeAsync(int id)
 	{
 		return await incomeService.GetIncomeAsync(id);
 	}
 
-	// PUT: api/Income/5
 	[HttpPut("{id}")]
 	[Authorize("IncomeOwnerPolicy")]
 	public async Task<IActionResult> PutIncomeAsync(int id, Income income)
@@ -48,14 +43,18 @@ public class IncomeController(IIncomeService incomeService) : ControllerBase
 		return await incomeService.UpdateIncomeAsync(id, income, this);
 	}
 
-	// POST: api/Income
 	[HttpPost]
 	public async Task<ActionResult<Income>> PostIncomeAsync(Income income)
 	{
 		return await incomeService.CreateIncomeAsync(income, this);
 	}
 
-	// DELETE: api/Income/5
+	[HttpDelete]
+	public async Task<IActionResult> DeleteAllIncomesAsync()
+	{
+		return await incomeService.DeleteAllIncomesAsync(this);
+	}
+
 	[HttpDelete("{id}")]
 	[Authorize("IncomeOwnerPolicy")]
 	public async Task<IActionResult> DeleteIncomeAsync(int id)

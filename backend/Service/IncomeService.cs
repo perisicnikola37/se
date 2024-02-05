@@ -20,7 +20,7 @@ public class IncomeService(
 {
 	[HttpGet]
 	public async Task<PagedResponseDto<List<IncomeResponse>>> GetIncomesAsync(PaginationFilterDto filter,
-		ControllerBase controller)
+	ControllerBase controller)
 	{
 		try
 		{
@@ -34,7 +34,6 @@ public class IncomeService(
 			var validFilter = new PaginationFilterDto(filter.PageNumber, filter.PageSize);
 
 			var query = context.Incomes
-				.Include(e => e.User)
 				.Where(e => e.UserId == authenticatedUserId);
 
 			query = ApplyFilter(query, e => e.Description.Contains(description),
@@ -43,6 +42,9 @@ public class IncomeService(
 			query = ApplyFilter(query, e => e.Amount <= float.Parse(maxAmount), !string.IsNullOrWhiteSpace(maxAmount));
 			query = ApplyFilter(query, e => e.IncomeGroupId == int.Parse(incomeGroupId),
 				!string.IsNullOrWhiteSpace(incomeGroupId));
+
+			var totalRecords = await query.CountAsync();
+			var totalPages = (int)Math.Ceiling((double)totalRecords / validFilter.PageSize);
 
 			var pagedData = await query
 				.Skip((validFilter.PageNumber - 1) * validFilter.PageSize)
@@ -56,15 +58,27 @@ public class IncomeService(
 					IncomeGroupId = e.IncomeGroupId,
 					IncomeGroup = e.IncomeGroup!,
 					UserId = e.UserId,
-					User = new UserResponse
-					{
-						Username = e.User!.Username
-					}
 				})
 				.OrderByDescending(e => e.CreatedAt)
 				.ToListAsync();
 
-			return new PagedResponseDto<List<IncomeResponse>>(pagedData, validFilter.PageNumber, validFilter.PageSize);
+
+			var baseUri = new Uri(controller.Request.Scheme + "://" + controller.Request.Host.Value);
+			var currentPageUri = new Uri(controller.Request.Path, UriKind.Relative);
+			var nextPageUri = new Uri(baseUri, $"{currentPageUri}?pageNumber={validFilter.PageNumber + 1}&pageSize={validFilter.PageSize}");
+			var previousPageUri = new Uri(baseUri, $"{currentPageUri}?pageNumber={validFilter.PageNumber - 1}&pageSize={validFilter.PageSize}");
+
+			return new PagedResponseDto<List<IncomeResponse>>(pagedData, validFilter.PageNumber, validFilter.PageSize)
+			{
+				PageNumber = validFilter.PageNumber,
+				PageSize = validFilter.PageSize,
+				FirstPage = new Uri(baseUri, $"{currentPageUri}?pageNumber=1&pageSize={validFilter.PageSize}"),
+				LastPage = new Uri(baseUri, $"{currentPageUri}?pageNumber={totalPages}&pageSize={validFilter.PageSize}"),
+				TotalPages = totalPages,
+				TotalRecords = totalRecords,
+				NextPage = validFilter.PageNumber < totalPages ? nextPageUri : null,
+				PreviousPage = validFilter.PageNumber > 1 ? previousPageUri : null
+			};
 		}
 		catch (Exception ex)
 		{
@@ -73,14 +87,32 @@ public class IncomeService(
 		}
 	}
 
-	public async Task<List<Income>> GetLatestIncomesAsync()
+	public async Task<object> GetLatestIncomesAsync(ControllerBase controller)
 	{
 		try
 		{
-			return await context.Incomes
+			var authenticatedUserId = getAuthenticatedUserId.GetUserId(controller.User);
+
+			var highestIncome = await context.Incomes
+				.Where(i => i.CreatedAt >= DateTime.UtcNow.AddDays(-7) && i.UserId == authenticatedUserId)
+				.OrderByDescending(i => i.Amount)
+				.Select(i => i.Amount)
+				.FirstOrDefaultAsync();
+
+			var latestIncomes = await context.Incomes
+				.Where(i => i.UserId == authenticatedUserId)
+				.Include(e => e.IncomeGroup)
 				.OrderByDescending(e => e.CreatedAt)
 				.Take(5)
 				.ToListAsync();
+
+			var response = new
+			{
+				highestIncome,
+				incomes = latestIncomes
+			};
+
+			return response;
 		}
 		catch (Exception ex)
 		{
@@ -88,6 +120,7 @@ public class IncomeService(
 			throw;
 		}
 	}
+
 	public async Task<ActionResult<Income>> GetIncomeAsync(int id)
 	{
 		try
@@ -122,7 +155,6 @@ public class IncomeService(
 			income.UserId = (int)userId!;
 
 			context.Incomes.Add(income);
-
 			await context.SaveChangesAsync();
 
 			return new CreatedAtActionResult("GetIncome", "Income", new { id = income.Id }, income);
@@ -201,6 +233,38 @@ public class IncomeService(
 		catch (Exception ex)
 		{
 			logger.LogError($"GetTotalAmountOfIncomesAsync: An error occurred. Error: {ex.Message}");
+			throw;
+		}
+	}
+
+	public async Task<IActionResult> DeleteAllIncomesAsync(ControllerBase controller)
+	{
+		try
+		{
+			var authenticatedUserId = getAuthenticatedUserId.GetUserId(controller.User);
+
+			if (!authenticatedUserId.HasValue)
+			{
+				return new BadRequestResult();
+			}
+
+			var incomesToDelete = await context.Incomes
+				.Where(e => e.UserId == authenticatedUserId.Value)
+				.ToListAsync();
+
+			if (incomesToDelete == null || incomesToDelete.Count == 0)
+			{
+				return new NotFoundResult();
+			}
+
+			context.Incomes.RemoveRange(incomesToDelete);
+			await context.SaveChangesAsync();
+
+			return new NoContentResult();
+		}
+		catch (Exception ex)
+		{
+			logger.LogError($"DeleteAllIncomesAsync: An error occurred. Error: {ex.Message}");
 			throw;
 		}
 	}

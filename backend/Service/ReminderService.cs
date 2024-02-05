@@ -15,16 +15,13 @@ public class ReminderService(
     IValidator<Reminder> validator,
     ReminderRepository reminderRepository) : IReminderService
 {
-    public async Task<ActionResult<ReminderDto>> GetRemindersAsync()
+    public async Task<IEnumerable<Reminder>> GetRemindersAsync()
     {
         try
         {
             var reminders = await reminderRepository.GetRemindersAsync();
 
-            return await Task.FromResult<ActionResult<ReminderDto>>(new ReminderDto
-            {
-                Reminders = reminders
-            });
+            return reminders;
         }
         catch (Exception ex)
         {
