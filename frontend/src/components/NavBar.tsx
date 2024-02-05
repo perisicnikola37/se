@@ -136,7 +136,6 @@ const NavBar = () => {
                                 {pages.map((page, index) => (
                                     <MenuItem
                                         key={page.url}
-                                        onClick={handleCloseNavMenu}
                                         className={`transition duration-300 ${index >= pages.length - 2 ? "ml-auto" : ""
                                             }`}
                                     >
@@ -230,7 +229,7 @@ const NavBar = () => {
                                 >
                                     <NavLink to="profile">
                                         <MenuItem
-                                            onClick={handleCloseNavMenu}
+                                            onClick={handleCloseUserMenu}
                                             sx={{ width: "200px", marginLeft: "10px" }}
                                         >
                                             Profile
@@ -239,12 +238,12 @@ const NavBar = () => {
                                     {user.accountType === "Administrator" && (
                                         <>
                                             <NavLink to="blogs">
-                                                <MenuItem sx={{ width: "200px", marginLeft: "10px" }}>
+                                                <MenuItem onClick={handleCloseUserMenu} sx={{ width: "200px", marginLeft: "10px" }}>
                                                     Blogs
                                                 </MenuItem>
                                             </NavLink>
                                             <NavLink to="reminders">
-                                                <MenuItem sx={{ width: "200px", marginLeft: "10px" }}>
+                                                <MenuItem onClick={handleCloseUserMenu} sx={{ width: "200px", marginLeft: "10px" }}>
                                                     Reminders
                                                 </MenuItem>
                                             </NavLink>

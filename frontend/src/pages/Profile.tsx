@@ -25,11 +25,9 @@ const Profile = () => {
 
     return (
         <div className="w-full max-w-screen-xl min-h-[48rem] mx-auto p-4 md:py-8">
-
             <Helmet>
                 <title>User profile | Expense Tracker</title>
             </Helmet>
-
             <div className="p-16">
                 <div className="p-8 bg-white shadow mt-24">
                     <div className="grid grid-cols-1 md:grid-cols-3">
