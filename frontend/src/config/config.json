@@ -25,10 +25,6 @@
                 "url": "/expenses/groups"
             },
             {
-                "name": "FAQ",
-                "url": "/faq"
-            },
-            {
                 "name": "Blogovi",
                 "url": "/blogs"
             }
@@ -79,10 +75,6 @@
             {
                 "name": "Expense groups",
                 "url": "/expenses/groups"
-            },
-            {
-                "name": "FAQ",
-                "url": "/faq"
             },
             {
                 "name": "Blogs",

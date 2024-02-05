@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
 import DeleteModal from "../components/Modals/DeleteModal";
 import useAllReminders from "../hooks/Reminders/AllRemindersHook";
-import { Alert, Skeleton } from "@mui/material";
+import { Alert, Breadcrumbs, Skeleton, Typography } from "@mui/material";
 import ReminderCreateModal from "../components/Modals/ReminderCreateModal";
 import { useModal } from "../contexts/GlobalContext";
+import { Link } from "react-router-dom";
 
 const Reminders = () => {
     const { loadReminders, reminders } = useAllReminders();
@@ -22,9 +23,17 @@ const Reminders = () => {
 
     return (
         <div className="w-full max-w-screen-xl min-h-[48rem] mx-auto p-4 md:py-8">
-            <div className="flex justify-between items-center mb-4">
+            <div className="flex justify-between items-center mb-10">
                 <h1 className="text-3xl font-semibold">Reminders</h1>
                 <ReminderCreateModal />
+                <div className="hidden md:block">
+                    <Breadcrumbs aria-label="breadcrumb">
+                        <Link to="/" className="hover:text-[#2563EB] transition-colors duration-300">
+                            Dashboard
+                        </Link>
+                        <Typography color="text.primary">Reminders</Typography>
+                    </Breadcrumbs>
+                </div>
             </div >
             {
                 isLoading ? (

@@ -22,6 +22,7 @@ import { useUser } from "../contexts/UserContext";
 import { useModal } from "../contexts/GlobalContext";
 import userPicture from "../../src/assets/profile_image.jpg";
 import { useDarkMode } from "../contexts/DarkModeContext";
+import NightlightIcon from '@mui/icons-material/Nightlight';
 
 const NavBar = () => {
     const navigate = useNavigate();
@@ -30,7 +31,7 @@ const NavBar = () => {
     const { modalState } = useModal();
     const iconStyle = { fontSize: 16, marginLeft: "5px" };
     const { isLoggedIn } = useUser();
-    const { toggleDarkMode } = useDarkMode();
+    const { toggleDarkMode, darkMode } = useDarkMode();
 
     const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
     const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
@@ -90,8 +91,7 @@ const NavBar = () => {
                 position="sticky"
                 sx={{
                     zIndex: modalState ? 11 : 1,
-                    backgroundColor: "#fff",
-                    textColor: "#000",
+                    backgroundColor: darkMode ? "#111827" : "#fff",
                     boxShadow: "none",
                     borderBottom: scrolled ? "1px solid #ddd" : "none",
                 }}
@@ -116,7 +116,7 @@ const NavBar = () => {
                                 onClick={handleOpenNavMenu}
                                 color="inherit"
                             >
-                                <MenuIcon className="text-gray-500" />
+                                <MenuIcon className="text-gray-500 dark:text-white" />
                             </IconButton>
                             <Menu
                                 id="menu-appbar"
@@ -148,7 +148,7 @@ const NavBar = () => {
                                     >
                                         <NavLink
                                             to={page.url}
-                                            className={`text-black hover:text-blue-500 ${page.url === location.pathname ? "text-blue-500" : ""
+                                            className={`text-black dark:text-white hover:text-blue-500 ${page.url === location.pathname ? "text-blue-500" : ""
                                                 }`}
                                         >
                                             {page.name}
@@ -169,13 +169,13 @@ const NavBar = () => {
                                         key={page.url}
                                         to={page.url}
                                         className={`text-black m-3 inline-block transition duration-300 border-b-2 border-transparent hover:border-blue-500 ${page.url === location.pathname ? "border-blue-300" : ""
-                                            } ${index >= pages.length - 2 ? "float-right" : ""}`}
+                                            } ${index >= pages.length - 1 ? "float-right" : ""}`}
                                         onClick={handleCloseNavMenu}
                                     >
                                         <span
                                             className={`my-2 ${page.url === location.pathname
-                                                    ? "text-blue-500"
-                                                    : "text-black"
+                                                ? "text-blue-500"
+                                                : "text-black"
                                                 }`}
                                         >
                                             {page.name}
@@ -184,10 +184,17 @@ const NavBar = () => {
                                 ))}
                             </div>
                         </Box>
-                        <Brightness4Icon
-                            onClick={() => toggleDarkMode((prev) => !prev)}
-                            className="mr-5 text-[#1b2a4b] cursor-pointer hover:scale-105 duration-300"
-                        />
+                        {!darkMode ? (
+                            <NightlightIcon
+                                onClick={() => toggleDarkMode((prev) => !prev)}
+                                className="mr-5 text-[#6B7280] cursor-pointer hover:scale-105 duration-300"
+                            />
+                        ) : (
+                            <Brightness4Icon
+                                onClick={() => toggleDarkMode((prev) => !prev)}
+                                className="mr-5 text-[#fff] cursor-pointer hover:scale-105 duration-300"
+                            />
+                        )}
                         {!isLoggedIn() ? (
                             <button
                                 type="button"
@@ -251,7 +258,7 @@ const NavBar = () => {
                         )}
                     </Toolbar>
                 </Container>
-            </AppBar>
+            </AppBar >
         </>
     );
 };

@@ -58,15 +58,24 @@ body {
         padding: 2%;
     }
     ._main-text_paragraph {
+        margin-top: 5% !important;
         text-align: left;
         width: 100%;
-        padding: 2%;
     }
     ._chart {
         display: none;
     }
     .four_zero_four_bg {
         width: 100% !important;
+    }
+    .search {
+        display: none;
+    }
+    .export-button {
+        display: none;
+    }
+    .search {
+        display: none;
     }
 }
 
@@ -98,7 +107,7 @@ body {
 }
 
 .link_404 {
-    color: #fff!important;
+    color: #fff !important;
     padding: 10px 20px;
     background: #3968cd;
     margin: 20px 0;

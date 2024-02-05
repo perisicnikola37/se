@@ -3,14 +3,9 @@ using DinkToPdf.Contracts;
 
 namespace Presentation;
 
-public class PdfGenerator
+public class PdfGenerator(IConverter converter)
 {
-	private readonly IConverter _converter;
-
-	public PdfGenerator(IConverter converter)
-	{
-		_converter = converter;
-	}
+	private readonly IConverter _converter = converter;
 
 	public byte[] GeneratePdf(string htmlContent)
 	{

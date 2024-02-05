@@ -17,3 +17,50 @@ export const truncateString = (str: string, maxLength: number) => {
     }
     return str;
 }
+
+export const validatePassword = (newPassword: string, confirmNewPassword: string) => {
+    const errors: { message: string }[] = [];
+
+    if (newPassword.length < 8) {
+        errors.push({
+            message: "Your password must be at least 8 characters long.",
+        });
+    }
+
+    if (newPassword.length > 36) {
+        errors.push({
+            message: "Your password must not exceed 36 characters.",
+        });
+    }
+
+    if (!/[A-Z]+/.test(newPassword)) {
+        errors.push({
+            message: "Your password must contain at least one uppercase letter.",
+        });
+    }
+
+    if (!/[a-z]+/.test(newPassword)) {
+        errors.push({
+            message: "Your password must contain at least one lowercase letter.",
+        });
+    }
+
+    if (!/[0-9]+/.test(newPassword)) {
+        errors.push({
+            message: "Your password must contain at least one number.",
+        });
+    }
+
+    if (!/[\\!\\?\\*\\.]+/.test(newPassword)) {
+        errors.push({
+            message:
+                "Your password must contain at least one of the following characters: !?*.",
+        });
+    }
+
+    if (newPassword !== confirmNewPassword) {
+        errors.push({ message: "Passwords do not match" });
+    }
+
+    return errors;
+};

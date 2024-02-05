@@ -22,6 +22,7 @@ import ExpenseGroupDetail from "./pages/ExpenseGroupDetail.tsx";
 import ForgotPassword from "./pages/ForgotPassword.tsx";
 import { DarkModeProvider } from "./contexts/DarkModeContext.tsx";
 import BlogDetail from "./pages/BlogDetail.tsx";
+import ResetPassword from "./pages/ResetPassword.tsx";
 
 const router = createBrowserRouter([
     {
@@ -77,6 +78,10 @@ const router = createBrowserRouter([
     {
         path: "/forgot/password",
         element: <ForgotPassword />,
+    },
+    {
+        path: "/reset-password",
+        element: <ResetPassword />,
     },
 ]);
 
