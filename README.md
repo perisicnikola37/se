@@ -1,8 +1,10 @@
+<kbd>[<img title="Engleski" alt="Engleski" src="https://upload.wikimedia.org/wikipedia/en/thumb/a/ae/Flag_of_the_United_Kingdom.svg/1200px-Flag_of_the_United_Kingdom.svg.png" width="22">](translations/README.en.md)</kbd>
+<kbd>[<img title="Italijanski" alt="Italijanski" src="https://upload.wikimedia.org/wikipedia/en/thumb/0/03/Flag_of_Italy.svg/1500px-Flag_of_Italy.svg.png" width="22">](translations/README.ita.md)</kbd>
+
 <div style="display: flex; justify-content: space-between; align-items: center;">
   <h1>Expense Tracker</h1>
   <img src="https://i.postimg.cc/VsKQJpRb/logo.png" width="38" />
 </div>
-
 
 ### Overview
 
@@ -10,6 +12,9 @@ This .NET and React-based application is designed to help users manage and track
 
 ## Postman API documentation
 <a href="https://documenter.getpostman.com/view/21619259/2s9YsRd9TF#757dd6bd-9a08-40fd-b5f9-7b19dfaf9b81" target="_blank">Click here</a>
+
+## Swagger API documentation
+[applicationURL]/swagger
 
 ## Default Administrator user
 
@@ -38,6 +43,7 @@ Password: password
 - **Expense Group**
   - Name
   - Description
+  - User ID
   - [expenses]
 
 - **Expense**
@@ -49,6 +55,7 @@ Password: password
 - **Income Group**
   - Name
   - Description
+  - User ID
   - [incomes]
 
 - **Income**
@@ -70,55 +77,120 @@ Password: password
 ## User Interface - UI
 
 1. **Dashboard**
-   - Total amount widget
-   - Last 5 expense changes
-   - Last 5 income changes
-   - Buttons to navigate to expense and income group list pages
-   - Button to add expense/income through a popup
+   - Last week summary - Chart
+   - Last 5 expense changes + graphical change in relation to the highest expense cost amount
+   - Last 5 income changes + graphical change in relation to the highest income cost amount
+   - Menu to navigate to expense and income group list pages
+   - Customized plans for your financial journey
+   - Testimonials section
+   - Frequently asked questions(FAQ) section
+   - Newsletter section
+   - Footer with related links
 
-2. **Income/Expense Group List Page**
-   - Table with group details
-   - Edit and delete buttons
-   - Details button navigating to details page
-   - Button to add a group through a popup
+2. **Income/Expense List Page**
+   - Table
+     - Id
+     - Name(description)
+     - Amount
+     - Group
+     - Edit and delete buttons
+   - Checkbox button to select all available incomes/expenses
+   - Delete icon button to delete all available incomes/expenses
+   - Sorting arrows to sort all available incomes/expenses
+   - Button to add income/expense through popup
+   - Search input field for searching incomes/expenses
+   - Filter dropdown to filter incomes/expenses
+   - Available filter options: Min amount, max amount and filter by income/expense group(name)
+   - Button to export stats to email
+   - Pagination options to paginate incomes/expenses
+   - "Rows per page" feature to show certain amount of incomes/expenses
 
-3. **Income/Expense Group Details Page**
-   - Name
-   - Description
-   - Last 5 account changes for that group
+3. **Income/Expense Edit Popup**
+   - Editable name field
+   - Editable description field
+   - Editable amount field
+   - Editable income group field
+   - Save button
+   - Cancel button
 
-4. **Income/Expense Edit Popup**
+4. **Income/Expense Delete Popup**
+   - Save button
+   - Cancel button
+
+5. **Income/Expense Group List Page**
+   - Table
+     - Id
+     - Name
+     - Description
+     - Edit and delete buttons
+   - Checkbox button to select all available income/expense groups
+   - Delete icon button to delete all available income/expense groups
+   - Sorting arrows to sort all available income/expense groups
+   - Button to add income/expense group through popup
+   - Pagination options to paginate income/expense groups
+   - "Rows per page" feature to show certain amount of income/expense groups
+   - Delete modal with confirmation and cancel option
+   - Clickable income/expense group name which goes to details page
+
+6. **Income/Expense Group Edit Popup**
    - Editable name field
    - Editable description field
    - Save button
    - Cancel button
 
-5. **Income/Expense List Page**
-   - Table
-     - No.
-     - Group name
-     - Amount
-     - Description
-     - Creation time
-     - Edit and delete buttons
-   - Button to add income/expense through popup
-   - Incomes table with option to filter and a button to get the report
-   - Expenses table with option to filter and a button to get the report
+7. **Income/Expense Group Delete Popup**
+   - Save button
+   - Cancel button
 
-6. **Reminder Settings (Premium Feature inside Profile Settings)**
+8. **Income/Expense Group Details Page**
+   - Name
+   - Description
+   - Last 5 account changes for that group
+   - Breadcrumb for easy navigation
+
+9. **Reminders (Premium Feature inside Profile Settings)**
    - Button to create reminder through a popup
    - Details of currently set reminder on the dashboard
+   - Breadcrumb for easy navigation
 
-7. **Blog Page (Premium Feature)**
+10. **Reminder Delete Popup**
+   - Save button
+   - Cancel button
+
+11. **Blogs (Premium Feature)**
+   - Cards with all available blogs
+   - Breadcrumb for easy navigation
+
+12. **Blog Details Page**
+   - Title
+   - Description
+   - Author
+   - Created at date
+   - Body
+   - Breadcrumb for easy navigation
+
+## Installation
+For installation guide visit our <a href="https://git.vegaitsourcing.rs/nikola.perisic/vega-internship-project/-/wikis/Project-setup-and-installation" target="_blank">Wiki</a>
 
 ## Additional integrations
 
-### Emails on push
-Email the commits and diff of each push to a list of recipients.
-
 ### Pipeline status emails
-Email the pipeline status to a list of recipients. Only failed pipelines.
+**Backend Pipeline:**
+Enable tests in the .NET project.
+<br/>
+<br/>
+**Frontend Pipeline:**
+Build the project.
+
+**Email Notification:**
+
+Send pipeline status emails to a predefined list of recipients, focusing only on failed pipelines.
+
+### Mailchimp integration
+Automatically register users who sign up for the newsletter to the connected Mailchimp audience.
 
 <hr/>
 
-Copyright &copy; 2023
+All rights reserved.
+<br/>
+Copyright &copy; 2023 
