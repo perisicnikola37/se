@@ -1,13 +1,6 @@
 import { useState } from 'react';
 import axiosConfig from '../../config/axiosConfig';
-
-type BlogType = {
-    id: number;
-    text: string;
-    author: string;
-    createdAt?: Date;
-    description: string;
-};
+import { BlogType } from '../../interfaces/globalInterfaces';
 
 const fetchBlogById = async (objectId: number, setBlog: (data: BlogType | null) => void, setIsLoading: (loading: boolean) => void, setError: (error: string | null) => void) => {
     setIsLoading(true);

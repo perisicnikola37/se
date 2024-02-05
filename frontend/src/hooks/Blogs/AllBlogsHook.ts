@@ -1,27 +1,14 @@
 import { useState } from 'react';
 import axiosConfig from '../../config/axiosConfig';
-
-interface User {
-    username: string;
-}
-
-interface Blog {
-    id: number;
-    description: string;
-    author: string;
-    text: string;
-    createdAt: string;
-    userId: number;
-    user: User;
-}
+import { BlogInterface } from '../../interfaces/globalInterfaces';
 
 const useAllBlogs = () => {
     const [isLoading, setIsLoading] = useState<boolean>(false);
-    const [blogs, setBlogs] = useState<Blog[]>([]);
+    const [blogs, setBlogs] = useState<BlogInterface[]>([]);
     const [error, setError] = useState<string | null>(null);
 
     const fetchAllBlogs = async () => {
-        const result = { isLoading: true, blogs: [] as Blog[], error: null as string | null };
+        const result = { isLoading: true, blogs: [] as BlogInterface[], error: null as string | null };
 
         try {
             const response = await axiosConfig.get('/api/blogs');

@@ -1,14 +1,8 @@
 import { useState } from 'react';
 import axiosConfig from '../../config/axiosConfig';
+import { GetObjectInterface } from '../../interfaces/globalInterfaces';
 
-type ObjectType = {
-    description: string;
-    amount: number;
-    incomeGroupId?: number;
-    expenseGroupId?: number;
-};
-
-const fetchObjectById = async (objectId: number, objectType: string, setObject: (data: ObjectType | null) => void, setIsLoading: (loading: boolean) => void, setError: (error: string | null) => void) => {
+const fetchObjectById = async (objectId: number, objectType: string, setObject: (data: GetObjectInterface | null) => void, setIsLoading: (loading: boolean) => void, setError: (error: string | null) => void) => {
     setIsLoading(true);
     setError(null);
 
@@ -16,7 +10,7 @@ const fetchObjectById = async (objectId: number, objectType: string, setObject: 
         const endpoint = `/api/${objectType}s/${objectId}`;
         const response = await axiosConfig.get(endpoint);
 
-        const objectData: ObjectType = response.data;
+        const objectData: GetObjectInterface = response.data;
 
         setObject(objectData);
     } catch (err) {
@@ -27,7 +21,7 @@ const fetchObjectById = async (objectId: number, objectType: string, setObject: 
 };
 
 const useGetObjectById = (objectId: number, objectType: string) => {
-    const [object, setObject] = useState<ObjectType | null>(null);
+    const [object, setObject] = useState<GetObjectInterface | null>(null);
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
 

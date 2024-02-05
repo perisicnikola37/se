@@ -1,19 +1,5 @@
-import React, { createContext, useContext, useState, ReactNode, Dispatch, SetStateAction } from 'react';
-
-interface User {
-    token: string | null;
-    id: number | null;
-    username: string | null;
-    email: string | null;
-    accountType: string | null;
-    formattedCreatedAt: string | null;
-}
-
-interface UserContextProps {
-    user: User;
-    setUser: Dispatch<SetStateAction<User>>;
-    isLoggedIn: () => boolean;
-}
+import React, { createContext, useContext, useState, ReactNode } from 'react';
+import { User, UserContextProps } from '../interfaces/contextsInterfaces';
 
 const UserContext = createContext<UserContextProps | undefined>(undefined);
 

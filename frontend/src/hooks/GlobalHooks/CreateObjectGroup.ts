@@ -1,10 +1,6 @@
 import { useState } from 'react';
 import axiosConfig from '../../config/axiosConfig';
-
-interface ObjectData {
-    name: string;
-    description: string;
-}
+import { ObjectData } from '../../interfaces/globalInterfaces';
 
 interface ErrorResponse {
     response?: {

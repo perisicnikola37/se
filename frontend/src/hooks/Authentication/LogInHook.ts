@@ -1,27 +1,7 @@
 import axiosConfig from '../../config/axiosConfig';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-
-interface LoginData {
-    email: string;
-    password: string;
-}
-
-interface User {
-    id: number;
-    username: string;
-    email: string;
-    accountType: string;
-    formattedCreatedAt: string;
-    createdAt: string;
-    token: string;
-}
-
-interface LoginResponse {
-    success: boolean;
-    message: string;
-    user: User;
-}
+import { LoginData, LoginResponse, LoginResult } from '../../interfaces/globalInterfaces';
 
 interface ErrorResponse {
     response?: {
@@ -30,12 +10,6 @@ interface ErrorResponse {
             errorMessage: string;
         }[];
     };
-}
-
-interface LoginResult {
-    user: User | null;
-    success: boolean;
-    message: string;
 }
 
 const useLogin = () => {

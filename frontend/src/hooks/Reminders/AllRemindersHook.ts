@@ -1,22 +1,14 @@
 import { useState } from 'react';
 import axiosConfig from '../../config/axiosConfig';
-
-
-interface Reminder {
-    id: number;
-    reminderDay: string;
-    type: string;
-    createdAt: string;
-    active: boolean;
-}
+import { ReminderInterface } from '../../interfaces/globalInterfaces';
 
 const useAllReminders = () => {
     const [isLoading, setIsLoading] = useState<boolean>(false);
-    const [reminders, setReminders] = useState<Reminder[]>([]);
+    const [reminders, setReminders] = useState<ReminderInterface[]>([]);
     const [error, setError] = useState<string | null>(null);
 
     const fetchAllReminders = async () => {
-        const result = { isLoading: true, reminders: [] as Reminder[], error: null as string | null };
+        const result = { isLoading: true, reminders: [] as ReminderInterface[], error: null as string | null };
 
         try {
             const response = await axiosConfig.get('/api/reminders');

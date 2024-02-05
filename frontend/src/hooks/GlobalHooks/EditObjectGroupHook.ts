@@ -1,17 +1,12 @@
 import { useState } from 'react';
 import axiosConfig from '../../config/axiosConfig';
-
-type UpdatedData = {
-    id: number;
-    name: string;
-    description: string;
-};
+import { UpdateObjectGroupInterface } from '../../interfaces/globalInterfaces';
 
 const useEditObjectGroup = () => {
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
 
-    const editObjectGroup = async (objectId: number, objectType: string, updatedData: UpdatedData) => {
+    const editObjectGroup = async (objectId: number, objectType: string, updatedData: UpdateObjectGroupInterface) => {
         setIsLoading(true);
         setError(null);
 

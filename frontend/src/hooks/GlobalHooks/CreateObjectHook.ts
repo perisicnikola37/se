@@ -1,12 +1,6 @@
 import { useState } from 'react';
 import axiosConfig from '../../config/axiosConfig';
-
-interface ObjectData {
-    description: string;
-    amount: number;
-    incomeGroupId?: number;
-    expenseGroupId?: number;
-}
+import { CreateObjectDataInterface } from '../../interfaces/globalInterfaces';
 
 interface ErrorResponse {
     response?: {
@@ -21,7 +15,7 @@ const useCreateObject = (objectType: string) => {
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
 
-    const createObject = async (objectData: ObjectData) => {
+    const createObject = async (objectData: CreateObjectDataInterface) => {
         setIsLoading(true);
         setError(null);
 

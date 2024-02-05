@@ -1,12 +1,6 @@
 import { useState } from 'react';
 import axiosConfig from '../../config/axiosConfig';
-
-interface MailchimpSubscribeHookResult {
-    isLoading: boolean;
-    success: boolean;
-    error: string | null;
-    subscribeToMailchimp: (email: string) => Promise<void>;
-}
+import { MailchimpSubscribeHookResult } from '../../interfaces/globalInterfaces';
 
 const useMailchimpSubscribe = (): MailchimpSubscribeHookResult => {
     const [isLoading, setIsLoading] = useState<boolean>(false);

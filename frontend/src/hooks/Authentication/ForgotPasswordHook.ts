@@ -1,13 +1,7 @@
 import { useState } from "react";
 import axiosConfig from "../../config/axiosConfig";
 import Swal from "sweetalert2";
-
-interface ForgotPasswordHookInterface {
-    isLoading: boolean;
-    success: boolean;
-    error: string | null;
-    forgotPassword: (email: string) => Promise<void>;
-}
+import { ForgotPasswordHookInterface } from "../../interfaces/globalInterfaces";
 
 const useForgotPassword = (): ForgotPasswordHookInterface => {
     const [isLoading, setIsLoading] = useState<boolean>(false);

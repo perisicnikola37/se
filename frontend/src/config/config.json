@@ -42,7 +42,6 @@
                 "url": "/contact"
             }
         ],
-        "settings": ["Profil", "Odjava"],
         "policyText": "Koristimo kolačiće kako bi poboljšali Vaše iskustvo. Korišćenjem našeg sajta, slažete se sa našim ",
         "privacyPolicy": "Pravila privatnosti",
         "acceptButton": "Potvrdi"
@@ -90,7 +89,6 @@
                 "url": "/contact"
             }
         ],
-        "settings": ["Profile", "Log out"],
         "policyText": "We use cookies to enhance your experience. By using our website, you agree to our ",
         "privacyPolicy": "Privacy Policy",
         "acceptButton": "Accept"

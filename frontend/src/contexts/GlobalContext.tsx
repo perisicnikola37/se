@@ -1,31 +1,5 @@
 import React, { createContext, useContext, useState, ReactNode } from 'react';
-
-interface FetchObjectParams {
-    pageNumber: number;
-    pageSize: number;
-    description?: string | null;
-    minAmount?: number | null;
-    maxAmount?: number | null;
-    incomeGroupId?: string | null;
-    expenseGroupId?: string | null;
-}
-
-interface ModalContextProps {
-    modalState: boolean;
-    // pagination
-    totalRecords: number;
-    setTotalRecords: (number: number) => void;
-    pageNumber: number;
-    setPageNumber: (number: number) => void;
-    actionChange: { counter: number; value: boolean };
-    appliedFilters: FetchObjectParams;
-    openModal: () => void;
-    closeModal: () => void;
-    setActionChanged: () => void;
-    resetActionChange: () => void;
-    setAppliedFilters: (filters: FetchObjectParams) => void;
-    getAppliedFilters: () => FetchObjectParams;
-}
+import { FetchObjectParams, ModalContextProps } from '../interfaces/contextsInterfaces';
 
 const ModalContext = createContext<ModalContextProps | undefined>(undefined);
 

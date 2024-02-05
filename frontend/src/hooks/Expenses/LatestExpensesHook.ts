@@ -1,20 +1,15 @@
 import { useState } from 'react';
 import axiosConfig from '../../config/axiosConfig';
-
-interface Expense {
-    description: string;
-    amount: number;
-    createdAt: string;
-}
+import { ExpenseSimplified } from '../../interfaces/globalInterfaces';
 
 const useLatestExpenses = () => {
     const [isLoading, setIsLoading] = useState<boolean>(false);
-    const [expenses, setExpenses] = useState<Expense[]>([]);
+    const [expenses, setExpenses] = useState<ExpenseSimplified[]>([]);
     const [error, setError] = useState<string | null>(null);
     const [highestExpense, setHighestExpense] = useState<number>(0);
 
     const fetchLatestExpenses = async () => {
-        const result = { isLoading: true, expenses: [] as Expense[], error: null as string | null };
+        const result = { isLoading: true, expenses: [] as ExpenseSimplified[], error: null as string | null };
 
         try {
             const response = await axiosConfig.get('/api/expenses/latest/5');

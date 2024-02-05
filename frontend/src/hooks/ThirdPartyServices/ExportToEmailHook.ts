@@ -1,12 +1,6 @@
 import { useState } from 'react';
 import axiosConfig from '../../config/axiosConfig';
-
-interface ExportToEmailHookResult {
-    isLoading: boolean;
-    success: boolean;
-    error: string | null;
-    exportToEmail: (email: string) => Promise<void>;
-}
+import { ExportToEmailHookResult } from '../../interfaces/globalInterfaces';
 
 const useExportToEmail = (): ExportToEmailHookResult => {
     const [isLoading, setIsLoading] = useState<boolean>(false);

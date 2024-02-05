@@ -49,7 +49,6 @@ const NavBar = () => {
     };
 
     const pages = pagesData.pages.map((page) => ({ ...page }));
-    const settings = pagesData.settings || [];
 
     const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorElNav(event.currentTarget);
@@ -232,26 +231,11 @@ const NavBar = () => {
                                     open={Boolean(anchorElUser)}
                                     onClose={handleCloseUserMenu}
                                 >
-                                    {/* {settings.map((setting) => (
                                     <MenuItem
-                                        key={setting}
-                                        onClick={handleCloseUserMenu}
+                                        sx={{ width: "200px", marginLeft: "10px" }}
                                     >
-                                        <Typography textAlign="center">
-                                            {setting}
-                                        </Typography>
+                                        <NavLink to="profile">Profile</NavLink>
                                     </MenuItem>
-                                ))} */}
-
-                                    {settings.map((setting) => (
-                                        <MenuItem
-                                            sx={{ width: "200px", marginLeft: "10px" }}
-                                            key={setting}
-                                            onClick={() => handleLogout()}
-                                        >
-                                            <Typography textAlign="center">{setting}</Typography>
-                                        </MenuItem>
-                                    ))}
                                     {user.accountType === "Administrator" && (
                                         <>
                                             <MenuItem sx={{ width: "200px", marginLeft: "10px" }}>
@@ -262,6 +246,12 @@ const NavBar = () => {
                                             </MenuItem>
                                         </>
                                     )}
+                                    <MenuItem
+                                        sx={{ width: "200px", marginLeft: "10px" }}
+                                        onClick={() => handleLogout()}
+                                    >
+                                        <Typography textAlign="center">Log out</Typography>
+                                    </MenuItem>
                                 </Menu>
                             </Box>
                         )}

@@ -1,15 +1,7 @@
 import { useState } from 'react';
 import axiosConfig from '../../config/axiosConfig';
 import { useModal } from '../../contexts/GlobalContext';
-import { IncomeInterface, ExpenseInterface } from '../../interfaces/globalInterfaces';
-
-interface FetchObjectsParams {
-    pageSize: number;
-    description?: string | null;
-    minAmount?: number | null;
-    maxAmount?: number | null;
-    incomeGroupId?: string | null;
-}
+import { IncomeInterface, ExpenseInterface, FetchObjectsParams } from '../../interfaces/globalInterfaces';
 
 type ObjectInterface = IncomeInterface | ExpenseInterface;
 
