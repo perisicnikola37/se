@@ -64,3 +64,7 @@ export interface DarkModeContextProps {
     darkMode: boolean;
     toggleDarkMode: (prev: boolean) => void;
 }
+
+export interface UserProviderProps {
+    children: ReactNode;
+}

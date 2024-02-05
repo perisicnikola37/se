@@ -176,11 +176,14 @@ const NavBar = () => {
                                             <span
                                                 className={`my-2 ${page.url === location.pathname
                                                     ? "text-blue-500"
-                                                    : "text-black"
+                                                    : darkMode
+                                                        ? "text-white"
+                                                        : "text-black"
                                                     }`}
                                             >
                                                 {page.name}
                                             </span>
+
                                         </NavLink>
                                     )
                                 ))}

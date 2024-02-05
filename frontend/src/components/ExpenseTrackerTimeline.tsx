@@ -12,7 +12,6 @@ const ExpenseTrackerTimeline = () => {
                     className="vertical-timeline-element--work"
                     date="First step"
                     iconStyle={{ background: "#2563EB", color: "#fff" }}
-                // icon={<WorkIcon />}
                 >
                     <h3 className="vertical-timeline-element-title">
                         Register on our platform
@@ -26,7 +25,6 @@ const ExpenseTrackerTimeline = () => {
                     className="vertical-timeline-element--work"
                     date="Second step"
                     iconStyle={{ background: "rgb(33, 150, 243)", color: "#fff" }}
-                // icon={<WorkIcon />}
                 >
                     <h3 className="vertical-timeline-element-title">
                         Add incomes & expenses
@@ -40,7 +38,6 @@ const ExpenseTrackerTimeline = () => {
                     className="vertical-timeline-element--work"
                     date="Third step"
                     iconStyle={{ background: "#2563EB", color: "#fff" }}
-                // icon={<WorkIcon />}
                 >
                     <h3 className="vertical-timeline-element-title">
                         Export your stats and follow chart statistics

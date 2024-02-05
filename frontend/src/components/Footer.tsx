@@ -8,7 +8,7 @@ const Footer = () => {
     const currentYear = new Date().getFullYear();
     const { languageKey } = useLanguage();
 
-    const languageConfig = (config as Config)[languageKey];
+    const languageConfig = (config as unknown as Config)[languageKey];
 
     return (
         <footer className="bg-[#1976D2] shadow  dark:bg-gray-900 w-[100%]">
