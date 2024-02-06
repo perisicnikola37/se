@@ -1,18 +1,33 @@
 stages:
+  - build
   - test
 
 variables:
-  SOLUTION_PATH: backend/Solution.sln
+  SOLUTION_PATH: backend
+  DOCKER_HOST: tcp://docker:2375/
+  ASPNETCORE_ENVIRONMENT: "Development"
 
 before_script:
-  - 'dotnet restore $SOLUTION_PATH'
+  - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+  - 'dotnet --version' 
+  - 'dotnet restore $SOLUTION_PATH/Solution.sln'
+
+build:
+  stage: build
+  script:
+    - docker build -t $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME .
+    - docker push $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME
 
 test:
   stage: test
   only:
-  - main
+    - main
   script:
-    - 'dotnet test $SOLUTION_PATH'
+    - docker-compose up -d
+    - docker-compose exec expense-tracker-api dotnet test
+
+after_script:
+  - docker-compose down
 
 image:
   name: mcr.microsoft.com/dotnet/sdk:latest
