@@ -1,14 +1,14 @@
 import logo from "../assets/logo.png";
 import CookieConsent from "./CookieConsent";
 import config from "../config/config.json"
-import { useLanguage } from "../contexts/GetLanguageKeyContext";
 import { Config } from "../types/TranslationTypes";
+import { useModal } from "../contexts/GlobalContext";
 
 const Footer = () => {
     const currentYear = new Date().getFullYear();
-    const { languageKey } = useLanguage();
+    const { language } = useModal();
 
-    const languageConfig = (config as Config)[languageKey];
+    const languageConfig = (config as unknown as Config)[language];
 
     return (
         <footer className="bg-[#1976D2] shadow  dark:bg-gray-900 w-[100%]">

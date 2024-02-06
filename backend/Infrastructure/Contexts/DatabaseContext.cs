@@ -9,9 +9,7 @@ namespace Infrastructure.Contexts;
 
 public class DatabaseContext : DbContext, IDatabaseContext
 {
-	public DatabaseContext(DbContextOptions<DatabaseContext> options) : base(options)
-	{
-	}
+	public DatabaseContext(DbContextOptions<DatabaseContext> options) : base(options) { }
 
 	// important for tests
 	public DatabaseContext()

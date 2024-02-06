@@ -12,6 +12,7 @@ import {
 } from "@mui/material";
 import useResetPassword from "../hooks/Authentication/ResetPasswordHook";
 import { validatePassword } from "../utils/utils";
+import { Helmet } from "react-helmet";
 
 const ResetPassword = () => {
     const { resetPassword, isLoading } = useResetPassword();
@@ -47,6 +48,9 @@ const ResetPassword = () => {
                 alignItems: "center",
             }}
         >
+            <Helmet>
+                <title>Reset password | Expense Tracker</title>
+            </Helmet>
             <CssBaseline />
             <Box
                 sx={{

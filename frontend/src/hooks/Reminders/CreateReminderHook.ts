@@ -1,11 +1,6 @@
 import { useState } from 'react';
 import axiosConfig from '../../config/axiosConfig';
-
-interface CreateReminderData {
-    ReminderDay: string;
-    Type: string;
-    Active: boolean;
-}
+import { CreateReminderData } from '../../interfaces/globalInterfaces';
 
 const useCreateReminder = () => {
     const [isLoading, setIsLoading] = useState<boolean>(false);

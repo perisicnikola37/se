@@ -1,24 +1,27 @@
-import React, { useState } from "react";
-import Button from "@mui/material/Button";
-import CssBaseline from "@mui/material/CssBaseline";
-import TextField from "@mui/material/TextField";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Checkbox from "@mui/material/Checkbox";
-import Link from "@mui/material/Link";
-import Grid from "@mui/material/Grid";
-import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
-import Container from "@mui/material/Container";
+import {
+    Button,
+    CssBaseline,
+    TextField,
+    FormControlLabel,
+    Checkbox,
+    Link,
+    Grid,
+    Box,
+    Typography,
+    Container,
+} from "@mui/material";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { Alert } from "@mui/material";
 import useLogin from "../hooks/Authentication/LogInHook";
-import { isEmailValid } from "../utils/utils";
+import { validateLoginForm } from "../utils/utils";
 import { useUser } from "../contexts/UserContext";
+import { useState } from "react";
 
 const defaultTheme = createTheme();
 
 export default function SignInForm() {
     const { setUser } = useUser()
+    const { login, fieldErrorMessages, isLoading, response } = useLogin();
     const [loginData, setLoginData] = useState({
         email: "",
         password: "",
@@ -26,52 +29,11 @@ export default function SignInForm() {
 
     const [formError, setFormError] = useState<string | null>(null);
 
-    const { login, fieldErrorMessages, isLoading, response } = useLogin();
-
-    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-        event.preventDefault();
-
-        if (!loginData.email || !loginData.password) {
-            setFormError("Please fill in both email and password.");
-            return;
-        }
-
-        if (!isEmailValid(loginData.email)) {
-            setFormError("Please enter a valid email address.");
-            return;
-        }
-
-        if (loginData.password.length < 8) {
-            setFormError("Password must have a minimum of 8 characters.");
-            return;
-        }
-
-        setFormError(null);
-
-        await login(loginData);
-        setUser(prev => {
-            if (response && response.user) {
-                return {
-                    ...prev,
-                    id: response.user.id ?? prev.id,
-                    accountType: response.user.accountType ?? prev.accountType,
-                    email: response.user.email ?? prev.email,
-                    formattedCreatedAt: response.user.formattedCreatedAt ?? prev.formattedCreatedAt,
-                    token: response.user.token ?? prev.token,
-                    username: response.user.username ?? prev.username,
-                };
-            } else {
-                return prev;
-            }
-        });
-    };
-
     const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-        const { name, value } = event.target;
-        setLoginData((prevData) => ({
-            ...prevData,
-            [name]: value,
-        }));
+        setLoginData({
+            ...loginData,
+            [event.target.name]: event.target.value,
+        });
     };
 
     return (
@@ -91,7 +53,10 @@ export default function SignInForm() {
                     </Typography>
                     <Box
                         component="form"
-                        onSubmit={handleSubmit}
+                        onSubmit={async (event) => {
+                            event.preventDefault();
+                            await validateLoginForm(loginData, setFormError, login, setUser, response);
+                        }}
                         noValidate
                         sx={{ mt: 1 }}
                     >

@@ -5,6 +5,7 @@ import { Alert, Breadcrumbs, Skeleton, Typography } from "@mui/material";
 import ReminderCreateModal from "../components/Modals/ReminderCreateModal";
 import { useModal } from "../contexts/GlobalContext";
 import { Link } from "react-router-dom";
+import { Helmet } from "react-helmet";
 
 const Reminders = () => {
     const { loadReminders, reminders } = useAllReminders();
@@ -12,7 +13,6 @@ const Reminders = () => {
     const { actionChange } = useModal()
 
     useEffect(() => {
-        document.title = "Reminders | Expense Tracker";
         loadReminders();
         setTimeout(() => {
             setIsLoading(false);
@@ -23,6 +23,9 @@ const Reminders = () => {
 
     return (
         <div className="w-full max-w-screen-xl min-h-[48rem] mx-auto p-4 md:py-8">
+            <Helmet>
+                <title>Reminders | Expense Tracker</title>
+            </Helmet>
             <div className="flex justify-between items-center mb-10">
                 <h1 className="text-3xl font-semibold">Reminders</h1>
                 <ReminderCreateModal />

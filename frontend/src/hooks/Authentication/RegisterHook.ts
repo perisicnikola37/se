@@ -1,24 +1,7 @@
 import axiosConfig from '../../config/axiosConfig';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-
-interface RegistrationData {
-    username: string;
-    email: string;
-    accountType: string;
-    password: string;
-}
-
-interface RegistrationResponse {
-    success: boolean;
-    message: string;
-    username: string;
-    token: string;
-    id: number;
-    email: string;
-    accountType: string;
-    formattedCreatedAt: string;
-}
+import { RegistrationData, RegistrationResponse } from '../../interfaces/globalInterfaces';
 
 interface ErrorResponse {
     response?: {

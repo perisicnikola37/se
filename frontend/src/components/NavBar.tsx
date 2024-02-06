@@ -23,6 +23,7 @@ import { useModal } from "../contexts/GlobalContext";
 import userPicture from "../../src/assets/profile_image.jpg";
 import { useDarkMode } from "../contexts/DarkModeContext";
 import NightlightIcon from '@mui/icons-material/Nightlight';
+import { handleLogout } from "../utils/utils";
 
 const NavBar = () => {
     const navigate = useNavigate();
@@ -33,26 +34,24 @@ const NavBar = () => {
     const iconStyle = { fontSize: 16, marginLeft: "5px" };
     const { isLoggedIn } = useUser();
     const { toggleDarkMode, darkMode } = useDarkMode();
-
+    const { setLanguage } = useModal()
     const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
     const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
 
-    const handleLogout = () => {
-        localStorage.removeItem("id");
-        localStorage.removeItem("username");
-        localStorage.removeItem("email");
-        localStorage.removeItem("accountType");
-        localStorage.removeItem("token");
-        localStorage.removeItem("formattedCreatedAt");
-
+    const handleLogoutOperation = () => {
+        handleLogout()
         navigate("/sign-in");
     };
 
     const pages = pagesData.pages.map((page) => ({ ...page }));
-    const settings = pagesData.settings || [];
 
     const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorElNav(event.currentTarget);
+    };
+
+    const handleLanguageClick = (language: string) => {
+        localStorage.setItem('defaultLanguage', language);
+        setLanguage(language);
     };
 
     const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
@@ -117,7 +116,7 @@ const NavBar = () => {
                                 onClick={handleOpenNavMenu}
                                 color="inherit"
                             >
-                                <MenuIcon className="text-gray-500 dark:text-white" />
+                                <MenuIcon className="text-gray-500" />
                             </IconButton>
                             <Menu
                                 id="menu-appbar"
@@ -143,13 +142,12 @@ const NavBar = () => {
                                 {pages.map((page, index) => (
                                     <MenuItem
                                         key={page.url}
-                                        onClick={handleCloseNavMenu}
                                         className={`transition duration-300 ${index >= pages.length - 2 ? "ml-auto" : ""
                                             }`}
                                     >
                                         <NavLink
                                             to={page.url}
-                                            className={`text-black dark:text-white hover:text-blue-500 ${page.url === location.pathname ? "text-blue-500" : ""
+                                            className={`text-black  hover:text-blue-500 ${page.url === location.pathname ? "text-blue-500" : ""
                                                 }`}
                                         >
                                             {page.name}
@@ -177,11 +175,14 @@ const NavBar = () => {
                                             <span
                                                 className={`my-2 ${page.url === location.pathname
                                                     ? "text-blue-500"
-                                                    : "text-black"
+                                                    : darkMode
+                                                        ? "text-white"
+                                                        : "text-black"
                                                     }`}
                                             >
                                                 {page.name}
                                             </span>
+
                                         </NavLink>
                                     )
                                 ))}
@@ -199,6 +200,23 @@ const NavBar = () => {
                                 className="mr-5 text-[#fff] cursor-pointer hover:scale-105 duration-300"
                             />
                         )}
+
+                        <div className="text-black mr-5">
+                            <span
+                                className="cursor-pointer hover:text-[#2563EB] duration-300"
+                                onClick={() => handleLanguageClick('EN')}
+                            >
+                                eng
+                            </span>
+                            {' / '}
+                            <span
+                                className="cursor-pointer hover:text-red-500 duration-300"
+                                onClick={() => handleLanguageClick('ME')}
+                            >
+                                mne
+                            </span>
+                        </div>
+
                         {!isLoggedIn() ? (
                             <button
                                 type="button"
@@ -232,36 +250,34 @@ const NavBar = () => {
                                     open={Boolean(anchorElUser)}
                                     onClose={handleCloseUserMenu}
                                 >
-                                    {/* {settings.map((setting) => (
-                                    <MenuItem
-                                        key={setting}
-                                        onClick={handleCloseUserMenu}
-                                    >
-                                        <Typography textAlign="center">
-                                            {setting}
-                                        </Typography>
-                                    </MenuItem>
-                                ))} */}
-
-                                    {settings.map((setting) => (
+                                    <NavLink to="profile">
                                         <MenuItem
+                                            onClick={handleCloseUserMenu}
                                             sx={{ width: "200px", marginLeft: "10px" }}
-                                            key={setting}
-                                            onClick={() => handleLogout()}
                                         >
-                                            <Typography textAlign="center">{setting}</Typography>
+                                            Profile
                                         </MenuItem>
-                                    ))}
+                                    </NavLink>
                                     {user.accountType === "Administrator" && (
                                         <>
-                                            <MenuItem sx={{ width: "200px", marginLeft: "10px" }}>
-                                                <NavLink to="blogs">Blogs</NavLink>
-                                            </MenuItem>
-                                            <MenuItem sx={{ width: "200px", marginLeft: "10px" }}>
-                                                <NavLink to="reminders">Reminders</NavLink>
-                                            </MenuItem>
+                                            <NavLink to="blogs">
+                                                <MenuItem onClick={handleCloseUserMenu} sx={{ width: "200px", marginLeft: "10px" }}>
+                                                    Blogs
+                                                </MenuItem>
+                                            </NavLink>
+                                            <NavLink to="reminders">
+                                                <MenuItem onClick={handleCloseUserMenu} sx={{ width: "200px", marginLeft: "10px" }}>
+                                                    Reminders
+                                                </MenuItem>
+                                            </NavLink>
                                         </>
                                     )}
+                                    <MenuItem
+                                        sx={{ width: "200px", marginLeft: "10px" }}
+                                        onClick={() => handleLogoutOperation()}
+                                    >
+                                        <Typography textAlign="center">Log out</Typography>
+                                    </MenuItem>
                                 </Menu>
                             </Box>
                         )}

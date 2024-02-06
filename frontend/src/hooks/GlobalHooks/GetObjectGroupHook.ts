@@ -1,14 +1,8 @@
 import { useState } from 'react';
 import axiosConfig from '../../config/axiosConfig';
+import { ObjectGroupDataInterface } from '../../interfaces/globalInterfaces';
 
-type ObjectType = {
-    name: string;
-    description: string;
-    expenses?: Array<{ id: number; description: string; amount: number }>;
-    incomes?: Array<{ id: number; description: string; amount: number }>;
-};
-
-const fetchObjectGroupById = async (objectId: number, objectType: string, setObject: (data: ObjectType | null) => void, setIsLoading: (loading: boolean) => void, setError: (error: string | null) => void) => {
+const fetchObjectGroupById = async (objectId: number, objectType: string, setObject: (data: ObjectGroupDataInterface | null) => void, setIsLoading: (loading: boolean) => void, setError: (error: string | null) => void) => {
     setIsLoading(true);
     setError(null);
 
@@ -16,7 +10,7 @@ const fetchObjectGroupById = async (objectId: number, objectType: string, setObj
         const endpoint = `/api/${objectType}s/groups/${objectId}`;
         const response = await axiosConfig.get(endpoint);
 
-        const objectData: ObjectType = response.data;
+        const objectData: ObjectGroupDataInterface = response.data;
 
         setObject(objectData);
     } catch (err) {
@@ -27,7 +21,7 @@ const fetchObjectGroupById = async (objectId: number, objectType: string, setObj
 };
 
 const useGetObjectGroupById = (objectId: number, objectType: string) => {
-    const [object, setObject] = useState<ObjectType | null>(null);
+    const [object, setObject] = useState<ObjectGroupDataInterface | null>(null);
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
 

@@ -1,40 +1,15 @@
 import React, { createContext, useContext, useState, ReactNode } from 'react';
-
-interface FetchObjectParams {
-    pageNumber: number;
-    pageSize: number;
-    description?: string | null;
-    minAmount?: number | null;
-    maxAmount?: number | null;
-    incomeGroupId?: string | null;
-    expenseGroupId?: string | null;
-}
-
-interface ModalContextProps {
-    modalState: boolean;
-    // pagination
-    totalRecords: number;
-    setTotalRecords: (number: number) => void;
-    pageNumber: number;
-    setPageNumber: (number: number) => void;
-    actionChange: { counter: number; value: boolean };
-    appliedFilters: FetchObjectParams;
-    openModal: () => void;
-    closeModal: () => void;
-    setActionChanged: () => void;
-    resetActionChange: () => void;
-    setAppliedFilters: (filters: FetchObjectParams) => void;
-    getAppliedFilters: () => FetchObjectParams;
-}
-
-const ModalContext = createContext<ModalContextProps | undefined>(undefined);
+import { FetchObjectParams, ModalContextProps } from '../interfaces/contextsInterfaces';
 
 interface ModalProviderProps {
     children: ReactNode;
 }
 
+const ModalContext = createContext<ModalContextProps | undefined>(undefined);
+
 export const ModalProvider: React.FC<ModalProviderProps> = ({ children }) => {
     const [modalState, setModalState] = useState(false);
+    const [language, setLanguage] = useState(localStorage.getItem('defaultLanguage') || 'EN');
     const [totalRecords, setTotalRecordsState] = useState(0);
     const [pageNumber, setPageNumberState] = useState(0);
     const [actionChange, setActionChange] = useState({ counter: 0, value: false });
@@ -82,10 +57,12 @@ export const ModalProvider: React.FC<ModalProviderProps> = ({ children }) => {
         resetActionChange,
         setAppliedFilters,
         getAppliedFilters,
-        totalRecords: totalRecords,
+        totalRecords,
         setTotalRecords,
-        pageNumber: pageNumber,
-        setPageNumber
+        pageNumber,
+        setPageNumber,
+        language,
+        setLanguage,
     };
 
     return (

@@ -1,5 +1,5 @@
 // App.tsx
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { ThreeDots } from "react-loader-spinner";
 import NavBar from "./components/NavBar";
 import { useLoading } from "./contexts/LoadingContext";
@@ -8,6 +8,7 @@ import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import { useUser } from "./contexts/UserContext";
 import { useDarkMode } from "./contexts/DarkModeContext";
 import { CssBaseline, ThemeProvider, createTheme } from "@mui/material";
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 
 function App() {
     const { loading, setLoadingState } = useLoading();
@@ -21,6 +22,28 @@ function App() {
             mode: darkMode ? "dark" : "light",
         },
     });
+
+    const [showScrollToTop, setShowScrollToTop] = useState(false);
+
+    useEffect(() => {
+        const handleScroll = () => {
+            const shouldShow = window.scrollY > 800;
+            setShowScrollToTop(shouldShow);
+        };
+
+        window.addEventListener("scroll", handleScroll);
+
+        return () => {
+            window.removeEventListener("scroll", handleScroll);
+        };
+    }, []);
+
+    const handleScrollToTop = () => {
+        window.scrollTo({
+            top: 0,
+            behavior: "smooth",
+        });
+    };
 
     useEffect(() => {
         // Check if the URL contains "reset-password"
@@ -62,6 +85,20 @@ function App() {
                             <CssBaseline />
                             <NavBar />
                             <Outlet />
+                            {showScrollToTop && (
+                                <div
+                                    className="scroll-to-top rounded-lg z-10"
+                                    onClick={handleScrollToTop}
+                                    style={{
+                                        position: "fixed",
+                                        bottom: "20px",
+                                        right: "20px",
+                                    }}
+                                >
+                                    <KeyboardArrowUpIcon style={{ fontSize: "40px", cursor: "pointer", background: "#fff", borderRadius: "40px" }} />
+                                </div>
+                            )}
+
                             <Footer />
                         </ThemeProvider>
                     </div>

@@ -1,24 +1,24 @@
+# Build stage
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build-env
-WORKDIR /backend
-
-COPY *.csproj ./
+WORKDIR /app
 
 COPY . .
 
 RUN dotnet restore
-
+# CMD ["dotnet", "ef", "database", "update", "--context", "DatabaseContext"]
 RUN dotnet publish -c Release -o out
 
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends \
-        wkhtmltopdf \
-        wkhtmltoimage \
-    && rm -rf /var/lib/apt/lists/*
+# Migration stage
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS migration
+WORKDIR /app
 
+COPY --from=build-env /app/ExpenseTrackerApi /app/ExpenseTrackerApi
+
+# Run migrations
+
+# Runtime stage
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS runtime
-WORKDIR /backend
-COPY --from=build-env /backend/out .
-
+WORKDIR /app
+COPY --from=build-env /app/out .
 EXPOSE 80
-
 ENTRYPOINT ["dotnet", "ExpenseTrackerApi.dll"]

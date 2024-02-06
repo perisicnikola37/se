@@ -1,20 +1,15 @@
 import { useState } from 'react';
 import axiosConfig from '../../config/axiosConfig';
-
-interface Income {
-    description: string;
-    amount: number;
-    createdAt: string;
-}
+import { IncomeSimplified } from '../../interfaces/globalInterfaces';
 
 const useLatestIncomes = () => {
     const [isLoading, setIsLoading] = useState<boolean>(false);
-    const [incomes, setIncomes] = useState<Income[]>([]);
+    const [incomes, setIncomes] = useState<IncomeSimplified[]>([]);
     const [error, setError] = useState<string | null>(null);
     const [highestIncome, setHighestIncome] = useState<number>(0);
 
     const fetchLatestIncomes = async () => {
-        const result = { isLoading: true, incomes: [] as Income[], error: null as string | null };
+        const result = { isLoading: true, incomes: [] as IncomeSimplified[], error: null as string | null };
 
         try {
             const response = await axiosConfig.get('/api/incomes/latest/5');

@@ -1,24 +1,29 @@
 import React, { useState } from "react";
-import Button from "@mui/material/Button";
-import CssBaseline from "@mui/material/CssBaseline";
-import TextField from "@mui/material/TextField";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Checkbox from "@mui/material/Checkbox";
-import Link from "@mui/material/Link";
-import Grid from "@mui/material/Grid";
-import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
-import Container from "@mui/material/Container";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
 import {
+    Button,
+    CssBaseline,
+    TextField,
+    FormControlLabel,
+    Checkbox,
+    Link,
+    Grid,
+    Box,
+    Typography,
+    Container,
+    createTheme,
+    ThemeProvider,
     Alert,
     FormControl,
     InputLabel,
     MenuItem,
     Select,
     SelectChangeEvent,
+    InputAdornment,
+    IconButton,
 } from "@mui/material";
 import useRegistration from "../hooks/Authentication/RegisterHook";
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 
 const defaultTheme = createTheme();
 
@@ -28,35 +33,45 @@ export default function SignUpForm() {
         email: "",
         accountType: "Regular",
         password: "",
+        passwordConfirmation: "",
     });
+
+    const [passwordMatchError, setPasswordMatchError] = useState<string | null>(null);
+    const [showPassword, setShowPassword] = useState(false); // New state for password visibility
 
     const { register, fieldErrorMessages, isLoading } = useRegistration();
 
-    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-        event.preventDefault();
-
-        await register(registrationData);
-    };
-
     const handleChange = (
-        event:
-            | React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-            | SelectChangeEvent<string>
+        event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement> | SelectChangeEvent<string>
     ) => {
         if ("target" in event) {
-            const { name, value } = event.target;
+            const { name, value } = event.target as HTMLInputElement | HTMLTextAreaElement;
             setRegistrationData((prevData) => ({
                 ...prevData,
                 [name]: value,
             }));
         } else {
-            // Handle SelectChangeEvent
             const { name, value } = event;
             setRegistrationData((prevData) => ({
                 ...prevData,
                 [name]: value,
             }));
         }
+    };
+
+    const togglePasswordVisibility = () => {
+        setShowPassword((prev) => !prev);
+    };
+
+    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+        if (registrationData.password !== registrationData.passwordConfirmation) {
+            setPasswordMatchError("Passwords do not match.");
+            return;
+        } else {
+            setPasswordMatchError(null);
+        }
+        await register(registrationData);
     };
 
     return (
@@ -108,7 +123,6 @@ export default function SignUpForm() {
                             label="Username"
                             name="username"
                             autoComplete="username"
-                            autoFocus
                             onChange={handleChange}
                         />
                         <TextField
@@ -119,20 +133,30 @@ export default function SignUpForm() {
                             label="Email Address"
                             name="email"
                             autoComplete="email"
-                            autoFocus
                             onChange={handleChange}
                         />
-
                         <TextField
                             margin="normal"
                             required
                             fullWidth
                             name="password"
                             label="Password"
-                            type="password"
+                            type={showPassword ? "text" : "password"}
                             id="password"
                             autoComplete="current-password"
                             onChange={handleChange}
+                            InputProps={{
+                                endAdornment: (
+                                    <InputAdornment position="end">
+                                        <IconButton
+                                            aria-label="toggle password visibility"
+                                            onClick={togglePasswordVisibility}
+                                        >
+                                            {showPassword ? <VisibilityIcon /> : <VisibilityOffIcon />}
+                                        </IconButton>
+                                    </InputAdornment>
+                                ),
+                            }}
                         />
                         <TextField
                             margin="normal"
@@ -146,6 +170,12 @@ export default function SignUpForm() {
                             sx={{ mb: 2 }}
                             onChange={handleChange}
                         />
+                        {passwordMatchError && (
+                            <Alert sx={{ mb: 2 }} severity="error">
+                                {passwordMatchError}
+                            </Alert>
+                        )}
+
                         <FormControl fullWidth>
                             <InputLabel id="demo-simple-select-label">Type</InputLabel>
                             <Select

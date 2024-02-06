@@ -1,9 +1,5 @@
 import { createContext, useContext, useState, ReactNode } from "react";
-
-type DarkModeContextProps = {
-    darkMode: boolean;
-    toggleDarkMode: (prev: boolean) => void;
-};
+import { DarkModeContextProps } from "../interfaces/contextsInterfaces";
 
 const DarkModeContext = createContext<DarkModeContextProps | undefined>(
     undefined

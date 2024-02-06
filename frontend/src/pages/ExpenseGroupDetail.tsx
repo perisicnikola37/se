@@ -3,6 +3,7 @@ import { Link, useParams } from "react-router-dom";
 import useGetObjectGroupById from "../hooks/GlobalHooks/GetObjectGroupHook";
 import { Breadcrumbs, Typography } from "@mui/material";
 import { motion } from "framer-motion";
+import { Helmet } from "react-helmet";
 
 const ExpenseGroupDetail = () => {
     const { id } = useParams();
@@ -22,6 +23,9 @@ const ExpenseGroupDetail = () => {
             transition={{ duration: 0.5 }}
             className="w-full max-w-screen-xl min-h-[48rem] mx-auto p-4 md:py-8"
         >
+            <Helmet>
+                <title>Expense group details | Expense Tracker</title>
+            </Helmet>
             <Breadcrumbs aria-label="breadcrumb" sx={{ marginBottom: "30px" }}>
                 <Link to="/" className="hover:text-[#2563EB] transition-colors duration-300">
                     Dashboard

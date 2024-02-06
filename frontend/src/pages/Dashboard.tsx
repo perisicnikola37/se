@@ -8,15 +8,21 @@ import LatestSection from "../components/Dashboard/LatestSection";
 import { useUser } from "../contexts/UserContext";
 import Chart from "../components/Chart";
 import Newsletter from "../components/Newsletter";
-import { useEffect } from "react";
 import MailChimp from "../components/Dashboard/Mailchimp";
 import EmailExport from "../components/Dashboard/EmailExport";
 import FAQ from "../components/FAQ";
 import Pricing from "../components/Pricing";
 import Testimonials from "../components/Testimonials";
+import { Helmet } from "react-helmet";
+import { useModal } from "../contexts/GlobalContext";
+import config from "../config/config.json"
+import { Config } from "../types/TranslationTypes";
 
 const Dashboard = () => {
     const { isLoggedIn } = useUser();
+    const { language } = useModal()
+
+    const languageConfig = (config as unknown as Config)[language];
 
     const h1MotionStyle: MotionStyle = {
         fontFamily:
@@ -29,12 +35,11 @@ const Dashboard = () => {
         fontWeight: "800",
     };
 
-    useEffect(() => {
-        document.title = "Dashboard | Expense Tracker";
-    }, []);
-
     return (
         <div className="flex-grow flex flex-col items-center justify-center min-h-screen">
+            <Helmet>
+                <title>Dashboard | Expense Tracker</title>
+            </Helmet>
             {!isLoggedIn() ? (
                 <>
                     <div className="_main-text">
@@ -45,8 +50,9 @@ const Dashboard = () => {
                             animate={{ opacity: 1, scale: 1 }}
                             transition={{ duration: 0.8 }}
                         >
-                            Track expenses even faster with <br /> our brand new Expense
-                            Tracker application
+                            {languageConfig.mainTextOnDashboard1}
+                            <br />
+                            {languageConfig.mainTextOnDashboard2}
                         </motion.h4>
                         <motion.p
                             className="_main-text_paragraph mt-3 text-gray-500"
@@ -54,10 +60,7 @@ const Dashboard = () => {
                             animate={{ opacity: 1, scale: 1 }}
                             transition={{ duration: 0.8 }}
                         >
-                            Take advantage of our open-source solution, designed to streamline
-                            and enhance your expense tracking experience. Dive into a wealth
-                            of features and functionalities that empower you to manage your
-                            finances effortlessly.
+                            {languageConfig.textOnDashboard}
                         </motion.p>
                     </div>
                     <div className="mt-5 flex flex-col sm:flex-row w-[95%] sm:w-auto">
@@ -65,7 +68,7 @@ const Dashboard = () => {
                             type="button"
                             className="text-white  bg-blue-700 hover:bg-blue-800  font-medium rounded-md text-sm px-3 py-1.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
                         >
-                            <a href="/sign-in">Get started</a>
+                            <a href="/sign-in">{languageConfig.getStarted}</a>
                         </button>
 
                         <button
@@ -77,7 +80,7 @@ const Dashboard = () => {
                                 href="https://git.vegaitsourcing.rs/nikola.perisic/vega-internship-project"
                                 target="_blank"
                             >
-                                Explore repository
+                                {languageConfig.exploreRepository}
                             </a>
                         </button>
                     </div>
@@ -152,3 +155,5 @@ const Dashboard = () => {
 };
 
 export default Dashboard;
+
+

@@ -23,6 +23,7 @@ import ForgotPassword from "./pages/ForgotPassword.tsx";
 import { DarkModeProvider } from "./contexts/DarkModeContext.tsx";
 import BlogDetail from "./pages/BlogDetail.tsx";
 import ResetPassword from "./pages/ResetPassword.tsx";
+import Profile from "./pages/Profile.tsx";
 
 const router = createBrowserRouter([
     {
@@ -53,6 +54,13 @@ const router = createBrowserRouter([
             { path: "blogs", element: <Blogs /> },
             { path: "blogs/:id", element: <BlogDetail /> },
             { path: "reminders", element: <Reminders /> },
+            {
+                path: "profile", element: (
+                    <UserProvider>
+                        <Profile />
+                    </UserProvider>
+                )
+            },
             {
                 path: "*",
                 element: <NotFoundPage />,

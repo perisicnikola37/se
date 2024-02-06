@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import SignInForm from "../components/SignInForm";
 import { useUser } from "../contexts/UserContext";
+import { Helmet } from "react-helmet";
 
 export default function SignIn() {
     const { isLoggedIn } = useUser();
@@ -11,5 +12,12 @@ export default function SignIn() {
         }
     }, [isLoggedIn]);
 
-    return <SignInForm />;
+    return (
+        <>
+            <Helmet>
+                <title>Sign In | Expense Tracker</title>
+            </Helmet>
+            <SignInForm />
+        </>
+    );
 }
