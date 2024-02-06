@@ -5,11 +5,11 @@ variables:
   SOLUTION_PATH: backend
 
 before_script:
-  - 'dotnet restore $SOLUTION_PATH/Solution.sln'
+  - 'dotnet restore backend/Solution.sln'
 
 test:
   stage: test
   only:
     - main
   script:
-    - 'dotnet test $SOLUTION_PATH/Solution.sln'
+    - 'dotnet test backend/Solution.sln'
