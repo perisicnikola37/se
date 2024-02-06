@@ -9,7 +9,6 @@ using ExpenseTrackerApi.Middlewares;
 using FluentValidation;
 using Infrastructure.Contexts;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.DataProtection;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
@@ -57,37 +56,14 @@ builder.Services.AddScoped<IAuthorizationHandler, ExpenseGroupAuthorizationHandl
 var connectionString = configuration["DefaultConnection"];
 if (connectionString == null) throw new ArgumentNullException(nameof(connectionString), "DefaultConnection is null");
 
-// builder.Services.AddDbContext<DatabaseContext>((serviceProvider, options) =>
-// {
-// 	options.UseMySql(
-// 		connectionString,
-// 		new MySqlServerVersion(new Version(8, 0, 35)),
-// 		b => b.MigrationsAssembly("ExpenseTrackerApi")
-// 	);
-
-// 	   .UseSqlServer(
-// 		   @"Server=(localdb)\mssqllocaldb;Database=EFMiscellanous.ConnectionResiliency;Trusted_Connection=True",
-// 		   options => options.EnableRetryOnFailure());
-// }
-
-// 	options.UseInternalServiceProvider(serviceProvider);
-// });
-
-builder.Services.AddDbContext<DatabaseContext>(options =>
+builder.Services.AddDbContext<DatabaseContext>((serviceProvider, options) =>
 {
 	options.UseMySql(
-		"server=localhost;port=3306;database=first_database;user=root;password=example",
+		connectionString,
 		new MySqlServerVersion(new Version(8, 0, 35)),
-		mySqlOptions =>
-		{
-			mySqlOptions.MigrationsAssembly("ExpenseTrackerApi");
-			mySqlOptions.EnableRetryOnFailure();
-		});
+		b => b.MigrationsAssembly("ExpenseTrackerApi")
+	);
 });
-
-builder.Services.AddDataProtection()
-		.PersistKeysToFileSystem(new DirectoryInfo("/app/keys"));
-
 
 builder.Services.AddAuthentication();
 
