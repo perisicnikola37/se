@@ -6,6 +6,7 @@ import ReminderCreateModal from "../components/Modals/ReminderCreateModal";
 import { useModal } from "../contexts/GlobalContext";
 import { Link } from "react-router-dom";
 import { Helmet } from "react-helmet";
+import { motion } from "framer-motion";
 
 const Reminders = () => {
     const { loadReminders, reminders } = useAllReminders();
@@ -51,7 +52,9 @@ const Reminders = () => {
                         ))}
                     </ul>
                 ) : reminders.length === 0 ? (
-                    <Alert severity="info">No reminders found.</Alert>
+                    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.15 }}>
+                        <Alert severity="info">No reminders found.</Alert>
+                    </motion.div>
                 ) : (
                     <div>
                         {reminders.length > 0 && (

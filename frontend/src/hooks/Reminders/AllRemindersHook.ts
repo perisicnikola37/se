@@ -31,6 +31,7 @@ const useAllReminders = () => {
             setReminders(result.reminders);
             setError(null);
         } else {
+            setReminders([])
             setError(result.error);
         }
     };

@@ -46,6 +46,11 @@ export interface CreateReminderData {
     Active: boolean;
 }
 
+export interface CreateBlogData {
+    Text: string;
+    Description: string;
+}
+
 export interface ExpenseInterface {
     id: number;
     description: string;

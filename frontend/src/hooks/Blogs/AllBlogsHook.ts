@@ -31,6 +31,7 @@ const useAllBlogs = () => {
             setBlogs(result.blogs);
             setError(null);
         } else {
+            setBlogs([])
             setError(result.error);
         }
     };
