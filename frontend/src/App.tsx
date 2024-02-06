@@ -95,7 +95,7 @@ function App() {
                                         right: "20px",
                                     }}
                                 >
-                                    <KeyboardArrowUpIcon style={{ fontSize: "40px", cursor: "pointer" }} />
+                                    <KeyboardArrowUpIcon style={{ fontSize: "40px", cursor: "pointer", background: "#fff", borderRadius: "40px" }} />
                                 </div>
                             )}
 
