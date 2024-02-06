@@ -15,6 +15,6 @@ services:
     image: mysql:latest
     environment:
       MYSQL_DATABASE: first_database
-      MYSQL_ROOT_PASSWORD: 06032004
+      MYSQL_ROOT_PASSWORD: password
     ports:
       - "3306:3306"

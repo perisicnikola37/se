@@ -31,6 +31,7 @@ import IncomeEditModal from "../Modals/IncomeEditModal";
 import SendIcon from '@mui/icons-material/Send';
 import useExportToEmail from "../../hooks/ThirdPartyServices/ExportToEmailHook";
 import Swal from "sweetalert2";
+import { motion } from "framer-motion";
 interface Data {
     id: number;
     description: string;
@@ -636,10 +637,29 @@ function EnhancedTable({ incomes }: EnhancedTablePropsWithData<IncomeInterface>)
                 </TableContainer>
                 <div className="flex justify-between">
                     <div className="_export-button">
-                        <Button disabled={exportButtonDisabled} onClick={handleExport} variant="contained" size="small" sx={{ margin: "10px", fontSize: "12px", background: "#3C70ED" }} endIcon={<SendIcon />}>
-                            Export to email
-                        </Button>
+                        {loading ? (
+                            <>
+                            </>
+                        ) : (
+                            <motion.div
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                transition={{ duration: 0.5 }}
+                            >
+                                <Button
+                                    disabled={exportButtonDisabled}
+                                    onClick={handleExport}
+                                    variant="contained"
+                                    size="small"
+                                    sx={{ margin: "10px", fontSize: "12px", background: "#3C70ED" }}
+                                    endIcon={<SendIcon />}
+                                >
+                                    Export to email
+                                </Button>
+                            </motion.div>
+                        )}
                     </div>
+
                     <TablePagination
                         rowsPerPageOptions={[5, 10, 25]}
                         component="div"
@@ -652,7 +672,7 @@ function EnhancedTable({ incomes }: EnhancedTablePropsWithData<IncomeInterface>)
                         }
                     />
                 </div>
-            </Paper>
+            </Paper >
         </Box >
     );
 }

@@ -151,30 +151,27 @@ public class AuthService(IDatabaseContext context, IConfiguration configuration,
 		var resetLink = $"{configuration["AppUrl"]}/reset-password?token={resetToken}&email={userEmail}";
 
 		string emailBody = $@"<!DOCTYPE html PUBLIC ""-//W3C//DTD XHTML 1.0 Transitional//EN"" ""http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"">
-        <html dir=""ltr"" lang=""en"">
-          <head>
-            <meta content=""text/html; charset=UTF-8"" http-equiv=""Content-Type"" />
-            <link href=""https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"" rel=""stylesheet"">
-          </head>
-          <div style=""display:none;overflow:hidden;line-height:1px;opacity:0;max-height:0;max-width:0"">Reset password<div></div>
-          </div>
-        
-          <body style=""background-color:#ffffff;font-family:'Inter', 'ui-sans-serif', 'system-ui', '-apple-system', 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif"">
-            <div class='max-w-2xl mx-auto p-4'>
-                <img src='https://i.postimg.cc/VsKQJpRb/logo.png' alt='Linear Logo' class='block mx-auto mb-4' style='width: 42px; height: 42px;'>
-                <h1 class='text-2xl font-semibold text-gray-800 mb-6'>Reset password</h1>
-                <p class='text-gray-700 text-sm mt-6'>
+		<html dir=""ltr"" lang=""en"">
+		  <head>
+			<meta content=""text/html; charset=UTF-8"" http-equiv=""Content-Type"" />
+			<link href=""https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"" rel=""stylesheet"">
+		  </head>
+		  <body style=""background-color:#ffffff;font-family:'Inter', 'ui-sans-serif', 'system-ui', '-apple-system', 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif"">
+			<div class='max-w-2xl mx-auto p-4'>
+				<img src='https://i.postimg.cc/VsKQJpRb/logo.png' alt='Linear Logo' class='block mx-auto mb-4' style='width: 42px; height: 42px;'>
+				<h1 class='text-2xl font-semibold text-gray-800 mb-6'>Reset password</h1>
+				<p class='text-gray-700 text-sm mt-6'>
    				You have requested to reset your password. Click the following link to reset it:
 				<br/>
-    			<a href='{resetLink}' class='text-blue-500 hover:underline'>Click here</a>
+				<a href='{resetLink}' class='text-blue-500 hover:underline'>Click here</a>
 				</p>
-                <hr class='border-t border-gray-300 my-8'>
-                <p class='text-gray-700 text-sm'>ExpenseTracker&trade;</p>
-            </div>
-          </body>
-        </html>";
+				<hr class='border-t border-gray-300 my-8'>
+				<p class='text-blue-700 text-sm'>ExpenseTracker&trade;</p>
+			</div>
+		  </body>
+		</html>";
 
-		var subject = "Reset password - Expense Tracker&trade;";
+		var subject = "Reset password - Expense Tracker";
 		await emailService.SendEmail(new EmailRequestDto { ToEmail = userEmail }, subject, emailBody);
 
 		return true;

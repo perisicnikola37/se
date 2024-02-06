@@ -59,11 +59,23 @@ if (connectionString == null) throw new ArgumentNullException(nameof(connectionS
 builder.Services.AddDbContext<DatabaseContext>((serviceProvider, options) =>
 {
 	options.UseMySql(
-		connectionString,
+		"server=mysql;user=root;port=3306;Connect Timeout=5;database=first_database;password=password",
 		new MySqlServerVersion(new Version(8, 0, 35)),
 		b => b.MigrationsAssembly("ExpenseTrackerApi")
 	);
 });
+
+builder.Services.AddDbContextPool<DatabaseContext>(options =>
+	   {
+		   options.UseMySql(
+			 	"server=mysql;user=root;port=3306;Connect Timeout=5;database=first_database;password=password",
+			   ServerVersion.AutoDetect("server=mysql;user=root;port=3306;Connect Timeout=5;database=first_database;password=password"),
+			   options => options.EnableRetryOnFailure(
+				   maxRetryCount: 5,
+				   maxRetryDelay: System.TimeSpan.FromSeconds(30),
+				   errorNumbersToAdd: null)
+			   );
+	   });
 
 builder.Services.AddAuthentication();
 
@@ -121,6 +133,12 @@ builder.Services.ConfigureSwaggerGen();
 
 var app = builder.Build();
 
+using (var scope = app.Services.CreateScope())
+{
+	var db = scope.ServiceProvider.GetRequiredService<DatabaseContext>();
+	db.Database.Migrate();
+}
+
 // app.UseHttpLogging();
 
 // handle default route path - redirection to swagger documentation
@@ -155,9 +173,8 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-
 // this middleware needs to be after .net auth middlewares!
-// app.UseMiddleware<ClaimsMiddleware>();
+app.UseMiddleware<ClaimsMiddleware>();
 app.UseGlobalExceptionHandler();
 app.UseMiddleware<TimeTrackingMiddleware>();
 

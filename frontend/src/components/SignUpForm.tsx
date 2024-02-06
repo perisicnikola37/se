@@ -37,7 +37,7 @@ export default function SignUpForm() {
     });
 
     const [passwordMatchError, setPasswordMatchError] = useState<string | null>(null);
-    const [showPassword, setShowPassword] = useState(false); // New state for password visibility
+    const [showPassword, setShowPassword] = useState(false);
 
     const { register, fieldErrorMessages, isLoading } = useRegistration();
 

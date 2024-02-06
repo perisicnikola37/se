@@ -52,4 +52,5 @@ public class User
 	public List<Blog>? Blogs { get; set; }
 	public string? ResetToken { get; set; }
 	public DateTime? ResetTokenExpiration { get; set; }
+	public bool? IsVerified { get; set; } = false;
 }
