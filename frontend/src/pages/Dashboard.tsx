@@ -17,6 +17,7 @@ import { Helmet } from "react-helmet";
 import { useModal } from "../contexts/GlobalContext";
 import config from "../config/config.json"
 import { Config } from "../types/TranslationTypes";
+import ContactUs from "../components/ContactUs";
 
 const Dashboard = () => {
     const { isLoggedIn } = useUser();
@@ -150,6 +151,8 @@ const Dashboard = () => {
             <FAQ />
 
             <Newsletter />
+
+            <ContactUs />
         </div>
     );
 };
