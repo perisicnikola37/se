@@ -141,6 +141,7 @@ const NavBar = () => {
                             >
                                 {pages.map((page, index) => (
                                     <MenuItem
+                                        onClick={handleCloseNavMenu}
                                         key={page.url}
                                         className={`transition duration-300 ${index >= pages.length - 2 ? "ml-auto" : ""
                                             }`}

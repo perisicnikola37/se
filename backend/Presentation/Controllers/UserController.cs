@@ -142,9 +142,9 @@ public class UserController(DatabaseContext context, IEmailService emailService,
 			var isEmailSent = await emailService.SendEmailWithAttachment(emailRequest, "Expense Tracker", emailBody, "expense_tracker.pdf", pdfBytes, "application/pdf");
 
 			if (isEmailSent)
-				return Ok("Invoice sent successfully");
+				return Ok("Email sent successfully");
 
-			return BadRequest("Failed to send invoice");
+			return BadRequest("Failed to send email");
 		}
 		catch (Exception e)
 		{

@@ -9,16 +9,21 @@ import {
     Box,
     CssBaseline,
     Alert,
+    InputAdornment,
+    IconButton,
 } from "@mui/material";
 import useResetPassword from "../hooks/Authentication/ResetPasswordHook";
 import { validatePassword } from "../utils/utils";
 import { Helmet } from "react-helmet";
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 
 const ResetPassword = () => {
     const { resetPassword, isLoading } = useResetPassword();
     const [newPassword, setNewPassword] = useState<string>("");
     const [confirmNewPassword, setConfirmNewPassword] = useState<string>("");
     const [errors, setErrors] = useState<{ message: string }[]>([]);
+    const [showPassword, setShowPassword] = useState(false);
 
     const handleResetPassword = async () => {
         const newErrors = validatePassword(newPassword, confirmNewPassword);
@@ -34,6 +39,10 @@ const ResetPassword = () => {
         }
 
         setErrors([]);
+    };
+
+    const togglePasswordVisibility = () => {
+        setShowPassword((prev) => !prev);
     };
 
     return (
@@ -86,25 +95,48 @@ const ResetPassword = () => {
                         margin="normal"
                         required
                         fullWidth
-                        id="newPassword"
+                        name="password"
                         label="New password"
-                        name="newPassword"
-                        autoComplete="newPassword"
-                        autoFocus
+                        type={showPassword ? "text" : "password"}
+                        id="password"
+                        autoComplete="current-password"
                         value={newPassword}
                         onChange={(e) => setNewPassword(e.target.value)}
+                        InputProps={{
+                            endAdornment: (
+                                <InputAdornment position="end">
+                                    <IconButton
+                                        aria-label="toggle password visibility"
+                                        onClick={togglePasswordVisibility}
+                                    >
+                                        {showPassword ? <VisibilityIcon /> : <VisibilityOffIcon />}
+                                    </IconButton>
+                                </InputAdornment>
+                            ),
+                        }}
                     />
                     <TextField
                         margin="normal"
                         required
                         fullWidth
-                        id="confirmNewPassword"
-                        label="Confirm new password"
                         name="confirmNewPassword"
+                        label="Confirm new password"
+                        type={showPassword ? "text" : "password"}
+                        id="confirmNewPassword"
                         autoComplete="confirmNewPassword"
-                        autoFocus
-                        value={confirmNewPassword}
                         onChange={(e) => setConfirmNewPassword(e.target.value)}
+                        InputProps={{
+                            endAdornment: (
+                                <InputAdornment position="end">
+                                    <IconButton
+                                        aria-label="toggle password visibility"
+                                        onClick={togglePasswordVisibility}
+                                    >
+                                        {showPassword ? <VisibilityIcon /> : <VisibilityOffIcon />}
+                                    </IconButton>
+                                </InputAdornment>
+                            ),
+                        }}
                     />
                     <Button
                         type="submit"

@@ -82,7 +82,7 @@ const Newsletter = () => {
                             <div className="mx-auto max-w-screen-sm text-sm text-left text-gray-500 newsletter-form-footer">
                                 We care about the protection of your data.{" "}
                                 <a
-                                    href="#"
+                                    href="/privacy-policy"
                                     className="font-medium text-primary-600 hover:underline"
                                 >
                                     Read our Privacy Policy

@@ -214,6 +214,9 @@ namespace ExpenseTrackerApi.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
+                    b.Property<bool?>("IsVerified")
+                        .HasColumnType("tinyint(1)");
+
                     b.Property<string>("Password")
                         .IsRequired()
                         .HasColumnType("longtext");
@@ -238,8 +241,9 @@ namespace ExpenseTrackerApi.Migrations
                             Id = 1,
                             AccountType = "Administrator",
                             AccountTypeEnum = 1,
-                            CreatedAt = new DateTime(2024, 2, 6, 10, 53, 47, 392, DateTimeKind.Local).AddTicks(3564),
+                            CreatedAt = new DateTime(2024, 2, 6, 13, 50, 2, 607, DateTimeKind.Local).AddTicks(4207),
                             Email = "admin@gmail.com",
+                            IsVerified = false,
                             Password = "5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8",
                             Username = "Administrator"
                         });

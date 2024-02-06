@@ -20,7 +20,7 @@ import FilterListIcon from "@mui/icons-material/FilterList";
 import { visuallyHidden } from "@mui/utils";
 import Skeleton from "@mui/material/Skeleton";
 import DeleteModal from "../Modals/DeleteModal";
-import { Autocomplete, Chip, Popover, TextField } from "@mui/material";
+import { Autocomplete, Button, Chip, Popover, TextField } from "@mui/material";
 import useObjectGroups from "../../hooks/GlobalHooks/GetObjectsHook";
 import { useModal } from "../../contexts/GlobalContext";
 import useDeleteAllObjects from "../../hooks/GlobalHooks/DeleteAllObjectsHook";
@@ -28,6 +28,10 @@ import useObjects from "../../hooks/GlobalHooks/AllObjectsHook";
 import ExpenseCreateModal from "../Modals/ExpenseCreateModal";
 import ExpenseEditModal from "../Modals/ExpenseEditModal";
 import { ExpenseInterface } from "../../interfaces/globalInterfaces";
+import { motion } from "framer-motion";
+import useExportToEmail from "../../hooks/ThirdPartyServices/ExportToEmailHook";
+import Swal from "sweetalert2";
+import SendIcon from '@mui/icons-material/Send';
 
 interface Data {
     id: number;
@@ -445,6 +449,8 @@ function EnhancedTable({ expenses }: EnhancedTablePropsWithData<ExpenseInterface
     const { setActionChanged } = useModal()
     const { rowsPerPage, setRowsPerPage } = useObjects();
     const { getAppliedFilters, setAppliedFilters, totalRecords } = useModal()
+    const { exportToEmail } = useExportToEmail()
+    const [exportButtonDisabled, setExportButtonDisabled] = React.useState(false);
 
     React.useEffect(() => {
         const newRows = expenses.map((expense) =>
@@ -524,6 +530,24 @@ function EnhancedTable({ expenses }: EnhancedTablePropsWithData<ExpenseInterface
         totalRecords > 0
             ? Math.max(0, rowsPerPage - visibleRows.length)
             : rowsPerPage * (Math.max(0, totalRecords - page * rowsPerPage));
+
+    const handleExport = async () => {
+        if (!exportButtonDisabled) {
+            setExportButtonDisabled(true);
+
+            await exportToEmail(localStorage.getItem('email') || "null");
+
+            setTimeout(() => {
+                setExportButtonDisabled(false);
+
+                Swal.fire({
+                    title: "Operation successfully!",
+                    text: "PDF sent to your email address!",
+                    icon: "success"
+                });
+            }, 2000);
+        }
+    };
 
     return (
         <Box sx={{ width: '100%' }}>
@@ -613,17 +637,42 @@ function EnhancedTable({ expenses }: EnhancedTablePropsWithData<ExpenseInterface
                         </TableBody>
                     </Table>
                 </TableContainer>
-                <TablePagination
-                    rowsPerPageOptions={[5, 10, 25]}
-                    component="div"
-                    count={totalRecords}
-                    rowsPerPage={rowsPerPage}
-                    page={page}
-                    onPageChange={handleChangePage}
-                    onRowsPerPageChange={
-                        handleChangeRowsPerPage
-                    }
-                />
+                <div className="flex justify-between">
+                    <div className="_export-button">
+                        {loading ? (
+                            <>
+                            </>
+                        ) : (
+                            <motion.div
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                transition={{ duration: 0.5 }}
+                            >
+                                <Button
+                                    disabled={exportButtonDisabled}
+                                    onClick={handleExport}
+                                    variant="contained"
+                                    size="small"
+                                    sx={{ margin: "10px", fontSize: "12px", background: "#3C70ED" }}
+                                    endIcon={<SendIcon />}
+                                >
+                                    Export to email
+                                </Button>
+                            </motion.div>
+                        )}
+                    </div>
+                    <TablePagination
+                        rowsPerPageOptions={[5, 10, 25]}
+                        component="div"
+                        count={totalRecords}
+                        rowsPerPage={rowsPerPage}
+                        page={page}
+                        onPageChange={handleChangePage}
+                        onRowsPerPageChange={
+                            handleChangeRowsPerPage
+                        }
+                    />
+                </div>
             </Paper>
         </Box >
     );

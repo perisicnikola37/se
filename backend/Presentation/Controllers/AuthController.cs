@@ -5,7 +5,6 @@ using Domain.Models;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Service;
 
 namespace Presentation.Controllers;
 
@@ -134,17 +133,4 @@ public class AuthController(
 			throw new DatabaseException("AuthController.cs");
 		}
 	}
-}
-
-public class ForgotPasswordRequestDto
-{
-	public string UserEmail { get; set; }
-}
-
-
-public class ResetPasswordRequestDto
-{
-	public string UserEmail { get; set; }
-	public string ResetToken { get; set; }
-	public string NewPassword { get; set; }
 }
