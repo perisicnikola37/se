@@ -2,14 +2,17 @@ stages:
   - test
 
 variables:
-  SOLUTION_PATH: backend
+  SOLUTION_PATH: backend/Solution.sln
 
 before_script:
-  - 'dotnet restore backend/Solution.sln'
+  - 'dotnet restore $SOLUTION_PATH'
 
 test:
   stage: test
   only:
-    - main
+  - main
   script:
-    - 'dotnet test backend/Solution.sln'
+    - 'dotnet test $SOLUTION_PATH'
+
+image:
+  name: mcr.microsoft.com/dotnet/sdk:latest
