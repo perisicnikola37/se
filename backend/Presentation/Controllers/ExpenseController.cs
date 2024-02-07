@@ -19,7 +19,7 @@ public class ExpenseController(IExpenseService expenseService) : ControllerBase
 	}
 
 	[HttpGet("latest/5")]
-	public async Task<ActionResult<IEnumerable<Expense>>> GetLatestExpensesAsync()
+	public async Task<object> GetLatestExpensesAsync()
 	{
 		return Ok(await expenseService.GetLatestExpensesAsync());
 	}

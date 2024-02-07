@@ -8,7 +8,7 @@ namespace Domain.Interfaces;
 public interface IIncomeService
 {
 	Task<PagedResponseDto<List<IncomeResponseDto>>> GetIncomesAsync(PaginationFilterDto filter);
-	Task<ActionResult<IEnumerable<Income>>> GetLatestIncomesAsync();
+	Task<object> GetLatestIncomesAsync();
 	Task<ActionResult<Income>> GetIncomeAsync(int id);
 	Task<ActionResult<Income>> CreateIncomeAsync(Income income);
 	Task<IActionResult> UpdateIncomeAsync(int id, Income income);

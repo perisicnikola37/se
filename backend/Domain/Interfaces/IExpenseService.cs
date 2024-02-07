@@ -8,7 +8,7 @@ namespace Domain.Interfaces;
 public interface IExpenseService
 {
 	Task<PagedResponseDto<List<ExpenseResponseDto>>> GetExpensesAsync(PaginationFilterDto filter);
-	Task<ActionResult<IEnumerable<Expense>>> GetLatestExpensesAsync();
+	Task<object> GetLatestExpensesAsync();
 	Task<ActionResult<Expense>> GetExpenseAsync(int id);
 	Task<ActionResult<Expense>> CreateExpenseAsync(Expense expense);
 	Task<IActionResult> UpdateExpenseAsync(int id, Expense updatedExpense);
