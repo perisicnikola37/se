@@ -11,6 +11,8 @@ before_script:
   - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
   - 'dotnet --version' 
   - 'dotnet restore $SOLUTION_PATH/Solution.sln'
+  - apt-get update -qy
+  - apt-get install docker-compose -y
 
 build:
   stage: build
