@@ -15,7 +15,7 @@ namespace Service;
 public class AuthService(IDatabaseContext context, IConfiguration configuration, IEmailService emailService)
     : IAuthService
 {
-    public async Task<UserDto?> LogInUserAsync(LogInUser user)
+    public async Task<UserDto?> LogInUserAsync(LogInUserDto user)
     {
         var authenticatedUser = await context.Users
             .FirstOrDefaultAsync(u => u.Email == user.Email);

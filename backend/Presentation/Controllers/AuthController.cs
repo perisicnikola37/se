@@ -17,7 +17,7 @@ public class AuthController(
 	IGetCurrentUserService getCurrentUserService) : ControllerBase
 {
 	[HttpPost("login")]
-	public async Task<ActionResult<User>> LogInUserAsync(LogInUser user)
+	public async Task<ActionResult<User>> LogInUserAsync(LogInUserDto user)
 	{
 		try
 		{
