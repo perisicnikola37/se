@@ -14,7 +14,7 @@ public class ExpenseGroupController(IExpenseGroupService expenseGroupService) : 
 	[HttpGet]
 	public async Task<ActionResult<IEnumerable<ExpenseGroup>>> GetExpenseGroupsAsync()
 	{
-		return Ok(await expenseGroupService.GetExpenseGroupsAsync(this));
+		return Ok(await expenseGroupService.GetExpenseGroupsAsync());
 	}
 
 	[HttpGet("{id}")]
@@ -27,13 +27,13 @@ public class ExpenseGroupController(IExpenseGroupService expenseGroupService) : 
 	[Authorize("ExpenseGroupOwnerPolicy")]
 	public async Task<IActionResult> PutExpenseGroupAsync(int id, ExpenseGroup expenseGroup)
 	{
-		return await expenseGroupService.UpdateExpenseGroupAsync(id, expenseGroup, this);
+		return await expenseGroupService.UpdateExpenseGroupAsync(id, expenseGroup);
 	}
 
 	[HttpPost]
 	public async Task<ActionResult<ExpenseGroup>> PostExpenseGroupAsync(ExpenseGroup expenseGroup)
 	{
-		return await expenseGroupService.CreateExpenseGroupAsync(expenseGroup, this);
+		return await expenseGroupService.CreateExpenseGroupAsync(expenseGroup);
 	}
 
 	[HttpDelete("{id}")]

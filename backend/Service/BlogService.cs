@@ -3,6 +3,7 @@ using Domain.Interfaces;
 using Domain.Models;
 using FluentValidation;
 using Infrastructure.Contexts;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -13,9 +14,10 @@ public class BlogService(
 	DatabaseContext context,
 	IValidator<Blog> validator,
 	IGetAuthenticatedUserIdService getAuthenticatedUserId,
-	ILogger<BlogService> logger) : IBlogService
+	ILogger<BlogService> logger,
+	IHttpContextAccessor httpContextAccessor) : IBlogService
 {
-	public async Task<IEnumerable<Blog>> GetBlogsAsync(ControllerBase controller)
+	public async Task<IEnumerable<Blog>> GetBlogsAsync()
 	{
 		try
 		{
@@ -78,7 +80,7 @@ public class BlogService(
 		}
 	}
 
-	public async Task<ActionResult<Blog>> CreateBlogAsync(Blog blog, ControllerBase controller)
+	public async Task<ActionResult<Blog>> CreateBlogAsync(Blog blog)
 	{
 		try
 		{
@@ -89,7 +91,7 @@ public class BlogService(
 				return new BadRequestObjectResult(validationResult.Errors);
 			}
 
-			var userId = getAuthenticatedUserId.GetUserId(controller.User);
+			var userId = getAuthenticatedUserId.GetUserId(httpContextAccessor.HttpContext.User);
 
 			if (userId == null)
 			{
@@ -133,7 +135,7 @@ public class BlogService(
 		}
 	}
 
-	public async Task<IActionResult> UpdateBlogAsync(int id, Blog blog, ControllerBase controller)
+	public async Task<IActionResult> UpdateBlogAsync(int id, Blog blog)
 	{
 		try
 		{
@@ -141,7 +143,7 @@ public class BlogService(
 
 			if (!BlogExists(id)) return new NotFoundResult();
 
-			var authenticatedUserId = getAuthenticatedUserId.GetUserId(controller.User);
+			var authenticatedUserId = getAuthenticatedUserId.GetUserId(httpContextAccessor.HttpContext.User);
 
 			// Check if authenticatedUserId has a value
 			if (authenticatedUserId.HasValue)

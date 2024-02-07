@@ -4,5 +4,5 @@ namespace Domain.Interfaces;
 
 public interface ISummaryService
 {
-    Task<object> GetLast7DaysIncomesAndExpensesAsync(ControllerBase controller);
+    Task<object> GetLast7DaysIncomesAndExpensesAsync();
 }

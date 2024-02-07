@@ -26,13 +26,13 @@ public class ReminderController(IReminderService reminderService) : ControllerBa
 	[HttpPut("{id}")]
 	public async Task<IActionResult> PutReminderAsync(int id, Reminder reminder)
 	{
-		return await reminderService.UpdateReminderAsync(id, reminder, this);
+		return await reminderService.UpdateReminderAsync(id, reminder);
 	}
 
 	[HttpPost]
 	public async Task<ActionResult<Reminder>> PostReminderAsync(Reminder reminder)
 	{
-		return await reminderService.CreateReminderAsync(reminder, this);
+		return await reminderService.CreateReminderAsync(reminder);
 	}
 
 	[HttpDelete("{id}")]

@@ -4,20 +4,21 @@ using Domain.Interfaces;
 using Domain.Models;
 using FluentValidation;
 using Infrastructure.Contexts;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace Service;
 
-public class IncomeGroupService(DatabaseContext context, IValidator<IncomeGroup> validator, ILogger<IncomeGroupService> logger, IGetAuthenticatedUserIdService getAuthenticatedUserId) : IIncomeGroupService
+public class IncomeGroupService(DatabaseContext context, IValidator<IncomeGroup> validator, ILogger<IncomeGroupService> logger, IGetAuthenticatedUserIdService getAuthenticatedUserId, IHttpContextAccessor httpContextAccessor) : IIncomeGroupService
 {
 	[HttpGet]
-	public async Task<IEnumerable<IncomeGroupDto>> GetIncomeGroupsAsync(ControllerBase controller)
+	public async Task<IEnumerable<IncomeGroupDto>> GetIncomeGroupsAsync()
 	{
 		try
 		{
-			var authenticatedUserId = getAuthenticatedUserId.GetUserId(controller.User);
+			var authenticatedUserId = getAuthenticatedUserId.GetUserId(httpContextAccessor.HttpContext.User);
 
 			var incomeGroups = await context.IncomeGroups
 			 	.Where(ig => ig.UserId == authenticatedUserId)
@@ -93,21 +94,21 @@ public class IncomeGroupService(DatabaseContext context, IValidator<IncomeGroup>
 		}
 	}
 
-	public async Task<ActionResult<IncomeGroup>> CreateIncomeGroupAsync(IncomeGroup incomeGroup, ControllerBase controller)
+	public async Task<ActionResult<IncomeGroup>> CreateIncomeGroupAsync(IncomeGroup incomeGroup)
 	{
 		try
 		{
 			var validationResult = await validator.ValidateAsync(incomeGroup);
 			if (!validationResult.IsValid) return new BadRequestObjectResult(validationResult.Errors);
 
-			var userId = getAuthenticatedUserId.GetUserId(controller.User);
+			var userId = getAuthenticatedUserId.GetUserId(httpContextAccessor.HttpContext.User);
 
 			incomeGroup.UserId = (int)userId!;
 
 			context.IncomeGroups.Add(incomeGroup);
 			await context.SaveChangesAsync();
 
-			return controller.Ok(incomeGroup);
+			return incomeGroup;
 		}
 		catch (Exception ex)
 		{
@@ -116,13 +117,13 @@ public class IncomeGroupService(DatabaseContext context, IValidator<IncomeGroup>
 		}
 	}
 
-	public async Task<IActionResult> UpdateIncomeGroupAsync(int id, IncomeGroup incomeGroup, ControllerBase controller)
+	public async Task<IActionResult> UpdateIncomeGroupAsync(int id, IncomeGroup incomeGroup)
 	{
 		try
 		{
 			if (id != incomeGroup.Id) return new BadRequestResult();
 
-			var authenticatedUserId = getAuthenticatedUserId.GetUserId(controller.User);
+			var authenticatedUserId = getAuthenticatedUserId.GetUserId(httpContextAccessor.HttpContext.User);
 
 			// Check if authenticatedUserId has a value
 			if (authenticatedUserId.HasValue)

@@ -15,7 +15,7 @@ public class IncomeGroupController(IIncomeGroupService incomeGroupService) : Con
 	[HttpGet]
 	public async Task<ActionResult<IEnumerable<IncomeGroupDto>>> GetIncomeGroupsAsync()
 	{
-		return Ok(await incomeGroupService.GetIncomeGroupsAsync(this));
+		return Ok(await incomeGroupService.GetIncomeGroupsAsync());
 	}
 
 	[HttpGet("{id}")]
@@ -28,13 +28,13 @@ public class IncomeGroupController(IIncomeGroupService incomeGroupService) : Con
 	[Authorize("IncomeGroupOwnerPolicy")]
 	public async Task<IActionResult> PutIncomeGroupAsync(int id, IncomeGroup incomeGroup)
 	{
-		return await incomeGroupService.UpdateIncomeGroupAsync(id, incomeGroup, this);
+		return await incomeGroupService.UpdateIncomeGroupAsync(id, incomeGroup);
 	}
 
 	[HttpPost]
 	public async Task<ActionResult<IncomeGroup>> PostIncomeGroupAsync(IncomeGroup incomeGroup)
 	{
-		return await incomeGroupService.CreateIncomeGroupAsync(incomeGroup, this);
+		return await incomeGroupService.CreateIncomeGroupAsync(incomeGroup);
 	}
 
 	[HttpDelete("{id}")]

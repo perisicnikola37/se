@@ -1,15 +1,16 @@
 using Domain.Interfaces;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace Service;
 
-public class SummaryService(IDatabaseContext context, GetAuthenticatedUserIdService getAuthenticatedUserId)
+public class SummaryService(IDatabaseContext context, GetAuthenticatedUserIdService getAuthenticatedUserId, IHttpContextAccessor httpContextAccessor)
     : ISummaryService
 {
-    public async Task<object> GetLast7DaysIncomesAndExpensesAsync(ControllerBase controller)
+    public async Task<object> GetLast7DaysIncomesAndExpensesAsync()
     {
-        var authenticatedUserId = getAuthenticatedUserId.GetUserId(controller.User);
+        var authenticatedUserId = getAuthenticatedUserId.GetUserId(httpContextAccessor.HttpContext.User);
 
         var startOfLast7Days = DateTime.UtcNow.AddDays(-6); // for the last 7 days
 

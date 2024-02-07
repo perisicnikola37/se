@@ -12,7 +12,7 @@ public class SeederManager
 		seeders =
 		[
 			new UserSeeder(),
-			new BlogSeeder(),
+			// new BlogSeeder(),
 		];
 	}
 

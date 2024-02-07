@@ -14,7 +14,7 @@ public class BlogController(IBlogService blogService) : ControllerBase
 	[HttpGet]
 	public async Task<ActionResult<IEnumerable<Blog>>> GetBlogsAsync()
 	{
-		return Ok(await blogService.GetBlogsAsync(this));
+		return Ok(await blogService.GetBlogsAsync());
 	}
 
 	[HttpGet("{id}")]
@@ -27,13 +27,13 @@ public class BlogController(IBlogService blogService) : ControllerBase
 	[Authorize("BlogOwnerPolicy")]
 	public async Task<IActionResult> PutBlogAsync(int id, Blog blog)
 	{
-		return await blogService.UpdateBlogAsync(id, blog, this);
+		return await blogService.UpdateBlogAsync(id, blog);
 	}
 
 	[HttpPost]
 	public async Task<ActionResult<Blog>> PostBlogAsync(Blog blog)
 	{
-		return await blogService.CreateBlogAsync(blog, this);
+		return await blogService.CreateBlogAsync(blog);
 	}
 
 	[HttpDelete("{id}")]
