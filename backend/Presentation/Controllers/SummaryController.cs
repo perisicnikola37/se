@@ -1,10 +1,12 @@
 using Domain.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 
 namespace Presentation.Controllers;
 
 [ApiController]
 [Route("api/summary")]
+[EnableRateLimiting("fixed")]
 public class SummaryController(ISummaryService summaryService) : ControllerBase
 {
 	[HttpGet("last-week")]

@@ -17,11 +17,11 @@ public class ExpenseService(
 	DatabaseContext context,
 	IValidator<Expense> validator,
 	IGetAuthenticatedUserIdService getAuthenticatedUserId,
-	ILogger<ExpenseService> logger) : IExpenseService
+	ILogger<ExpenseService> logger,
+	IHttpContextAccessor httpContextAccessor) : IExpenseService
 {
 	[HttpGet]
-	public async Task<PagedResponseDto<List<ExpenseResponseDto>>> GetExpensesAsync(PaginationFilterDto filter,
-		IHttpContextAccessor httpContextAccessor)
+	public async Task<PagedResponseDto<List<ExpenseResponseDto>>> GetExpensesAsync(PaginationFilterDto filter)
 	{
 		try
 		{
@@ -96,11 +96,11 @@ public class ExpenseService(
 		}
 	}
 
-	public async Task<object> GetLatestExpensesAsync(ControllerBase controller)
+	public async Task<object> GetLatestExpensesAsync()
 	{
 		try
 		{
-			var authenticatedUserId = getAuthenticatedUserId.GetUserId(controller.User);
+			var authenticatedUserId = getAuthenticatedUserId.GetUserId(httpContextAccessor.HttpContext.User);
 
 			var highestExpense = await context.Expenses
 				.Where(i => i.CreatedAt >= DateTime.UtcNow.AddDays(-7) && i.UserId == authenticatedUserId)
@@ -150,7 +150,7 @@ public class ExpenseService(
 		}
 	}
 
-	public async Task<ActionResult<Expense>> CreateExpenseAsync(Expense expense, ControllerBase controller)
+	public async Task<ActionResult<Expense>> CreateExpenseAsync(Expense expense)
 	{
 		try
 		{
@@ -160,7 +160,7 @@ public class ExpenseService(
 			_ = await context.ExpenseGroups.FindAsync(expense.ExpenseGroupId) ??
 				throw NotFoundException.Create("ExpenseGroupId", "Expense group not found.");
 
-			var userId = getAuthenticatedUserId.GetUserId(controller.User);
+			var userId = getAuthenticatedUserId.GetUserId(httpContextAccessor.HttpContext.User);
 
 			expense.UserId = (int)userId!;
 
@@ -177,13 +177,13 @@ public class ExpenseService(
 		}
 	}
 
-	public async Task<IActionResult> UpdateExpenseAsync(int id, Expense updatedExpense, ControllerBase controller)
+	public async Task<IActionResult> UpdateExpenseAsync(int id, Expense updatedExpense)
 	{
 		try
 		{
 			if (id != updatedExpense.Id) return new BadRequestResult();
 
-			var authenticatedUserId = getAuthenticatedUserId.GetUserId(controller.User);
+			var authenticatedUserId = getAuthenticatedUserId.GetUserId(httpContextAccessor.HttpContext.User);
 
 			// Check if authenticatedUserId has a value
 			if (authenticatedUserId.HasValue)
@@ -248,11 +248,11 @@ public class ExpenseService(
 		}
 	}
 
-	public async Task<IActionResult> DeleteAllExpensesAsync(ControllerBase controller)
+	public async Task<IActionResult> DeleteAllExpensesAsync()
 	{
 		try
 		{
-			var authenticatedUserId = getAuthenticatedUserId.GetUserId(controller.User);
+			var authenticatedUserId = getAuthenticatedUserId.GetUserId(httpContextAccessor.HttpContext.User);
 
 			if (!authenticatedUserId.HasValue) return new BadRequestResult();
 

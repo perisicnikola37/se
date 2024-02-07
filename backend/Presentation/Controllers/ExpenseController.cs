@@ -2,7 +2,6 @@ using Contracts.Filter;
 using Domain.Interfaces;
 using Domain.Models;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
 
@@ -14,15 +13,15 @@ namespace Presentation.Controllers;
 public class ExpenseController(IExpenseService expenseService) : ControllerBase
 {
 	[HttpGet]
-	public async Task<IActionResult> GetExpensesAsync([FromQuery] PaginationFilterDto filter, IHttpContextAccessor httpContextAccessor)
+	public async Task<IActionResult> GetExpensesAsync([FromQuery] PaginationFilterDto filter)
 	{
-		return Ok(await expenseService.GetExpensesAsync(filter, httpContextAccessor));
+		return Ok(await expenseService.GetExpensesAsync(filter));
 	}
 
 	[HttpGet("latest/5")]
 	public async Task<ActionResult<IEnumerable<Expense>>> GetLatestExpensesAsync()
 	{
-		return Ok(await expenseService.GetLatestExpensesAsync(this));
+		return Ok(await expenseService.GetLatestExpensesAsync());
 	}
 
 	[HttpGet("total/amount")]
@@ -41,13 +40,13 @@ public class ExpenseController(IExpenseService expenseService) : ControllerBase
 	[Authorize("ExpenseOwnerPolicy")]
 	public async Task<IActionResult> PutExpenseAsync(int id, Expense expense)
 	{
-		return await expenseService.UpdateExpenseAsync(id, expense, this);
+		return await expenseService.UpdateExpenseAsync(id, expense);
 	}
 
 	[HttpPost]
 	public async Task<ActionResult<Expense>> PostExpenseAsync(Expense expense)
 	{
-		return await expenseService.CreateExpenseAsync(expense, this);
+		return await expenseService.CreateExpenseAsync(expense);
 	}
 
 	[HttpDelete("{id}")]
@@ -60,6 +59,6 @@ public class ExpenseController(IExpenseService expenseService) : ControllerBase
 	[HttpDelete]
 	public async Task<IActionResult> DeleteAllExpensesAsync()
 	{
-		return await expenseService.DeleteAllExpensesAsync(this);
+		return await expenseService.DeleteAllExpensesAsync();
 	}
 }

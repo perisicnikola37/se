@@ -4,12 +4,14 @@ using Domain.Interfaces;
 using Domain.Models;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.Extensions.Logging;
 
 namespace Presentation.Controllers;
 
 [Route("api/auth")]
 [ApiController]
+[EnableRateLimiting("fixed")]
 public class AuthController(
 	IAuthService authService,
 	IValidator<User> validator,

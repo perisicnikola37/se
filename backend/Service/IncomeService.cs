@@ -16,12 +16,12 @@ public class IncomeService(
 	DatabaseContext context,
 	IValidator<Income> validator,
 	IGetAuthenticatedUserIdService getAuthenticatedUserId,
-	ILogger<IncomeService> logger) : IIncomeService
+	ILogger<IncomeService> logger,
+	IHttpContextAccessor httpContextAccessor) : IIncomeService
 {
 	[HttpGet]
 	public async Task<PagedResponseDto<List<IncomeResponseDto>>> GetIncomesAsync(
-	PaginationFilterDto filter,
-	IHttpContextAccessor httpContextAccessor)
+	PaginationFilterDto filter)
 	{
 		try
 		{
@@ -96,11 +96,11 @@ public class IncomeService(
 		}
 	}
 
-	public async Task<object> GetLatestIncomesAsync(ControllerBase controller)
+	public async Task<object> GetLatestIncomesAsync()
 	{
 		try
 		{
-			var authenticatedUserId = getAuthenticatedUserId.GetUserId(controller.User);
+			var authenticatedUserId = getAuthenticatedUserId.GetUserId(httpContextAccessor.HttpContext.User);
 
 			var highestIncome = await context.Incomes
 				.Where(i => i.CreatedAt >= DateTime.UtcNow.AddDays(-7) && i.UserId == authenticatedUserId)
@@ -149,7 +149,7 @@ public class IncomeService(
 		}
 	}
 
-	public async Task<ActionResult<Income>> CreateIncomeAsync(Income income, ControllerBase controller)
+	public async Task<ActionResult<Income>> CreateIncomeAsync(Income income)
 	{
 		try
 		{
@@ -159,7 +159,7 @@ public class IncomeService(
 			_ = await context.IncomeGroups.FindAsync(income.IncomeGroupId) ??
 				throw NotFoundException.Create("IncomeGroupId", "Income group not found.");
 
-			var userId = getAuthenticatedUserId.GetUserId(controller.User);
+			var userId = getAuthenticatedUserId.GetUserId(httpContextAccessor.HttpContext.User);
 
 			income.UserId = (int)userId!;
 
@@ -175,13 +175,13 @@ public class IncomeService(
 		}
 	}
 
-	public async Task<IActionResult> UpdateIncomeAsync(int id, Income income, ControllerBase controller)
+	public async Task<IActionResult> UpdateIncomeAsync(int id, Income income)
 	{
 		try
 		{
 			if (id != income.Id) return new BadRequestResult();
 
-			var authenticatedUserId = getAuthenticatedUserId.GetUserId(controller.User);
+			var authenticatedUserId = getAuthenticatedUserId.GetUserId(httpContextAccessor.HttpContext.User);
 
 			// Check if authenticatedUserId has a value
 			if (authenticatedUserId.HasValue)
@@ -246,11 +246,11 @@ public class IncomeService(
 		}
 	}
 
-	public async Task<IActionResult> DeleteAllIncomesAsync(ControllerBase controller)
+	public async Task<IActionResult> DeleteAllIncomesAsync()
 	{
 		try
 		{
-			var authenticatedUserId = getAuthenticatedUserId.GetUserId(controller.User);
+			var authenticatedUserId = getAuthenticatedUserId.GetUserId(httpContextAccessor.HttpContext.User);
 
 			if (!authenticatedUserId.HasValue) return new BadRequestResult();
 
