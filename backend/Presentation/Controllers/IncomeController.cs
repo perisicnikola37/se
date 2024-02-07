@@ -2,6 +2,7 @@ using Contracts.Filter;
 using Domain.Interfaces;
 using Domain.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
 
@@ -13,9 +14,9 @@ namespace Presentation.Controllers;
 public class IncomeController(IIncomeService incomeService) : ControllerBase
 {
 	[HttpGet]
-	public async Task<IActionResult> GetIncomesAsync([FromQuery] PaginationFilterDto filter)
+	public async Task<IActionResult> GetIncomesAsync([FromQuery] PaginationFilterDto filter, IHttpContextAccessor httpContextAccessor)
 	{
-		return Ok(await incomeService.GetIncomesAsync(filter, this));
+		return Ok(await incomeService.GetIncomesAsync(filter, httpContextAccessor));
 	}
 
 	[HttpGet("latest/5")]

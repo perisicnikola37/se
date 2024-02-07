@@ -6,6 +6,7 @@ using Domain.Interfaces;
 using Domain.Models;
 using FluentValidation;
 using Infrastructure.Contexts;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -20,16 +21,16 @@ public class ExpenseService(
 {
 	[HttpGet]
 	public async Task<PagedResponseDto<List<ExpenseResponseDto>>> GetExpensesAsync(PaginationFilterDto filter,
-		ControllerBase controller)
+		IHttpContextAccessor httpContextAccessor)
 	{
 		try
 		{
-			var authenticatedUserId = getAuthenticatedUserId.GetUserId(controller.User);
+			var authenticatedUserId = getAuthenticatedUserId.GetUserId(httpContextAccessor.HttpContext.User);
 
-			string description = controller.HttpContext.Request.Query["description"]!;
-			string minAmount = controller.HttpContext.Request.Query["minAmount"]!;
-			string maxAmount = controller.HttpContext.Request.Query["maxAmount"]!;
-			string expenseGroupId = controller.HttpContext.Request.Query["expenseGroupId"]!;
+			string description = httpContextAccessor.HttpContext.Request.Query["description"]!;
+			string minAmount = httpContextAccessor.HttpContext.Request.Query["minAmount"]!;
+			string maxAmount = httpContextAccessor.HttpContext.Request.Query["maxAmount"]!;
+			string expenseGroupId = httpContextAccessor.HttpContext.Request.Query["expenseGroupId"]!;
 
 			var validFilter = new PaginationFilterDto(filter.PageNumber, filter.PageSize);
 
@@ -71,8 +72,8 @@ public class ExpenseService(
 			   .ToListAsync();
 
 
-			var baseUri = new Uri(controller.Request.Scheme + "://" + controller.Request.Host.Value);
-			var currentPageUri = new Uri(controller.Request.Path, UriKind.Relative);
+			var baseUri = new Uri(httpContextAccessor.HttpContext.Request.Scheme + "://" + httpContextAccessor.HttpContext.Request.Host.Value);
+			var currentPageUri = new Uri(httpContextAccessor.HttpContext.Request.Path, UriKind.Relative);
 			var nextPageUri = new Uri(baseUri,
 				$"{currentPageUri}?pageNumber={validFilter.PageNumber + 1}&pageSize={validFilter.PageSize}");
 			var previousPageUri = new Uri(baseUri,

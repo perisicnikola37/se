@@ -30,9 +30,7 @@ public class UserController(
             .OrderByDescending(e => e.CreatedAt)
             .ToListAsync();
 
-        if (users.Count != 0)
-            return users;
-        return Ok(users);
+        return users;
     }
 
     [HttpGet("{id}")]

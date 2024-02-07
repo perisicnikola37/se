@@ -1,6 +1,7 @@
 using Contracts.Dto;
 using Contracts.Filter;
 using Domain.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Domain.Interfaces;
@@ -8,7 +9,7 @@ namespace Domain.Interfaces;
 public interface IExpenseService
 {
 	Task<PagedResponseDto<List<ExpenseResponseDto>>> GetExpensesAsync(PaginationFilterDto filter,
-		ControllerBase controller);
+		IHttpContextAccessor httpContextAccessor);
 	Task<object> GetLatestExpensesAsync(ControllerBase controller);
 	Task<ActionResult<Expense>> GetExpenseAsync(int id);
 	Task<ActionResult<Expense>> CreateExpenseAsync(Expense expense, ControllerBase controller);
