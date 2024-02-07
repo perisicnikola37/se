@@ -2,6 +2,7 @@ using Contracts.Dto;
 using Domain.Exceptions;
 using Domain.Interfaces;
 using Domain.Models;
+using Domain.ValidationAttributes;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
@@ -19,6 +20,7 @@ public class AuthController(
 	IGetCurrentUserService getCurrentUserService) : ControllerBase
 {
 	[HttpPost("login")]
+	[AllowAnonymous]
 	public async Task<ActionResult<User>> LogInUserAsync(LogInUserDto user)
 	{
 		try
@@ -46,6 +48,7 @@ public class AuthController(
 	}
 
 	[HttpPost("register")]
+	[AllowAnonymous]
 	public async Task<ActionResult<UserDto>> RegisterUserAsync(User userRegistration)
 	{
 		try
@@ -88,6 +91,7 @@ public class AuthController(
 	}
 
 	[HttpPost("forgot/password")]
+	[AllowAnonymous]
 	public async Task<IActionResult> ForgotPasswordAsync([FromBody] ForgotPasswordRequestDto forgotPasswordRequest)
 	{
 		try
@@ -111,6 +115,7 @@ public class AuthController(
 	}
 
 	[HttpPost("reset/password")]
+	[AllowAnonymous]
 	public async Task<IActionResult> ResetPasswordAsync([FromBody] ResetPasswordRequestDto resetPasswordRequest)
 	{
 		try
