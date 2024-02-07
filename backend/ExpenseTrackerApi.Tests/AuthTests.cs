@@ -20,7 +20,7 @@ public class AuthControllerTests
     {
         // Arrange
         // Create a mock user object for login with email and password
-        var user = new LogInUser { Email = "nikola@e-invoices.online", Password = "06032004" };
+        var user = new LogInUserDto { Email = "nikola@e-invoices.online", Password = "06032004" };
 
         // Create a mock user object with a token for the expected result
         var userWithToken = new UserDto
@@ -48,7 +48,7 @@ public class AuthControllerTests
     {
         // Arrange
         // Create a mock user object for login with invalid email address
-        var user = new LogInUser { Email = "nonexistent@e-invoices.online", Password = "password123" };
+        var user = new LogInUserDto { Email = "nonexistent@e-invoices.online", Password = "password123" };
 
         // Set up the mock AuthService to return null when LogInUserAsync is called for a nonexistent user
         authServiceMock.Setup(x => x.LogInUserAsync(user)).ReturnsAsync((UserDto)null!);
@@ -64,7 +64,7 @@ public class AuthControllerTests
         var notFoundResult = Assert.IsType<UnauthorizedObjectResult>(actionResult.Result);
 
         var actualErrorMessage =
-            (string)notFoundResult.Value.GetType().GetProperty("message")!.GetValue(notFoundResult.Value, null)!;
+            (string)notFoundResult.Value?.GetType().GetProperty("message")!.GetValue(notFoundResult.Value, null)!;
 
         Assert.Equal("Invalid email or password", actualErrorMessage);
     }

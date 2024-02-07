@@ -12,50 +12,43 @@ namespace Presentation.Controllers;
 [EnableRateLimiting("fixed")]
 public class ExpenseController(IExpenseService expenseService) : ControllerBase
 {
-	// GET: api/Expense
 	[HttpGet]
 	public async Task<IActionResult> GetExpensesAsync([FromQuery] PaginationFilterDto filter)
 	{
-		return Ok(await expenseService.GetExpensesAsync(filter, this));
+		return Ok(await expenseService.GetExpensesAsync(filter));
 	}
 
-	// GET: api/Expense/latest/5
 	[HttpGet("latest/5")]
-	public async Task<ActionResult<IEnumerable<Expense>>> GetLatestExpensesAsync()
+	public async Task<object> GetLatestExpensesAsync()
 	{
-		return Ok(await expenseService.GetLatestExpensesAsync(this));
+		return Ok(await expenseService.GetLatestExpensesAsync());
 	}
 
-	// GET: api/Expense/total-amount
-	[HttpGet("total-amount")]
+	[HttpGet("total/amount")]
 	public ActionResult<int> GetTotalAmountOfExpensesAsync()
 	{
 		return Ok(expenseService.GetTotalAmountOfExpensesAsync());
 	}
 
-	// GET: api/Expense/5
 	[HttpGet("{id}")]
 	public async Task<ActionResult<Expense>> GetExpenseAsync(int id)
 	{
 		return await expenseService.GetExpenseAsync(id);
 	}
 
-	// PUT: api/Expense/5
 	[HttpPut("{id}")]
 	[Authorize("ExpenseOwnerPolicy")]
 	public async Task<IActionResult> PutExpenseAsync(int id, Expense expense)
 	{
-		return await expenseService.UpdateExpenseAsync(id, expense, this);
+		return await expenseService.UpdateExpenseAsync(id, expense);
 	}
 
-	// POST: api/Expense
 	[HttpPost]
 	public async Task<ActionResult<Expense>> PostExpenseAsync(Expense expense)
 	{
-		return await expenseService.CreateExpenseAsync(expense, this);
+		return await expenseService.CreateExpenseAsync(expense);
 	}
 
-	// DELETE: api/Expense/5
 	[HttpDelete("{id}")]
 	[Authorize("ExpenseOwnerPolicy")]
 	public async Task<IActionResult> DeleteExpenseAsync(int id)
@@ -66,6 +59,6 @@ public class ExpenseController(IExpenseService expenseService) : ControllerBase
 	[HttpDelete]
 	public async Task<IActionResult> DeleteAllExpensesAsync()
 	{
-		return await expenseService.DeleteAllExpensesAsync(this);
+		return await expenseService.DeleteAllExpensesAsync();
 	}
 }

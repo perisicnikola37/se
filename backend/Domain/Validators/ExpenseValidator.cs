@@ -1,6 +1,6 @@
 namespace Domain.Validators;
 
-using Domain.Models;
+using Models;
 using FluentValidation;
 
 public class ExpenseValidator : AbstractValidator<Expense>

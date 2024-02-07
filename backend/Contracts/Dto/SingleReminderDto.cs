@@ -1,4 +1,4 @@
-namespace Contracts.Dto.Reminders;
+namespace Contracts.Dto;
 
 public class SingleReminderDto
 {

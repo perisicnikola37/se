@@ -16,8 +16,8 @@ public class JwtTokenGeneratorTests
         _configuration = new ConfigurationBuilder()
             .AddInMemoryCollection(new Dictionary<string, string>
             {
-                { "Jwt:Issuer", "https://joydipkanjilal.com/" },
-                { "Jwt:Audience", "https://joydipkanjilal.com/" },
+                { "Jwt:Issuer", "https://perisicnikola.com/" },
+                { "Jwt:Audience", "https://perisicnikola.com/" },
                 { "Jwt:Key", GetJwtKey() }
             }!)
             .Build();
@@ -48,11 +48,12 @@ public class JwtTokenGeneratorTests
         var authService = new AuthService(dbContextMock.Object, _configuration, emailServiceMock.Object);
 
         // Use Reflection to get the private method info
-        var methodInfo = typeof(AuthService).GetMethod("GenerateJwtToken", BindingFlags.NonPublic | BindingFlags.Instance);
+        var methodInfo =
+            typeof(AuthService).GetMethod("GenerateJwtToken", BindingFlags.NonPublic | BindingFlags.Instance);
         Assert.NotNull(methodInfo);
 
         // Act
-        var token = (string)methodInfo.Invoke(authService, new object[] { user });
+        var token = (string)methodInfo.Invoke(authService, new object[] { user })!;
 
         // Assert
         Assert.NotNull(token);
@@ -78,19 +79,18 @@ public class JwtTokenGeneratorTests
         Assert.NotNull(jwtToken);
 
         // Example: Check user ID claim
-        var userIdClaim = jwtToken?.Claims.FirstOrDefault(c => c.Type == "Id");
+        var userIdClaim = jwtToken.Claims.FirstOrDefault(c => c.Type == "Id");
         Assert.NotNull(userIdClaim);
         Assert.Equal(user.Id.ToString(), userIdClaim.Value);
 
         // Example: Check username claim
-        var usernameClaim = jwtToken?.Claims.FirstOrDefault(c => c.Type == JwtRegisteredClaimNames.Sub);
+        var usernameClaim = jwtToken.Claims.FirstOrDefault(c => c.Type == JwtRegisteredClaimNames.Sub);
         Assert.NotNull(usernameClaim);
         Assert.Equal(user.Username, usernameClaim.Value);
 
         // Example: Check email claim
-        var emailClaim = jwtToken?.Claims.FirstOrDefault(c => c.Type == JwtRegisteredClaimNames.Email);
+        var emailClaim = jwtToken.Claims.FirstOrDefault(c => c.Type == JwtRegisteredClaimNames.Email);
         Assert.NotNull(emailClaim);
         Assert.Equal(user.Email, emailClaim.Value);
     }
-
 }

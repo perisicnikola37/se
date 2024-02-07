@@ -1,6 +1,5 @@
 namespace Domain.Exceptions;
 
-public class DatabaseException(string fileName) : Exception("Problem with a database.")
+public class DatabaseException() : Exception("Internal error.")
 {
-    public string FileName { get; } = fileName;
 }

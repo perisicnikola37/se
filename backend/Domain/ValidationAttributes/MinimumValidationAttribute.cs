@@ -17,6 +17,6 @@ public class MinimumAttribute : ValidationAttribute
             return new ValidationResult(ErrorMessage ??
                                         $"The field {validationContext.DisplayName} must be greater than {_minValue}.");
 
-        return ValidationResult.Success;
+        return ValidationResult.Success!;
     }
 }

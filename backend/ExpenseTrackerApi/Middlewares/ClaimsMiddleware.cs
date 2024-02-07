@@ -1,36 +1,38 @@
-using ExpenseTrackerApi.Exclusions;
+using Domain.ValidationAttributes;
 
-namespace ExpenseTrackerApi.Middlewares;
-
-public class ClaimsMiddleware(RequestDelegate next, ILogger<ClaimsMiddleware> logger)
+namespace ExpenseTrackerApi.Middlewares
 {
-    public async Task Invoke(HttpContext context)
-    {
-        var httpPath = context.Request.Path;
+	public class ClaimsMiddleware(RequestDelegate next)
+	{
+		private readonly RequestDelegate _next = next;
 
-        var excludedEndpoints = AuthenticationEndpointExclusions.ExcludedEndpoints;
+		public async Task Invoke(HttpContext context)
+		{
+			var httpPath = context.Request.Path;
 
-        if (excludedEndpoints.Contains(httpPath))
-        {
-            await next(context);
-        }
-        else
-        {
-            var userIdClaim = context.User.Claims.FirstOrDefault(c => c.Type == "Id");
+			var isAllowAnonymous = context.GetEndpoint()?.Metadata.GetMetadata<AllowAnonymousAttribute>() != null;
 
-            if (userIdClaim == null)
-            {
-                if (!context.Response.HasStarted)
-                {
-                    logger.LogWarning("Unauthorized: Invalid user claims");
-                    context.Response.StatusCode = StatusCodes.Status401Unauthorized;
-                    await context.Response.WriteAsync("Unauthorized: Invalid user claims");
-                }
-            }
-            else
-            {
-                await next(context);
-            }
-        }
-    }
+			if (isAllowAnonymous)
+			{
+				await _next(context);
+			}
+			else
+			{
+				var userIdClaim = context.User.Claims.FirstOrDefault(c => c.Type == "Id");
+
+				if (userIdClaim == null)
+				{
+					if (!context.Response.HasStarted)
+					{
+						context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+						await context.Response.WriteAsync("Unauthorized: Invalid user claims");
+					}
+				}
+				else
+				{
+					await _next(context);
+				}
+			}
+		}
+	}
 }

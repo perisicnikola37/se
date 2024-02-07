@@ -4,20 +4,21 @@ using Domain.Interfaces;
 using Domain.Models;
 using FluentValidation;
 using Infrastructure.Contexts;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace Service;
 
-public class ExpenseGroupService(DatabaseContext context, IValidator<ExpenseGroup> validator, ILogger<ExpenseGroupService> logger, IGetAuthenticatedUserIdService getAuthenticatedUserId) : IExpenseGroupService
+public class ExpenseGroupService(DatabaseContext context, IValidator<ExpenseGroup> validator, ILogger<ExpenseGroupService> logger, IGetAuthenticatedUserIdService getAuthenticatedUserId, IHttpContextAccessor httpContextAccessor) : IExpenseGroupService
 {
 	[HttpGet]
-	public async Task<IEnumerable<ExpenseGroupDto>> GetExpenseGroupsAsync(ControllerBase controller)
+	public async Task<IEnumerable<ExpenseGroupDto>> GetExpenseGroupsAsync()
 	{
 		try
 		{
-			var authenticatedUserId = getAuthenticatedUserId.GetUserId(controller.User);
+			var authenticatedUserId = getAuthenticatedUserId.GetUserId(httpContextAccessor.HttpContext.User);
 
 			var expenseGroups = await context.ExpenseGroups
 				.Where(ig => ig.UserId == authenticatedUserId)
@@ -94,21 +95,21 @@ public class ExpenseGroupService(DatabaseContext context, IValidator<ExpenseGrou
 		}
 	}
 
-	public async Task<ActionResult<ExpenseGroup>> CreateExpenseGroupAsync(ExpenseGroup expenseGroup, ControllerBase controller)
+	public async Task<ActionResult<ExpenseGroup>> CreateExpenseGroupAsync(ExpenseGroup expenseGroup)
 	{
 		try
 		{
 			var validationResult = await validator.ValidateAsync(expenseGroup);
 			if (!validationResult.IsValid) return new BadRequestObjectResult(validationResult.Errors);
 
-			var userId = getAuthenticatedUserId.GetUserId(controller.User);
+			var userId = getAuthenticatedUserId.GetUserId(httpContextAccessor.HttpContext.User);
 
 			expenseGroup.UserId = (int)userId!;
 
 			context.ExpenseGroups.Add(expenseGroup);
 			await context.SaveChangesAsync();
 
-			return controller.Ok(expenseGroup);
+			return expenseGroup;
 		}
 		catch (Exception ex)
 		{
@@ -116,13 +117,13 @@ public class ExpenseGroupService(DatabaseContext context, IValidator<ExpenseGrou
 			throw;
 		}
 	}
-	public async Task<IActionResult> UpdateExpenseGroupAsync(int id, ExpenseGroup expenseGroup, ControllerBase controller)
+	public async Task<IActionResult> UpdateExpenseGroupAsync(int id, ExpenseGroup expenseGroup)
 	{
 		try
 		{
 			if (id != expenseGroup.Id) return new BadRequestResult();
 
-			var authenticatedUserId = getAuthenticatedUserId.GetUserId(controller.User);
+			var authenticatedUserId = getAuthenticatedUserId.GetUserId(httpContextAccessor.HttpContext.User);
 
 			// Check if authenticatedUserId has a value
 			if (authenticatedUserId.HasValue)
@@ -140,7 +141,7 @@ public class ExpenseGroupService(DatabaseContext context, IValidator<ExpenseGrou
 			{
 				if (!ExpenseGroupExists(id)) return new NotFoundResult();
 
-				throw new ConflictException("ExpenseGroupService.cs");
+				throw new ConflictException();
 			}
 			return new NoContentResult();
 		}

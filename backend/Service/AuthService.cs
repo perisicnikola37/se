@@ -12,145 +12,89 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace Service;
 
-public class AuthService(IDatabaseContext context, IConfiguration configuration, IEmailService emailService) : IAuthService
+public class AuthService(IDatabaseContext context, IConfiguration configuration, IEmailService emailService)
+    : IAuthService
 {
-	public async Task<UserDto?> LogInUserAsync(LogInUser user)
-	{
-		var authenticatedUser = await context.Users
-			.FirstOrDefaultAsync(u => u.Email == user.Email);
+    public async Task<UserDto?> LogInUserAsync(LogInUserDto user)
+    {
+        var authenticatedUser = await context.Users
+            .FirstOrDefaultAsync(u => u.Email == user.Email);
 
-		if (authenticatedUser == null || !VerifyPassword(user.Password, authenticatedUser.Password)) return null;
+        if (authenticatedUser == null || !VerifyPassword(user.Password, authenticatedUser.Password)) return null;
 
-		var jwtToken = GenerateJwtToken(authenticatedUser);
+        var jwtToken = GenerateJwtToken(authenticatedUser);
 
-		var userWithToken = new UserDto
-		{
-			Id = authenticatedUser.Id,
-			Username = authenticatedUser.Username,
-			Email = authenticatedUser.Email,
-			AccountType = authenticatedUser.AccountType,
-			Token = jwtToken
-		};
+        var userWithToken = new UserDto
+        {
+            Id = authenticatedUser.Id,
+            Username = authenticatedUser.Username,
+            Email = authenticatedUser.Email,
+            AccountType = authenticatedUser.AccountType,
+            Token = jwtToken
+        };
 
-		return userWithToken;
-	}
+        return userWithToken;
+    }
 
-	public async Task<ActionResult<UserDto>> RegisterUserAsync(User userRegistration)
-	{
-		if (await context.Users.AnyAsync(u => u.Email == userRegistration.Email))
-			return new ConflictObjectResult(new { message = "Email is already registered" });
+    public async Task<ActionResult<UserDto>> RegisterUserAsync(User userRegistration)
+    {
+        if (await context.Users.AnyAsync(u => u.Email == userRegistration.Email))
+            return new ConflictObjectResult(new { message = "Email is already registered" });
 
-		var newUser = new User
-		{
-			Username = userRegistration.Username,
-			Email = userRegistration.Email,
-			AccountType = userRegistration.AccountType
-		};
+        var newUser = new User
+        {
+            Username = userRegistration.Username,
+            Email = userRegistration.Email,
+            AccountType = userRegistration.AccountType
+        };
 
-		var hashedPassword = HashPassword(userRegistration.Password);
-		newUser.Password = hashedPassword;
+        var hashedPassword = HashPassword(userRegistration.Password);
+        newUser.Password = hashedPassword;
 
-		context.Users.Add(newUser);
-		await context.SaveChangesAsync();
+        context.Users.Add(newUser);
+        await context.SaveChangesAsync();
 
-		var claims = new List<Claim>
-		{
-			new Claim("Id", newUser.Id.ToString()),
-			new Claim(JwtRegisteredClaimNames.Sub, newUser.Username),
-			new Claim(JwtRegisteredClaimNames.Email, newUser.Email),
-			new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
-		};
+        var claims = new List<Claim>
+        {
+            new("Id", newUser.Id.ToString()),
+            new(JwtRegisteredClaimNames.Sub, newUser.Username),
+            new(JwtRegisteredClaimNames.Email, newUser.Email),
+            new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+        };
 
-		var token = GenerateJwtToken(newUser);
+        var token = GenerateJwtToken(newUser);
 
-		var userDto = new UserDto
-		{
-			Id = newUser.Id,
-			Username = newUser.Username,
-			Email = newUser.Email,
-			AccountType = newUser.AccountType,
-			CreatedAt = newUser.CreatedAt,
-			Token = token
-		};
+        var userDto = new UserDto
+        {
+            Id = newUser.Id,
+            Username = newUser.Username,
+            Email = newUser.Email,
+            AccountType = newUser.AccountType,
+            CreatedAt = newUser.CreatedAt,
+            Token = token
+        };
 
-		return userDto;
-	}
+        return userDto;
+    }
 
-	private string GenerateJwtToken(User user)
-	{
-		var issuer = configuration["Jwt:Issuer"];
-		var audience = configuration["Jwt:Audience"];
-		var key = Encoding.ASCII.GetBytes(configuration["Jwt:Key"] ??
-										  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkZGFzYWRoYXNiZCBhc2RhZHMgc2Rhc3AgZGFzIGRhc2RhcyBhc2RhcyBkYXNkIGFzZGFzZGFzZCBhcyBkYXNhZGFzIGFzIGRhcyBkYXNhZGFzIGFzIGRhcyBkYXNhZGFzZGFzZCBhcyBkYXNhIGRhcyBkYXNhIGRhcyBkYXNhIGRhcyBkYXNhIGRhcyBkYXNhIGRhcyBkYXNhIGFzIGRhcyBkYXNhIGRhcyBkYXNhZGFzIGRhcyBkYXNhZGphcyBkYXNhIGRhcyBkYXNhIGRhcyBkYXNhIGRhcyBkYXNhIGRhcyBkYXNhIGRhcyBkYXNhIGRhcyBkYXNhIGRhcyBkYXNhIGRhcyBkYXNhIGRhcyBkYXNhZGphcyIsImlhdCI6MTYzNDEwNTUyMn0.S7G4f8pW7sGJ7t9PIShNElA0RRve-HlPfZRvX8hnZ6c");
+    [Obsolete("Obsolete")]
+    public async Task<bool> ForgotPasswordAsync(string userEmail)
+    {
+        var user = await context.Users.FirstOrDefaultAsync(u => u.Email == userEmail);
 
-		var tokenDescriptor = new SecurityTokenDescriptor
-		{
-			Subject = new ClaimsIdentity(new[]
-			{
-				new Claim("Id", user.Id.ToString()),
-				new Claim(JwtRegisteredClaimNames.Sub, user.Username),
-				new Claim(JwtRegisteredClaimNames.Email, user.Email),
-				new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
-			}),
-			Expires = DateTime.Now.AddHours(1),
-			Issuer = issuer,
-			Audience = audience,
-			SigningCredentials =
-				new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha512Signature)
-		};
+        if (user == null)
+            return false;
 
-		var tokenHandler = new JwtSecurityTokenHandler();
-		return tokenHandler.WriteToken(tokenHandler.CreateToken(tokenDescriptor));
-	}
+        var resetToken = GenerateResetToken();
+        user.ResetToken = resetToken;
+        user.ResetTokenExpiration = DateTime.UtcNow.AddHours(1);
 
-	public static string HashPassword(string password)
-	{
-		var hashedBytes = SHA256.HashData(Encoding.UTF8.GetBytes(password));
+        await context.SaveChangesAsync();
 
-		return BitConverter.ToString(hashedBytes).Replace("-", "").ToLower();
-	}
+        var resetLink = $"{configuration["AppUrl"]}/reset-password?token={resetToken}&email={userEmail}";
 
-	public static bool VerifyPassword(string inputPassword, string hashedPassword)
-	{
-		var hashedBytes = SHA256.HashData(Encoding.UTF8.GetBytes(inputPassword));
-		var inputHashedPassword = BitConverter.ToString(hashedBytes).Replace("-", "").ToLower();
-
-		return string.Equals(inputHashedPassword, hashedPassword, StringComparison.OrdinalIgnoreCase);
-	}
-
-	private static string GenerateResetToken()
-	{
-		var tokenLength = 32;
-		var randomBytes = new byte[tokenLength];
-
-		using (var rng = new RNGCryptoServiceProvider())
-		{
-			rng.GetBytes(randomBytes);
-		}
-
-		// Use URL-safe base64 encoding
-		var base64Token = Convert.ToBase64String(randomBytes);
-		var urlSafeToken = base64Token.Replace('+', '-').Replace('/', '_');
-
-		return urlSafeToken;
-	}
-
-	public async Task<bool> ForgotPasswordAsync(string userEmail)
-	{
-		var user = await context.Users.FirstOrDefaultAsync(u => u.Email == userEmail);
-
-		if (user == null)
-			return false;
-
-		var resetToken = GenerateResetToken();
-		user.ResetToken = resetToken;
-		user.ResetTokenExpiration = DateTime.UtcNow.AddHours(1);
-
-		await context.SaveChangesAsync();
-
-		var resetLink = $"{configuration["AppUrl"]}/reset-password?token={resetToken}&email={userEmail}";
-
-		string emailBody = $@"<!DOCTYPE html PUBLIC ""-//W3C//DTD XHTML 1.0 Transitional//EN"" ""http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"">
+        var emailBody =
+            $@"<!DOCTYPE html PUBLIC ""-//W3C//DTD XHTML 1.0 Transitional//EN"" ""http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"">
 		<html dir=""ltr"" lang=""en"">
 		  <head>
 			<meta content=""text/html; charset=UTF-8"" http-equiv=""Content-Type"" />
@@ -171,25 +115,86 @@ public class AuthService(IDatabaseContext context, IConfiguration configuration,
 		  </body>
 		</html>";
 
-		var subject = "Reset password - Expense Tracker";
-		await emailService.SendEmail(new EmailRequestDto { ToEmail = userEmail }, subject, emailBody);
+        var subject = "Reset password - Expense Tracker";
+        await emailService.SendEmail(new EmailRequestDto { ToEmail = userEmail }, subject, emailBody);
 
-		return true;
-	}
+        return true;
+    }
 
-	public async Task<bool> ResetPasswordAsync(string userEmail, string token, string newPassword)
-	{
-		var user = await context.Users.FirstOrDefaultAsync(u => u.Email == userEmail && u.ResetToken == token && u.ResetTokenExpiration > DateTime.UtcNow);
+    public async Task<bool> ResetPasswordAsync(string userEmail, string token, string newPassword)
+    {
+        var user = await context.Users.FirstOrDefaultAsync(u =>
+            u.Email == userEmail && u.ResetToken == token && u.ResetTokenExpiration > DateTime.UtcNow);
 
-		if (user == null)
-			return false;
+        if (user == null)
+            return false;
 
-		user.Password = HashPassword(newPassword);
-		user.ResetToken = null;
-		user.ResetTokenExpiration = null;
+        user.Password = HashPassword(newPassword);
+        user.ResetToken = null;
+        user.ResetTokenExpiration = null;
 
-		await context.SaveChangesAsync();
+        await context.SaveChangesAsync();
 
-		return true;
-	}
+        return true;
+    }
+
+    private string GenerateJwtToken(User user)
+    {
+        var issuer = configuration["Jwt:Issuer"];
+        var audience = configuration["Jwt:Audience"];
+        var key = Encoding.ASCII.GetBytes(configuration["Jwt:Key"] ??
+                                          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkZGFzYWRoYXNiZCBhc2RhZHMgc2Rhc3AgZGFzIGRhc2RhcyBhc2RhcyBkYXNkIGFzZGFzZGFzZCBhcyBkYXNhZGFzIGFzIGRhcyBkYXNhZGFzIGFzIGRhcyBkYXNhZGFzZGFzZCBhcyBkYXNhIGRhcyBkYXNhIGRhcyBkYXNhIGRhcyBkYXNhIGRhcyBkYXNhIGRhcyBkYXNhIGFzIGRhcyBkYXNhIGRhcyBkYXNhZGFzIGRhcyBkYXNhZGphcyBkYXNhIGRhcyBkYXNhIGRhcyBkYXNhIGRhcyBkYXNhIGRhcyBkYXNhIGRhcyBkYXNhIGRhcyBkYXNhIGRhcyBkYXNhIGRhcyBkYXNhIGRhcyBkYXNhZGphcyIsImlhdCI6MTYzNDEwNTUyMn0.S7G4f8pW7sGJ7t9PIShNElA0RRve-HlPfZRvX8hnZ6c");
+
+        var tokenDescriptor = new SecurityTokenDescriptor
+        {
+            Subject = new ClaimsIdentity(new[]
+            {
+                new Claim("Id", user.Id.ToString()),
+                new Claim(JwtRegisteredClaimNames.Sub, user.Username),
+                new Claim(JwtRegisteredClaimNames.Email, user.Email),
+                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+            }),
+            Expires = DateTime.Now.AddHours(1),
+            Issuer = issuer,
+            Audience = audience,
+            SigningCredentials =
+                new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha512Signature)
+        };
+
+        var tokenHandler = new JwtSecurityTokenHandler();
+        return tokenHandler.WriteToken(tokenHandler.CreateToken(tokenDescriptor));
+    }
+
+    public static string HashPassword(string password)
+    {
+        var hashedBytes = SHA256.HashData(Encoding.UTF8.GetBytes(password));
+
+        return BitConverter.ToString(hashedBytes).Replace("-", "").ToLower();
+    }
+
+    public static bool VerifyPassword(string inputPassword, string hashedPassword)
+    {
+        var hashedBytes = SHA256.HashData(Encoding.UTF8.GetBytes(inputPassword));
+        var inputHashedPassword = BitConverter.ToString(hashedBytes).Replace("-", "").ToLower();
+
+        return string.Equals(inputHashedPassword, hashedPassword, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Obsolete("Obsolete")]
+    private static string GenerateResetToken()
+    {
+        var tokenLength = 32;
+        var randomBytes = new byte[tokenLength];
+
+        using (var rng = new RNGCryptoServiceProvider())
+        {
+            rng.GetBytes(randomBytes);
+        }
+
+        // Use URL-safe base64 encoding
+        var base64Token = Convert.ToBase64String(randomBytes);
+        var urlSafeToken = base64Token.Replace('+', '-').Replace('/', '_');
+
+        return urlSafeToken;
+    }
 }

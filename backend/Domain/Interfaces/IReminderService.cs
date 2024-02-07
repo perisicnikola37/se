@@ -1,4 +1,4 @@
-using Contracts.Dto.Reminders;
+using Contracts.Dto;
 using Domain.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,7 +8,7 @@ public interface IReminderService
 {
 	Task<IEnumerable<Reminder>> GetRemindersAsync();
 	Task<ActionResult<SingleReminderDto>> GetReminderAsync(int id);
-	Task<IActionResult> UpdateReminderAsync(int id, Reminder reminder, ControllerBase controller);
-	Task<ActionResult<Reminder>> CreateReminderAsync(Reminder reminder, ControllerBase controller);
+	Task<IActionResult> UpdateReminderAsync(int id, Reminder reminder);
+	Task<ActionResult<Reminder>> CreateReminderAsync(Reminder reminder);
 	Task<IActionResult> DeleteReminderAsync(int id);
 }

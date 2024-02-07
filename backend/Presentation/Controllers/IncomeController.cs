@@ -15,16 +15,16 @@ public class IncomeController(IIncomeService incomeService) : ControllerBase
 	[HttpGet]
 	public async Task<IActionResult> GetIncomesAsync([FromQuery] PaginationFilterDto filter)
 	{
-		return Ok(await incomeService.GetIncomesAsync(filter, this));
+		return Ok(await incomeService.GetIncomesAsync(filter));
 	}
 
 	[HttpGet("latest/5")]
-	public async Task<ActionResult<object>> GetLatestIncomesAsync()
+	public async Task<object> GetLatestIncomesAsync()
 	{
-		return Ok(await incomeService.GetLatestIncomesAsync(this));
+		return Ok(await incomeService.GetLatestIncomesAsync());
 	}
 
-	[HttpGet("total-amount")]
+	[HttpGet("total/amount")]
 	public ActionResult<int> GetTotalAmountOfIncomesAsync()
 	{
 		return Ok(incomeService.GetTotalAmountOfIncomesAsync());
@@ -40,19 +40,19 @@ public class IncomeController(IIncomeService incomeService) : ControllerBase
 	[Authorize("IncomeOwnerPolicy")]
 	public async Task<IActionResult> PutIncomeAsync(int id, Income income)
 	{
-		return await incomeService.UpdateIncomeAsync(id, income, this);
+		return await incomeService.UpdateIncomeAsync(id, income);
 	}
 
 	[HttpPost]
 	public async Task<ActionResult<Income>> PostIncomeAsync(Income income)
 	{
-		return await incomeService.CreateIncomeAsync(income, this);
+		return await incomeService.CreateIncomeAsync(income);
 	}
 
 	[HttpDelete]
 	public async Task<IActionResult> DeleteAllIncomesAsync()
 	{
-		return await incomeService.DeleteAllIncomesAsync(this);
+		return await incomeService.DeleteAllIncomesAsync();
 	}
 
 	[HttpDelete("{id}")]

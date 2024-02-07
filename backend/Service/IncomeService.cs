@@ -1,4 +1,3 @@
-using System.Linq.Expressions;
 using Contracts.Dto;
 using Contracts.Filter;
 using Domain.Exceptions;
@@ -6,6 +5,7 @@ using Domain.Interfaces;
 using Domain.Models;
 using FluentValidation;
 using Infrastructure.Contexts;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -16,32 +16,30 @@ public class IncomeService(
 	DatabaseContext context,
 	IValidator<Income> validator,
 	IGetAuthenticatedUserIdService getAuthenticatedUserId,
-	ILogger<IncomeService> logger) : IIncomeService
+	ILogger<IncomeService> logger,
+	IHttpContextAccessor httpContextAccessor) : IIncomeService
 {
 	[HttpGet]
-	public async Task<PagedResponseDto<List<IncomeResponse>>> GetIncomesAsync(PaginationFilterDto filter,
-	ControllerBase controller)
+	public async Task<PagedResponseDto<List<IncomeResponseDto>>> GetIncomesAsync(
+	PaginationFilterDto filter)
 	{
 		try
 		{
-			var authenticatedUserId = getAuthenticatedUserId.GetUserId(controller.User);
+			var authenticatedUserId = getAuthenticatedUserId.GetUserId(httpContextAccessor.HttpContext.User);
 
-			string description = controller.HttpContext.Request.Query["description"]!;
-			string minAmount = controller.HttpContext.Request.Query["minAmount"]!;
-			string maxAmount = controller.HttpContext.Request.Query["maxAmount"]!;
-			string incomeGroupId = controller.HttpContext.Request.Query["incomeGroupId"]!;
+			string description = httpContextAccessor.HttpContext.Request.Query["description"]!;
+			string minAmount = httpContextAccessor.HttpContext.Request.Query["minAmount"]!;
+			string maxAmount = httpContextAccessor.HttpContext.Request.Query["maxAmount"]!;
+			string incomeGroupId = httpContextAccessor.HttpContext.Request.Query["incomeGroupId"]!;
 
 			var validFilter = new PaginationFilterDto(filter.PageNumber, filter.PageSize);
 
 			var query = context.Incomes
-				.Where(e => e.UserId == authenticatedUserId);
-
-			query = ApplyFilter(query, e => e.Description.Contains(description),
-				!string.IsNullOrWhiteSpace(description));
-			query = ApplyFilter(query, e => e.Amount >= float.Parse(minAmount), !string.IsNullOrWhiteSpace(minAmount));
-			query = ApplyFilter(query, e => e.Amount <= float.Parse(maxAmount), !string.IsNullOrWhiteSpace(maxAmount));
-			query = ApplyFilter(query, e => e.IncomeGroupId == int.Parse(incomeGroupId),
-				!string.IsNullOrWhiteSpace(incomeGroupId));
+				  .Where(e => e.UserId == authenticatedUserId)
+				  .ApplyFilter(e => e.Description.Contains(description), !string.IsNullOrWhiteSpace(description))
+				  .ApplyFilter(e => e.Amount >= float.Parse(minAmount), !string.IsNullOrWhiteSpace(minAmount))
+				  .ApplyFilter(e => e.Amount <= float.Parse(maxAmount), !string.IsNullOrWhiteSpace(maxAmount))
+				  .ApplyFilter(e => e.IncomeGroupId == int.Parse(incomeGroupId), !string.IsNullOrWhiteSpace(incomeGroupId));
 
 			var totalRecords = await query.CountAsync();
 			var totalPages = (int)Math.Ceiling((double)totalRecords / validFilter.PageSize);
@@ -49,31 +47,42 @@ public class IncomeService(
 			var pagedData = await query
 				.Skip((validFilter.PageNumber - 1) * validFilter.PageSize)
 				.Take(validFilter.PageSize)
-				.Select(e => new IncomeResponse
+				.Select(e => new IncomeResponseDto
 				{
 					Id = e.Id,
 					Description = e.Description,
 					Amount = e.Amount,
 					CreatedAt = e.CreatedAt,
 					IncomeGroupId = e.IncomeGroupId,
-					IncomeGroup = e.IncomeGroup!,
-					UserId = e.UserId,
+					IncomeGroup = (e
+						.IncomeGroup != null
+						? new IncomeGroupDto
+						{
+							Id = e.IncomeGroup.Id,
+							Name = e.IncomeGroup.Name,
+							Description = e.IncomeGroup.Description
+						}
+						: null)!,
+					UserId = e.UserId
 				})
 				.OrderByDescending(e => e.CreatedAt)
 				.ToListAsync();
 
+			var baseUri = new Uri(httpContextAccessor.HttpContext.Request.Scheme + "://" + httpContextAccessor.HttpContext.Request.Host.Value);
+			var currentPageUri = new Uri(httpContextAccessor.HttpContext.Request.Path, UriKind.Relative);
+			var nextPageUri = new Uri(baseUri,
+				$"{currentPageUri}?pageNumber={validFilter.PageNumber + 1}&pageSize={validFilter.PageSize}");
+			var previousPageUri = new Uri(baseUri,
+				$"{currentPageUri}?pageNumber={validFilter.PageNumber - 1}&pageSize={validFilter.PageSize}");
 
-			var baseUri = new Uri(controller.Request.Scheme + "://" + controller.Request.Host.Value);
-			var currentPageUri = new Uri(controller.Request.Path, UriKind.Relative);
-			var nextPageUri = new Uri(baseUri, $"{currentPageUri}?pageNumber={validFilter.PageNumber + 1}&pageSize={validFilter.PageSize}");
-			var previousPageUri = new Uri(baseUri, $"{currentPageUri}?pageNumber={validFilter.PageNumber - 1}&pageSize={validFilter.PageSize}");
-
-			return new PagedResponseDto<List<IncomeResponse>>(pagedData, validFilter.PageNumber, validFilter.PageSize)
+			return new PagedResponseDto<List<IncomeResponseDto>>(pagedData, validFilter.PageNumber,
+			 validFilter.PageSize)
 			{
 				PageNumber = validFilter.PageNumber,
 				PageSize = validFilter.PageSize,
 				FirstPage = new Uri(baseUri, $"{currentPageUri}?pageNumber=1&pageSize={validFilter.PageSize}"),
-				LastPage = new Uri(baseUri, $"{currentPageUri}?pageNumber={totalPages}&pageSize={validFilter.PageSize}"),
+				LastPage =
+				 new Uri(baseUri, $"{currentPageUri}?pageNumber={totalPages}&pageSize={validFilter.PageSize}"),
 				TotalPages = totalPages,
 				TotalRecords = totalRecords,
 				NextPage = validFilter.PageNumber < totalPages ? nextPageUri : null,
@@ -87,11 +96,11 @@ public class IncomeService(
 		}
 	}
 
-	public async Task<object> GetLatestIncomesAsync(ControllerBase controller)
+	public async Task<object> GetLatestIncomesAsync()
 	{
 		try
 		{
-			var authenticatedUserId = getAuthenticatedUserId.GetUserId(controller.User);
+			var authenticatedUserId = getAuthenticatedUserId.GetUserId(httpContextAccessor.HttpContext.User);
 
 			var highestIncome = await context.Incomes
 				.Where(i => i.CreatedAt >= DateTime.UtcNow.AddDays(-7) && i.UserId == authenticatedUserId)
@@ -129,7 +138,7 @@ public class IncomeService(
 				.Where(e => e.Id == id)
 				.FirstOrDefaultAsync();
 
-			if (income == null) return null;
+			if (income == null) return null!;
 
 			return new OkObjectResult(income);
 		}
@@ -140,7 +149,7 @@ public class IncomeService(
 		}
 	}
 
-	public async Task<ActionResult<Income>> CreateIncomeAsync(Income income, ControllerBase controller)
+	public async Task<ActionResult<Income>> CreateIncomeAsync(Income income)
 	{
 		try
 		{
@@ -150,7 +159,7 @@ public class IncomeService(
 			_ = await context.IncomeGroups.FindAsync(income.IncomeGroupId) ??
 				throw NotFoundException.Create("IncomeGroupId", "Income group not found.");
 
-			var userId = getAuthenticatedUserId.GetUserId(controller.User);
+			var userId = getAuthenticatedUserId.GetUserId(httpContextAccessor.HttpContext.User);
 
 			income.UserId = (int)userId!;
 
@@ -166,13 +175,13 @@ public class IncomeService(
 		}
 	}
 
-	public async Task<IActionResult> UpdateIncomeAsync(int id, Income income, ControllerBase controller)
+	public async Task<IActionResult> UpdateIncomeAsync(int id, Income income)
 	{
 		try
 		{
 			if (id != income.Id) return new BadRequestResult();
 
-			var authenticatedUserId = getAuthenticatedUserId.GetUserId(controller.User);
+			var authenticatedUserId = getAuthenticatedUserId.GetUserId(httpContextAccessor.HttpContext.User);
 
 			// Check if authenticatedUserId has a value
 			if (authenticatedUserId.HasValue)
@@ -189,7 +198,7 @@ public class IncomeService(
 				catch (ConflictException)
 				{
 					if (!IncomeExists(id)) return new NotFoundResult();
-					throw new ConflictException("IncomeService.cs");
+					throw new ConflictException();
 				}
 
 				return new NoContentResult();
@@ -237,25 +246,19 @@ public class IncomeService(
 		}
 	}
 
-	public async Task<IActionResult> DeleteAllIncomesAsync(ControllerBase controller)
+	public async Task<IActionResult> DeleteAllIncomesAsync()
 	{
 		try
 		{
-			var authenticatedUserId = getAuthenticatedUserId.GetUserId(controller.User);
+			var authenticatedUserId = getAuthenticatedUserId.GetUserId(httpContextAccessor.HttpContext.User);
 
-			if (!authenticatedUserId.HasValue)
-			{
-				return new BadRequestResult();
-			}
+			if (!authenticatedUserId.HasValue) return new BadRequestResult();
 
 			var incomesToDelete = await context.Incomes
 				.Where(e => e.UserId == authenticatedUserId.Value)
 				.ToListAsync();
 
-			if (incomesToDelete == null || incomesToDelete.Count == 0)
-			{
-				return new NotFoundResult();
-			}
+			if (incomesToDelete.Count == 0) return new NotFoundResult();
 
 			context.Incomes.RemoveRange(incomesToDelete);
 			await context.SaveChangesAsync();
@@ -280,11 +283,5 @@ public class IncomeService(
 			logger.LogError($"IncomeExists: An error occurred. Error: {ex.Message}");
 			throw;
 		}
-	}
-
-	private static IQueryable<Income> ApplyFilter(IQueryable<Income> query, Expression<Func<Income, bool>> filter,
-		bool condition)
-	{
-		return condition ? query.Where(filter) : query;
 	}
 }

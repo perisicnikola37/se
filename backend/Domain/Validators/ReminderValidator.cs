@@ -1,7 +1,7 @@
-namespace Domain.Validators;
-
 using Domain.Models;
 using FluentValidation;
+
+namespace Domain.Validators;
 
 public class ReminderValidator : AbstractValidator<Reminder>
 {

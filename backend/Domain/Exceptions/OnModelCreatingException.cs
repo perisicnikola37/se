@@ -1,6 +1,5 @@
 namespace Domain.Exceptions;
 
-public class OnModelCreatingException(string fileName) : Exception("Error in method: onModelCreating.")
+public class OnModelCreatingException() : Exception("Internal error.")
 {
-    public string FileName { get; } = fileName;
 }

@@ -4,20 +4,20 @@ import { useUser } from "../contexts/UserContext";
 import { Helmet } from "react-helmet";
 
 export default function SignIn() {
-    const { isLoggedIn } = useUser();
+  const { isLoggedIn } = useUser();
 
-    useEffect(() => {
-        if (isLoggedIn()) {
-            window.history.back();
-        }
-    }, [isLoggedIn]);
+  useEffect(() => {
+    if (isLoggedIn()) {
+      window.history.back();
+    }
+  }, [isLoggedIn]);
 
-    return (
-        <>
-            <Helmet>
-                <title>Sign In | Expense Tracker</title>
-            </Helmet>
-            <SignInForm />
-        </>
-    );
+  return (
+    <>
+      <Helmet>
+        <title>Sign In | Expense Tracker</title>
+      </Helmet>
+      <SignInForm />
+    </>
+  );
 }

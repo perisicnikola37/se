@@ -31,7 +31,7 @@ public class User
 		get => accountType;
 		set
 		{
-			if (Enum.TryParse(value, out AccountTypes result))
+			if (Enum.TryParse(value, out AccountTypes _))
 				accountType = value;
 			else
 				throw new ArgumentException("Invalid AccountType");

@@ -1,7 +1,6 @@
 namespace Domain.Exceptions
 {
-    public class UnauthorizedException(string fileName) : Exception($"Conflict.")
+    public class UnauthorizedException() : Exception($"Unauthorized.")
     {
-        public string FileName { get; } = fileName;
     }
 }

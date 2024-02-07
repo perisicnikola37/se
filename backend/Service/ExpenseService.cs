@@ -6,6 +6,7 @@ using Domain.Interfaces;
 using Domain.Models;
 using FluentValidation;
 using Infrastructure.Contexts;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -16,64 +17,72 @@ public class ExpenseService(
 	DatabaseContext context,
 	IValidator<Expense> validator,
 	IGetAuthenticatedUserIdService getAuthenticatedUserId,
-	ILogger<ExpenseService> logger) : IExpenseService
+	ILogger<ExpenseService> logger,
+	IHttpContextAccessor httpContextAccessor) : IExpenseService
 {
 	[HttpGet]
-	public async Task<PagedResponseDto<List<ExpenseResponse>>> GetExpensesAsync(PaginationFilterDto filter,
-	ControllerBase controller)
+	public async Task<PagedResponseDto<List<ExpenseResponseDto>>> GetExpensesAsync(PaginationFilterDto filter)
 	{
 		try
 		{
-			var authenticatedUserId = getAuthenticatedUserId.GetUserId(controller.User);
+			var authenticatedUserId = getAuthenticatedUserId.GetUserId(httpContextAccessor.HttpContext.User);
 
-			string description = controller.HttpContext.Request.Query["description"]!;
-			string minAmount = controller.HttpContext.Request.Query["minAmount"]!;
-			string maxAmount = controller.HttpContext.Request.Query["maxAmount"]!;
-			string expenseGroupId = controller.HttpContext.Request.Query["expenseGroupId"]!;
+			string description = httpContextAccessor.HttpContext.Request.Query["description"]!;
+			string minAmount = httpContextAccessor.HttpContext.Request.Query["minAmount"]!;
+			string maxAmount = httpContextAccessor.HttpContext.Request.Query["maxAmount"]!;
+			string expenseGroupId = httpContextAccessor.HttpContext.Request.Query["expenseGroupId"]!;
 
 			var validFilter = new PaginationFilterDto(filter.PageNumber, filter.PageSize);
 
 			var query = context.Expenses
-				.Where(e => e.UserId == authenticatedUserId);
-
-			query = ApplyFilter(query, e => e.Description.Contains(description),
-				!string.IsNullOrWhiteSpace(description));
-			query = ApplyFilter(query, e => e.Amount >= float.Parse(minAmount), !string.IsNullOrWhiteSpace(minAmount));
-			query = ApplyFilter(query, e => e.Amount <= float.Parse(maxAmount), !string.IsNullOrWhiteSpace(maxAmount));
-			query = ApplyFilter(query, e => e.ExpenseGroupId == int.Parse(expenseGroupId),
-				!string.IsNullOrWhiteSpace(expenseGroupId));
+				  .Where(e => e.UserId == authenticatedUserId)
+				  .ApplyFilter(e => e.Description.Contains(description), !string.IsNullOrWhiteSpace(description))
+				  .ApplyFilter(e => e.Amount >= float.Parse(minAmount), !string.IsNullOrWhiteSpace(minAmount))
+				  .ApplyFilter(e => e.Amount <= float.Parse(maxAmount), !string.IsNullOrWhiteSpace(maxAmount))
+				  .ApplyFilter(e => e.ExpenseGroupId == int.Parse(expenseGroupId), !string.IsNullOrWhiteSpace(expenseGroupId));
 
 			var totalRecords = await query.CountAsync();
 			var totalPages = (int)Math.Ceiling((double)totalRecords / validFilter.PageSize);
 
 			var pagedData = await query
-				.Skip((validFilter.PageNumber - 1) * validFilter.PageSize)
-				.Take(validFilter.PageSize)
-				.Select(e => new ExpenseResponse
-				{
-					Id = e.Id,
-					Description = e.Description,
-					Amount = e.Amount,
-					CreatedAt = e.CreatedAt,
-					ExpenseGroupId = e.ExpenseGroupId,
-					ExpenseGroup = e.ExpenseGroup!,
-					UserId = e.UserId,
-				})
-				.OrderByDescending(e => e.CreatedAt)
-				.ToListAsync();
+			   .Skip((validFilter.PageNumber - 1) * validFilter.PageSize)
+			   .Take(validFilter.PageSize)
+			   .Select(e => new ExpenseResponseDto
+			   {
+				   Id = e.Id,
+				   Description = e.Description,
+				   Amount = e.Amount,
+				   CreatedAt = e.CreatedAt,
+				   ExpenseGroupId = e.ExpenseGroupId,
+				   ExpenseGroup = (e
+					   .ExpenseGroup != null
+					   ? new ExpenseGroupDto
+					   {
+						   Id = e.ExpenseGroup.Id,
+						   Name = e.ExpenseGroup.Name,
+						   Description = e.ExpenseGroup.Description
+					   }
+					   : null)!,
+				   UserId = e.UserId
+			   })
+			   .OrderByDescending(e => e.CreatedAt)
+			   .ToListAsync();
 
 
-			var baseUri = new Uri(controller.Request.Scheme + "://" + controller.Request.Host.Value);
-			var currentPageUri = new Uri(controller.Request.Path, UriKind.Relative);
-			var nextPageUri = new Uri(baseUri, $"{currentPageUri}?pageNumber={validFilter.PageNumber + 1}&pageSize={validFilter.PageSize}");
-			var previousPageUri = new Uri(baseUri, $"{currentPageUri}?pageNumber={validFilter.PageNumber - 1}&pageSize={validFilter.PageSize}");
+			var baseUri = new Uri(httpContextAccessor.HttpContext.Request.Scheme + "://" + httpContextAccessor.HttpContext.Request.Host.Value);
+			var currentPageUri = new Uri(httpContextAccessor.HttpContext.Request.Path, UriKind.Relative);
+			var nextPageUri = new Uri(baseUri,
+				$"{currentPageUri}?pageNumber={validFilter.PageNumber + 1}&pageSize={validFilter.PageSize}");
+			var previousPageUri = new Uri(baseUri,
+				$"{currentPageUri}?pageNumber={validFilter.PageNumber - 1}&pageSize={validFilter.PageSize}");
 
-			return new PagedResponseDto<List<ExpenseResponse>>(pagedData, validFilter.PageNumber, validFilter.PageSize)
+			return new PagedResponseDto<List<ExpenseResponseDto>>(pagedData, validFilter.PageNumber, validFilter.PageSize)
 			{
 				PageNumber = validFilter.PageNumber,
 				PageSize = validFilter.PageSize,
 				FirstPage = new Uri(baseUri, $"{currentPageUri}?pageNumber=1&pageSize={validFilter.PageSize}"),
-				LastPage = new Uri(baseUri, $"{currentPageUri}?pageNumber={totalPages}&pageSize={validFilter.PageSize}"),
+				LastPage =
+					new Uri(baseUri, $"{currentPageUri}?pageNumber={totalPages}&pageSize={validFilter.PageSize}"),
 				TotalPages = totalPages,
 				TotalRecords = totalRecords,
 				NextPage = validFilter.PageNumber < totalPages ? nextPageUri : null,
@@ -87,17 +96,17 @@ public class ExpenseService(
 		}
 	}
 
-	public async Task<object> GetLatestExpensesAsync(ControllerBase controller)
+	public async Task<object> GetLatestExpensesAsync()
 	{
 		try
 		{
-			var authenticatedUserId = getAuthenticatedUserId.GetUserId(controller.User);
+			var authenticatedUserId = getAuthenticatedUserId.GetUserId(httpContextAccessor.HttpContext.User);
 
 			var highestExpense = await context.Expenses
-						 	.Where(i => i.CreatedAt >= DateTime.UtcNow.AddDays(-7) && i.UserId == authenticatedUserId)
-							.OrderByDescending(i => i.Amount)
-							.Select(i => i.Amount)
-							.FirstOrDefaultAsync();
+				.Where(i => i.CreatedAt >= DateTime.UtcNow.AddDays(-7) && i.UserId == authenticatedUserId)
+				.OrderByDescending(i => i.Amount)
+				.Select(i => i.Amount)
+				.FirstOrDefaultAsync();
 
 			var latestExpenses = await context.Expenses
 				.Where(i => i.UserId == authenticatedUserId)
@@ -130,7 +139,7 @@ public class ExpenseService(
 				.Where(e => e.Id == id)
 				.FirstOrDefaultAsync();
 
-			if (expense == null) return null;
+			if (expense == null) return null!;
 
 			return new OkObjectResult(expense);
 		}
@@ -141,7 +150,7 @@ public class ExpenseService(
 		}
 	}
 
-	public async Task<ActionResult<Expense>> CreateExpenseAsync(Expense expense, ControllerBase controller)
+	public async Task<ActionResult<Expense>> CreateExpenseAsync(Expense expense)
 	{
 		try
 		{
@@ -151,7 +160,7 @@ public class ExpenseService(
 			_ = await context.ExpenseGroups.FindAsync(expense.ExpenseGroupId) ??
 				throw NotFoundException.Create("ExpenseGroupId", "Expense group not found.");
 
-			var userId = getAuthenticatedUserId.GetUserId(controller.User);
+			var userId = getAuthenticatedUserId.GetUserId(httpContextAccessor.HttpContext.User);
 
 			expense.UserId = (int)userId!;
 
@@ -168,13 +177,13 @@ public class ExpenseService(
 		}
 	}
 
-	public async Task<IActionResult> UpdateExpenseAsync(int id, Expense updatedExpense, ControllerBase controller)
+	public async Task<IActionResult> UpdateExpenseAsync(int id, Expense updatedExpense)
 	{
 		try
 		{
 			if (id != updatedExpense.Id) return new BadRequestResult();
 
-			var authenticatedUserId = getAuthenticatedUserId.GetUserId(controller.User);
+			var authenticatedUserId = getAuthenticatedUserId.GetUserId(httpContextAccessor.HttpContext.User);
 
 			// Check if authenticatedUserId has a value
 			if (authenticatedUserId.HasValue)
@@ -191,7 +200,7 @@ public class ExpenseService(
 				catch (ConflictException)
 				{
 					if (!ExpenseExists(id)) return new NotFoundResult();
-					throw new ConflictException("ExpenseService.cs");
+					throw new ConflictException();
 				}
 
 				return new NoContentResult();
@@ -239,38 +248,19 @@ public class ExpenseService(
 		}
 	}
 
-	private bool ExpenseExists(int id)
+	public async Task<IActionResult> DeleteAllExpensesAsync()
 	{
 		try
 		{
-			return context.Expenses.Any(e => e.Id == id);
-		}
-		catch (Exception ex)
-		{
-			logger.LogError($"ExpenseExists: An error occurred. Error: {ex.Message}");
-			throw;
-		}
-	}
+			var authenticatedUserId = getAuthenticatedUserId.GetUserId(httpContextAccessor.HttpContext.User);
 
-	public async Task<IActionResult> DeleteAllExpensesAsync(ControllerBase controller)
-	{
-		try
-		{
-			var authenticatedUserId = getAuthenticatedUserId.GetUserId(controller.User);
-
-			if (!authenticatedUserId.HasValue)
-			{
-				return new BadRequestResult();
-			}
+			if (!authenticatedUserId.HasValue) return new BadRequestResult();
 
 			var expensesToDelete = await context.Expenses
 				.Where(e => e.UserId == authenticatedUserId.Value)
 				.ToListAsync();
 
-			if (expensesToDelete == null || expensesToDelete.Count == 0)
-			{
-				return new NotFoundResult();
-			}
+			if (expensesToDelete.Count == 0) return new NotFoundResult();
 
 			context.Expenses.RemoveRange(expensesToDelete);
 			await context.SaveChangesAsync();
@@ -284,9 +274,16 @@ public class ExpenseService(
 		}
 	}
 
-	private static IQueryable<Expense> ApplyFilter(IQueryable<Expense> query, Expression<Func<Expense, bool>> filter,
-		bool condition)
+	private bool ExpenseExists(int id)
 	{
-		return condition ? query.Where(filter) : query;
+		try
+		{
+			return context.Expenses.Any(e => e.Id == id);
+		}
+		catch (Exception ex)
+		{
+			logger.LogError($"ExpenseExists: An error occurred. Error: {ex.Message}");
+			throw;
+		}
 	}
 }

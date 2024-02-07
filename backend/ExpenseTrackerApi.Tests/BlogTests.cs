@@ -1,5 +1,6 @@
 using ExpenseTrackerApi.Tests.Fixtures;
 using FluentValidation;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Moq;
 
@@ -10,6 +11,7 @@ public class BlogControllerTests(DatabaseFixture fixture) : IClassFixture<Databa
     private readonly Mock<GetAuthenticatedUserIdService> getAuthenticated = new();
     private readonly Mock<ILogger<BlogService>> loggerMock = new();
     private readonly Mock<IValidator<Blog>> validatorMock = new();
+    private readonly Mock<IHttpContextAccessor> httpContextAccessorMock = new();
 
     [Fact]
     public async Task GetBlogsAsync_ReturnsOkResult()
@@ -30,7 +32,7 @@ public class BlogControllerTests(DatabaseFixture fixture) : IClassFixture<Databa
 
         // Create the service and controller
         var blogService = new BlogService(context, validatorMock.Object, getAuthenticated.Object,
-            loggerMock.Object);
+            loggerMock.Object, httpContextAccessorMock.Object);
         var controller = new BlogController(blogService);
 
         // Act

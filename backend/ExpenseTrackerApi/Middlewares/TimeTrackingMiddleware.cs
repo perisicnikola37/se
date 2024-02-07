@@ -1,5 +1,7 @@
 using System.Diagnostics;
 
+namespace ExpenseTrackerApi.Middlewares;
+
 public class TimeTrackingMiddleware(RequestDelegate next, ILogger<TimeTrackingMiddleware> logger)
 {
     public async Task Invoke(HttpContext context)

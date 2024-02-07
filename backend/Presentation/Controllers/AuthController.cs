@@ -2,14 +2,17 @@ using Contracts.Dto;
 using Domain.Exceptions;
 using Domain.Interfaces;
 using Domain.Models;
+using Domain.ValidationAttributes;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.Extensions.Logging;
 
 namespace Presentation.Controllers;
 
 [Route("api/auth")]
 [ApiController]
+[EnableRateLimiting("fixed")]
 public class AuthController(
 	IAuthService authService,
 	IValidator<User> validator,
@@ -17,7 +20,8 @@ public class AuthController(
 	IGetCurrentUserService getCurrentUserService) : ControllerBase
 {
 	[HttpPost("login")]
-	public async Task<ActionResult<User>> LogInUserAsync(LogInUser user)
+	[AllowAnonymous]
+	public async Task<ActionResult<User>> LogInUserAsync(LogInUserDto user)
 	{
 		try
 		{
@@ -39,11 +43,12 @@ public class AuthController(
 		{
 			logger.LogError(ex, "An error occurred during login.");
 
-			throw new DatabaseException("AuthController.cs");
+			throw new DatabaseException();
 		}
 	}
 
 	[HttpPost("register")]
+	[AllowAnonymous]
 	public async Task<ActionResult<UserDto>> RegisterUserAsync(User userRegistration)
 	{
 		try
@@ -66,7 +71,7 @@ public class AuthController(
 		{
 			logger.LogError(ex, "An error occurred during user registration.");
 
-			throw new DatabaseException("AuthController.cs");
+			throw new DatabaseException();
 		}
 	}
 
@@ -81,11 +86,12 @@ public class AuthController(
 		{
 			logger.LogError(ex, "An error occurred while getting the current user.");
 
-			throw new DatabaseException("AuthController.cs");
+			throw new DatabaseException();
 		}
 	}
 
 	[HttpPost("forgot/password")]
+	[AllowAnonymous]
 	public async Task<IActionResult> ForgotPasswordAsync([FromBody] ForgotPasswordRequestDto forgotPasswordRequest)
 	{
 		try
@@ -104,11 +110,12 @@ public class AuthController(
 		catch (Exception ex)
 		{
 			logger.LogError(ex, "An error occurred during forgot password request.");
-			throw new DatabaseException("AuthController.cs");
+			throw new DatabaseException();
 		}
 	}
 
 	[HttpPost("reset/password")]
+	[AllowAnonymous]
 	public async Task<IActionResult> ResetPasswordAsync([FromBody] ResetPasswordRequestDto resetPasswordRequest)
 	{
 		try
@@ -130,7 +137,7 @@ public class AuthController(
 		catch (Exception ex)
 		{
 			logger.LogError(ex, "An error occurred during password reset.");
-			throw new DatabaseException("AuthController.cs");
+			throw new DatabaseException();
 		}
 	}
 }

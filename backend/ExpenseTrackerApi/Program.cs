@@ -21,10 +21,8 @@ var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
 // disabled
 // builder.Services.AddHttpLogging(o => { });
-builder.Services.AddCors(p => p.AddPolicy("cors", builder =>
-{
-	builder.WithOrigins("*").AllowAnyMethod().AllowAnyHeader();
-}));
+builder.Services.AddCors(p => p.AddPolicy("cors",
+	corsPolicyBuilder => { corsPolicyBuilder.WithOrigins("*").AllowAnyMethod().AllowAnyHeader(); }));
 
 builder.Services.AddSingleton(typeof(IConverter), new SynchronizedConverter(new PdfTools()));
 builder.Services.AddScoped<PdfGenerator>();
@@ -56,26 +54,28 @@ builder.Services.AddScoped<IAuthorizationHandler, ExpenseGroupAuthorizationHandl
 var connectionString = configuration["DefaultConnection"];
 if (connectionString == null) throw new ArgumentNullException(nameof(connectionString), "DefaultConnection is null");
 
-builder.Services.AddDbContext<DatabaseContext>((serviceProvider, options) =>
+builder.Services.AddDbContext<DatabaseContext>(options =>
 {
 	options.UseMySql(
-		"server=mysql;user=root;port=3306;Connect Timeout=5;database=first_database;password=password",
+		connectionString,
+		// "server=mysql;user=root;port=3306;Connect Timeout=5;database=first_database;password=password",
 		new MySqlServerVersion(new Version(8, 0, 35)),
 		b => b.MigrationsAssembly("ExpenseTrackerApi")
 	);
 });
 
-builder.Services.AddDbContextPool<DatabaseContext>(options =>
-	   {
-		   options.UseMySql(
-			 	"server=mysql;user=root;port=3306;Connect Timeout=5;database=first_database;password=password",
-			   ServerVersion.AutoDetect("server=mysql;user=root;port=3306;Connect Timeout=5;database=first_database;password=password"),
-			   options => options.EnableRetryOnFailure(
-				   maxRetryCount: 5,
-				   maxRetryDelay: System.TimeSpan.FromSeconds(30),
-				   errorNumbersToAdd: null)
-			   );
-	   });
+// builder.Services.AddDbContextPool<DatabaseContext>(options =>
+// {
+// 	options.UseMySql(
+// 		"server=mysql;user=root;port=3306;Connect Timeout=5;database=first_database;password=password",
+// 		ServerVersion.AutoDetect(
+// 			"server=mysql;user=root;port=3306;Connect Timeout=5;database=first_database;password=password"),
+// 		mySqlDbContextOptionsBuilder => mySqlDbContextOptionsBuilder.EnableRetryOnFailure(
+// 			5,
+// 			TimeSpan.FromSeconds(30),
+// 			null)
+// 	);
+// });
 
 builder.Services.AddAuthentication();
 
@@ -96,7 +96,6 @@ builder.Services.AddScoped<IValidator<User>, UserValidator>();
 builder.Services.AddScoped<IValidator<Reminder>, ReminderValidator>();
 
 // services
-
 // core
 builder.Services.AddScoped<IDatabaseContext, DatabaseContext>();
 builder.Services.AddScoped<IGetAuthenticatedUserIdService, GetAuthenticatedUserIdService>();
@@ -112,7 +111,7 @@ builder.Services.AddScoped<IExpenseService, ExpenseService>();
 builder.Services.AddScoped<IIncomeGroupService, IncomeGroupService>();
 builder.Services.AddScoped<IIncomeService, IncomeService>();
 
-// other entitites
+// other entities
 builder.Services.AddScoped<IBlogService, BlogService>();
 builder.Services.AddScoped<IReminderService, ReminderService>();
 builder.Services.AddScoped<ISummaryService, SummaryService>();

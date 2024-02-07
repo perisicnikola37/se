@@ -1,27 +1,33 @@
 using Contracts.Dto;
+using Domain.ValidationAttributes;
 using MailChimp.Net;
 using MailChimp.Net.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.Extensions.Configuration;
 
 namespace Presentation.Controllers;
 
 [ApiController]
 [Route("api/mailchimp")]
+[EnableRateLimiting("fixed")]
 public class MailchimpController : ControllerBase
 {
-	private readonly MailChimpManager _mailChimpManager;
 	private readonly string _audienceId = "5fe973b75d";
+	private readonly MailChimpManager _mailChimpManager;
 
 	public MailchimpController(IConfiguration configuration)
 	{
-		string apiKey = configuration["MailChimp:ApiKey"] ?? throw new ApplicationException("MailChimp API key is not configured.");
-		_audienceId = configuration["MailChimp:AudienceId"] ?? throw new ApplicationException("MailChimp AudienceId is not configured.");
+		var apiKey = configuration["MailChimp:ApiKey"] ??
+					 throw new ApplicationException("MailChimp API key is not configured.");
+		_audienceId = configuration["MailChimp:AudienceId"] ??
+					  throw new ApplicationException("MailChimp AudienceId is not configured.");
 
 		_mailChimpManager = new MailChimpManager(apiKey);
 	}
 
 	[HttpPost("subscribe")]
+	[AllowAnonymous]
 	public async Task<IActionResult> Subscribe([FromBody] SubscriberRequest model)
 	{
 		try
@@ -33,7 +39,7 @@ public class MailchimpController : ControllerBase
 		}
 		catch (Exception ex)
 		{
-			Console.WriteLine($"Error: {ex.ToString()}");
+			Console.WriteLine($"Error: {ex}");
 
 			return BadRequest($"Failed to add subscriber: {ex.Message}");
 		}
@@ -50,7 +56,7 @@ public class MailchimpController : ControllerBase
 		}
 		catch (Exception ex)
 		{
-			Console.WriteLine($"Error: {ex.ToString()}");
+			Console.WriteLine($"Error: {ex}");
 
 			return BadRequest($"Failed to retrieve members: {ex.Message}");
 		}
