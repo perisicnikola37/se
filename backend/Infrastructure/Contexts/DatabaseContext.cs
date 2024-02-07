@@ -1,5 +1,3 @@
-using System.Security.Cryptography;
-using System.Text;
 using Domain.Exceptions;
 using Domain.Interfaces;
 using Domain.Models;
@@ -33,28 +31,7 @@ public class DatabaseContext : DbContext, IDatabaseContext
 	{
 		try
 		{
-			// Your existing model building logic here...
-
-			// seed blogs
-			// for (int i = 1; i <= 100; i++)
-			// {
-			//    modelBuilder.Entity<Blog>().HasData(new Blog
-			//    {
-			//        Id = i,
-			//        Description = $"Blog Description {i}",
-			//        Author = $"http://author{i}.com",
-			//        Text = $"Blog Text {i}"
-			//    });
-			// }
-
-			modelBuilder.Entity<User>().HasData(new User
-			{
-				Id = 1,
-				Username = "Administrator",
-				Email = "admin@gmail.com",
-				Password = HashPassword("password"),
-				AccountType = "Administrator"
-			});
+			SeedData.Seed(modelBuilder);
 
 			modelBuilder.Entity<User>()
 				.HasMany(e => e.Blogs)
@@ -105,12 +82,5 @@ public class DatabaseContext : DbContext, IDatabaseContext
 			Console.WriteLine($"An error occurred during model building: {ex.Message}");
 			throw new OnModelCreatingException("DatabaseContext.cs");
 		}
-	}
-
-	private static string HashPassword(string password)
-	{
-		var hashedBytes = SHA256.HashData(Encoding.UTF8.GetBytes(password));
-
-		return BitConverter.ToString(hashedBytes).Replace("-", "").ToLower();
 	}
 }

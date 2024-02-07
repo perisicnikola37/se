@@ -1,3 +1,5 @@
+using Contracts.Dto;
+
 namespace Domain.Models;
 
 public class ExpenseResponse

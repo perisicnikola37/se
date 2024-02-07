@@ -1,6 +1,5 @@
 using Contracts.Dto;
 using Domain.Interfaces;
-using Domain.Models;
 using Infrastructure.Contexts;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;

@@ -5,7 +5,6 @@ using Domain.Models;
 using FluentValidation;
 using Infrastructure.Contexts;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 

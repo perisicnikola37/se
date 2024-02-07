@@ -37,7 +37,7 @@ public class Reminder
         get => reminderDay;
         init
         {
-            if (Enum.TryParse(value, out WeekDays result))
+            if (Enum.TryParse(value, out WeekDays _))
                 reminderDay = value;
             else
                 throw new ArgumentException("Invalid Reminder_day");

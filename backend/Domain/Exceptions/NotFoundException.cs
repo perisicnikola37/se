@@ -13,7 +13,7 @@ public class NotFoundException : Exception
         FieldName = fieldName;
     }
 
-    public string FieldName { get; }
+    public string FieldName { get; } = null!;
 
     public static NotFoundException Create(string fieldName, string message)
     {

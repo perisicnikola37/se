@@ -24,7 +24,7 @@ public class IncomeController(IIncomeService incomeService) : ControllerBase
 		return Ok(await incomeService.GetLatestIncomesAsync(this));
 	}
 
-	[HttpGet("total-amount")]
+	[HttpGet("total/amount")]
 	public ActionResult<int> GetTotalAmountOfIncomesAsync()
 	{
 		return Ok(incomeService.GetTotalAmountOfIncomesAsync());

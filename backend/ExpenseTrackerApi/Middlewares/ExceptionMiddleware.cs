@@ -50,9 +50,6 @@ namespace ExpenseTrackerApi.Middlewares
 					code = HttpStatusCode.Unauthorized;
 					fileName = unauthorizedException.FileName;
 					break;
-
-				default:
-					break;
 			}
 
 

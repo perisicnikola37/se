@@ -64,7 +64,7 @@ public class AuthControllerTests
         var notFoundResult = Assert.IsType<UnauthorizedObjectResult>(actionResult.Result);
 
         var actualErrorMessage =
-            (string)notFoundResult.Value.GetType().GetProperty("message")!.GetValue(notFoundResult.Value, null)!;
+            (string)notFoundResult.Value?.GetType().GetProperty("message")!.GetValue(notFoundResult.Value, null)!;
 
         Assert.Equal("Invalid email or password", actualErrorMessage);
     }

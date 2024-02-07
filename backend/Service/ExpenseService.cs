@@ -13,280 +13,276 @@ using Microsoft.Extensions.Logging;
 namespace Service;
 
 public class ExpenseService(
-	DatabaseContext context,
-	IValidator<Expense> validator,
-	IGetAuthenticatedUserIdService getAuthenticatedUserId,
-	ILogger<ExpenseService> logger) : IExpenseService
+    DatabaseContext context,
+    IValidator<Expense> validator,
+    IGetAuthenticatedUserIdService getAuthenticatedUserId,
+    ILogger<ExpenseService> logger) : IExpenseService
 {
-	[HttpGet]
-	public async Task<PagedResponseDto<List<ExpenseResponse>>> GetExpensesAsync(PaginationFilterDto filter,
-	ControllerBase controller)
-	{
-		try
-		{
-			var authenticatedUserId = getAuthenticatedUserId.GetUserId(controller.User);
+    [HttpGet]
+    public async Task<PagedResponseDto<List<ExpenseResponse>>> GetExpensesAsync(PaginationFilterDto filter,
+        ControllerBase controller)
+    {
+        try
+        {
+            var authenticatedUserId = getAuthenticatedUserId.GetUserId(controller.User);
 
-			string description = controller.HttpContext.Request.Query["description"]!;
-			string minAmount = controller.HttpContext.Request.Query["minAmount"]!;
-			string maxAmount = controller.HttpContext.Request.Query["maxAmount"]!;
-			string expenseGroupId = controller.HttpContext.Request.Query["expenseGroupId"]!;
+            string description = controller.HttpContext.Request.Query["description"]!;
+            string minAmount = controller.HttpContext.Request.Query["minAmount"]!;
+            string maxAmount = controller.HttpContext.Request.Query["maxAmount"]!;
+            string expenseGroupId = controller.HttpContext.Request.Query["expenseGroupId"]!;
 
-			var validFilter = new PaginationFilterDto(filter.PageNumber, filter.PageSize);
+            var validFilter = new PaginationFilterDto(filter.PageNumber, filter.PageSize);
 
-			var query = context.Expenses
-				.Where(e => e.UserId == authenticatedUserId);
+            var query = context.Expenses
+                .Where(e => e.UserId == authenticatedUserId);
 
-			query = ApplyFilter(query, e => e.Description.Contains(description),
-				!string.IsNullOrWhiteSpace(description));
-			query = ApplyFilter(query, e => e.Amount >= float.Parse(minAmount), !string.IsNullOrWhiteSpace(minAmount));
-			query = ApplyFilter(query, e => e.Amount <= float.Parse(maxAmount), !string.IsNullOrWhiteSpace(maxAmount));
-			query = ApplyFilter(query, e => e.ExpenseGroupId == int.Parse(expenseGroupId),
-				!string.IsNullOrWhiteSpace(expenseGroupId));
+            query = ApplyFilter(query, e => e.Description.Contains(description),
+                !string.IsNullOrWhiteSpace(description));
+            query = ApplyFilter(query, e => e.Amount >= float.Parse(minAmount), !string.IsNullOrWhiteSpace(minAmount));
+            query = ApplyFilter(query, e => e.Amount <= float.Parse(maxAmount), !string.IsNullOrWhiteSpace(maxAmount));
+            query = ApplyFilter(query, e => e.ExpenseGroupId == int.Parse(expenseGroupId),
+                !string.IsNullOrWhiteSpace(expenseGroupId));
 
-			var totalRecords = await query.CountAsync();
-			var totalPages = (int)Math.Ceiling((double)totalRecords / validFilter.PageSize);
+            var totalRecords = await query.CountAsync();
+            var totalPages = (int)Math.Ceiling((double)totalRecords / validFilter.PageSize);
 
-			var pagedData = await query
-				.Skip((validFilter.PageNumber - 1) * validFilter.PageSize)
-				.Take(validFilter.PageSize)
-				.Select(e => new ExpenseResponse
-				{
-					Id = e.Id,
-					Description = e.Description,
-					Amount = e.Amount,
-					CreatedAt = e.CreatedAt,
-					ExpenseGroupId = e.ExpenseGroupId,
-					ExpenseGroup = e.ExpenseGroup!,
-					UserId = e.UserId,
-				})
-				.OrderByDescending(e => e.CreatedAt)
-				.ToListAsync();
-
-
-			var baseUri = new Uri(controller.Request.Scheme + "://" + controller.Request.Host.Value);
-			var currentPageUri = new Uri(controller.Request.Path, UriKind.Relative);
-			var nextPageUri = new Uri(baseUri, $"{currentPageUri}?pageNumber={validFilter.PageNumber + 1}&pageSize={validFilter.PageSize}");
-			var previousPageUri = new Uri(baseUri, $"{currentPageUri}?pageNumber={validFilter.PageNumber - 1}&pageSize={validFilter.PageSize}");
-
-			return new PagedResponseDto<List<ExpenseResponse>>(pagedData, validFilter.PageNumber, validFilter.PageSize)
-			{
-				PageNumber = validFilter.PageNumber,
-				PageSize = validFilter.PageSize,
-				FirstPage = new Uri(baseUri, $"{currentPageUri}?pageNumber=1&pageSize={validFilter.PageSize}"),
-				LastPage = new Uri(baseUri, $"{currentPageUri}?pageNumber={totalPages}&pageSize={validFilter.PageSize}"),
-				TotalPages = totalPages,
-				TotalRecords = totalRecords,
-				NextPage = validFilter.PageNumber < totalPages ? nextPageUri : null,
-				PreviousPage = validFilter.PageNumber > 1 ? previousPageUri : null
-			};
-		}
-		catch (Exception ex)
-		{
-			logger.LogError($"GetExpensesAsync: An error occurred. Error: {ex.Message}");
-			throw;
-		}
-	}
-
-	public async Task<object> GetLatestExpensesAsync(ControllerBase controller)
-	{
-		try
-		{
-			var authenticatedUserId = getAuthenticatedUserId.GetUserId(controller.User);
-
-			var highestExpense = await context.Expenses
-						 	.Where(i => i.CreatedAt >= DateTime.UtcNow.AddDays(-7) && i.UserId == authenticatedUserId)
-							.OrderByDescending(i => i.Amount)
-							.Select(i => i.Amount)
-							.FirstOrDefaultAsync();
-
-			var latestExpenses = await context.Expenses
-				.Where(i => i.UserId == authenticatedUserId)
-				.Include(e => e.ExpenseGroup)
-				.OrderByDescending(e => e.CreatedAt)
-				.Take(5)
-				.ToListAsync();
+            var pagedData = await query
+                .Skip((validFilter.PageNumber - 1) * validFilter.PageSize)
+                .Take(validFilter.PageSize)
+                .Select(e => new ExpenseResponse
+                {
+                    Id = e.Id,
+                    Description = e.Description,
+                    Amount = e.Amount,
+                    CreatedAt = e.CreatedAt,
+                    ExpenseGroupId = e.ExpenseGroupId,
+                    ExpenseGroup = e.ExpenseGroup!,
+                })
+                .OrderByDescending(e => e.CreatedAt)
+                .ToListAsync();
 
 
-			var response = new
-			{
-				highestExpense,
-				expenses = latestExpenses
-			};
+            var baseUri = new Uri(controller.Request.Scheme + "://" + controller.Request.Host.Value);
+            var currentPageUri = new Uri(controller.Request.Path, UriKind.Relative);
+            var nextPageUri = new Uri(baseUri,
+                $"{currentPageUri}?pageNumber={validFilter.PageNumber + 1}&pageSize={validFilter.PageSize}");
+            var previousPageUri = new Uri(baseUri,
+                $"{currentPageUri}?pageNumber={validFilter.PageNumber - 1}&pageSize={validFilter.PageSize}");
 
-			return response;
-		}
-		catch (Exception ex)
-		{
-			logger.LogError($"GetLatestExpensesAsync: An error occurred. Error: {ex.Message}");
-			throw;
-		}
-	}
+            return new PagedResponseDto<List<ExpenseResponse>>(pagedData, validFilter.PageNumber, validFilter.PageSize)
+            {
+                PageNumber = validFilter.PageNumber,
+                PageSize = validFilter.PageSize,
+                FirstPage = new Uri(baseUri, $"{currentPageUri}?pageNumber=1&pageSize={validFilter.PageSize}"),
+                LastPage =
+                    new Uri(baseUri, $"{currentPageUri}?pageNumber={totalPages}&pageSize={validFilter.PageSize}"),
+                TotalPages = totalPages,
+                TotalRecords = totalRecords,
+                NextPage = validFilter.PageNumber < totalPages ? nextPageUri : null,
+                PreviousPage = validFilter.PageNumber > 1 ? previousPageUri : null
+            };
+        }
+        catch (Exception ex)
+        {
+            logger.LogError($"GetExpensesAsync: An error occurred. Error: {ex.Message}");
+            throw;
+        }
+    }
 
-	public async Task<ActionResult<Expense>> GetExpenseAsync(int id)
-	{
-		try
-		{
-			var expense = await context.Expenses
-				.Where(e => e.Id == id)
-				.FirstOrDefaultAsync();
+    public async Task<object> GetLatestExpensesAsync(ControllerBase controller)
+    {
+        try
+        {
+            var authenticatedUserId = getAuthenticatedUserId.GetUserId(controller.User);
 
-			if (expense == null) return null;
+            var highestExpense = await context.Expenses
+                .Where(i => i.CreatedAt >= DateTime.UtcNow.AddDays(-7) && i.UserId == authenticatedUserId)
+                .OrderByDescending(i => i.Amount)
+                .Select(i => i.Amount)
+                .FirstOrDefaultAsync();
 
-			return new OkObjectResult(expense);
-		}
-		catch (Exception ex)
-		{
-			logger.LogError($"GetExpenseAsync: An error occurred. Error: {ex.Message}");
-			throw;
-		}
-	}
+            var latestExpenses = await context.Expenses
+                .Where(i => i.UserId == authenticatedUserId)
+                .Include(e => e.ExpenseGroup)
+                .OrderByDescending(e => e.CreatedAt)
+                .Take(5)
+                .ToListAsync();
 
-	public async Task<ActionResult<Expense>> CreateExpenseAsync(Expense expense, ControllerBase controller)
-	{
-		try
-		{
-			var validationResult = await validator.ValidateAsync(expense);
-			if (!validationResult.IsValid) return new BadRequestObjectResult(validationResult.Errors);
 
-			_ = await context.ExpenseGroups.FindAsync(expense.ExpenseGroupId) ??
-				throw NotFoundException.Create("ExpenseGroupId", "Expense group not found.");
+            var response = new
+            {
+                highestExpense,
+                expenses = latestExpenses
+            };
 
-			var userId = getAuthenticatedUserId.GetUserId(controller.User);
+            return response;
+        }
+        catch (Exception ex)
+        {
+            logger.LogError($"GetLatestExpensesAsync: An error occurred. Error: {ex.Message}");
+            throw;
+        }
+    }
 
-			expense.UserId = (int)userId!;
+    public async Task<ActionResult<Expense>> GetExpenseAsync(int id)
+    {
+        try
+        {
+            var expense = await context.Expenses
+                .Where(e => e.Id == id)
+                .FirstOrDefaultAsync();
 
-			context.Expenses.Add(expense);
+            if (expense == null) return null!;
 
-			await context.SaveChangesAsync();
+            return new OkObjectResult(expense);
+        }
+        catch (Exception ex)
+        {
+            logger.LogError($"GetExpenseAsync: An error occurred. Error: {ex.Message}");
+            throw;
+        }
+    }
 
-			return new CreatedAtActionResult("GetExpense", "Expense", new { id = expense.Id }, expense);
-		}
-		catch (Exception ex)
-		{
-			logger.LogError($"CreateExpenseAsync: An error occurred. Error: {ex.Message}");
-			throw;
-		}
-	}
+    public async Task<ActionResult<Expense>> CreateExpenseAsync(Expense expense, ControllerBase controller)
+    {
+        try
+        {
+            var validationResult = await validator.ValidateAsync(expense);
+            if (!validationResult.IsValid) return new BadRequestObjectResult(validationResult.Errors);
 
-	public async Task<IActionResult> UpdateExpenseAsync(int id, Expense updatedExpense, ControllerBase controller)
-	{
-		try
-		{
-			if (id != updatedExpense.Id) return new BadRequestResult();
+            _ = await context.ExpenseGroups.FindAsync(expense.ExpenseGroupId) ??
+                throw NotFoundException.Create("ExpenseGroupId", "Expense group not found.");
 
-			var authenticatedUserId = getAuthenticatedUserId.GetUserId(controller.User);
+            var userId = getAuthenticatedUserId.GetUserId(controller.User);
 
-			// Check if authenticatedUserId has a value
-			if (authenticatedUserId.HasValue)
-			{
-				// Attach authenticated user id
-				updatedExpense.UserId = authenticatedUserId.Value;
+            expense.UserId = (int)userId!;
 
-				context.Entry(updatedExpense).State = EntityState.Modified;
+            context.Expenses.Add(expense);
 
-				try
-				{
-					await context.SaveChangesAsync();
-				}
-				catch (ConflictException)
-				{
-					if (!ExpenseExists(id)) return new NotFoundResult();
-					throw new ConflictException("ExpenseService.cs");
-				}
+            await context.SaveChangesAsync();
 
-				return new NoContentResult();
-			}
+            return new CreatedAtActionResult("GetExpense", "Expense", new { id = expense.Id }, expense);
+        }
+        catch (Exception ex)
+        {
+            logger.LogError($"CreateExpenseAsync: An error occurred. Error: {ex.Message}");
+            throw;
+        }
+    }
 
-			return new BadRequestResult();
-		}
-		catch (Exception ex)
-		{
-			logger.LogError($"UpdateExpenseAsync: An error occurred. Error: {ex.Message}");
-			throw;
-		}
-	}
+    public async Task<IActionResult> UpdateExpenseAsync(int id, Expense updatedExpense, ControllerBase controller)
+    {
+        try
+        {
+            if (id != updatedExpense.Id) return new BadRequestResult();
 
-	public async Task<IActionResult> DeleteExpenseByIdAsync(int id)
-	{
-		try
-		{
-			var expense = await context.Expenses.FindAsync(id);
+            var authenticatedUserId = getAuthenticatedUserId.GetUserId(controller.User);
 
-			if (expense == null) return new NotFoundResult();
+            // Check if authenticatedUserId has a value
+            if (authenticatedUserId.HasValue)
+            {
+                // Attach authenticated user id
+                updatedExpense.UserId = authenticatedUserId.Value;
 
-			context.Expenses.Remove(expense);
-			await context.SaveChangesAsync();
+                context.Entry(updatedExpense).State = EntityState.Modified;
 
-			return new NoContentResult();
-		}
-		catch (Exception ex)
-		{
-			logger.LogError($"DeleteExpenseByIdAsync: An error occurred. Error: {ex.Message}");
-			throw;
-		}
-	}
+                try
+                {
+                    await context.SaveChangesAsync();
+                }
+                catch (ConflictException)
+                {
+                    if (!ExpenseExists(id)) return new NotFoundResult();
+                    throw new ConflictException("ExpenseService.cs");
+                }
 
-	public async Task<ActionResult<int>> GetTotalAmountOfExpensesAsync()
-	{
-		try
-		{
-			return await context.Expenses.CountAsync();
-		}
-		catch (Exception ex)
-		{
-			logger.LogError($"GetTotalAmountOfExpensesAsync: An error occurred. Error: {ex.Message}");
-			throw;
-		}
-	}
+                return new NoContentResult();
+            }
 
-	private bool ExpenseExists(int id)
-	{
-		try
-		{
-			return context.Expenses.Any(e => e.Id == id);
-		}
-		catch (Exception ex)
-		{
-			logger.LogError($"ExpenseExists: An error occurred. Error: {ex.Message}");
-			throw;
-		}
-	}
+            return new BadRequestResult();
+        }
+        catch (Exception ex)
+        {
+            logger.LogError($"UpdateExpenseAsync: An error occurred. Error: {ex.Message}");
+            throw;
+        }
+    }
 
-	public async Task<IActionResult> DeleteAllExpensesAsync(ControllerBase controller)
-	{
-		try
-		{
-			var authenticatedUserId = getAuthenticatedUserId.GetUserId(controller.User);
+    public async Task<IActionResult> DeleteExpenseByIdAsync(int id)
+    {
+        try
+        {
+            var expense = await context.Expenses.FindAsync(id);
 
-			if (!authenticatedUserId.HasValue)
-			{
-				return new BadRequestResult();
-			}
+            if (expense == null) return new NotFoundResult();
 
-			var expensesToDelete = await context.Expenses
-				.Where(e => e.UserId == authenticatedUserId.Value)
-				.ToListAsync();
+            context.Expenses.Remove(expense);
+            await context.SaveChangesAsync();
 
-			if (expensesToDelete == null || expensesToDelete.Count == 0)
-			{
-				return new NotFoundResult();
-			}
+            return new NoContentResult();
+        }
+        catch (Exception ex)
+        {
+            logger.LogError($"DeleteExpenseByIdAsync: An error occurred. Error: {ex.Message}");
+            throw;
+        }
+    }
 
-			context.Expenses.RemoveRange(expensesToDelete);
-			await context.SaveChangesAsync();
+    public async Task<ActionResult<int>> GetTotalAmountOfExpensesAsync()
+    {
+        try
+        {
+            return await context.Expenses.CountAsync();
+        }
+        catch (Exception ex)
+        {
+            logger.LogError($"GetTotalAmountOfExpensesAsync: An error occurred. Error: {ex.Message}");
+            throw;
+        }
+    }
 
-			return new NoContentResult();
-		}
-		catch (Exception ex)
-		{
-			logger.LogError($"DeleteAllExpensesAsync: An error occurred. Error: {ex.Message}");
-			throw;
-		}
-	}
+    public async Task<IActionResult> DeleteAllExpensesAsync(ControllerBase controller)
+    {
+        try
+        {
+            var authenticatedUserId = getAuthenticatedUserId.GetUserId(controller.User);
 
-	private static IQueryable<Expense> ApplyFilter(IQueryable<Expense> query, Expression<Func<Expense, bool>> filter,
-		bool condition)
-	{
-		return condition ? query.Where(filter) : query;
-	}
+            if (!authenticatedUserId.HasValue) return new BadRequestResult();
+
+            var expensesToDelete = await context.Expenses
+                .Where(e => e.UserId == authenticatedUserId.Value)
+                .ToListAsync();
+
+            if (expensesToDelete.Count == 0) return new NotFoundResult();
+
+            context.Expenses.RemoveRange(expensesToDelete);
+            await context.SaveChangesAsync();
+
+            return new NoContentResult();
+        }
+        catch (Exception ex)
+        {
+            logger.LogError($"DeleteAllExpensesAsync: An error occurred. Error: {ex.Message}");
+            throw;
+        }
+    }
+
+    private bool ExpenseExists(int id)
+    {
+        try
+        {
+            return context.Expenses.Any(e => e.Id == id);
+        }
+        catch (Exception ex)
+        {
+            logger.LogError($"ExpenseExists: An error occurred. Error: {ex.Message}");
+            throw;
+        }
+    }
+
+    private static IQueryable<Expense> ApplyFilter(IQueryable<Expense> query, Expression<Func<Expense, bool>> filter,
+        bool condition)
+    {
+        return condition ? query.Where(filter) : query;
+    }
 }
