@@ -1,15 +1,13 @@
-using Contracts.Dto;
+namespace Contracts.Dto;
 
-namespace Domain.Models;
-
-public class ExpenseResponse
+public class ExpenseResponseDto
 {
     public int Id { get; set; }
     public string Description { get; set; }
     public float Amount { get; set; }
     public DateTime CreatedAt { get; set; }
     public int? ExpenseGroupId { get; set; }
-    public ExpenseGroup ExpenseGroup { get; set; }
+    public ExpenseGroupDto ExpenseGroup { get; set; }
     public int UserId { get; set; }
-    public UserResponse User { get; set; }
+    public UserResponseDto User { get; set; }
 }

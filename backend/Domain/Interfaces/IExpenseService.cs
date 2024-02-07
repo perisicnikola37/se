@@ -7,7 +7,7 @@ namespace Domain.Interfaces;
 
 public interface IExpenseService
 {
-	Task<PagedResponseDto<List<ExpenseResponse>>> GetExpensesAsync(PaginationFilterDto filter,
+	Task<PagedResponseDto<List<ExpenseResponseDto>>> GetExpensesAsync(PaginationFilterDto filter,
 		ControllerBase controller);
 	Task<object> GetLatestExpensesAsync(ControllerBase controller);
 	Task<ActionResult<Expense>> GetExpenseAsync(int id);
