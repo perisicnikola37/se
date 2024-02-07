@@ -9,8 +9,6 @@ before_script:
 
 test:
   stage: test
-  only:
-  - main
   script:
     - 'dotnet test $SOLUTION_PATH'
 
