@@ -1,72 +1,76 @@
-import { useState } from 'react';
-import Swal from 'sweetalert2';
-import { useNavigate } from 'react-router-dom';
-import axiosConfig from '../../config/axiosConfig';
-import { User } from '../../interfaces/globalInterfaces';
-import { handleLogout } from '../../utils/utils';
+import { useState } from "react";
+import Swal from "sweetalert2";
+import { useNavigate } from "react-router-dom";
+import axiosConfig from "../../config/axiosConfig";
+import { User } from "../../interfaces/globalInterfaces";
+import { handleLogout } from "../../utils/utils";
 
 const useDeleteAccount = () => {
-    const [isLoading, setIsLoading] = useState<boolean>(false);
-    const [user, setUser] = useState<User | null>(null);
-    const [error, setError] = useState<string | null>(null);
-    const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [user, setUser] = useState<User | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const navigate = useNavigate();
 
-    const deleteAccountOperation = async () => {
-        const result = { isLoading: true, user: null as User | null, error: null as string | null };
-
-        try {
-            const response = await axiosConfig.delete('/api/users/delete/account');
-            result.user = response.data;
-        } catch (err) {
-            result.error = 'Error deleting account.';
-        } finally {
-            result.isLoading = false;
-        }
-
-        return result;
+  const deleteAccountOperation = async () => {
+    const result = {
+      isLoading: true,
+      user: null as User | null,
+      error: null as string | null,
     };
 
-    const deleteAccount = async () => {
-        const shouldDelete = await showConfirmationModal();
+    try {
+      const response = await axiosConfig.delete("/api/users/delete/account");
+      result.user = response.data;
+    } catch (err) {
+      result.error = "Error deleting account.";
+    } finally {
+      result.isLoading = false;
+    }
 
-        if (shouldDelete) {
-            setIsLoading(true);
-            const result = await deleteAccountOperation();
-            setIsLoading(false);
+    return result;
+  };
 
-            if (result) {
-                setUser(result.user);
-                setError(null);
+  const deleteAccount = async () => {
+    const shouldDelete = await showConfirmationModal();
 
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Account Deleted',
-                    text: 'Your account has been successfully deleted.',
-                }).then(() => {
-                    handleLogout()
-                    navigate('/sign-in');
-                });
-            } else {
-                setError(result);
-            }
-        }
-    };
+    if (shouldDelete) {
+      setIsLoading(true);
+      const result = await deleteAccountOperation();
+      setIsLoading(false);
 
-    const showConfirmationModal = async () => {
-        const confirmationResult = await Swal.fire({
-            icon: 'warning',
-            title: 'Are you sure?',
-            text: 'You won\'t be able to revert this!',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes, delete it!',
+      if (result) {
+        setUser(result.user);
+        setError(null);
+
+        Swal.fire({
+          icon: "success",
+          title: "Account Deleted",
+          text: "Your account has been successfully deleted.",
+        }).then(() => {
+          handleLogout();
+          navigate("/sign-in");
         });
+      } else {
+        setError(result);
+      }
+    }
+  };
 
-        return confirmationResult.isConfirmed;
-    };
+  const showConfirmationModal = async () => {
+    const confirmationResult = await Swal.fire({
+      icon: "warning",
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    });
 
-    return { isLoading, user, error, deleteAccount };
+    return confirmationResult.isConfirmed;
+  };
+
+  return { isLoading, user, error, deleteAccount };
 };
 
 export default useDeleteAccount;

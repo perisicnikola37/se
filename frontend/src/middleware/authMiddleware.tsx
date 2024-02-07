@@ -1,22 +1,20 @@
-import { useEffect } from 'react';
+import { useEffect } from "react";
 
 export const useAuthMiddleware = () => {
-    useEffect(() => {
-        const isAuthenticated = () => {
-            const token = localStorage.getItem('token');
-            return !!token;
-        };
+  useEffect(() => {
+    const isAuthenticated = () => {
+      const token = localStorage.getItem("token");
+      return !!token;
+    };
 
-        const checkAuthentication = () => {
-            if (!isAuthenticated()) {
-                window.location.replace('/sign-in');
-            }
-        };
+    const checkAuthentication = () => {
+      if (!isAuthenticated()) {
+        window.location.replace("/sign-in");
+      }
+    };
 
-        checkAuthentication();
+    checkAuthentication();
 
-        return () => {
-
-        };
-    }, []);
+    return () => {};
+  }, []);
 };

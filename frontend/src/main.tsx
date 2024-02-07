@@ -27,78 +27,78 @@ import Profile from "./pages/Profile.tsx";
 import PrivacyPolicy from "./pages/PrivacyPolicy.tsx";
 
 const router = createBrowserRouter([
-    {
-        path: "/",
-        element: (
-            <DarkModeProvider>
-                <LoadingProvider >
-                    <ModalProvider>
-                        <UserProvider>
-                            <LanguageProvider>
-                                <App />
-                            </LanguageProvider>
-                        </UserProvider>
-                    </ModalProvider>
-                </ LoadingProvider>
-            </DarkModeProvider>
-        ),
-        children: [
-            {
-                index: true, element: <Dashboard />
-            },
-            { path: "incomes", element: <Incomes /> },
-            { path: "incomes/groups", element: <IncomeGroups /> },
-            { path: "incomes/groups/:id", element: <IncomeGroupDetail /> },
-            { path: "expenses", element: <Expenses /> },
-            { path: "expenses/groups/:id", element: <ExpenseGroupDetail /> },
-            { path: "expenses/groups", element: <ExpenseGroups /> },
-            { path: "blogs", element: <Blogs /> },
-            { path: "blogs/:id", element: <BlogDetail /> },
-            { path: "reminders", element: <Reminders /> },
-            { path: "/privacy-policy", element: <PrivacyPolicy /> },
-            {
-                path: "profile", element: (
-                    <UserProvider>
-                        <Profile />
-                    </UserProvider>
-                )
-            },
-            {
-                path: "*",
-                element: <NotFoundPage />,
-            },
-        ],
-    },
-    {
-        path: "/sign-up",
-        element: (
+  {
+    path: "/",
+    element: (
+      <DarkModeProvider>
+        <LoadingProvider>
+          <ModalProvider>
             <UserProvider>
-                <SignUp />
+              <LanguageProvider>
+                <App />
+              </LanguageProvider>
             </UserProvider>
-        ),
-    },
-    {
-        path: "/sign-in",
+          </ModalProvider>
+        </LoadingProvider>
+      </DarkModeProvider>
+    ),
+    children: [
+      {
+        index: true,
+        element: <Dashboard />,
+      },
+      { path: "incomes", element: <Incomes /> },
+      { path: "incomes/groups", element: <IncomeGroups /> },
+      { path: "incomes/groups/:id", element: <IncomeGroupDetail /> },
+      { path: "expenses", element: <Expenses /> },
+      { path: "expenses/groups/:id", element: <ExpenseGroupDetail /> },
+      { path: "expenses/groups", element: <ExpenseGroups /> },
+      { path: "blogs", element: <Blogs /> },
+      { path: "blogs/:id", element: <BlogDetail /> },
+      { path: "reminders", element: <Reminders /> },
+      { path: "/privacy-policy", element: <PrivacyPolicy /> },
+      {
+        path: "profile",
         element: (
-            <UserProvider>
-                <SignIn />
-            </UserProvider>
+          <UserProvider>
+            <Profile />
+          </UserProvider>
         ),
-    },
-    {
-        path: "/forgot/password",
-        element: <ForgotPassword />,
-    },
-    {
-        path: "/reset-password",
-        element: <ResetPassword />,
-    },
+      },
+      {
+        path: "*",
+        element: <NotFoundPage />,
+      },
+    ],
+  },
+  {
+    path: "/sign-up",
+    element: (
+      <UserProvider>
+        <SignUp />
+      </UserProvider>
+    ),
+  },
+  {
+    path: "/sign-in",
+    element: (
+      <UserProvider>
+        <SignIn />
+      </UserProvider>
+    ),
+  },
+  {
+    path: "/forgot/password",
+    element: <ForgotPassword />,
+  },
+  {
+    path: "/reset-password",
+    element: <ResetPassword />,
+  },
 ]);
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
-    <React.StrictMode>
-        <RouterProvider router={router} />
-    </React.StrictMode>
+  <React.StrictMode>
+    <RouterProvider router={router} />
+  </React.StrictMode>,
 );
-
-
