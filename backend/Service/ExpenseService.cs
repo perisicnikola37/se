@@ -35,14 +35,11 @@ public class ExpenseService(
 			var validFilter = new PaginationFilterDto(filter.PageNumber, filter.PageSize);
 
 			var query = context.Expenses
-				.Where(e => e.UserId == authenticatedUserId);
-
-			query = ApplyFilter(query, e => e.Description.Contains(description),
-				!string.IsNullOrWhiteSpace(description));
-			query = ApplyFilter(query, e => e.Amount >= float.Parse(minAmount), !string.IsNullOrWhiteSpace(minAmount));
-			query = ApplyFilter(query, e => e.Amount <= float.Parse(maxAmount), !string.IsNullOrWhiteSpace(maxAmount));
-			query = ApplyFilter(query, e => e.ExpenseGroupId == int.Parse(expenseGroupId),
-				!string.IsNullOrWhiteSpace(expenseGroupId));
+				  .Where(e => e.UserId == authenticatedUserId)
+				  .ApplyFilter(e => e.Description.Contains(description), !string.IsNullOrWhiteSpace(description))
+				  .ApplyFilter(e => e.Amount >= float.Parse(minAmount), !string.IsNullOrWhiteSpace(minAmount))
+				  .ApplyFilter(e => e.Amount <= float.Parse(maxAmount), !string.IsNullOrWhiteSpace(maxAmount))
+				  .ApplyFilter(e => e.ExpenseGroupId == int.Parse(expenseGroupId), !string.IsNullOrWhiteSpace(expenseGroupId));
 
 			var totalRecords = await query.CountAsync();
 			var totalPages = (int)Math.Ceiling((double)totalRecords / validFilter.PageSize);
@@ -288,11 +285,5 @@ public class ExpenseService(
 			logger.LogError($"ExpenseExists: An error occurred. Error: {ex.Message}");
 			throw;
 		}
-	}
-
-	private static IQueryable<Expense> ApplyFilter(IQueryable<Expense> query, Expression<Func<Expense, bool>> filter,
-		bool condition)
-	{
-		return condition ? query.Where(filter) : query;
 	}
 }
