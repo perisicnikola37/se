@@ -8,12 +8,12 @@ variables:
   ASPNETCORE_ENVIRONMENT: "Development"
 
 before_script:
+  - apt-get update -qy
+  - apt-get install -y docker.io
   - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
   - 'dotnet --version' 
   - 'dotnet restore $SOLUTION_PATH/Solution.sln'
-  - apt-get update -qy
-  - apt-get docker
-  - apt-get install docker-compose -y
+  - apt-get install -y docker-compose
 
 build:
   stage: build
