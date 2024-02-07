@@ -1,4 +1,4 @@
-import { ChangeEvent, useMemo, useState, MouseEvent, useEffect } from "react"
+import { ChangeEvent, useMemo, useState, MouseEvent, useEffect } from "react";
 import { alpha } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import Table from "@mui/material/Table";
@@ -131,10 +131,7 @@ const headCells: readonly HeadCell[] = [
 
 interface EnhancedTableProps {
   numSelected: number;
-  onRequestSort: (
-    event: MouseEvent<unknown>,
-    property: keyof Data,
-  ) => void;
+  onRequestSort: (event: MouseEvent<unknown>, property: keyof Data) => void;
   onSelectAllClick: (event: ChangeEvent<HTMLInputElement>) => void;
   order: Order;
   orderBy: keyof Data;
@@ -214,8 +211,7 @@ function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const [minAmount, setMinAmount] = useState<number | null>(null);
   const [maxAmount, setMaxAmount] = useState<number | null>(null);
-  const [selectedExpenseGroup, setSelectedExpenseGroup] =
-    useState<string>("");
+  const [selectedExpenseGroup, setSelectedExpenseGroup] = useState<string>("");
   const { fetchObjectGroups, objectGroups } = useObjectGroups("expense");
   const { setActionChanged, setAppliedFilters, getAppliedFilters } = useModal();
 
@@ -486,10 +482,7 @@ function EnhancedTable({
     return () => clearTimeout(timeout);
   }, []);
 
-  const handleRequestSort = (
-    _: MouseEvent<unknown>,
-    property: keyof Data,
-  ) => {
+  const handleRequestSort = (_: MouseEvent<unknown>, property: keyof Data) => {
     const isAsc = orderBy === property && order === "asc";
     setOrder(isAsc ? "desc" : "asc");
     setOrderBy(property);
@@ -513,9 +506,7 @@ function EnhancedTable({
     setActionChanged();
   };
 
-  const handleChangeRowsPerPage = (
-    event: ChangeEvent<HTMLInputElement>,
-  ) => {
+  const handleChangeRowsPerPage = (event: ChangeEvent<HTMLInputElement>) => {
     setRowsPerPage(parseInt(event.target.value));
     setAppliedFilters({
       ...getAppliedFilters(),
@@ -578,20 +569,20 @@ function EnhancedTable({
             <TableBody>
               {loading
                 ? Array.from({
-                  length: rowsPerPage,
-                }).map((_, index) => <LoadingTableRow key={index} />)
+                    length: rowsPerPage,
+                  }).map((_, index) => <LoadingTableRow key={index} />)
                 : visibleRows.map((row) => (
-                  <TableRow
-                    hover
-                    role="checkbox"
-                    aria-checked={isSelected(row.id)}
-                    tabIndex={-1}
-                    key={row.id}
-                    selected={isSelected(row.id)}
-                    sx={{ cursor: "pointer" }}
-                  >
-                    <TableCell padding="checkbox">
-                      {/* <Checkbox
+                    <TableRow
+                      hover
+                      role="checkbox"
+                      aria-checked={isSelected(row.id)}
+                      tabIndex={-1}
+                      key={row.id}
+                      selected={isSelected(row.id)}
+                      sx={{ cursor: "pointer" }}
+                    >
+                      <TableCell padding="checkbox">
+                        {/* <Checkbox
                                                      color="primary"
                                                      checked={isSelected(
                                                          row.id
@@ -601,25 +592,25 @@ function EnhancedTable({
                                                              `enhanced-table-checkbox-${index}`,
                                                      }}
                                                  /> */}
-                    </TableCell>
-                    <TableCell component="th" scope="row" padding="none">
-                      {row.id}
-                    </TableCell>
-                    <TableCell align="right">{row.description}</TableCell>
-                    <TableCell align="right">
-                      <Chip
-                        size="small"
-                        label={`$${row.amount}`}
-                        sx={{ background: "#e1243e", color: "#fff" }}
-                      />
-                    </TableCell>
-                    <TableCell align="right">{row.expenseGroup}</TableCell>
-                    <TableCell align="right">
-                      <ExpenseEditModal id={row.id} objectType={""} />
-                      <DeleteModal id={row.id} objectType={"expense"} />
-                    </TableCell>
-                  </TableRow>
-                ))}
+                      </TableCell>
+                      <TableCell component="th" scope="row" padding="none">
+                        {row.id}
+                      </TableCell>
+                      <TableCell align="right">{row.description}</TableCell>
+                      <TableCell align="right">
+                        <Chip
+                          size="small"
+                          label={`$${row.amount}`}
+                          sx={{ background: "#e1243e", color: "#fff" }}
+                        />
+                      </TableCell>
+                      <TableCell align="right">{row.expenseGroup}</TableCell>
+                      <TableCell align="right">
+                        <ExpenseEditModal id={row.id} objectType={""} />
+                        <DeleteModal id={row.id} objectType={"expense"} />
+                      </TableCell>
+                    </TableRow>
+                  ))}
               <TableRow
                 style={{
                   height: (dense ? 33 : 53) * emptyRows,

@@ -1,7 +1,7 @@
 import { useDarkMode } from "../contexts/DarkModeContext";
 
 export default function Testimonials() {
-  const { darkMode } = useDarkMode()
+  const { darkMode } = useDarkMode();
 
   return (
     <section className="py-12  sm:py-16 lg:py-20 ">
@@ -11,7 +11,13 @@ export default function Testimonials() {
             <p className="text-lg font-medium text-gray-600 font-pj">
               129+ people have said how good ExpenseTracker is
             </p>
-            <h2 className={darkMode ? 'mt-4 text-3xl font-bold text-white sm:text-4xl xl:text-5xl font-pj' : 'mt-4 text-3xl font-bold text-gray-900 sm:text-4xl xl:text-5xl font-pj'}>
+            <h2
+              className={
+                darkMode
+                  ? "mt-4 text-3xl font-bold text-white sm:text-4xl xl:text-5xl font-pj"
+                  : "mt-4 text-3xl font-bold text-gray-900 sm:text-4xl xl:text-5xl font-pj"
+              }
+            >
               Our happy clients said about us
             </h2>
           </div>
@@ -34,7 +40,9 @@ export default function Testimonials() {
 
             <div className="relative grid max-w-lg grid-cols-1 gap-6 mx-auto md:max-w-none lg:gap-10 md:grid-cols-3">
               <div className="flex flex-col overflow-hidden shadow-xl hover:scale-105 duration-300">
-                <div className={`flex flex-col justify-between flex-1 p-6 ${!darkMode ? 'bg-white' : 'bg-[#ededed]'} lg:py-8 lg:px-7`}>
+                <div
+                  className={`flex flex-col justify-between flex-1 p-6 ${!darkMode ? "bg-white" : "bg-[#ededed]"} lg:py-8 lg:px-7`}
+                >
                   <div className="flex-1">
                     <div className="flex items-center">
                       <svg
@@ -109,7 +117,9 @@ export default function Testimonials() {
               </div>
 
               <div className="flex flex-col overflow-hidden shadow-xl hover:scale-105 duration-300">
-                <div className={`flex flex-col justify-between flex-1 p-6 ${!darkMode ? 'bg-white' : 'bg-[#ededed]'} lg:py-8 lg:px-7`}>
+                <div
+                  className={`flex flex-col justify-between flex-1 p-6 ${!darkMode ? "bg-white" : "bg-[#ededed]"} lg:py-8 lg:px-7`}
+                >
                   <div className="flex-1">
                     <div className="flex items-center">
                       <svg
@@ -183,7 +193,9 @@ export default function Testimonials() {
               </div>
 
               <div className="flex flex-col overflow-hidden shadow-xl hover:scale-105 duration-300">
-                <div className={`flex flex-col justify-between flex-1 p-6 ${!darkMode ? 'bg-white' : 'bg-[#ededed]'} lg:py-8 lg:px-7`}>
+                <div
+                  className={`flex flex-col justify-between flex-1 p-6 ${!darkMode ? "bg-white" : "bg-[#ededed]"} lg:py-8 lg:px-7`}
+                >
                   <div className="flex-1">
                     <div className="flex items-center">
                       <svg

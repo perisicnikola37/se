@@ -108,7 +108,11 @@ const Dashboard = () => {
               Your last <span className="text-[#2563EB]">week</span> summary
             </motion.h4>
             <motion.p
-              className={darkMode ? '_main-text_paragraph mt-3 text-gray-300' : '_main-text_paragraph mt-3 text-gray-500'}
+              className={
+                darkMode
+                  ? "_main-text_paragraph mt-3 text-gray-300"
+                  : "_main-text_paragraph mt-3 text-gray-500"
+              }
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.8 }}

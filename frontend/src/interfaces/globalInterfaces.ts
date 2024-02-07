@@ -1,5 +1,5 @@
-import { MouseEvent, ChangeEvent } from 'react';
-import { Order } from '../types/globalTypes';
+import { MouseEvent, ChangeEvent } from "react";
+import { Order } from "../types/globalTypes";
 export interface StatisticsResponse {
   expenses: { [date: string]: number };
   incomes: { [date: string]: number };
@@ -297,10 +297,7 @@ export interface ResetPasswordHookInterface {
 
 export interface EnhancedTableProps {
   numSelected: number;
-  onRequestSort: (
-    event: MouseEvent<unknown>,
-    property: keyof Data,
-  ) => void;
+  onRequestSort: (event: MouseEvent<unknown>, property: keyof Data) => void;
   onSelectAllClick: (event: ChangeEvent<HTMLInputElement>) => void;
   order: Order;
   orderBy: keyof Data;

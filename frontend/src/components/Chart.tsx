@@ -17,9 +17,9 @@ const Chart = () => {
   const { isLoggedIn } = useUser();
   const data = isLoggedIn()
     ? generateData(
-      expenses.map((e) => e.amount),
-      incomes.map((i) => i.amount),
-    )
+        expenses.map((e) => e.amount),
+        incomes.map((i) => i.amount),
+      )
     : generateLoremData();
 
   useEffect(() => {

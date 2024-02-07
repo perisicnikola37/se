@@ -12,7 +12,7 @@ const Incomes = () => {
   useEffect(() => {
     loadObjects(appliedFilters, "income");
     window.scrollTo({
-      top: 0
+      top: 0,
     });
   }, [actionChange, appliedFilters]);
 

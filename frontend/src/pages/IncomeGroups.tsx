@@ -13,7 +13,7 @@ const IncomeGroups = () => {
   useEffect(() => {
     fetchObjectGroups();
     window.scrollTo({
-      top: 0
+      top: 0,
     });
   }, [actionChange]);
 

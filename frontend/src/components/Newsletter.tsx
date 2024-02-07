@@ -8,7 +8,7 @@ const Newsletter = () => {
   const [isSubscribed, setIsSubscribed] = useState(false);
   const [email, setEmail] = useState("");
   const [isEmailValid, setIsEmailValid] = useState(true);
-  const { darkMode } = useDarkMode()
+  const { darkMode } = useDarkMode();
 
   useEffect(() => {
     const storedSubscriptionStatus = localStorage.getItem("isSubscribed");
@@ -30,10 +30,14 @@ const Newsletter = () => {
   };
 
   return (
-    <section className={`bg-${darkMode ? 'transparent' : 'white'} text-${darkMode ? 'white' : 'black'} mb-10 lg:mb-0`}>
+    <section
+      className={`bg-${darkMode ? "transparent" : "white"} text-${darkMode ? "white" : "black"} mb-10 lg:mb-0`}
+    >
       <div className="py-8 px-4 mx-auto max-w-screen-xl lg:py-16 lg:px-6">
         <div className="mx-auto max-w-screen-md sm:text-center">
-          <h2 className={`mb-4 text-3xl tracking-tight font-extrabold ${darkMode ? 'text-white' : 'text-gray-900'} sm:text-4xl`}>
+          <h2
+            className={`mb-4 text-3xl tracking-tight font-extrabold ${darkMode ? "text-white" : "text-gray-900"} sm:text-4xl`}
+          >
             Sign up for our newsletter
           </h2>
           <p className="mx-auto mb-8 max-w-2xl font-light text-gray-500 md:mb-12 sm:text-xl">
@@ -61,8 +65,9 @@ const Newsletter = () => {
                     ></svg>
                   </div>
                   <input
-                    className={`block p-3 lg:pl-10 sm:pl-3 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 sm:rounded-none sm:rounded-l-lg outline-none ${isEmailValid ? "" : "border-red-500"
-                      }`}
+                    className={`block p-3 lg:pl-10 sm:pl-3 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 sm:rounded-none sm:rounded-l-lg outline-none ${
+                      isEmailValid ? "" : "border-red-500"
+                    }`}
                     placeholder="Enter your email"
                     type="email"
                     id="email"

@@ -27,7 +27,11 @@ const Mailchimp = ({ imageUrl }: MailChimpProps) => {
           </span>{" "}
           {languageConfig.mailchimpHeading2}
         </h1>
-        <p className={darkMode ? 'text-white mt-5 lg:mt-0' : 'text-gray-500 mt-5 lg:mt-0'}>
+        <p
+          className={
+            darkMode ? "text-white mt-5 lg:mt-0" : "text-gray-500 mt-5 lg:mt-0"
+          }
+        >
           {languageConfig.mailchimpText}
         </p>
       </div>

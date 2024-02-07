@@ -6,7 +6,7 @@ import { useDarkMode } from "../../contexts/DarkModeContext";
 
 const EmailExport = ({ imageUrl }: EmailExportProps) => {
   const { language } = useModal();
-  const { darkMode } = useDarkMode()
+  const { darkMode } = useDarkMode();
 
   const languageConfig = (config as unknown as Config)[language];
 
@@ -19,7 +19,11 @@ const EmailExport = ({ imageUrl }: EmailExportProps) => {
           </span>{" "}
           {languageConfig.emailExportHeading2}
         </h1>
-        <p className={darkMode ? 'text-white mt-5 lg:mt-0' : 'text-gray-500 mt-5 lg:mt-0'}>
+        <p
+          className={
+            darkMode ? "text-white mt-5 lg:mt-0" : "text-gray-500 mt-5 lg:mt-0"
+          }
+        >
           {languageConfig.emailExportText}
         </p>
       </div>

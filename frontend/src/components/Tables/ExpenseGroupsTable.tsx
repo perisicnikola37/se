@@ -1,4 +1,4 @@
-import { ChangeEvent, useMemo, useState, MouseEvent } from "react"
+import { ChangeEvent, useMemo, useState, MouseEvent } from "react";
 import { alpha } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import Table from "@mui/material/Table";
@@ -108,10 +108,7 @@ const headCells: readonly HeadCell[] = [
 
 interface EnhancedTableProps {
   numSelected: number;
-  onRequestSort: (
-    event: MouseEvent<unknown>,
-    property: keyof Data,
-  ) => void;
+  onRequestSort: (event: MouseEvent<unknown>, property: keyof Data) => void;
   onSelectAllClick: (event: ChangeEvent<HTMLInputElement>) => void;
   order: Order;
   orderBy: keyof Data;
@@ -302,10 +299,7 @@ function EnhancedTable({
     return () => clearTimeout(timeout);
   }, []);
 
-  const handleRequestSort = (
-    _: MouseEvent<unknown>,
-    property: keyof Data,
-  ) => {
+  const handleRequestSort = (_: MouseEvent<unknown>, property: keyof Data) => {
     const isAsc = orderBy === property && order === "asc";
     setOrder(isAsc ? "desc" : "asc");
     setOrderBy(property);
@@ -324,9 +318,7 @@ function EnhancedTable({
     setPage(newPage);
   };
 
-  const handleChangeRowsPerPage = (
-    event: ChangeEvent<HTMLInputElement>,
-  ) => {
+  const handleChangeRowsPerPage = (event: ChangeEvent<HTMLInputElement>) => {
     setRowsPerPage(parseInt(event.target.value));
     setPage(0);
   };
@@ -365,40 +357,40 @@ function EnhancedTable({
             <TableBody>
               {loading
                 ? Array.from({
-                  length: rowsPerPage,
-                }).map((_, index) => <LoadingTableRow key={index} />)
+                    length: rowsPerPage,
+                  }).map((_, index) => <LoadingTableRow key={index} />)
                 : visibleRows.map((row) => (
-                  <TableRow
-                    hover
-                    role="checkbox"
-                    aria-checked={isSelected(row.id)}
-                    tabIndex={-1}
-                    key={row.id}
-                    selected={isSelected(row.id)}
-                    sx={{ cursor: "pointer" }}
-                  >
-                    <TableCell padding="checkbox"></TableCell>
-                    <TableCell component="th" scope="row" padding="none">
-                      {row.id}
-                    </TableCell>
-                    <TableCell align="right">
-                      <Link
-                        to={`${row.id}`}
-                        className="hover:text-[#2563EB] transition-colors duration-300"
-                      >
-                        {row.name}
-                      </Link>
-                    </TableCell>
-                    <TableCell align="right">{row.description}</TableCell>
-                    <TableCell align="right">
-                      <ExpenseGroupEditModal id={row.id} objectType={""} />
-                      <DeleteObjectGroupModal
-                        id={row.id}
-                        objectType={"expense"}
-                      />
-                    </TableCell>
-                  </TableRow>
-                ))}
+                    <TableRow
+                      hover
+                      role="checkbox"
+                      aria-checked={isSelected(row.id)}
+                      tabIndex={-1}
+                      key={row.id}
+                      selected={isSelected(row.id)}
+                      sx={{ cursor: "pointer" }}
+                    >
+                      <TableCell padding="checkbox"></TableCell>
+                      <TableCell component="th" scope="row" padding="none">
+                        {row.id}
+                      </TableCell>
+                      <TableCell align="right">
+                        <Link
+                          to={`${row.id}`}
+                          className="hover:text-[#2563EB] transition-colors duration-300"
+                        >
+                          {row.name}
+                        </Link>
+                      </TableCell>
+                      <TableCell align="right">{row.description}</TableCell>
+                      <TableCell align="right">
+                        <ExpenseGroupEditModal id={row.id} objectType={""} />
+                        <DeleteObjectGroupModal
+                          id={row.id}
+                          objectType={"expense"}
+                        />
+                      </TableCell>
+                    </TableRow>
+                  ))}
               <TableRow
                 style={{
                   height: (dense ? 33 : 53) * emptyRows,

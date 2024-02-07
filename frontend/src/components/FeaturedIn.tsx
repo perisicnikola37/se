@@ -5,13 +5,19 @@ import { useDarkMode } from "../contexts/DarkModeContext";
 
 const FeaturedInSection = () => {
   const { language } = useModal();
-  const { darkMode } = useDarkMode()
+  const { darkMode } = useDarkMode();
 
   const languageConfig = (config as unknown as Config)[language];
 
   return (
     <div className="max-w-4xl mt-10 lg:mt-28 mx-auto text-center select-none">
-      <h2 className={darkMode ? 'text-xl font-semibold -tracking-tight mb-4 text-white uppercase' : 'text-xl font-semibold -tracking-tight mb-4 text-gray-500 uppercase'}>
+      <h2
+        className={
+          darkMode
+            ? "text-xl font-semibold -tracking-tight mb-4 text-white uppercase"
+            : "text-xl font-semibold -tracking-tight mb-4 text-gray-500 uppercase"
+        }
+      >
         {languageConfig.featuredIn}
       </h2>
 
