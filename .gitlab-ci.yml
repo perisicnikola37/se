@@ -12,6 +12,7 @@ before_script:
   - 'dotnet --version' 
   - 'dotnet restore $SOLUTION_PATH/Solution.sln'
   - apt-get update -qy
+  - apt-get docker
   - apt-get install docker-compose -y
 
 build:
