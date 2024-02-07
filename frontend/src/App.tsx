@@ -64,7 +64,7 @@ function App() {
   }, [setLoadingState]);
 
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className={darkMode ? 'flex flex-col min-h-screen bg-[#111827]' : 'flex flex-col min-h-screen'}>
       <div className="flex-grow">
         {loading ? (
           <div className="flex justify-center items-center h-screen">

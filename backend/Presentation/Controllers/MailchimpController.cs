@@ -1,4 +1,5 @@
 using Contracts.Dto;
+using Domain.ValidationAttributes;
 using MailChimp.Net;
 using MailChimp.Net.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -26,6 +27,7 @@ public class MailchimpController : ControllerBase
 	}
 
 	[HttpPost("subscribe")]
+	[AllowAnonymous]
 	public async Task<IActionResult> Subscribe([FromBody] SubscriberRequest model)
 	{
 		try

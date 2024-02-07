@@ -2,9 +2,11 @@ import { useModal } from "../../contexts/GlobalContext";
 import { MailChimpProps } from "../../interfaces/globalInterfaces";
 import config from "../../config/config.json";
 import { Config } from "../../types/TranslationTypes";
+import { useDarkMode } from "../../contexts/DarkModeContext";
 
 const Mailchimp = ({ imageUrl }: MailChimpProps) => {
   const { language } = useModal();
+  const { darkMode } = useDarkMode();
 
   const languageConfig = (config as unknown as Config)[language];
 
@@ -15,7 +17,7 @@ const Mailchimp = ({ imageUrl }: MailChimpProps) => {
           src={imageUrl}
           alt="Mailchimp Logo"
           className="max-w-full h-auto md:max-h-full object-cover hidden md:block"
-          style={{ width: "300px", height: "auto" }}
+          style={{ width: "270px", height: "auto" }}
         />
       </div>
       <div className="w-full md:w-3/4 p-4 md:p-20  md:pl-8  md:ml-8 mt-4 md:mt-0">
@@ -25,7 +27,7 @@ const Mailchimp = ({ imageUrl }: MailChimpProps) => {
           </span>{" "}
           {languageConfig.mailchimpHeading2}
         </h1>
-        <p className="text-gray-500 mt-5 lg:mt-0">
+        <p className={darkMode ? 'text-white mt-5 lg:mt-0' : 'text-gray-500 mt-5 lg:mt-0'}>
           {languageConfig.mailchimpText}
         </p>
       </div>

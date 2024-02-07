@@ -7,7 +7,7 @@ COPY . .
 RUN dotnet restore
 
 WORKDIR /app
-
+# build?
 RUN dotnet publish -c Release -o out
 
 # Runtime stage

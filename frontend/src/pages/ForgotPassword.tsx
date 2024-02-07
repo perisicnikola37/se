@@ -31,7 +31,6 @@ const ForgotPassword = () => {
     try {
       await forgotPassword(email);
     } catch (error) {
-      console.error(error);
       setErrorMessage("An unexpected error occurred. Please try again.");
     }
   };

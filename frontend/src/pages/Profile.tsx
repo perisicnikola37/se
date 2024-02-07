@@ -7,10 +7,12 @@ import useDeleteAccount from "../hooks/Authentication/DeleteAccountHook";
 import BorderLinearProgress from "../components/Progress";
 import { Button } from "@mui/material";
 import CountUp from "react-countup";
+import { useDarkMode } from "../contexts/DarkModeContext";
 
 const Profile = () => {
   const { loadCurrentUser, user } = useCurrentUser();
   const { deleteAccount } = useDeleteAccount();
+  const { darkMode } = useDarkMode();
 
   useEffect(() => {
     loadCurrentUser();
@@ -47,7 +49,7 @@ const Profile = () => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.5 }}
-          className="p-8 bg-white shadow mt-24"
+          className={`p-8 ${darkMode ? 'bg-[#262D3B] text-white' : 'bg-white text-black'} shadow mt-24`}
         >
           <div className="grid grid-cols-1 md:grid-cols-3">
             <div className="grid grid-cols-3 text-center order-last md:order-first mt-20 md:mt-0">
@@ -55,19 +57,19 @@ const Profile = () => {
                 <p className="font-bold text-red-500 text-xl">
                   <CountUp end={user?.expenses ? user.expenses.length : 0} />
                 </p>
-                <p className="text-gray-400">Expenses</p>
+                <p className={darkMode ? 'text-white' : 'text-gray-400'}>Expenses</p>
               </div>
               <div>
                 <p className="font-bold text-green-500 text-xl">
                   <CountUp end={user?.incomes ? user.incomes.length : 0} />
                 </p>
-                <p className="text-gray-400">Incomes</p>
+                <p className={darkMode ? 'text-white' : 'text-gray-400'}>Incomes</p>
               </div>
               <div>
                 <p className="font-bold text-[#2563EB] text-xl">
                   $<CountUp end={totalIncome} />
                 </p>
-                <p className="text-gray-400">Total revenue</p>
+                <p className={darkMode ? 'text-white' : 'text-gray-400'}>Total revenue</p>
               </div>
             </div>
 
@@ -101,7 +103,7 @@ const Profile = () => {
           </div>
 
           <div className="mt-20 text-center border-b pb-12">
-            <h1 className="text-4xl font-medium text-gray-700 mb-3">
+            <h1 className={darkMode ? 'text-white text-4xl font-medium mb-3' : 'text-gray-700 text-4xl font-medium mb-3'}>
               {user?.username}
             </h1>
             <a
@@ -110,21 +112,21 @@ const Profile = () => {
             >
               {user?.email}
             </a>
-            <p className="font-light text-gray-600 mt-3">
+            <p className={darkMode ? 'text-white font-light mt-3' : 'text-gray-600 font-light mt-3'}>
               Podgorica, Montenegro
             </p>
             <div className="mt-10 text-center">
-              <h3 className="mb-3 text-2xl font-semibold text-gray-700">
+              <h1 className={darkMode ? 'text-white text-2xl font-medium mb-3' : 'text-gray-700 text-4xl font-medium mb-3'}>
                 Basic Plan
-              </h3>
-              <p className="text-gray-600 mb-2">
+              </h1>
+              <p className={darkMode ? 'text-white font-light mb-2' : 'text-gray-600 font-light mb-2'}>
                 You can add up to {100 - totalProgress} more expenses/incomes
               </p>
               <BorderLinearProgress
                 variant="determinate"
                 value={totalProgress}
               />
-              <p className="mt-2 text-lg font-medium text-gray-700">
+              <p className={darkMode ? 'text-white mt-2 text-lg font-medium' : 'text-gray-700 mt-2 text-lg font-medium'}>
                 {totalProgress}% Complete
               </p>
             </div>

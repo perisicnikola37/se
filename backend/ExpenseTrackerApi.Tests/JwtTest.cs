@@ -16,8 +16,8 @@ public class JwtTokenGeneratorTests
         _configuration = new ConfigurationBuilder()
             .AddInMemoryCollection(new Dictionary<string, string>
             {
-                { "Jwt:Issuer", "https://joydipkanjilal.com/" },
-                { "Jwt:Audience", "https://joydipkanjilal.com/" },
+                { "Jwt:Issuer", "https://perisicnikola.com/" },
+                { "Jwt:Audience", "https://perisicnikola.com/" },
                 { "Jwt:Key", GetJwtKey() }
             }!)
             .Build();

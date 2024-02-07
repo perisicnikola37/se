@@ -17,11 +17,12 @@ import { Helmet } from "react-helmet";
 import { useModal } from "../contexts/GlobalContext";
 import config from "../config/config.json";
 import { Config } from "../types/TranslationTypes";
-// import ContactUs from "../components/ContactUs";
+import { useDarkMode } from "../contexts/DarkModeContext";
 
 const Dashboard = () => {
   const { isLoggedIn } = useUser();
   const { language } = useModal();
+  const { darkMode } = useDarkMode();
 
   const languageConfig = (config as unknown as Config)[language];
 
@@ -35,6 +36,14 @@ const Dashboard = () => {
     fontVariantNumeric: "normal",
     fontWeight: "800",
   };
+
+  const mailchimpUrl = darkMode
+    ? "https://i.postimg.cc/445VyrZv/mailchimp-icon-1811x2048-u8tnp53p.png"
+    : "https://1000logos.net/wp-content/uploads/2023/04/Mailchimp-logo.png";
+
+  const emailExportUrl = darkMode
+    ? "https://i.postimg.cc/1tdVSZDs/gmail.png"
+    : "https://i.postimg.cc/d098fSsM/removed.png";
 
   return (
     <div className="flex-grow flex flex-col items-center justify-center min-h-screen">
@@ -99,7 +108,7 @@ const Dashboard = () => {
               Your last <span className="text-[#2563EB]">week</span> summary
             </motion.h4>
             <motion.p
-              className="_main-text_paragraph mt-3 text-gray-500"
+              className={darkMode ? '_main-text_paragraph mt-3 text-gray-300' : '_main-text_paragraph mt-3 text-gray-500'}
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.8 }}
@@ -142,8 +151,8 @@ const Dashboard = () => {
 
       <FeaturedInSection />
 
-      <MailChimp imageUrl="https://1000logos.net/wp-content/uploads/2023/04/Mailchimp-logo.png" />
-      <EmailExport imageUrl="https://i.postimg.cc/d098fSsM/removed.png" />
+      <MailChimp imageUrl={mailchimpUrl} />
+      <EmailExport imageUrl={emailExportUrl} />
       <Pricing />
 
       <Testimonials />
@@ -151,8 +160,6 @@ const Dashboard = () => {
       <FAQ />
 
       <Newsletter />
-
-      {/* <ContactUs /> */}
     </div>
   );
 };

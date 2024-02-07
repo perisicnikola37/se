@@ -204,7 +204,7 @@ const NavBar = () => {
               />
             )}
 
-            <div className="text-black mr-5">
+            <div className={darkMode ? 'text-white mr-5' : 'text-black mr-5'}>
               <span
                 className="cursor-pointer hover:text-[#2563EB] duration-300"
                 onClick={() => handleLanguageClick("EN")}
@@ -292,7 +292,7 @@ const NavBar = () => {
             )}
           </Toolbar>
         </Container>
-      </AppBar>
+      </AppBar >
     </>
   );
 };
