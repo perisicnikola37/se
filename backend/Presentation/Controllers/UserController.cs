@@ -58,7 +58,7 @@ public class UserController(
         {
             if (!UserExists(id))
                 return NotFound();
-            throw new ConflictException("UserController.cs");
+            throw new ConflictException();
         }
 
         return NoContent();

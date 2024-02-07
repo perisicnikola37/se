@@ -198,7 +198,7 @@ public class IncomeService(
 				catch (ConflictException)
 				{
 					if (!IncomeExists(id)) return new NotFoundResult();
-					throw new ConflictException("IncomeService.cs");
+					throw new ConflictException();
 				}
 
 				return new NoContentResult();

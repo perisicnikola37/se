@@ -1,7 +1,6 @@
 namespace Domain.Exceptions
 {
-    public class ConflictException(string fileName) : Exception($"Conflict.")
+    public class ConflictException() : Exception("Conflict occurred.")
     {
-        public string FileName { get; } = fileName;
     }
 }

@@ -141,7 +141,7 @@ public class IncomeGroupService(DatabaseContext context, IValidator<IncomeGroup>
 			{
 				if (!IncomeGroupExists(id)) return new NotFoundResult();
 
-				throw new ConflictException("IncomeGroupService.cs");
+				throw new ConflictException();
 			}
 			return new NoContentResult();
 		}

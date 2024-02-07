@@ -41,7 +41,7 @@ public class AuthController(
 		{
 			logger.LogError(ex, "An error occurred during login.");
 
-			throw new DatabaseException("AuthController.cs");
+			throw new DatabaseException();
 		}
 	}
 
@@ -68,7 +68,7 @@ public class AuthController(
 		{
 			logger.LogError(ex, "An error occurred during user registration.");
 
-			throw new DatabaseException("AuthController.cs");
+			throw new DatabaseException();
 		}
 	}
 
@@ -83,7 +83,7 @@ public class AuthController(
 		{
 			logger.LogError(ex, "An error occurred while getting the current user.");
 
-			throw new DatabaseException("AuthController.cs");
+			throw new DatabaseException();
 		}
 	}
 
@@ -106,7 +106,7 @@ public class AuthController(
 		catch (Exception ex)
 		{
 			logger.LogError(ex, "An error occurred during forgot password request.");
-			throw new DatabaseException("AuthController.cs");
+			throw new DatabaseException();
 		}
 	}
 
@@ -132,7 +132,7 @@ public class AuthController(
 		catch (Exception ex)
 		{
 			logger.LogError(ex, "An error occurred during password reset.");
-			throw new DatabaseException("AuthController.cs");
+			throw new DatabaseException();
 		}
 	}
 }

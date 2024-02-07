@@ -40,7 +40,7 @@ public class EmailService(IConfiguration configuration) : IEmailService
         {
             Console.WriteLine(e);
 
-            throw new EmailException("EmailService.cs");
+            throw new EmailException();
         }
     }
 
@@ -78,7 +78,7 @@ public class EmailService(IConfiguration configuration) : IEmailService
         {
             Console.WriteLine(e);
 
-            throw new EmailException("EmailService.cs");
+            throw new EmailException();
         }
     }
 }

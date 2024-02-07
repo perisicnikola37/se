@@ -25,11 +25,4 @@
         <ProjectReference Include="..\Infrastructure\Infrastructure.csproj" />
         <ProjectReference Include="..\Service\Service.csproj" />
     </ItemGroup>
-
-    <ItemGroup>
-        <Reference Include="AutoMapper">
-            <HintPath>..\..\..\..\..\.nuget\packages\automapper\12.0.1\lib\netstandard2.1\AutoMapper.dll</HintPath>
-        </Reference>
-    </ItemGroup>
-
 </Project>

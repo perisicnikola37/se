@@ -140,7 +140,7 @@ public class ExpenseGroupService(DatabaseContext context, IValidator<ExpenseGrou
 			{
 				if (!ExpenseGroupExists(id)) return new NotFoundResult();
 
-				throw new ConflictException("ExpenseGroupService.cs");
+				throw new ConflictException();
 			}
 			return new NoContentResult();
 		}

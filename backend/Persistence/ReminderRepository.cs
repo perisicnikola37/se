@@ -17,7 +17,7 @@ public class ReminderRepository(DatabaseContext context, ILogger<Reminder> logge
         catch (Exception ex)
         {
             logger.LogError($"GetRemindersAsync: An error occurred. Error: {ex.Message}");
-            throw new DatabaseException("ReminderRepository.cs");
+            throw new DatabaseException();
         }
     }
 
@@ -30,7 +30,7 @@ public class ReminderRepository(DatabaseContext context, ILogger<Reminder> logge
         catch (Exception ex)
         {
             logger.LogError($"GetReminderAsync: An error occurred. Error: {ex.Message}");
-            throw new DatabaseException("ReminderRepository.cs");
+            throw new DatabaseException();
         }
     }
 
@@ -43,7 +43,7 @@ public class ReminderRepository(DatabaseContext context, ILogger<Reminder> logge
         catch (Exception ex)
         {
             logger.LogError($"ReminderExistsAsync: An error occurred. Error: {ex.Message}");
-            throw new DatabaseException("ReminderRepository.cs");
+            throw new DatabaseException();
         }
     }
 
@@ -57,7 +57,7 @@ public class ReminderRepository(DatabaseContext context, ILogger<Reminder> logge
         catch (Exception ex)
         {
             logger.LogError($"UpdateReminderAsync: An error occurred. Error: {ex.Message}");
-            throw new DatabaseException("ReminderRepository.cs");
+            throw new DatabaseException();
         }
     }
 
@@ -71,7 +71,7 @@ public class ReminderRepository(DatabaseContext context, ILogger<Reminder> logge
         catch (Exception ex)
         {
             logger.LogError($"CreateReminderAsync: An error occurred. Error: {ex.Message}");
-            throw new DatabaseException("ReminderRepository.cs");
+            throw new DatabaseException();
         }
     }
 
@@ -86,7 +86,7 @@ public class ReminderRepository(DatabaseContext context, ILogger<Reminder> logge
         catch (Exception ex)
         {
             logger.LogError($"DeleteReminderAsync: An error occurred. Error: {ex.Message}");
-            throw new DatabaseException("ReminderRepository.cs");
+            throw new DatabaseException();
         }
     }
 }

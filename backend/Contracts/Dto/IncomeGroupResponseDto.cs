@@ -1,4 +1,4 @@
-using Contracts.Dto;
+namespace Contracts.Dto;
 
 public class IncomeGroupResponseDto
 {

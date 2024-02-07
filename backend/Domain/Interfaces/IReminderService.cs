@@ -1,4 +1,4 @@
-using Contracts.Dto.Reminders;
+using Contracts.Dto;
 using Domain.Models;
 using Microsoft.AspNetCore.Mvc;
 

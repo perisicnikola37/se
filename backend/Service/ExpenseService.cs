@@ -200,7 +200,7 @@ public class ExpenseService(
 				catch (ConflictException)
 				{
 					if (!ExpenseExists(id)) return new NotFoundResult();
-					throw new ConflictException("ExpenseService.cs");
+					throw new ConflictException();
 				}
 
 				return new NoContentResult();

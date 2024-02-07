@@ -1,4 +1,4 @@
-using Contracts.Dto.Reminders;
+using Contracts.Dto;
 using Domain.Exceptions;
 using Domain.Interfaces;
 using Domain.Models;
@@ -26,7 +26,7 @@ public class ReminderService(
         catch (Exception ex)
         {
             logger.LogError($"GetRemindersAsync: An error occurred. Error: {ex.Message}");
-            throw new DatabaseException("ReminderService.cs");
+            throw new DatabaseException();
         }
     }
 
@@ -50,7 +50,7 @@ public class ReminderService(
         catch (Exception ex)
         {
             logger.LogError($"GetReminderAsync: An error occurred. Error: {ex.Message}");
-            throw new DatabaseException("ReminderService.cs");
+            throw new DatabaseException();
         }
     }
 
@@ -72,7 +72,7 @@ public class ReminderService(
         catch (Exception ex)
         {
             logger.LogError($"CreateReminderAsync: An error occurred. Error: {ex.Message}");
-            throw new DatabaseException("ReminderService.cs");
+            throw new DatabaseException();
         }
     }
 
@@ -93,12 +93,12 @@ public class ReminderService(
             logger.LogError($"UpdateReminderAsync: Concurrency conflict occurred. Error: {ex.Message}");
             if (!await reminderRepository.ReminderExistsAsync(id))
                 return new NotFoundResult();
-            throw new ConflictException("ReminderService.cs");
+            throw new ConflictException();
         }
         catch (Exception ex)
         {
             logger.LogError($"UpdateReminderAsync: An error occurred. Error: {ex.Message}");
-            throw new DatabaseException("ReminderService.cs");
+            throw new DatabaseException();
         }
     }
 
@@ -121,12 +121,12 @@ public class ReminderService(
         catch (ConflictException ex)
         {
             logger.LogError($"DeleteReminderAsync: Concurrency conflict occurred. Error: {ex.Message}");
-            throw new ConflictException("ReminderService.cs");
+            throw new ConflictException();
         }
         catch (Exception ex)
         {
             logger.LogError($"DeleteReminderAsync: An error occurred. Error: {ex.Message}");
-            throw new DatabaseException("ReminderService.cs");
+            throw new DatabaseException();
         }
     }
 }

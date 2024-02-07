@@ -158,7 +158,7 @@ public class BlogService(
 				catch (Exception)
 				{
 					if (!BlogExists(id)) return new NotFoundResult();
-					throw new ConflictException("BlogService.cs");
+					throw new ConflictException();
 				}
 
 				return new NoContentResult();
@@ -194,7 +194,7 @@ public class BlogService(
 		catch (ConflictException ex)
 		{
 			logger.LogError($"DeleteBlogAsync: Concurrency conflict occurred. Error: {ex.Message}");
-			throw new ConflictException("BlogService.cs");
+			throw new ConflictException();
 		}
 		catch (Exception ex)
 		{
