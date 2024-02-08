@@ -309,3 +309,7 @@ export interface Data {
   name: string;
   description: string;
 }
+
+export interface ScrollToTopButtonProps {
+  onClick: React.MouseEventHandler;
+}
