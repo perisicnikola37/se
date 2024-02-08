@@ -48,6 +48,7 @@ public static class BuilderConfig
 		builder.Services.ConfigureServices();
 		builder.Services.ConfigureJwtAuthentication(builder.Configuration);
 		builder.Services.AddEndpointsApiExplorer();
+		builder.Services.ConfigureSwaggerGen();
 
 		// currently disabled
 		// builder.Services.ConfigureRateLimiter();

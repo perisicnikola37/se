@@ -1,5 +1,4 @@
-namespace ExpenseTrackerApi.conf;
-
+using ExpenseTrackerApi.conf;
 using ExpenseTrackerApi.Middlewares;
 
 public static class AppConfig
@@ -10,6 +9,8 @@ public static class AppConfig
 		app.ApplyRedirection();
 
 		// app.UseHttpLogging();
+
+		// handle default route path - redirection to swagger documentation
 
 		if (app.Environment.IsDevelopment())
 		{

@@ -1,5 +1,5 @@
-<kbd>[<img title="Engleski" alt="Engleski" src="https://upload.wikimedia.org/wikipedia/en/thumb/a/ae/Flag_of_the_United_Kingdom.svg/1200px-Flag_of_the_United_Kingdom.svg.png" width="22">](translations/README.en.md)</kbd>
-<kbd>[<img title="Italijanski" alt="Italijanski" src="https://upload.wikimedia.org/wikipedia/en/thumb/0/03/Flag_of_Italy.svg/1500px-Flag_of_Italy.svg.png" width="22">](translations/README.ita.md)</kbd>
+<kbd>[<img title="Italian" alt="Italian" src="https://upload.wikimedia.org/wikipedia/en/thumb/0/03/Flag_of_Italy.svg/1500px-Flag_of_Italy.svg.png" width="22">](translations/README.ita.md)</kbd>
+<kbd>[<img title="Spanish" alt="Spanish" src="https://cdn11.bigcommerce.com/s-hhbbk/images/stencil/1280x1280/products/854/42341/SPAN0001__19783.1580480313.png?c=2" width="22">](translations/README.spa.md)</kbd>
 
 <div style="display: flex; justify-content: space-between; align-items: center;">
   <h1>Expense Tracker</h1>
@@ -158,10 +158,15 @@ Password: password
    - Cancel button
 
 11. **Blogs (Premium Feature)**
+   - Button to create blog through a popup
    - Cards with all available blogs
    - Breadcrumb for easy navigation
 
-12. **Blog Details Page**
+12. **Blog Delete Popup**
+   - Save button
+   - Cancel button
+
+13. **Blog Details Page**
    - Title
    - Description
    - Author

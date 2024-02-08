@@ -1,14 +1,13 @@
 <kbd>[<img title="Inglese" alt="Inglese" src="https://upload.wikimedia.org/wikipedia/en/thumb/a/ae/Flag_of_the_United_Kingdom.svg/1200px-Flag_of_the_United_Kingdom.svg.png" width="22">](translations/README.en.md)</kbd>
-<kbd>[<img title="Italiano" alt="Italiano" src="https://upload.wikimedia.org/wikipedia/en/thumb/0/03/Flag_of_Italy.svg/1500px-Flag_of_Italy.svg.png" width="22">](translations/README.ita.md)</kbd>
 
 <div style="display: flex; justify-content: space-between; align-items: center;">
-  <h1>Expense Tracker</h1>
+  <h1>Gestore delle Spese</h1>
   <img src="https://i.postimg.cc/VsKQJpRb/logo.png" width="38" />
 </div>
 
 ### Panoramica
 
-Questa applicazione basata su .NET e React è progettata per aiutare gli utenti a gestire ed monitorare efficacemente le proprie spese e entrate. L'obiettivo è fornire una soluzione completa per organizzare transazioni finanziarie, generare report e offrire funzionalità premium aggiuntive per un'esperienza utente avanzata.
+Questa applicazione basata su .NET e React è progettata per aiutare gli utenti a gestire ed monitorare le loro spese e entrate in modo efficace. L'obiettivo è fornire una soluzione completa per organizzare transazioni finanziarie, generare report e offrire funzionalità premium aggiuntive per un'esperienza utente migliorata.
 
 ## Documentazione API Postman
 <a href="https://documenter.getpostman.com/view/21619259/2s9YsRd9TF#757dd6bd-9a08-40fd-b5f9-7b19dfaf9b81" target="_blank">Clicca qui</a>
@@ -29,18 +28,18 @@ Password: password
    - Visualizza l'importo corrente
    - Mostra gli ultimi 5 cambiamenti nelle spese
    - Mostra gli ultimi 5 cambiamenti nelle entrate
-   - Pulsanti per navigare alle pagine di elenco gruppi spese ed entrate
-   - Pulsante per aggiungere spese/entrate tramite un popup
+   - Pulsanti per navigare alle pagine di elenco gruppi di spese e entrate
+   - Pulsante per aggiungere spese/entrate attraverso un popup
 
 2. **Operazioni CRUD**
-   - Creare, Leggere, Aggiornare ed Eliminare spese
-   - Creare, Leggere, Aggiornare ed Eliminare entrate
-   - Creare, Leggere, Aggiornare ed Eliminare gruppi di entrate
-   - Creare, Leggere, Aggiornare ed Eliminare gruppi di spese
+   - Creare, leggere, aggiornare e eliminare spese
+   - Creare, leggere, aggiornare e eliminare entrate
+   - Creare, leggere, aggiornare e eliminare gruppi di entrate
+   - Creare, leggere, aggiornare e eliminare gruppi di spese
 
 ## Modelli di Database
 
-- **Gruppo Spese**
+- **Gruppo di Spese**
   - Nome
   - Descrizione
   - ID Utente
@@ -49,10 +48,10 @@ Password: password
 - **Spesa**
   - Descrizione
   - Importo
-  - ID Gruppo spese
+  - ID Gruppo di Spese
   - ID Utente
 
-- **Gruppo Entrate**
+- **Gruppo di Entrate**
   - Nome
   - Descrizione
   - ID Utente
@@ -61,15 +60,15 @@ Password: password
 - **Entrata**
   - Descrizione
   - Importo
-  - ID Gruppo entrate
+  - ID Gruppo di Entrate
   - ID Utente
 
-- **Promemoria** (Funzionalità Premium)
-  - Giorno promemoria
+- **Promemoria** (Funzione Premium)
+  - Giorno del promemoria
   - Tipo
   - Attivo (booleano)
 
-- **Blog** (Funzionalità Premium)
+- **Blog** (Funzione Premium)
   - Descrizione
   - Testo
   - ID Utente
@@ -77,17 +76,17 @@ Password: password
 ## Interfaccia Utente - UI
 
 1. **Dashboard**
-   - Riassunto della scorsa settimana - Grafico
+   - Riepilogo della settimana scorsa - Grafico
    - Ultimi 5 cambiamenti nelle spese + cambiamento grafico in relazione all'importo più alto delle spese
    - Ultimi 5 cambiamenti nelle entrate + cambiamento grafico in relazione all'importo più alto delle entrate
-   - Menu per navigare alle pagine di elenco gruppi spese ed entrate
+   - Menu per navigare alle pagine di elenco gruppi di spese e entrate
    - Piani personalizzati per il tuo percorso finanziario
    - Sezione testimonianze
-   - Sezione domande frequenti (FAQ)
-   - Sezione newsletter
-   - Piè di pagina con collegamenti correlati
+   - Sezione Domande frequenti (FAQ)
+   - Sezione Newsletter
+   - Piè di pagina con link correlati
 
-2. **Pagina Elenco Entrate/Spese**
+2. **Pagina di Elenco Entrate/Spese**
    - Tabella
      - Id
      - Nome (descrizione)
@@ -97,10 +96,10 @@ Password: password
    - Pulsante checkbox per selezionare tutte le entrate/spese disponibili
    - Pulsante icona Elimina per eliminare tutte le entrate/spese disponibili
    - Frecce di ordinamento per ordinare tutte le entrate/spese disponibili
-   - Pulsante per aggiungere entrate/spese tramite popup
+   - Pulsante per aggiungere entrate/spese attraverso un popup
    - Campo di input di ricerca per cercare entrate/spese
-   - Menù a discesa per filtrare entrate/spese
-   - Opzioni di filtro disponibili: Importo minimo, Importo massimo e filtro per gruppo entrate/spese (nome)
+   - Menu a discesa filtro per filtrare entrate/spese
+   - Opzioni di filtro disponibili: Importo minimo, importo massimo e filtro per gruppo di entrate/spese (nome)
    - Pulsante per esportare le statistiche via email
    - Opzioni di paginazione per paginare entrate/spese
    - Funzionalità "Righe per pagina" per mostrare un certo numero di entrate/spese
@@ -109,7 +108,7 @@ Password: password
    - Campo nome modificabile
    - Campo descrizione modificabile
    - Campo importo modificabile
-   - Campo gruppo entrate modificabile
+   - Campo gruppo di entrate modificabile
    - Pulsante Salva
    - Pulsante Annulla
 
@@ -117,20 +116,20 @@ Password: password
    - Pulsante Salva
    - Pulsante Annulla
 
-5. **Pagina Elenco Gruppi Entrate/Spese**
+5. **Pagina di Elenco Gruppi Entrate/Spese**
    - Tabella
      - Id
      - Nome
      - Descrizione
      - Pulsanti Modifica ed Elimina
-   - Pulsante checkbox per selezionare tutti i gruppi entrate/spese disponibili
-   - Pulsante icona Elimina per eliminare tutti i gruppi entrate/spese disponibili
-   - Frecce di ordinamento per ordinare tutti i gruppi entrate/spese disponibili
-   - Pulsante per aggiungere gruppi entrate/spese tramite popup
-   - Opzioni di paginazione per paginare gruppi entrate/spese
-   - Funzionalità "Righe per pagina" per mostrare un certo numero di gruppi entrate/spese
-   - Modale di eliminazione con opzioni di conferma e annulla
-   - Nome cliccabile del gruppo entrate/spese che va alla pagina dei dettagli
+   - Pulsante checkbox per selezionare tutti i gruppi di entrate/spese disponibili
+   - Pulsante icona Elimina per eliminare tutti i gruppi di entrate/spese disponibili
+   - Frecce di ordinamento per ordinare tutti i gruppi di entrate/spese disponibili
+   - Pulsante per aggiungere gruppi di entrate/spese attraverso un popup
+   - Opzioni di paginazione per paginare gruppi di entrate/spese
+   - Funzionalità "Righe per pagina" per mostrare un certo numero di gruppi di entrate/spese
+   - Modale Elimina con opzioni di conferma e annulla
+   - Nome del gruppo di entrate/spese cliccabile che va alla pagina dei dettagli
 
 6. **Popup Modifica Gruppi Entrate/Spese**
    - Campo nome modificabile
@@ -142,39 +141,44 @@ Password: password
    - Pulsante Salva
    - Pulsante Annulla
 
-8. **Pagina Dettagli Gruppo Entrate/Spese**
+8. **Pagina di Dettagli Gruppi Entrate/Spese**
    - Nome
    - Descrizione
-   - Ultimi 5 cambiamenti nel conto per quel gruppo
+   - Ultimi 5 cambiamenti dell'account per quel gruppo
    - Breadcrumb per una navigazione semplice
 
-9. **Promemorie (Funzionalità Premium nelle Impostazioni Profilo)**
-   - Pulsante per creare promemoria tramite un popup
+9. **Promemoria (Funzione Premium nelle Impostazioni del Profilo)**
+   - Pulsante per creare un promemoria attraverso un popup
    - Dettagli del promemoria attualmente impostato sulla dashboard
    - Breadcrumb per una navigazione semplice
 
 10. **Popup Elimina Promemoria**
-   - Pulsante Salva
-   - Pulsante Annulla
+    - Pulsante Salva
+    - Pulsante Annulla
 
-11. **Blogs (Funzionalità Premium)**
-   - Card con tutti i blog disponibili
-   - Breadcrumb per una navigazione semplice
+11. **Blogs (Funzione Premium)**
+    - Pulsante per creare un blog attraverso un popup
+    - Card con tutti i blog disponibili
+    - Breadcrumb per una navigazione semplice
 
-12. **Pagina Dettagli Blog**
-   - Titolo
-   - Descrizione
-   - Autore
-   - Data di creazione
-   - Corpo
-   - Breadcrumb per una navigazione semplice
+12. **Popup Elimina Blog**
+    - Pulsante Salva
+    - Pulsante Annulla
+
+13. **Pagina di Dettagli Blog**
+    - Titolo
+    - Descrizione
+    - Autore
+    - Data di creazione
+    - Corpo
+    - Breadcrumb per una navigazione semplice
 
 ## Installazione
 Per la guida all'installazione, visita il nostro <a href="https://git.vegaitsourcing.rs/nikola.perisic/vega-internship-project/-/wikis/Project-setup-and-installation" target="_blank">Wiki</a>
 
-## Altre integrazioni
+## Integrazioni aggiuntive
 
-### Email stato pipeline
+### Email di stato della pipeline
 **Pipeline Backend:**
 Abilita i test nel progetto .NET.
 <br/>
@@ -182,12 +186,12 @@ Abilita i test nel progetto .NET.
 **Pipeline Frontend:**
 Compila il progetto.
 
-**Notifiche via Email:**
+**Notifiche via email:**
 
-Invia email di stato della pipeline a una lista predefinita di destinatari, concentrandosi solo sulle pipeline fallite.
+Invia email di stato della pipeline a una lista predefinita di destinatari, concentrando l'attenzione solo sulle pipeline fallite.
 
 ### Integrazione Mailchimp
-Registra automaticamente gli utenti che si iscrivono alla newsletter nell'audience collegata di Mailchimp.
+Registra automaticamente gli utenti che si iscrivono alla newsletter nell'audience di Mailchimp collegata.
 
 <hr/>
 
