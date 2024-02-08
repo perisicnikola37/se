@@ -1,4 +1,5 @@
 <kbd>[<img title="Inglese" alt="Inglese" src="https://upload.wikimedia.org/wikipedia/en/thumb/a/ae/Flag_of_the_United_Kingdom.svg/1200px-Flag_of_the_United_Kingdom.svg.png" width="22">](translations/README.en.md)</kbd>
+<kbd>[<img title="Spagnolo" alt="Spagnolo" src="https://cdn11.bigcommerce.com/s-hhbbk/images/stencil/1280x1280/products/854/42341/SPAN0001__19783.1580480313.png?c=2" width="22">](translations/README.spa.md)</kbd>
 
 <div style="display: flex; justify-content: space-between; align-items: center;">
   <h1>Gestore delle Spese</h1>
