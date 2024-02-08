@@ -1,6 +1,6 @@
 namespace Contracts.Dto;
 
-public record ErrorResponse
+public record ErrorResponseDto
 {
     public string Error { get; init; }
     public int StatusCode { get; init; }

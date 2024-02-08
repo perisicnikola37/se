@@ -2,14 +2,9 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Domain.ValidationAttributes;
 
-public class MinimumAttribute : ValidationAttribute
+public class MinimumAttribute(double minValue) : ValidationAttribute
 {
-    private readonly double _minValue;
-
-    public MinimumAttribute(double minValue)
-    {
-        _minValue = minValue;
-    }
+    private readonly double _minValue = minValue;
 
     protected override ValidationResult IsValid(object? value, ValidationContext validationContext)
     {

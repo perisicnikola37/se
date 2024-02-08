@@ -26,28 +26,28 @@ namespace ExpenseTrackerApi.Middlewares
 
 			switch (exception)
 			{
-				case InvalidAccountTypeException invalidAccountTypeException:
+				case InvalidAccountTypeException:
 					code = HttpStatusCode.BadRequest;
 					break;
 
-				case ConflictException conflictException:
+				case ConflictException:
 					code = HttpStatusCode.Conflict;
 					break;
 
-				case DatabaseException databaseException:
+				case DatabaseException:
 					code = HttpStatusCode.InternalServerError;
 					break;
 
-				case OnModelCreatingException onModelCreatingException:
+				case OnModelCreatingException:
 					code = HttpStatusCode.InternalServerError;
 					break;
-				case UnauthorizedException unauthorizedException:
+				case UnauthorizedException:
 					code = HttpStatusCode.Unauthorized;
 					break;
 			}
 
 
-			var errorResponse = new ErrorResponse
+			var errorResponse = new ErrorResponseDto
 			{
 				Error = exception.Message,
 				StatusCode = (int)code,
