@@ -18,7 +18,7 @@ public class ReminderController(IReminderService reminderService) : ControllerBa
 	}
 
 	[HttpGet("{id}")]
-	public async Task<ActionResult<SingleReminderDto>> GetReminder(int id)
+	public async Task<ActionResult<SingleReminderDto>> GetReminderAsync(int id)
 	{
 		return await reminderService.GetReminderAsync(id);
 	}
