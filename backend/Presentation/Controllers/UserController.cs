@@ -98,6 +98,8 @@ public class UserController(
             var user = await context.Users
                 .Include(u => u.Incomes)!
                 .ThenInclude(i => i.IncomeGroup)
+                .Include(u => u.Expenses)!
+                .ThenInclude(i => i.ExpenseGroup)
                 .FirstOrDefaultAsync(u => u.Id == userId);
 
             if (user == null) return BadRequest("User not found");
@@ -106,8 +108,15 @@ public class UserController(
                 user.Incomes!.Select(income =>
                 {
                     return
-                        $"<div class='flex items-center justify-between py-2 border-b border-gray-300'><span class='text-gray-700'>Description: {income.Description} <span class=`ml-10`>Group: {income.IncomeGroup?.Name}</span></span><span class='text-green-500'>&nbsp; +${income.Amount}</span></div>{income.CreatedAt:yyyy-MM-dd HH:mm:ss}";
+                        $"<div class='border-b border-gray-300'><div class='flex items-center justify-between py-2'><span class='text-gray-700'>Name: {income.Description} <span class=`ml-30`><br/>Group: {income.IncomeGroup?.Name}</span></span><span class='text-green-500'>&nbsp; +${income.Amount}</span></div>{income.CreatedAt:dd-mm-yyyy HH:mm:ss}</div>";
                 }));
+
+            var expensesHtml = string.Join("<br />",
+               user.Expenses!.Select(expense =>
+               {
+                   return
+                       $"<div class='border-b border-gray-300'><div class='flex items-center justify-between py-2'><span class='text-gray-700'>Name: {expense.Description} <span class=`ml-30`><br/>Group: {expense.ExpenseGroup?.Name}</span></span><span class='text-red-500'>&nbsp; -${expense.Amount}</span></div>{expense.CreatedAt:dd-mm-yyyy HH:mm:ss}</div>";
+               }));
 
             var statsId = GenerateStatsId();
             var statsDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
@@ -115,17 +124,19 @@ public class UserController(
             var emailBody =
                 $@"<!DOCTYPE html PUBLIC ""-//W3C//DTD XHTML 1.0 Transitional//EN"" ""http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"">
 			<html dir=""ltr"" lang=""en"">
+            <script src=""https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/cli.min.js"" integrity=""sha512-UQKfcDJJTdPuGLK59tlSqtHaggFEhRGB3NbaR4UDPHHHqIn7VMrwiuctCCIeSKXThqejU+P9uzs/sH8LXYCcwA=="" crossorigin=""anonymous"" referrerpolicy=""no-referrer""></script>
 			<head>
 				<meta content=""text/html; charset=UTF-8"" http-equiv=""Content-Type"" />
 				<link href=""https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"" rel=""stylesheet"">
 			</head>
 			<body style=""background-color:#fff;font-family:'Inter', 'ui-sans-serif', 'system-ui', '-apple-system', 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif"">
-				<div class='max-w-2xl mx-auto p-4'>
-					<img src='https://i.postimg.cc/VsKQJpRb/logo.png' alt='Linear Logo' class='block mx-auto mb-4' style='width: 42px; height: 42px;'>
+				<div class='max-w-4xl mx-auto p-4'>
+					<img src='https://i.postimg.cc/VsKQJpRb/logo.png' alt='Expense tracker' class='block mx-auto mb-4' style='width: 42px; height: 42px;'>
 					<h1 class='text-2xl font-semibold text-gray-800 mb-6'>Expense Tracker</h1>
-					<hr class='border-t border-gray-300 my-8'>
 					<p class='text-gray-700 text-sm mb-4'>Incomes:</p>
 					{incomesHtml}
+					<p class='text-gray-700 text-sm mt-10'>Expenses:</p>
+					{expensesHtml}
 					<div class=""mt-10"">
 					<p class='text-gray-700 text-sm mb-4'>Stats ID: {statsId}</p>
 					<p class='text-gray-700 text-sm mb-4'>Stats creation date: {statsDate}</p>
@@ -137,7 +148,7 @@ public class UserController(
 
             var pdfBytes = pdfGenerator.GeneratePdf(emailBody);
 
-            var isEmailSent = await emailService.SendEmailWithAttachment(emailRequest, "Expense Tracker", emailBody,
+            var isEmailSent = await emailService.SendEmailWithAttachment(emailRequest, "Expense Tracker stats", emailBody,
                 "expense_tracker.pdf", pdfBytes, "application/pdf");
 
             if (isEmailSent)
