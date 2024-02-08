@@ -25,10 +25,13 @@ import userPicture from "../../src/assets/profile_image.jpg";
 import { useDarkMode } from "../contexts/DarkModeContext";
 import NightlightIcon from "@mui/icons-material/Nightlight";
 import { handleLogout } from "../utils/utils";
+import { Config } from "../types/TranslationTypes";
 
 const NavBar = () => {
   const navigate = useNavigate();
-  const pagesData = config["EN"];
+  const { language } = useModal()
+  const pagesData = (config as unknown as Config)[language];
+
   const location = useLocation();
   const { modalState } = useModal();
   const { user } = useUser();
@@ -144,15 +147,13 @@ const NavBar = () => {
                   <MenuItem
                     onClick={handleCloseNavMenu}
                     key={page.url}
-                    className={`transition duration-300 ${
-                      index >= pages.length - 2 ? "ml-auto" : ""
-                    }`}
+                    className={`transition duration-300 ${index >= pages.length - 2 ? "ml-auto" : ""
+                      }`}
                   >
                     <NavLink
                       to={page.url}
-                      className={`text-black  hover:text-blue-500 ${
-                        page.url === location.pathname ? "text-blue-500" : ""
-                      }`}
+                      className={`text-black  hover:text-blue-500 ${page.url === location.pathname ? "text-blue-500" : ""
+                        }`}
                     >
                       {page.name}
                     </NavLink>
@@ -173,21 +174,19 @@ const NavBar = () => {
                       <NavLink
                         key={page.url}
                         to={page.url}
-                        className={`text-black m-3 inline-block transition duration-300 border-b-2 border-transparent hover:border-blue-500 ${
-                          page.url === location.pathname
-                            ? "border-blue-300"
-                            : ""
-                        }`}
+                        className={`text-black m-3 inline-block transition duration-300 border-b-2 border-transparent hover:border-blue-500 ${page.url === location.pathname
+                          ? "border-blue-300"
+                          : ""
+                          }`}
                         onClick={handleCloseNavMenu}
                       >
                         <span
-                          className={`my-2 ${
-                            page.url === location.pathname
-                              ? "text-blue-500"
-                              : darkMode
-                                ? "text-white"
-                                : "text-black"
-                          }`}
+                          className={`my-2 ${page.url === location.pathname
+                            ? "text-blue-500"
+                            : darkMode
+                              ? "text-white"
+                              : "text-black"
+                            }`}
                         >
                           {page.name}
                         </span>

@@ -7,7 +7,6 @@ import SignUp from "./pages/SignUp.tsx";
 import SignIn from "./pages/SignIn.tsx";
 import Dashboard from "./pages/Dashboard.tsx";
 import { LoadingProvider } from "./contexts/LoadingContext.tsx";
-import { LanguageProvider } from "./contexts/GetLanguageKeyContext.tsx";
 import Expenses from "./pages/Expenses.tsx";
 import Incomes from "./pages/Incomes.tsx";
 import NotFoundPage from "./pages/NotFoundPage.tsx";
@@ -34,9 +33,7 @@ const router = createBrowserRouter([
         <LoadingProvider>
           <ModalProvider>
             <UserProvider>
-              <LanguageProvider>
-                <App />
-              </LanguageProvider>
+              <App />
             </UserProvider>
           </ModalProvider>
         </LoadingProvider>

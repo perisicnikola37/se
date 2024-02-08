@@ -30,3 +30,9 @@ export type DarkModeProviderProps = {
 export type ObjectInterface = IncomeInterface | ExpenseInterface;
 
 export type Order = "asc" | "desc";
+
+export type FaqItem = {
+  question: string;
+  answer: string;
+};
+

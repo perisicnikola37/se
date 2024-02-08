@@ -2,6 +2,9 @@ import { useState, useEffect } from "react";
 import useMailchimpSubscribe from "../hooks/ThirdPartyServices/MailchimpSubscribeHook";
 import { validateEmail } from "../utils/utils";
 import { useDarkMode } from "../contexts/DarkModeContext";
+import config from "../config/config.json";
+import { Config } from "../types/TranslationTypes";
+import { useModal } from "../contexts/GlobalContext";
 
 const Newsletter = () => {
   const { subscribeToMailchimp } = useMailchimpSubscribe();
@@ -16,6 +19,9 @@ const Newsletter = () => {
       setIsSubscribed(true);
     }
   }, []);
+
+  const { language } = useModal();
+  const languageConfig = (config as unknown as Config)[language];
 
   const toggleAlert = () => {
     if (validateEmail(email)) {
@@ -38,14 +44,13 @@ const Newsletter = () => {
           <h2
             className={`mb-4 text-3xl tracking-tight font-extrabold ${darkMode ? "text-white" : "text-gray-900"} sm:text-4xl`}
           >
-            Sign up for our newsletter
+            {languageConfig.newsletterHeading}
           </h2>
           <p className={`mx-auto mb-8 max-w-2xl font-light ${darkMode ? 'text-neutral-200' : 'text-gray-500'} md:mb-12 sm:text-xl`}>
-            Stay up to date with the roadmap progress, announcements, and
-            exclusive discounts. Feel free to sign up with your email.
+            {languageConfig.newsletterText}
           </p>
           {isSubscribed ? (
-            <p className="text-[#4F65EB] font-bold">Subscribed :)</p>
+            <p className="text-[#4F65EB] font-bold">{languageConfig.subscribedMessage}</p>
           ) : (
             <form>
               <div className="flex items-center mx-auto mb-3 space-y-4 max-w-screen-sm sm:flex sm:space-y-0">
@@ -54,7 +59,7 @@ const Newsletter = () => {
                     htmlFor="email"
                     className="hidden mb-2 text-sm font-medium text-gray-900"
                   >
-                    Email address
+                    {languageConfig.emailLabel}
                   </label>
                   <div className="flex absolute inset-y-0 left-0 items-center pl-3 pointer-events-none">
                     <svg
@@ -67,7 +72,7 @@ const Newsletter = () => {
                   <input
                     className={`block p-3 lg:pl-10 sm:pl-3 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 sm:rounded-none sm:rounded-l-lg outline-none ${isEmailValid ? "" : "border-red-500"
                       }`}
-                    placeholder="Enter your email"
+                    placeholder={languageConfig.emailPlaceholder}
                     type="email"
                     id="email"
                     value={email}
@@ -83,17 +88,17 @@ const Newsletter = () => {
                     onClick={toggleAlert}
                     className="py-3 px-5 w-full text-sm font-medium text-center text-white rounded-lg border cursor-pointer bg-[#2563EB] border-primary-600 sm:rounded-none sm:rounded-r-lg hover:bg-[#3463c9] duration-200"
                   >
-                    Subscribe
+                    {languageConfig.subscribeButton}
                   </button>
                 </div>
               </div>
               <div className="mx-auto max-w-screen-sm text-sm text-left text-gray-500 newsletter-form-footer">
-                We care about the protection of your data.{" "}
+                {languageConfig.privacyPolicyText}{" "}
                 <a
                   href="/privacy-policy"
                   className="font-medium text-primary-600 hover:underline"
                 >
-                  Read our Privacy Policy
+                  {languageConfig.privacyPolicyLinkText}
                 </a>
               </div>
             </form>
@@ -106,7 +111,7 @@ const Newsletter = () => {
             onClick={toggleAlert}
             className="py-3 px-5 w-[60%] text-sm font-medium text-center text-white rounded-lg border cursor-pointer bg-[#2563EB] border-primary-600 hover:bg-[#3463c9] duration-200"
           >
-            Subscribe
+            {languageConfig.subscribeButton}
           </button>
         </div>
       )}

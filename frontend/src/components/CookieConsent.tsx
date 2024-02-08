@@ -1,14 +1,14 @@
 import { motion, useAnimation } from "framer-motion";
 import { useEffect, useState } from "react";
 import config from "../config/config.json";
-import { useLanguage } from "../contexts/GetLanguageKeyContext";
 import { Config } from "../types/TranslationTypes";
 import CloseIcon from "@mui/icons-material/Close";
+import { useModal } from "../contexts/GlobalContext";
 
 const CookieConsent = () => {
   const [showCookieConsent, setCookieConsent] = useState(true);
   const controls = useAnimation();
-  const { languageKey } = useLanguage();
+  const { language } = useModal();
 
   useEffect(() => {
     const cookieConsent = localStorage.getItem("cookieConsent");
@@ -34,7 +34,7 @@ const CookieConsent = () => {
     });
   };
 
-  const pagesData = (config as unknown as Config)[languageKey];
+  const pagesData = (config as unknown as Config)[language];
 
   return (
     <motion.div

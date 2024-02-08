@@ -14,6 +14,7 @@ export type FooterLink = {
 };
 
 export type LanguageConfig = {
+  faqData: [];
   acceptButton: string;
   privacyPolicy: string;
   policyText: string;
@@ -29,10 +30,37 @@ export type LanguageConfig = {
   emailExportText: string;
   emailExportHeading1: string;
   emailExportHeading2: string;
+  newsletterHeading: string;
+  newsletterText: string;
+  subscribedMessage: string;
+  emailLabel: string;
+  emailPlaceholder: string;
+  subscribeButton: string;
+  privacyPolicyText: string;
+  privacyPolicyLinkText: string;
   pages: Page[];
   info: Info;
   footerLinks: FooterLink[];
   settings: string[];
+  testimonials1: string;
+  testimonials2: string;
+  checkAll: string;
+  reviews: string;
+  pricing1: string;
+  pricing2: string;
+  pricing3: string;
+  pricing4: string;
+  pricing5: string;
+  pricing6: string;
+  pricing7: string;
+  pricing8: string;
+  pricing9: string;
+  pricing10: string;
+  pricing11: string;
+  pricing12: string;
+  unlimited: string;
+  subHeaderMessage: string;
+  checkItOut: string;
 };
 
 export type Config = {

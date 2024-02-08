@@ -1,7 +1,13 @@
 import { useDarkMode } from "../contexts/DarkModeContext";
+import { useModal } from "../contexts/GlobalContext";
+import { Config } from "../types/TranslationTypes";
+import config from "../config/config.json"
 
 export default function Testimonials() {
+  const { language } = useModal();
   const { darkMode } = useDarkMode();
+
+  const languageConfig = (config as unknown as Config)[language];
 
   return (
     <section className="py-12  sm:py-16 lg:py-20 ">
@@ -9,7 +15,7 @@ export default function Testimonials() {
         <div className="flex flex-col items-center">
           <div className="text-center">
             <p className={`text-lg font-medium ${darkMode ? 'text-white' : 'text-gray-600'} font-pj`}>
-              129+ people have said how good ExpenseTracker is
+              129+ {languageConfig.testimonials1}
             </p>
             <h2
               className={
@@ -18,7 +24,7 @@ export default function Testimonials() {
                   : "mt-4 text-3xl font-bold text-gray-900 sm:text-4xl xl:text-5xl font-pj"
               }
             >
-              Our happy clients said about us
+              {languageConfig.testimonials2}
             </h2>
           </div>
 
@@ -29,7 +35,7 @@ export default function Testimonials() {
               className="pb-2 text-base font-bold leading-7 text-gray-900 transition-all duration-200 border-b-2 border-gray-900 hover:border-gray-600 font-pj focus:outline-none focus:ring-1 focus:ring-gray-900 focus:ring-offset-2 hover:text-gray-600"
             >
               {" "}
-              Check all 137 reviews{" "}
+              {languageConfig.checkAll} 137 {languageConfig.reviews}{" "}
             </a>
           </div>
 
