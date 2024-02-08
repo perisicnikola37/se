@@ -8,7 +8,7 @@ export default function Testimonials() {
       <div className="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
         <div className="flex flex-col items-center">
           <div className="text-center">
-            <p className="text-lg font-medium text-gray-600 font-pj">
+            <p className={`text-lg font-medium ${darkMode ? 'text-white' : 'text-gray-600'} font-pj`}>
               129+ people have said how good ExpenseTracker is
             </p>
             <h2

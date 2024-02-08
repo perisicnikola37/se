@@ -3,18 +3,16 @@ import { ThreeDots } from "react-loader-spinner";
 import NavBar from "./components/NavBar";
 import { useLoading } from "./contexts/LoadingContext";
 import Footer from "./components/Footer";
-import { Outlet, useLocation, useNavigate } from "react-router-dom";
-import { useUser } from "./contexts/UserContext";
+import { Outlet } from "react-router-dom";
 import { useDarkMode } from "./contexts/DarkModeContext";
 import { CssBaseline, ThemeProvider, createTheme } from "@mui/material";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
+import { useAuthenticationMiddleware } from "./middleware/authMiddleware";
 
 function App() {
   const { loading, setLoadingState } = useLoading();
-  const navigate = useNavigate();
-  const location = useLocation();
-  const { isLoggedIn } = useUser();
   const { darkMode } = useDarkMode();
+  const authenticate = useAuthenticationMiddleware();
 
   const theme = createTheme({
     palette: {
@@ -45,15 +43,8 @@ function App() {
   };
 
   useEffect(() => {
-    // Check if the URL contains "reset-password"
-    const isResetPasswordRoute =
-      window.location.pathname.includes("reset-password");
-
-    // Exclude "/" path and "reset-password" route from redirection
-    if (!isLoggedIn() && location.pathname !== "/" && !isResetPasswordRoute) {
-      navigate("/sign-in");
-    }
-  }, [navigate, location, isLoggedIn]);
+    authenticate();
+  }, [authenticate]);
 
   useEffect(() => {
     const timeout = setTimeout(() => {

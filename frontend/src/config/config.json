@@ -1,113 +1,109 @@
 {
-  "ME": {
-    "info": {
-      "applicationName": "Tracking troškova",
-      "copyright": "Sva prava zadržana."
+    "ME": {
+        "info": {
+            "applicationName": "Tracking troškova",
+            "copyright": "Sva prava zadržana."
+        },
+        "pages": [{
+                "name": "Početna",
+                "url": "/"
+            },
+            {
+                "name": "Prihodi",
+                "url": "/incomes"
+            },
+            {
+                "name": "Rashodi",
+                "url": "/expenses"
+            },
+            {
+                "name": "Grupe prihoda",
+                "url": "/incomes/groups"
+            },
+            {
+                "name": "Grupe rashoda",
+                "url": "/expenses/groups"
+            }
+        ],
+        "footerLinks": [{
+                "name": "O nama",
+                "url": "/about"
+            },
+            {
+                "name": "Privatna polisa",
+                "url": "/privacy-policy"
+            },
+            {
+                "name": "Licenca",
+                "url": "/privacy-policy"
+            },
+            {
+                "name": "Kontakt",
+                "url": "/contact"
+            }
+        ],
+        "mainTextOnDashboard": "",
+        "policyText": "Koristimo kolačiće kako bi poboljšali Vaše iskustvo. Korišćenjem našeg sajta, slažete se sa našim ",
+        "privacyPolicy": "Pravila privatnosti",
+        "acceptButton": "Potvrdi"
     },
-    "pages": [
-      {
-        "name": "Početna",
-        "url": "/"
-      },
-      {
-        "name": "Prihodi",
-        "url": "/incomes"
-      },
-      {
-        "name": "Rashodi",
-        "url": "/expenses"
-      },
-      {
-        "name": "Grupe prihoda",
-        "url": "/incomes/groups"
-      },
-      {
-        "name": "Grupe rashoda",
-        "url": "/expenses/groups"
-      }
-    ],
-    "footerLinks": [
-      {
-        "name": "O nama",
-        "url": "/about"
-      },
-      {
-        "name": "Privatna polisa",
-        "url": "/privacy-policy"
-      },
-      {
-        "name": "Licenca",
-        "url": "/licensing"
-      },
-      {
-        "name": "Kontakt",
-        "url": "/contact"
-      }
-    ],
-    "mainTextOnDashboard": "",
-    "policyText": "Koristimo kolačiće kako bi poboljšali Vaše iskustvo. Korišćenjem našeg sajta, slažete se sa našim ",
-    "privacyPolicy": "Pravila privatnosti",
-    "acceptButton": "Potvrdi"
-  },
-  "EN": {
-    "info": {
-      "applicationName": "Expense Tracker",
-      "copyright": "All rights reserved."
-    },
-    "pages": [
-      {
-        "name": "Dashboard",
-        "url": "/"
-      },
-      {
-        "name": "Incomes",
-        "url": "/incomes"
-      },
-      {
-        "name": "Expenses",
-        "url": "/expenses"
-      },
-      {
-        "name": "Income groups",
-        "url": "/incomes/groups"
-      },
-      {
-        "name": "Expense groups",
-        "url": "/expenses/groups"
-      }
-    ],
-    "footerLinks": [
-      {
-        "name": "About",
-        "url": "/about"
-      },
-      {
-        "name": "Privacy Policy",
-        "url": "/privacy-policy"
-      },
-      {
-        "name": "Licensing",
-        "url": "/licensing"
-      },
-      {
-        "name": "Contact",
-        "url": "/contact"
-      }
-    ],
-    "mainTextOnDashboard1": "Track expenses even faster with",
-    "mainTextOnDashboard2": "our brand new Expense Tracker application ",
-    "textOnDashboard": "Take advantage of our open-source solution, designed to streamline and enhance your expense tracking experience. Dive into a wealth of features and functionalities that empower you to manage your finances effortlessly.",
-    "getStarted": "Get started",
-    "exploreRepository": "Explore repository",
-    "featuredIn": "Featured in",
-    "mailchimpText": "Enhance your business capabilities with seamless integration of third-party services. Our platform empowers you to effortlessly connect and collaborate with a variety of external tools and applications. Streamline your workflow, improve efficiency, and unlock new possibilities for growth. Discover the convenience of integrating with industry-leading services, all within the reach of your dashboard.",
-    "mailchimpHeading1": "Integration",
-    "mailchimpHeading2": "with third party services",
-    "emailExportText": "Exporting expenses and incomes is a breeze with our user-friendly platform, offering seamless financial management. Effortlessly streamline your financial processes by utilizing our intuitive tools for quick and efficient data export. Take control of your financial data with just a few clicks, ensuring a hassle-free experience in tracking both expenses and incomes. Our platform empowers you to simplify your financial workflows, providing a comprehensive solution for easy and effective exportation. Experience the convenience and efficiency of exporting expenses and incomes, making informed financial decisions has never been more accessible.",
-    "emailExportHeading1": "Export",
-    "emailExportHeading2": "expenses & incomes easily",
-    "policyText": "We use cookies to enhance your experience. By using our website, you agree to our ",
-    "privacyPolicy": "Privacy Policy",
-    "acceptButton": "Accept"
-  }
+    "EN": {
+        "info": {
+            "applicationName": "Expense Tracker",
+            "copyright": "All rights reserved."
+        },
+        "pages": [{
+                "name": "Dashboard",
+                "url": "/"
+            },
+            {
+                "name": "Incomes",
+                "url": "/incomes"
+            },
+            {
+                "name": "Expenses",
+                "url": "/expenses"
+            },
+            {
+                "name": "Income groups",
+                "url": "/incomes/groups"
+            },
+            {
+                "name": "Expense groups",
+                "url": "/expenses/groups"
+            }
+        ],
+        "footerLinks": [{
+                "name": "About",
+                "url": "/about"
+            },
+            {
+                "name": "Privacy Policy",
+                "url": "/privacy-policy"
+            },
+            {
+                "name": "Licensing",
+                "url": "/privacy-policy"
+            },
+            {
+                "name": "Contact",
+                "url": "/contact"
+            }
+        ],
+        "mainTextOnDashboard1": "Track expenses even faster with",
+        "mainTextOnDashboard2": "our brand new Expense Tracker application ",
+        "textOnDashboard": "Take advantage of our open-source solution, designed to streamline and enhance your expense tracking experience. Dive into a wealth of features and functionalities that empower you to manage your finances effortlessly.",
+        "getStarted": "Get started",
+        "exploreRepository": "Explore repository",
+        "featuredIn": "Featured in",
+        "mailchimpText": "Enhance your business capabilities with seamless integration of third-party services. Our platform empowers you to effortlessly connect and collaborate with a variety of external tools and applications. Streamline your workflow, improve efficiency, and unlock new possibilities for growth. Discover the convenience of integrating with industry-leading services, all within the reach of your dashboard.",
+        "mailchimpHeading1": "Integration",
+        "mailchimpHeading2": "with third party services",
+        "emailExportText": "Exporting expenses and incomes is a breeze with our user-friendly platform, offering seamless financial management. Effortlessly streamline your financial processes by utilizing our intuitive tools for quick and efficient data export. Take control of your financial data with just a few clicks, ensuring a hassle-free experience in tracking both expenses and incomes. Our platform empowers you to simplify your financial workflows, providing a comprehensive solution for easy and effective exportation. Experience the convenience and efficiency of exporting expenses and incomes, making informed financial decisions has never been more accessible.",
+        "emailExportHeading1": "Export",
+        "emailExportHeading2": "expenses & incomes easily",
+        "policyText": "We use cookies to enhance your experience. By using our website, you agree to our ",
+        "privacyPolicy": "Privacy Policy",
+        "acceptButton": "Accept"
+    }
 }

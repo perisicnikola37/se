@@ -9,7 +9,7 @@ const FeaturedInSection = () => {
 
   const languageConfig = (config as unknown as Config)[language];
 
-  return (
+  return !darkMode &&
     <div className="max-w-4xl mt-10 lg:mt-28 mx-auto text-center select-none">
       <h2
         className={
@@ -62,7 +62,8 @@ const FeaturedInSection = () => {
         />
       </div>
     </div>
-  );
 };
 
 export default FeaturedInSection;
+
+

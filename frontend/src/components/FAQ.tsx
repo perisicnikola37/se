@@ -1,6 +1,8 @@
 import { useState } from "react";
+import { useDarkMode } from "../contexts/DarkModeContext";
 
 const FAQ = () => {
+  const { darkMode } = useDarkMode()
   const [isCollapseOneVisible, setIsCollapseOneVisible] = useState(true);
   const [isCollapseTwoVisible, setIsCollapseTwoVisible] = useState(false);
   const [isCollapseThreeVisible, setIsCollapseThreeVisible] = useState(false);
@@ -44,13 +46,10 @@ const FAQ = () => {
               >
                 How do I add a new expense in the Expense Tracker application?
                 <span
-                  className={`ml-auto h-5 w-5 shrink-0 rotate-${
-                    isCollapseOneVisible ? "-180deg" : "0"
-                  } fill-[#336dec] transition-transform duration-200 ease-in-out group-${
-                    isCollapseOneVisible ? "0" : "1"
-                  }:fill-[#212529] motion-reduce:transition-none dark:fill-[#8FAEE0] dark:group-${
-                    isCollapseOneVisible ? "0" : "1"
-                  }:fill-[#eee]`}
+                  className={`ml-auto h-5 w-5 shrink-0 rotate-${isCollapseOneVisible ? "-180deg" : "0"
+                    } fill-[#336dec] transition-transform duration-200 ease-in-out group-${isCollapseOneVisible ? "0" : "1"
+                    }:fill-[#212529] motion-reduce:transition-none dark:fill-[#8FAEE0] dark:group-${isCollapseOneVisible ? "0" : "1"
+                    }:fill-[#eee]`}
                 >
                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
                     <path
@@ -63,14 +62,13 @@ const FAQ = () => {
             </h2>
             <div
               id="flush-collapseOne"
-              className={`transition-all ${
-                isCollapseOneVisible ? "max-h-[500px]" : "max-h-0"
-              }`}
+              className={`transition-all ${isCollapseOneVisible ? "max-h-[500px]" : "max-h-0"
+                }`}
               data-te-collapse-item
               aria-labelledby="flush-headingOne"
               data-te-parent="#accordionFlushExample"
             >
-              <div className="py-4 px-5 text-neutral-500">
+              <div className={`py-4 px-5 ${darkMode ? 'text-neutral-200' : 'text-neutral-500'}`}>
                 To add a new expense in the Expense Tracker application, follow
                 these steps:
                 <br />
@@ -99,13 +97,10 @@ const FAQ = () => {
                 Can I categorize and track my expenses by different spending
                 categories?
                 <span
-                  className={`ml-auto h-5 w-5 shrink-0 rotate-${
-                    isCollapseTwoVisible ? "-180deg" : "0"
-                  } fill-[#336dec] transition-transform duration-200 ease-in-out group-${
-                    isCollapseTwoVisible ? "0" : "1"
-                  }:fill-[#212529] motion-reduce:transition-none dark:fill-[#8FAEE0] dark:group-${
-                    isCollapseTwoVisible ? "0" : "1"
-                  }:fill-[#eee]`}
+                  className={`ml-auto h-5 w-5 shrink-0 rotate-${isCollapseTwoVisible ? "-180deg" : "0"
+                    } fill-[#336dec] transition-transform duration-200 ease-in-out group-${isCollapseTwoVisible ? "0" : "1"
+                    }:fill-[#212529] motion-reduce:transition-none dark:fill-[#8FAEE0] dark:group-${isCollapseTwoVisible ? "0" : "1"
+                    }:fill-[#eee]`}
                 >
                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
                     <path
@@ -118,14 +113,13 @@ const FAQ = () => {
             </h2>
             <div
               id="flush-collapseTwo"
-              className={`transition-all ${
-                isCollapseTwoVisible ? "max-h-[500px]" : "max-h-0"
-              }`}
+              className={`transition-all ${isCollapseTwoVisible ? "max-h-[500px]" : "max-h-0"
+                }`}
               data-te-collapse-item
               aria-labelledby="flush-headingTwo"
               data-te-parent="#accordionFlushExample"
             >
-              <div className="pb-2 px-5 text-neutral-500">
+              <div className={`py-4 px-5 ${darkMode ? 'text-neutral-200' : 'text-neutral-500'}`}>
                 Yes, you can categorize and track your expenses by different
                 spending categories. When adding a new expense, choose the
                 appropriate category from the available options. This feature
@@ -151,13 +145,10 @@ const FAQ = () => {
                 How can I generate reports to view my spending patterns over
                 time?
                 <span
-                  className={`ml-auto h-5 w-5 shrink-0 rotate-${
-                    isCollapseThreeVisible ? "-180deg" : "0"
-                  } fill-[#336dec] transition-transform duration-200 ease-in-out group-${
-                    isCollapseThreeVisible ? "0" : "1"
-                  }:fill-[#212529] motion-reduce:transition-none dark:fill-[#8FAEE0] dark:group-${
-                    isCollapseThreeVisible ? "0" : "1"
-                  }:fill-[#eee]`}
+                  className={`ml-auto h-5 w-5 shrink-0 rotate-${isCollapseThreeVisible ? "-180deg" : "0"
+                    } fill-[#336dec] transition-transform duration-200 ease-in-out group-${isCollapseThreeVisible ? "0" : "1"
+                    }:fill-[#212529] motion-reduce:transition-none dark:fill-[#8FAEE0] dark:group-${isCollapseThreeVisible ? "0" : "1"
+                    }:fill-[#eee]`}
                 >
                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
                     <path
@@ -170,14 +161,13 @@ const FAQ = () => {
             </h2>
             <div
               id="flush-collapseThree"
-              className={`transition-all ${
-                isCollapseThreeVisible ? "max-h-[500px]" : "max-h-0"
-              }`}
+              className={`transition-all ${isCollapseThreeVisible ? "max-h-[500px]" : "max-h-0"
+                }`}
               data-te-collapse-item
               aria-labelledby="flush-headingThree"
               data-te-parent="#accordionFlushExample"
             >
-              <div className="px-5 text-neutral-500">
+              <div className={`py-4 px-5 ${darkMode ? 'text-neutral-200' : 'text-neutral-500'}`}>
                 To generate reports, follow these steps:
                 <br />
                 Navigate to the <span className="font-bold">"Expenses"</span> or

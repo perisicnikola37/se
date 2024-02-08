@@ -40,7 +40,7 @@ const Newsletter = () => {
           >
             Sign up for our newsletter
           </h2>
-          <p className="mx-auto mb-8 max-w-2xl font-light text-gray-500 md:mb-12 sm:text-xl">
+          <p className={`mx-auto mb-8 max-w-2xl font-light ${darkMode ? 'text-neutral-200' : 'text-gray-500'} md:mb-12 sm:text-xl`}>
             Stay up to date with the roadmap progress, announcements, and
             exclusive discounts. Feel free to sign up with your email.
           </p>
@@ -65,9 +65,8 @@ const Newsletter = () => {
                     ></svg>
                   </div>
                   <input
-                    className={`block p-3 lg:pl-10 sm:pl-3 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 sm:rounded-none sm:rounded-l-lg outline-none ${
-                      isEmailValid ? "" : "border-red-500"
-                    }`}
+                    className={`block p-3 lg:pl-10 sm:pl-3 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 sm:rounded-none sm:rounded-l-lg outline-none ${isEmailValid ? "" : "border-red-500"
+                      }`}
                     placeholder="Enter your email"
                     type="email"
                     id="email"
