@@ -1,21 +1,12 @@
-using Castle.Core.Logging;
 using ExpenseTrackerApi.Tests.Fixtures;
 using Microsoft.Extensions.Logging;
 using Persistence;
-using System.Net;
-using System.Threading.Tasks;
-using Xunit;
 
 namespace ExpenseTrackerApi.Tests
 {
-	public class ReminderControllerTests : IClassFixture<DatabaseFixture>
+	public class ReminderControllerTests(DatabaseFixture fixture) : IClassFixture<DatabaseFixture>
 	{
-		private readonly DatabaseFixture _fixture;
-
-		public ReminderControllerTests(DatabaseFixture fixture)
-		{
-			_fixture = fixture;
-		}
+		private readonly DatabaseFixture _fixture = fixture;
 
 		[Fact]
 		public async Task GetRemindersAsync_ReturnsSuccessStatusCode()
