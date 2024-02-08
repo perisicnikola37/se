@@ -12,7 +12,7 @@ public static class SwaggerConfig
             {
                 Title = "Expense Tracker",
                 Version = "v1.0",
-                Description = "API for managing expenses and income.",
+                Description = ".NET and React-based application designed to help users manage and track their expenses and incomes effectively. The goal is to provide a comprehensive solution for organizing financial transactions, generating reports, and offering additional premium features for an enhanced user experience.",
                 Contact = new OpenApiContact
                 {
                     Name = "Nikola Perisic",
