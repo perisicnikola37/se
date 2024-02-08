@@ -52,30 +52,32 @@ builder.Services.AddScoped<IAuthorizationHandler, IncomeGroupAuthorizationHandle
 builder.Services.AddScoped<IAuthorizationHandler, ExpenseGroupAuthorizationHandler>();
 
 var connectionString = configuration["DefaultConnection"];
-if (connectionString == null) throw new ArgumentNullException(nameof(connectionString), "DefaultConnection is null");
+if (connectionString == null) throw new ArgumentNullException(nameof(connectionString), "DefaultConnection is null in environment variables. Please configure it.");
 
-builder.Services.AddDbContext<DatabaseContext>(options =>
+bool useDocker = configuration["useDocker"] != null && bool.TryParse(configuration["useDocker"], out var parsedValue) && parsedValue;
+
+if (useDocker)
+{
+	builder.Services.AddDbContext<DatabaseContext>(options =>
 {
 	options.UseMySql(
-		connectionString,
-		// "server=mysql;user=root;port=3306;Connect Timeout=5;database=first_database;password=password",
+		"server=mysql;user=root;port=3306;Connect Timeout=5;database=first_database;password=password",
 		new MySqlServerVersion(new Version(8, 0, 35)),
 		b => b.MigrationsAssembly("ExpenseTrackerApi")
 	);
 });
-
-// builder.Services.AddDbContextPool<DatabaseContext>(options =>
-// {
-// 	options.UseMySql(
-// 		"server=mysql;user=root;port=3306;Connect Timeout=5;database=first_database;password=password",
-// 		ServerVersion.AutoDetect(
-// 			"server=mysql;user=root;port=3306;Connect Timeout=5;database=first_database;password=password"),
-// 		mySqlDbContextOptionsBuilder => mySqlDbContextOptionsBuilder.EnableRetryOnFailure(
-// 			5,
-// 			TimeSpan.FromSeconds(30),
-// 			null)
-// 	);
-// });
+}
+else
+{
+	builder.Services.AddDbContext<DatabaseContext>(options =>
+	{
+		options.UseMySql(
+			connectionString,
+			new MySqlServerVersion(new Version(8, 0, 35)),
+			b => b.MigrationsAssembly("ExpenseTrackerApi")
+		);
+	});
+}
 
 builder.Services.AddAuthentication();
 

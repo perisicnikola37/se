@@ -1,7 +1,6 @@
 using Contracts.Dto;
 using Domain.Interfaces;
 using Domain.Models;
-using Domain.ValidationAttributes;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
 
