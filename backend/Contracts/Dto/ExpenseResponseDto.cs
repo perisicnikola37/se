@@ -3,7 +3,7 @@ namespace Contracts.Dto;
 public class ExpenseResponseDto
 {
     public int Id { get; set; }
-    public string Description { get; set; }
+    public string Description { get; set; } = default!;
     public float Amount { get; set; }
     public DateTime CreatedAt { get; set; }
     public int? ExpenseGroupId { get; set; }

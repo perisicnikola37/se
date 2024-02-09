@@ -11,7 +11,7 @@ public class User
 		Administrator
 	}
 
-	private string accountType;
+	private string accountType = string.Empty;
 
 	[JsonIgnore]
 	public AccountTypes AccountTypeEnum
@@ -38,12 +38,12 @@ public class User
 		}
 	}
 	public int Id { get; set; }
-	public string Username { get; set; }
+	public string Username { get; set; } = default!;
 	// old custom validation
 	// [EmailValidation(ErrorMessage = "Please enter a valid email address.")]
-	public string Email { get; set; }
+	public string Email { get; set; } = default!;
 	[JsonIgnore]
-	public string Password { get; set; }
+	public string Password { get; set; } = default!;
 	public DateTime CreatedAt { get; set; } = DateTime.Now;
 	public List<Expense>? Expenses { get; set; }
 	public List<Income>? Incomes { get; set; }

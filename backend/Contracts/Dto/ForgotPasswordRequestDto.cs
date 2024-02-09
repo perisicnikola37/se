@@ -2,5 +2,5 @@ namespace Contracts.Dto;
 
 public record ForgotPasswordRequestDto
 {
-	public string UserEmail { get; set; }
+	public string UserEmail { get; set; } = default!;
 }

@@ -2,5 +2,5 @@ namespace Contracts.Dto;
 
 public record SubscriberRequest
 {
-	public string Email { get; set; }
+	public string Email { get; set; } = default!;
 }

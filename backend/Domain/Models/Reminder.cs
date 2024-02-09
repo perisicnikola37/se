@@ -16,7 +16,7 @@ public class Reminder
         Sunday
     }
 
-    private readonly string reminderDay;
+    private readonly string reminderDay = string.Empty;
 
     [JsonIgnore]
     public WeekDays ReminderDayEnum
@@ -45,7 +45,7 @@ public class Reminder
     }
 
     public int Id { get; set; }
-    public string Type { get; set; }
+    public string Type { get; set; } = default!;
     public DateTime CreatedAt { get; set; } = DateTime.Now;
     public bool Active { get; set; }
 }
