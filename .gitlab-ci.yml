@@ -1,46 +1,17 @@
-# stages:
-#   - test
+stages:
+  - publish
 
-# variables:
-#   SOLUTION_PATH: backend/Solution.sln
+variables:
+  DOTNET_VERSION: '6.0.x'
 
-# before_script:
-#   - 'dotnet restore $SOLUTION_PATH'
+before_script:
+  - 'which dotnet || (curl -sSL https://dot.net/v1/dotnet-install.sh | bash /dev/stdin --version $DOTNET_VERSION)'
+  - export PATH="$HOME/.dotnet:$PATH"
 
-# test:
-#   stage: test
-#   script:
-#     - 'dotnet test $SOLUTION_PATH'
-
-# image:
-#   name: mcr.microsoft.com/dotnet/sdk:latest
-
-
-name: Publish
-
-on:
-  workflow_dispatch:
-  push:
-    branches:
-      - main
-  
-jobs:
-  publish:
-    runs-on: ubuntu-latest
-
-    steps:
-     - uses: actions/checkout@v3
-
-     - name: Setup .NET
-       uses: actions/setup-dotnet@v3
-       with:
-          dotnet-version: '6.0.x'
-
-      - name: Restore dependencies
-        run: dotnet restore ./backend/Solution.sln
-
-      - name : Build
-        run: dotnet build ./backend/Solution.sln --configuration Release --no-restore
-
-      - name: Publish
-        run: dotnet publish ./backend/Solution.sln --configuration Release --no-build
+publish:
+  stage: publish
+  script:
+    - cd ./backend
+    - dotnet restore Solution.sln
+    - dotnet build Solution.sln --configuration Release
+    - dotnet publish Solution.sln --configuration Release
