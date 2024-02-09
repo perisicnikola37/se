@@ -1,9 +1,12 @@
 import { useEffect } from "react";
-import { useModal } from "../contexts/GlobalContext";
-import useObjectGroups from "../hooks/GlobalHooks/GetObjectsHook";
-import EnhancedTable from "../components/Tables/ExpenseGroupsTable";
+
 import { Helmet } from "react-helmet";
+
 import { Alert } from "@mui/material";
+
+import { useModal } from "../contexts/GlobalContext";
+import useObjectGroups from "../hooks/GlobalHooks/useObjectGroups";
+import EnhancedTable from "../components/Tables/ExpenseGroupsTable";
 import ExpenseGroupCreateModal from "../components/Modals/ExpenseGroupCreateModal";
 
 const ExpenseGroups = () => {

@@ -1,9 +1,10 @@
-import { createContext, useContext, useState, useEffect } from "react";
-import { DarkModeContextProps } from "../interfaces/contextsInterfaces";
+import { createContext, useContext, useEffect, useState } from "react";
+
 import { DarkModeProviderProps } from "../types/globalTypes";
+import { DarkModeContextProps } from "../interfaces/contextsInterfaces";
 
 const DarkModeContext = createContext<DarkModeContextProps | undefined>(
-  undefined
+  undefined,
 );
 
 const DarkModeProvider = ({ children }: DarkModeProviderProps) => {

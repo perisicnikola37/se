@@ -1,16 +1,9 @@
 import { useEffect } from "react";
-import {
-  LineChart,
-  Line,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  Legend,
-  Label,
-} from "recharts";
-import useStatistics from "../hooks/Statistics/StatisticsHook";
+
+import { CartesianGrid, Label, Legend, Line, LineChart, Tooltip, XAxis, YAxis } from "recharts";
+
 import { useUser } from "../contexts/UserContext";
+import useStatistics from "../hooks/Statistics/useStatistics";
 import { generateData, generateLoremData } from "../utils/generateChartData";
 
 const Chart = () => {
@@ -41,7 +34,12 @@ const Chart = () => {
       >
         <CartesianGrid strokeDasharray="3 3" />
         <XAxis dataKey="name">
-          <Label value="x axis - last 7 days" offset={-120} position="right" dy={20} />
+          <Label
+            value="x axis - last 7 days"
+            offset={-120}
+            position="right"
+            dy={20}
+          />
         </XAxis>
         <YAxis>
           <Label value="y axis - amount" angle={-90} position="insideLeft" />

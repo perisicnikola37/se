@@ -1,19 +1,14 @@
 import { useEffect, useRef } from "react";
+
 import Slider from "react-slick";
-import EastSharpIcon from "@mui/icons-material/EastSharp";
-import {
-  LineChart,
-  Line,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  Legend,
-} from "recharts";
-import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
-import useLatestIncomes from "../hooks/Incomes/LatestIncomesHook";
-import { formatDate } from "../utils/utils";
 import { motion } from "framer-motion";
+import { CartesianGrid, Legend, Line, LineChart, Tooltip, XAxis, YAxis } from "recharts";
+
+import EastSharpIcon from "@mui/icons-material/EastSharp";
+import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
+
+import { formatDate } from "../utils/utils";
+import useLatestIncomes from "../hooks/Incomes/useLatestIncomes";
 
 const LatestIncomes = () => {
   const slider = useRef<Slider | null>(null);

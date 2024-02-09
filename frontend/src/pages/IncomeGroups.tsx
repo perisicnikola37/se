@@ -1,10 +1,13 @@
 import { useEffect } from "react";
+
 import { Helmet } from "react-helmet";
+
+import { Alert } from "@mui/material";
+
 import { useModal } from "../contexts/GlobalContext";
-import useObjectGroups from "../hooks/GlobalHooks/GetObjectsHook";
+import useObjectGroups from "../hooks/GlobalHooks/useObjectGroups";
 import EnhancedTable from "../components/Tables/IncomeGroupsTable";
 import IncomeGroupCreateModal from "../components/Modals/IncomeGroupCreateModal";
-import { Alert } from "@mui/material";
 
 const IncomeGroups = () => {
   const { objectGroups, fetchObjectGroups } = useObjectGroups("income");

@@ -1,29 +1,10 @@
 import React, { useState } from "react";
-import {
-  Button,
-  CssBaseline,
-  TextField,
-  FormControlLabel,
-  Checkbox,
-  Link,
-  Grid,
-  Box,
-  Typography,
-  Container,
-  createTheme,
-  ThemeProvider,
-  Alert,
-  FormControl,
-  InputLabel,
-  MenuItem,
-  Select,
-  SelectChangeEvent,
-  InputAdornment,
-  IconButton,
-} from "@mui/material";
-import useRegistration from "../hooks/Authentication/RegisterHook";
+
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
+import { Alert, Box, Button, Checkbox, Container, createTheme, CssBaseline, FormControl, FormControlLabel, Grid, IconButton, InputAdornment, InputLabel, Link, MenuItem, Select, SelectChangeEvent, TextField, ThemeProvider, Typography } from "@mui/material";
+
+import useRegistration from "../hooks/Authentication/useRegistration";
 
 const defaultTheme = createTheme();
 

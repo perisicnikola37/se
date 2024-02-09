@@ -1,14 +1,15 @@
 import { Chip } from "@mui/material";
 import EastSharpIcon from "@mui/icons-material/EastSharp";
-import { useDarkMode } from "../contexts/DarkModeContext";
-import { useModal } from "../contexts/GlobalContext";
-import config from "../config/config.json"
+
+import config from "../config/config.json";
 import { Config } from "../types/TranslationTypes";
+import { useModal } from "../contexts/GlobalContext";
+import { useDarkMode } from "../contexts/DarkModeContext";
 
 const SubHeader = () => {
   const iconStyle = { fontSize: 16 };
   const { darkMode } = useDarkMode();
-  const { language } = useModal()
+  const { language } = useModal();
 
   const languageConfig = (config as unknown as Config)[language];
 

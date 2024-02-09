@@ -1,22 +1,13 @@
 import { useState } from "react";
-import {
-  TextField,
-  Button,
-  Typography,
-  Container,
-  Grid,
-  Link,
-  Box,
-  CssBaseline,
-  Alert,
-  InputAdornment,
-  IconButton,
-} from "@mui/material";
-import useResetPassword from "../hooks/Authentication/ResetPasswordHook";
-import { validatePassword } from "../utils/utils";
+
 import { Helmet } from "react-helmet";
+
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
+import { Alert, Box, Button, Container, CssBaseline, Grid, IconButton, InputAdornment, Link, TextField, Typography } from "@mui/material";
+
+import { validatePassword } from "../utils/utils";
+import useResetPassword from "../hooks/Authentication/useResetPassword";
 
 const ResetPassword = () => {
   const { resetPassword, isLoading } = useResetPassword();

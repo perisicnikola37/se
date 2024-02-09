@@ -1,9 +1,10 @@
-import IconButton from "@mui/material/IconButton";
+import { createContext, useContext, useMemo, useState } from "react";
+
 import Box from "@mui/material/Box";
-import { useTheme, ThemeProvider, createTheme } from "@mui/material/styles";
+import IconButton from "@mui/material/IconButton";
 import Brightness4Icon from "@mui/icons-material/Brightness4";
 import Brightness7Icon from "@mui/icons-material/Brightness7";
-import { createContext, useContext, useMemo, useState } from "react";
+import { createTheme, ThemeProvider, useTheme } from "@mui/material/styles";
 
 const ColorModeContext = createContext({ toggleColorMode: () => {} });
 

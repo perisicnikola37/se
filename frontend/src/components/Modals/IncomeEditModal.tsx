@@ -1,17 +1,20 @@
 import { useEffect, useState } from "react";
+
+import Swal from "sweetalert2";
+
 import Button from "@mui/material/Button";
-import TextField from "@mui/material/TextField";
 import Dialog from "@mui/material/Dialog";
+import TextField from "@mui/material/TextField";
+import DialogTitle from "@mui/material/DialogTitle";
+import { Alert, Autocomplete } from "@mui/material";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
-import DialogTitle from "@mui/material/DialogTitle";
-import { Alert, Autocomplete } from "@mui/material";
+
 import { useModal } from "../../contexts/GlobalContext";
-import useObjectGroups from "../../hooks/GlobalHooks/GetObjectsHook";
-import useGetObjectById from "../../hooks/GlobalHooks/GetObjectHook";
-import useEditObject from "../../hooks/GlobalHooks/EditObjectHook";
-import Swal from "sweetalert2";
+import useEditObject from "../../hooks/GlobalHooks/useEditObject";
+import useObjectGroups from "../../hooks/GlobalHooks/useObjectGroups";
+import useGetObjectById from "../../hooks/GlobalHooks/useGetObjectById";
 
 const IncomeEditModal = ({ id }: { id: number; objectType: string }) => {
   const { fetchObjectGroups, objectGroups } = useObjectGroups("income");

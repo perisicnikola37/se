@@ -1,8 +1,8 @@
-import { useModal } from "../../contexts/GlobalContext";
-import { Config } from "../../types/TranslationTypes";
 import config from "../../config/config.json";
-import { EmailExportProps } from "../../interfaces/globalInterfaces";
+import { Config } from "../../types/TranslationTypes";
+import { useModal } from "../../contexts/GlobalContext";
 import { useDarkMode } from "../../contexts/DarkModeContext";
+import { EmailExportProps } from "../../interfaces/globalInterfaces";
 
 const EmailExport = ({ imageUrl }: EmailExportProps) => {
   const { language } = useModal();

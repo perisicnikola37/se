@@ -1,16 +1,19 @@
 import { useEffect, useState } from "react";
+
+import Swal from "sweetalert2";
+
+import { Alert } from "@mui/material";
 import Button from "@mui/material/Button";
-import TextField from "@mui/material/TextField";
 import Dialog from "@mui/material/Dialog";
+import TextField from "@mui/material/TextField";
+import DialogTitle from "@mui/material/DialogTitle";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
-import DialogTitle from "@mui/material/DialogTitle";
-import { Alert } from "@mui/material";
+
 import { useModal } from "../../contexts/GlobalContext";
-import Swal from "sweetalert2";
-import useEditObjectGroup from "../../hooks/GlobalHooks/EditObjectGroupHook";
-import useGetObjectGroupById from "../../hooks/GlobalHooks/GetObjectGroupHook";
+import useEditObjectGroup from "../../hooks/GlobalHooks/useEditObjectGroup";
+import useGetObjectGroupById from "../../hooks/GlobalHooks/useGetObjectGroupById";
 
 const IncomeGroupEditModal = ({ id }: { id: number; objectType: string }) => {
   const [open, setOpen] = useState(false);

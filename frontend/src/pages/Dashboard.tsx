@@ -1,23 +1,26 @@
-import { AnimatePresence, MotionStyle, motion } from "framer-motion";
+import { Helmet } from "react-helmet";
+import { AnimatePresence, motion, MotionStyle } from "framer-motion";
+
 import { Table } from "@mui/material";
 import ViewInArIcon from "@mui/icons-material/ViewInAr";
+
+import FAQ from "../components/FAQ";
+import Chart from "../components/Chart";
+import config from "../config/config.json";
+import Pricing from "../components/Pricing";
+import { useUser } from "../contexts/UserContext";
+import Newsletter from "../components/Newsletter";
+import { Config } from "../types/TranslationTypes";
+import { useModal } from "../contexts/GlobalContext";
+import Testimonials from "../components/Testimonials";
 import FeaturedInSection from "../components/FeaturedIn";
+import MailChimp from "../components/Dashboard/Mailchimp";
+import { useDarkMode } from "../contexts/DarkModeContext";
+import EmailExport from "../components/Dashboard/EmailExport";
+import LatestSection from "../components/Dashboard/LatestSection";
+
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import LatestSection from "../components/Dashboard/LatestSection";
-import { useUser } from "../contexts/UserContext";
-import Chart from "../components/Chart";
-import Newsletter from "../components/Newsletter";
-import MailChimp from "../components/Dashboard/Mailchimp";
-import EmailExport from "../components/Dashboard/EmailExport";
-import FAQ from "../components/FAQ";
-import Pricing from "../components/Pricing";
-import Testimonials from "../components/Testimonials";
-import { Helmet } from "react-helmet";
-import { useModal } from "../contexts/GlobalContext";
-import config from "../config/config.json";
-import { Config } from "../types/TranslationTypes";
-import { useDarkMode } from "../contexts/DarkModeContext";
 
 const Dashboard = () => {
   const { isLoggedIn } = useUser();

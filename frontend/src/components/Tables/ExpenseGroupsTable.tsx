@@ -1,34 +1,37 @@
-import { ChangeEvent, useMemo, useState, MouseEvent } from "react";
-import { alpha } from "@mui/material/styles";
+import { useEffect } from "react";
+import { ChangeEvent, MouseEvent, useMemo, useState } from "react";
+
+import { Link } from "react-router-dom";
+
 import Box from "@mui/material/Box";
 import Table from "@mui/material/Table";
+import Paper from "@mui/material/Paper";
+import Toolbar from "@mui/material/Toolbar";
+import Tooltip from "@mui/material/Tooltip";
+import { visuallyHidden } from "@mui/utils";
+import { alpha } from "@mui/material/styles";
+import TableRow from "@mui/material/TableRow";
+import Checkbox from "@mui/material/Checkbox";
+import Skeleton from "@mui/material/Skeleton";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
-import TablePagination from "@mui/material/TablePagination";
-import TableRow from "@mui/material/TableRow";
-import TableSortLabel from "@mui/material/TableSortLabel";
-import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
-import Paper from "@mui/material/Paper";
-import Checkbox from "@mui/material/Checkbox";
 import IconButton from "@mui/material/IconButton";
-import Tooltip from "@mui/material/Tooltip";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { visuallyHidden } from "@mui/utils";
-import Skeleton from "@mui/material/Skeleton";
-import useObjectGroups from "../../hooks/GlobalHooks/GetObjectsHook";
+import TableContainer from "@mui/material/TableContainer";
+import TableSortLabel from "@mui/material/TableSortLabel";
+import TablePagination from "@mui/material/TablePagination";
+
+import { Order } from "../../types/globalTypes";
 import { useModal } from "../../contexts/GlobalContext";
-import useDeleteAllObjects from "../../hooks/GlobalHooks/DeleteAllObjectsHook";
-import useObjects from "../../hooks/GlobalHooks/AllObjectsHook";
-import { Data, ObjectGroupInterface } from "../../interfaces/globalInterfaces";
+import useObjects from "../../hooks/GlobalHooks/useObjects";
+import ExpenseGroupEditModal from "../Modals/ExpenseGroupEditModal";
+import useObjectGroups from "../../hooks/GlobalHooks/useObjectGroups";
 import DeleteObjectGroupModal from "../Modals/DeleteObjectGroupModal";
 import ExpenseGroupCreateModal from "../Modals/ExpenseGroupCreateModal";
-import ExpenseGroupEditModal from "../Modals/ExpenseGroupEditModal";
-import { Link } from "react-router-dom";
-import { useEffect } from "react";
-import { Order } from "../../types/globalTypes";
+import useDeleteAllObjects from "../../hooks/GlobalHooks/useDeleteAllObjects";
+import { Data, ObjectGroupInterface } from "../../interfaces/globalInterfaces";
 
 function createData(id: number, name: string, description: string): Data {
   return {
@@ -357,40 +360,40 @@ function EnhancedTable({
             <TableBody>
               {loading
                 ? Array.from({
-                    length: rowsPerPage,
-                  }).map((_, index) => <LoadingTableRow key={index} />)
+                  length: rowsPerPage,
+                }).map((_, index) => <LoadingTableRow key={index} />)
                 : visibleRows.map((row) => (
-                    <TableRow
-                      hover
-                      role="checkbox"
-                      aria-checked={isSelected(row.id)}
-                      tabIndex={-1}
-                      key={row.id}
-                      selected={isSelected(row.id)}
-                      sx={{ cursor: "pointer" }}
-                    >
-                      <TableCell padding="checkbox"></TableCell>
-                      <TableCell component="th" scope="row" padding="none">
-                        {row.id}
-                      </TableCell>
-                      <TableCell align="right">
-                        <Link
-                          to={`${row.id}`}
-                          className="hover:text-[#2563EB] transition-colors duration-300"
-                        >
-                          {row.name}
-                        </Link>
-                      </TableCell>
-                      <TableCell align="right">{row.description}</TableCell>
-                      <TableCell align="right">
-                        <ExpenseGroupEditModal id={row.id} objectType={""} />
-                        <DeleteObjectGroupModal
-                          id={row.id}
-                          objectType={"expense"}
-                        />
-                      </TableCell>
-                    </TableRow>
-                  ))}
+                  <TableRow
+                    hover
+                    role="checkbox"
+                    aria-checked={isSelected(row.id)}
+                    tabIndex={-1}
+                    key={row.id}
+                    selected={isSelected(row.id)}
+                    sx={{ cursor: "pointer" }}
+                  >
+                    <TableCell padding="checkbox"></TableCell>
+                    <TableCell component="th" scope="row" padding="none">
+                      {row.id}
+                    </TableCell>
+                    <TableCell align="right">
+                      <Link
+                        to={`${row.id}`}
+                        className="hover:text-[#2563EB] transition-colors duration-300"
+                      >
+                        {row.name}
+                      </Link>
+                    </TableCell>
+                    <TableCell align="right">{row.description}</TableCell>
+                    <TableCell align="right">
+                      <ExpenseGroupEditModal id={row.id} objectType={""} />
+                      <DeleteObjectGroupModal
+                        id={row.id}
+                        objectType={"expense"}
+                      />
+                    </TableCell>
+                  </TableRow>
+                ))}
               <TableRow
                 style={{
                   height: (dense ? 33 : 53) * emptyRows,

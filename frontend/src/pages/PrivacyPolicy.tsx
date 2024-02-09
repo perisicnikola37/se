@@ -1,7 +1,8 @@
-import { Link } from "react-router-dom";
-import { motion } from "framer-motion";
-import { Breadcrumbs, Typography } from "@mui/material";
 import { Helmet } from "react-helmet";
+import { motion } from "framer-motion";
+import { Link } from "react-router-dom";
+
+import { Breadcrumbs, Typography } from "@mui/material";
 
 const PrivacyPolicy = () => {
   return (

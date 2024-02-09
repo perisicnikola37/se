@@ -1,4 +1,5 @@
-import { MouseEvent, ChangeEvent } from "react";
+import { ChangeEvent, MouseEvent } from "react";
+
 import { Order } from "../types/globalTypes";
 export interface StatisticsResponse {
   expenses: { [date: string]: number };

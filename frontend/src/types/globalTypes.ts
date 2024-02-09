@@ -1,8 +1,6 @@
 import { ReactNode } from "react";
-import {
-  ExpenseInterface,
-  IncomeInterface,
-} from "../interfaces/globalInterfaces";
+
+import { ExpenseInterface, IncomeInterface } from "../interfaces/globalInterfaces";
 
 export type StatisticsResponseType = {
   expenses: { [date: string]: number };
@@ -35,4 +33,3 @@ export type FaqItem = {
   question: string;
   answer: string;
 };
-

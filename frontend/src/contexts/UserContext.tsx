@@ -1,9 +1,6 @@
 import { createContext, useContext, useState } from "react";
-import {
-  User,
-  UserContextProps,
-  UserProviderProps,
-} from "../interfaces/contextsInterfaces";
+
+import { User, UserContextProps, UserProviderProps } from "../interfaces/contextsInterfaces";
 
 const UserContext = createContext<UserContextProps | undefined>(undefined);
 

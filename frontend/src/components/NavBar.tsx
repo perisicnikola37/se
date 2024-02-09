@@ -1,35 +1,26 @@
 import { useEffect, useState } from "react";
-import {
-  AppBar,
-  Avatar,
-  Box,
-  Button,
-  Container,
-  IconButton,
-  Menu,
-  MenuItem,
-  Toolbar,
-  Tooltip,
-  Typography,
-} from "@mui/material";
+
+import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
+
 import MenuIcon from "@mui/icons-material/Menu";
+import EastSharpIcon from "@mui/icons-material/EastSharp";
+import NightlightIcon from "@mui/icons-material/Nightlight";
 import Brightness4Icon from "@mui/icons-material/Brightness4";
+import { AppBar, Avatar, Box, Button, Container, IconButton, Menu, MenuItem, Toolbar, Tooltip, Typography } from "@mui/material";
+
+import SubHeader from "./SubHeader";
 import logo from "../assets/logo.png";
 import config from "../config/config.json";
-import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
-import SubHeader from "./SubHeader";
-import EastSharpIcon from "@mui/icons-material/EastSharp";
-import { useUser } from "../contexts/UserContext";
-import { useModal } from "../contexts/GlobalContext";
-import userPicture from "../../src/assets/profile_image.jpg";
-import { useDarkMode } from "../contexts/DarkModeContext";
-import NightlightIcon from "@mui/icons-material/Nightlight";
 import { handleLogout } from "../utils/utils";
+import { useUser } from "../contexts/UserContext";
 import { Config } from "../types/TranslationTypes";
+import { useModal } from "../contexts/GlobalContext";
+import { useDarkMode } from "../contexts/DarkModeContext";
+import userPicture from "../../src/assets/profile_image.jpg";
 
 const NavBar = () => {
   const navigate = useNavigate();
-  const { language } = useModal()
+  const { language } = useModal();
   const pagesData = (config as unknown as Config)[language];
   const languageConfig = (config as unknown as Config)[language];
 
@@ -176,17 +167,17 @@ const NavBar = () => {
                         key={page.url}
                         to={page.url}
                         className={`text-black m-3 inline-block transition duration-300 border-b-2 border-transparent hover:border-blue-500 ${page.url === location.pathname
-                          ? "border-blue-300"
-                          : ""
+                            ? "border-blue-300"
+                            : ""
                           }`}
                         onClick={handleCloseNavMenu}
                       >
                         <span
                           className={`my-2 ${page.url === location.pathname
-                            ? "text-blue-500"
-                            : darkMode
-                              ? "text-white"
-                              : "text-black"
+                              ? "text-blue-500"
+                              : darkMode
+                                ? "text-white"
+                                : "text-black"
                             }`}
                         >
                           {page.name}

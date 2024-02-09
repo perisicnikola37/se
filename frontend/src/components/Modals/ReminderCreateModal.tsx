@@ -1,21 +1,16 @@
 import { useState } from "react";
+
 import Button from "@mui/material/Button";
-import TextField from "@mui/material/TextField";
 import Dialog from "@mui/material/Dialog";
+import TextField from "@mui/material/TextField";
+import DialogTitle from "@mui/material/DialogTitle";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
-import DialogTitle from "@mui/material/DialogTitle";
-import {
-  Alert,
-  Select,
-  MenuItem,
-  FormControl,
-  InputLabel,
-  Checkbox,
-} from "@mui/material";
+import { Alert, Checkbox, FormControl, InputLabel, MenuItem, Select } from "@mui/material";
+
 import { useModal } from "../../contexts/GlobalContext";
-import useCreateReminder from "../../hooks/Reminders/CreateReminderHook";
+import useCreateReminder from "../../hooks/Reminders/useCreateReminder";
 
 const ReminderCreateModal = () => {
   const { createReminder, isLoading } = useCreateReminder();

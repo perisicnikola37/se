@@ -1,10 +1,11 @@
-import { useState, useEffect } from "react";
-import useMailchimpSubscribe from "../hooks/ThirdPartyServices/MailchimpSubscribeHook";
-import { validateEmail } from "../utils/utils";
-import { useDarkMode } from "../contexts/DarkModeContext";
+import { useEffect, useState } from "react";
+
 import config from "../config/config.json";
+import { validateEmail } from "../utils/utils";
 import { Config } from "../types/TranslationTypes";
 import { useModal } from "../contexts/GlobalContext";
+import { useDarkMode } from "../contexts/DarkModeContext";
+import useMailchimpSubscribe from "../hooks/ThirdPartyServices/useMailchimpSubscribe";
 
 const Newsletter = () => {
   const { subscribeToMailchimp } = useMailchimpSubscribe();
@@ -46,11 +47,15 @@ const Newsletter = () => {
           >
             {languageConfig.newsletterHeading}
           </h2>
-          <p className={`mx-auto mb-8 max-w-2xl font-light ${darkMode ? 'text-neutral-200' : 'text-gray-500'} md:mb-12 sm:text-xl`}>
+          <p
+            className={`mx-auto mb-8 max-w-2xl font-light ${darkMode ? "text-neutral-200" : "text-gray-500"} md:mb-12 sm:text-xl`}
+          >
             {languageConfig.newsletterText}
           </p>
           {isSubscribed ? (
-            <p className="text-[#4F65EB] font-bold">{languageConfig.subscribedMessage}</p>
+            <p className="text-[#4F65EB] font-bold">
+              {languageConfig.subscribedMessage}
+            </p>
           ) : (
             <form>
               <div className="flex items-center mx-auto mb-3 space-y-4 max-w-screen-sm sm:flex sm:space-y-0">

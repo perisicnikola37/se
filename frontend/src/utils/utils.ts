@@ -1,4 +1,5 @@
 import { Dispatch, SetStateAction } from "react";
+
 import { User } from "../interfaces/contextsInterfaces";
 import { LoginResponse, LoginResult } from "../interfaces/globalInterfaces";
 
@@ -129,4 +130,3 @@ export const handleLogout = () => {
   localStorage.removeItem("token");
   localStorage.removeItem("formattedCreatedAt");
 };
-

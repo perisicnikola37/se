@@ -1,4 +1,5 @@
-using ExpenseTrackerApi.conf;
+namespace ExpenseTrackerApi.conf;
+
 using ExpenseTrackerApi.Middlewares;
 
 public static class AppConfig
