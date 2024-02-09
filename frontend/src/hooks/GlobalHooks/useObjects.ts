@@ -1,8 +1,9 @@
 import { useState } from "react";
+
 import axiosConfig from "../../config/axiosConfig";
 import { useModal } from "../../contexts/GlobalContext";
-import { FetchObjectsParams } from "../../interfaces/globalInterfaces";
 import { ObjectInterface } from "../../types/globalTypes";
+import { FetchObjectsParams } from "../../interfaces/globalInterfaces";
 
 const useObjects = <T extends ObjectInterface>() => {
   const [isLoading, setIsLoading] = useState<boolean>(false);

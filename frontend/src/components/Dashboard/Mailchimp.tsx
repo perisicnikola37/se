@@ -1,8 +1,8 @@
-import { useModal } from "../../contexts/GlobalContext";
-import { MailChimpProps } from "../../interfaces/globalInterfaces";
 import config from "../../config/config.json";
 import { Config } from "../../types/TranslationTypes";
+import { useModal } from "../../contexts/GlobalContext";
 import { useDarkMode } from "../../contexts/DarkModeContext";
+import { MailChimpProps } from "../../interfaces/globalInterfaces";
 
 const Mailchimp = ({ imageUrl }: MailChimpProps) => {
   const { language } = useModal();

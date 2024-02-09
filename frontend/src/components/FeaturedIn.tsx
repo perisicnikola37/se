@@ -1,5 +1,5 @@
-import { Config } from "../types/TranslationTypes";
 import config from "../config/config.json";
+import { Config } from "../types/TranslationTypes";
 import { useModal } from "../contexts/GlobalContext";
 import { useDarkMode } from "../contexts/DarkModeContext";
 

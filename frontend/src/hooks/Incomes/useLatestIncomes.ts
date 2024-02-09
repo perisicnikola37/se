@@ -1,4 +1,5 @@
 import { useState } from "react";
+
 import { IncomeSimplified } from "../../interfaces/globalInterfaces";
 import fetchLatestIncomes from "../../services/latestIncomesService";
 

@@ -1,6 +1,7 @@
 import { useState } from "react";
-import { ObjectGroupInterface } from "../../interfaces/globalInterfaces";
+
 import fetchObjectGroups from "../../services/objectGroupsService";
+import { ObjectGroupInterface } from "../../interfaces/globalInterfaces";
 
 const useObjectGroups = (objectType: string) => {
   const [objectGroups, setObjectGroups] = useState<ObjectGroupInterface[]>([]);

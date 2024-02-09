@@ -1,8 +1,6 @@
-import { createContext, useContext, useState, ReactNode } from "react";
-import {
-  FetchObjectParams,
-  ModalContextProps,
-} from "../interfaces/contextsInterfaces";
+import { createContext, ReactNode, useContext, useState } from "react";
+
+import { FetchObjectParams, ModalContextProps } from "../interfaces/contextsInterfaces";
 
 interface ModalProviderProps {
   children: ReactNode;

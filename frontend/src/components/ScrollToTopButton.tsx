@@ -1,6 +1,7 @@
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
-import { ScrollToTopButtonProps } from "../interfaces/globalInterfaces";
+
 import { useDarkMode } from "../contexts/DarkModeContext";
+import { ScrollToTopButtonProps } from "../interfaces/globalInterfaces";
 
 const ScrollToTopButton = ({ onClick }: ScrollToTopButtonProps) => {
   const { darkMode } = useDarkMode();

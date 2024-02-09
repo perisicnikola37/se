@@ -1,4 +1,5 @@
 import { useState } from "react";
+
 import { fetchStatistics } from "../../services/statisticsService";
 
 const useStatistics = () => {

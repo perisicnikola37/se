@@ -1,7 +1,9 @@
 import { useEffect } from "react";
+
+import { Helmet } from "react-helmet";
+
 import SignUpForm from "../components/SignUpForm";
 import { useUser } from "../contexts/UserContext";
-import { Helmet } from "react-helmet";
 
 export default function SignUp() {
   const { isLoggedIn } = useUser();

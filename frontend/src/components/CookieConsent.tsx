@@ -1,8 +1,11 @@
-import { motion, useAnimation } from "framer-motion";
 import { useEffect, useState } from "react";
+
+import { motion, useAnimation } from "framer-motion";
+
+import CloseIcon from "@mui/icons-material/Close";
+
 import config from "../config/config.json";
 import { Config } from "../types/TranslationTypes";
-import CloseIcon from "@mui/icons-material/Close";
 import { useModal } from "../contexts/GlobalContext";
 
 const CookieConsent = () => {

@@ -1,15 +1,18 @@
 import { useEffect } from "react";
-import NavBar from "./components/NavBar";
-import { useLoading } from "./contexts/LoadingContext";
-import Footer from "./components/Footer";
+
 import { Outlet } from "react-router-dom";
-import { useDarkMode } from "./contexts/DarkModeContext";
+
 import { CssBaseline, ThemeProvider } from "@mui/material";
-import { useAuthenticationMiddleware } from "./middleware/authMiddleware";
-import ScrollToTopButton from "./components/ScrollToTopButton";
-import { getTheme } from "./config/themeConfiguration";
-import LoadingContainer from "./components/LoadingContainer";
+
+import NavBar from "./components/NavBar";
+import Footer from "./components/Footer";
 import useScrollToTop from "./hooks/useScrollToTop";
+import { useLoading } from "./contexts/LoadingContext";
+import { getTheme } from "./config/themeConfiguration";
+import { useDarkMode } from "./contexts/DarkModeContext";
+import LoadingContainer from "./components/LoadingContainer";
+import ScrollToTopButton from "./components/ScrollToTopButton";
+import { useAuthenticationMiddleware } from "./middleware/authMiddleware";
 
 function App() {
   const { loading, setLoadingState } = useLoading();

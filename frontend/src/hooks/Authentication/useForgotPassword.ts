@@ -1,6 +1,8 @@
 import { useState } from "react";
-import axiosConfig from "../../config/axiosConfig";
+
 import Swal from "sweetalert2";
+
+import axiosConfig from "../../config/axiosConfig";
 import { ForgotPasswordHookInterface } from "../../interfaces/globalInterfaces";
 
 const useForgotPassword = (): ForgotPasswordHookInterface => {

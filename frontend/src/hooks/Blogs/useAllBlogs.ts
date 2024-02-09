@@ -1,6 +1,7 @@
 import { useState } from "react";
-import { BlogInterface } from "../../interfaces/globalInterfaces";
+
 import { fetchAllBlogs } from "../../services/allBlogsService";
+import { BlogInterface } from "../../interfaces/globalInterfaces";
 
 const useAllBlogs = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);

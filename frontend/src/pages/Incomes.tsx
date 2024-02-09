@@ -1,9 +1,11 @@
 import { useEffect } from "react";
+
+import { Helmet } from "react-helmet";
+
 import { useModal } from "../contexts/GlobalContext";
 import useObjects from "../hooks/GlobalHooks/useObjects";
 import EnhancedTable from "../components/Tables/IncomesTable";
 import { IncomeInterface } from "../interfaces/globalInterfaces";
-import { Helmet } from "react-helmet";
 
 const Incomes = () => {
   const { objects, loadObjects } = useObjects<IncomeInterface>();

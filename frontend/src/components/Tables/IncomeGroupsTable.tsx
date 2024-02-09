@@ -1,33 +1,36 @@
-import { ChangeEvent, useMemo, useState, MouseEvent, useEffect } from "react";
-import { alpha } from "@mui/material/styles";
+import { ChangeEvent, MouseEvent, useEffect, useMemo, useState } from "react";
+
+import { Link } from "react-router-dom";
+
 import Box from "@mui/material/Box";
 import Table from "@mui/material/Table";
+import Paper from "@mui/material/Paper";
+import Toolbar from "@mui/material/Toolbar";
+import Tooltip from "@mui/material/Tooltip";
+import { visuallyHidden } from "@mui/utils";
+import { alpha } from "@mui/material/styles";
+import TableRow from "@mui/material/TableRow";
+import Checkbox from "@mui/material/Checkbox";
+import Skeleton from "@mui/material/Skeleton";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
-import TablePagination from "@mui/material/TablePagination";
-import TableRow from "@mui/material/TableRow";
-import TableSortLabel from "@mui/material/TableSortLabel";
-import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
-import Paper from "@mui/material/Paper";
-import Checkbox from "@mui/material/Checkbox";
 import IconButton from "@mui/material/IconButton";
-import Tooltip from "@mui/material/Tooltip";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { visuallyHidden } from "@mui/utils";
-import Skeleton from "@mui/material/Skeleton";
-import useObjectGroups from "../../hooks/GlobalHooks/useObjectGroups";
-import { useModal } from "../../contexts/GlobalContext";
-import useDeleteAllObjects from "../../hooks/GlobalHooks/useDeleteAllObjects";
-import useObjects from "../../hooks/GlobalHooks/useObjects";
-import { Data, ObjectGroupInterface } from "../../interfaces/globalInterfaces";
-import IncomeGroupCreateModal from "../Modals/IncomeGroupCreateModal";
-import IncomeGroupEditModal from "../Modals/IncomeGroupEditModal";
-import DeleteObjectGroupModal from "../Modals/DeleteObjectGroupModal";
-import { Link } from "react-router-dom";
+import TableContainer from "@mui/material/TableContainer";
+import TableSortLabel from "@mui/material/TableSortLabel";
+import TablePagination from "@mui/material/TablePagination";
+
 import { Order } from "../../types/globalTypes";
+import { useModal } from "../../contexts/GlobalContext";
+import useObjects from "../../hooks/GlobalHooks/useObjects";
+import IncomeGroupEditModal from "../Modals/IncomeGroupEditModal";
+import useObjectGroups from "../../hooks/GlobalHooks/useObjectGroups";
+import IncomeGroupCreateModal from "../Modals/IncomeGroupCreateModal";
+import DeleteObjectGroupModal from "../Modals/DeleteObjectGroupModal";
+import useDeleteAllObjects from "../../hooks/GlobalHooks/useDeleteAllObjects";
+import { Data, ObjectGroupInterface } from "../../interfaces/globalInterfaces";
 
 function createData(id: number, name: string, description: string): Data {
   return {

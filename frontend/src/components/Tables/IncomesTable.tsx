@@ -1,38 +1,41 @@
-import { ChangeEvent, useMemo, useState, MouseEvent, useEffect } from "react";
-import { alpha } from "@mui/material/styles";
-import Box from "@mui/material/Box";
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
-import TableHead from "@mui/material/TableHead";
-import TablePagination from "@mui/material/TablePagination";
-import TableRow from "@mui/material/TableRow";
-import TableSortLabel from "@mui/material/TableSortLabel";
-import Toolbar from "@mui/material/Toolbar";
-import Typography from "@mui/material/Typography";
-import Paper from "@mui/material/Paper";
-import Checkbox from "@mui/material/Checkbox";
-import IconButton from "@mui/material/IconButton";
-import Tooltip from "@mui/material/Tooltip";
-import DeleteIcon from "@mui/icons-material/Delete";
-import FilterListIcon from "@mui/icons-material/FilterList";
-import { visuallyHidden } from "@mui/utils";
-import Skeleton from "@mui/material/Skeleton";
-import { IncomeInterface } from "../../interfaces/globalInterfaces";
-import DeleteModal from "../Modals/DeleteModal";
-import { Autocomplete, Button, Chip, Popover, TextField } from "@mui/material";
-import useObjectGroups from "../../hooks/GlobalHooks/useObjectGroups";
-import { useModal } from "../../contexts/GlobalContext";
-import useDeleteAllObjects from "../../hooks/GlobalHooks/useDeleteAllObjects";
-import useObjects from "../../hooks/GlobalHooks/useObjects";
-import IncomeCreateModal from "../Modals/IncomeCreateModal";
-import IncomeEditModal from "../Modals/IncomeEditModal";
-import SendIcon from "@mui/icons-material/Send";
-import useExportToEmail from "../../hooks/ThirdPartyServices/useExportToEmail";
+import { ChangeEvent, MouseEvent, useEffect, useMemo, useState } from "react";
+
 import Swal from "sweetalert2";
 import { motion } from "framer-motion";
+
+import Box from "@mui/material/Box";
+import Table from "@mui/material/Table";
+import Paper from "@mui/material/Paper";
+import Toolbar from "@mui/material/Toolbar";
+import Tooltip from "@mui/material/Tooltip";
+import { visuallyHidden } from "@mui/utils";
+import { alpha } from "@mui/material/styles";
+import TableRow from "@mui/material/TableRow";
+import Checkbox from "@mui/material/Checkbox";
+import Skeleton from "@mui/material/Skeleton";
+import TableBody from "@mui/material/TableBody";
+import TableCell from "@mui/material/TableCell";
+import TableHead from "@mui/material/TableHead";
+import SendIcon from "@mui/icons-material/Send";
+import Typography from "@mui/material/Typography";
+import IconButton from "@mui/material/IconButton";
+import DeleteIcon from "@mui/icons-material/Delete";
+import TableContainer from "@mui/material/TableContainer";
+import TableSortLabel from "@mui/material/TableSortLabel";
+import TablePagination from "@mui/material/TablePagination";
+import FilterListIcon from "@mui/icons-material/FilterList";
+import { Autocomplete, Button, Chip, Popover, TextField } from "@mui/material";
+
+import DeleteModal from "../Modals/DeleteModal";
 import { Order } from "../../types/globalTypes";
+import { useModal } from "../../contexts/GlobalContext";
+import IncomeEditModal from "../Modals/IncomeEditModal";
+import useObjects from "../../hooks/GlobalHooks/useObjects";
+import IncomeCreateModal from "../Modals/IncomeCreateModal";
+import { IncomeInterface } from "../../interfaces/globalInterfaces";
+import useObjectGroups from "../../hooks/GlobalHooks/useObjectGroups";
+import useDeleteAllObjects from "../../hooks/GlobalHooks/useDeleteAllObjects";
+import useExportToEmail from "../../hooks/ThirdPartyServices/useExportToEmail";
 interface Data {
   id: number;
   description: string;
@@ -567,20 +570,20 @@ function EnhancedTable({
             <TableBody>
               {loading
                 ? Array.from({
-                    length: rowsPerPage,
-                  }).map((_, index) => <LoadingTableRow key={index} />)
+                  length: rowsPerPage,
+                }).map((_, index) => <LoadingTableRow key={index} />)
                 : visibleRows.map((row) => (
-                    <TableRow
-                      hover
-                      role="checkbox"
-                      aria-checked={isSelected(row.id)}
-                      tabIndex={-1}
-                      key={row.id}
-                      selected={isSelected(row.id)}
-                      sx={{ cursor: "pointer" }}
-                    >
-                      <TableCell padding="checkbox">
-                        {/* <Checkbox
+                  <TableRow
+                    hover
+                    role="checkbox"
+                    aria-checked={isSelected(row.id)}
+                    tabIndex={-1}
+                    key={row.id}
+                    selected={isSelected(row.id)}
+                    sx={{ cursor: "pointer" }}
+                  >
+                    <TableCell padding="checkbox">
+                      {/* <Checkbox
                                                      color="primary"
                                                      checked={isSelected(
                                                          row.id
@@ -590,25 +593,25 @@ function EnhancedTable({
                                                              `enhanced-table-checkbox-${index}`,
                                                      }}
                                                  /> */}
-                      </TableCell>
-                      <TableCell component="th" scope="row" padding="none">
-                        {row.id}
-                      </TableCell>
-                      <TableCell align="right">{row.description}</TableCell>
-                      <TableCell align="right">
-                        <Chip
-                          size="small"
-                          label={`$${row.amount}`}
-                          sx={{ background: "#5dc983", color: "#fff" }}
-                        />
-                      </TableCell>
-                      <TableCell align="right">{row.incomeGroup}</TableCell>
-                      <TableCell align="right">
-                        <IncomeEditModal id={row.id} objectType={""} />
-                        <DeleteModal id={row.id} objectType={"income"} />
-                      </TableCell>
-                    </TableRow>
-                  ))}
+                    </TableCell>
+                    <TableCell component="th" scope="row" padding="none">
+                      {row.id}
+                    </TableCell>
+                    <TableCell align="right">{row.description}</TableCell>
+                    <TableCell align="right">
+                      <Chip
+                        size="small"
+                        label={`$${row.amount}`}
+                        sx={{ background: "#5dc983", color: "#fff" }}
+                      />
+                    </TableCell>
+                    <TableCell align="right">{row.incomeGroup}</TableCell>
+                    <TableCell align="right">
+                      <IncomeEditModal id={row.id} objectType={""} />
+                      <DeleteModal id={row.id} objectType={"income"} />
+                    </TableCell>
+                  </TableRow>
+                ))}
               <TableRow
                 style={{
                   height: (dense ? 33 : 53) * emptyRows,

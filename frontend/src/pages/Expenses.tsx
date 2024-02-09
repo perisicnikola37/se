@@ -1,9 +1,11 @@
 import { useEffect } from "react";
+
+import { Helmet } from "react-helmet";
+
 import { useModal } from "../contexts/GlobalContext";
 import useObjects from "../hooks/GlobalHooks/useObjects";
 import EnhancedTable from "../components/Tables/ExpensesTable";
 import { ExpenseInterface } from "../interfaces/globalInterfaces";
-import { Helmet } from "react-helmet";
 
 const Expenses = () => {
   const { objects, loadObjects } = useObjects<ExpenseInterface>();

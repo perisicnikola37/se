@@ -1,12 +1,15 @@
 import { useEffect, useState } from "react";
-import DeleteModal from "../components/Modals/DeleteModal";
-import useAllReminders from "../hooks/Reminders/useAllReminders";
-import { Alert, Breadcrumbs, Skeleton, Typography } from "@mui/material";
-import ReminderCreateModal from "../components/Modals/ReminderCreateModal";
-import { useModal } from "../contexts/GlobalContext";
-import { Link } from "react-router-dom";
+
 import { Helmet } from "react-helmet";
 import { motion } from "framer-motion";
+import { Link } from "react-router-dom";
+
+import { Alert, Breadcrumbs, Skeleton, Typography } from "@mui/material";
+
+import { useModal } from "../contexts/GlobalContext";
+import DeleteModal from "../components/Modals/DeleteModal";
+import useAllReminders from "../hooks/Reminders/useAllReminders";
+import ReminderCreateModal from "../components/Modals/ReminderCreateModal";
 
 const Reminders = () => {
   const { loadReminders, reminders } = useAllReminders();
@@ -68,9 +71,8 @@ const Reminders = () => {
               {reminders.map((reminder) => (
                 <li
                   key={reminder.id}
-                  className={`${
-                    !reminder.active ? "bg-[#FEE9EC]" : "bg-[#d1fff7]"
-                  } p-4 rounded-md shadow-md flex flex-col justify-between relative`}
+                  className={`${!reminder.active ? "bg-[#FEE9EC]" : "bg-[#d1fff7]"
+                    } p-4 rounded-md shadow-md flex flex-col justify-between relative`}
                 >
                   <div className="mb-3">
                     <h2 className="text-xl font-semibold mb-2">

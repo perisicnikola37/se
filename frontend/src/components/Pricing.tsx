@@ -1,7 +1,7 @@
-import { useDarkMode } from "../contexts/DarkModeContext";
-import { useModal } from "../contexts/GlobalContext";
-import { Config } from "../types/TranslationTypes";
 import config from "../config/config.json";
+import { Config } from "../types/TranslationTypes";
+import { useModal } from "../contexts/GlobalContext";
+import { useDarkMode } from "../contexts/DarkModeContext";
 
 export default function Pricing() {
   const { language } = useModal();

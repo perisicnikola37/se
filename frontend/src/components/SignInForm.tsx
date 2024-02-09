@@ -1,21 +1,12 @@
-import {
-  Button,
-  CssBaseline,
-  TextField,
-  FormControlLabel,
-  Checkbox,
-  Link,
-  Grid,
-  Box,
-  Typography,
-  Container,
-} from "@mui/material";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { Alert } from "@mui/material";
-import useLogin from "../hooks/Authentication/useLogin";
-import { validateLoginForm } from "../utils/utils";
-import { useUser } from "../contexts/UserContext";
 import { useState } from "react";
+
+import { Alert } from "@mui/material";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { Box, Button, Checkbox, Container, CssBaseline, FormControlLabel, Grid, Link, TextField, Typography } from "@mui/material";
+
+import { useUser } from "../contexts/UserContext";
+import { validateLoginForm } from "../utils/utils";
+import useLogin from "../hooks/Authentication/useLogin";
 
 const defaultTheme = createTheme();
 

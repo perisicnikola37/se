@@ -1,13 +1,16 @@
+import { useEffect } from "react";
+
+import CountUp from "react-countup";
 import { Helmet } from "react-helmet";
 import { motion } from "framer-motion";
+
+import { Button } from "@mui/material";
+
+import BorderLinearProgress from "../components/Progress";
+import { useDarkMode } from "../contexts/DarkModeContext";
 import userPicture from "../../src/assets/profile_image.jpg";
-import { useEffect } from "react";
 import useCurrentUser from "../hooks/Authentication/useCurrentUser";
 import useDeleteAccount from "../hooks/Authentication/useDeleteAccount";
-import BorderLinearProgress from "../components/Progress";
-import { Button } from "@mui/material";
-import CountUp from "react-countup";
-import { useDarkMode } from "../contexts/DarkModeContext";
 
 const Profile = () => {
   const { loadCurrentUser, user } = useCurrentUser();

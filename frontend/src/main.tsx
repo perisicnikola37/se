@@ -1,29 +1,33 @@
 import React from "react";
+
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+
 import ReactDOM from "react-dom/client";
+
 import App from "./App.tsx";
-import "./index.css";
-import { RouterProvider, createBrowserRouter } from "react-router-dom";
+import Blogs from "./pages/Blogs.tsx";
 import SignUp from "./pages/SignUp.tsx";
 import SignIn from "./pages/SignIn.tsx";
-import Dashboard from "./pages/Dashboard.tsx";
-import { LoadingProvider } from "./contexts/LoadingContext.tsx";
-import Expenses from "./pages/Expenses.tsx";
 import Incomes from "./pages/Incomes.tsx";
+import Profile from "./pages/Profile.tsx";
+import Expenses from "./pages/Expenses.tsx";
+import Dashboard from "./pages/Dashboard.tsx";
+import Reminders from "./pages/Reminders.tsx";
+import BlogDetail from "./pages/BlogDetail.tsx";
 import NotFoundPage from "./pages/NotFoundPage.tsx";
-import { UserProvider } from "./contexts/UserContext.tsx";
-import { ModalProvider } from "./contexts/GlobalContext.tsx";
 import IncomeGroups from "./pages/IncomeGroups.tsx";
 import ExpenseGroups from "./pages/ExpenseGroups.tsx";
-import Reminders from "./pages/Reminders.tsx";
-import Blogs from "./pages/Blogs.tsx";
-import IncomeGroupDetail from "./pages/IncomeGroupDetail.tsx";
-import ExpenseGroupDetail from "./pages/ExpenseGroupDetail.tsx";
-import ForgotPassword from "./pages/ForgotPassword.tsx";
-import { DarkModeProvider } from "./contexts/DarkModeContext.tsx";
-import BlogDetail from "./pages/BlogDetail.tsx";
 import ResetPassword from "./pages/ResetPassword.tsx";
-import Profile from "./pages/Profile.tsx";
 import PrivacyPolicy from "./pages/PrivacyPolicy.tsx";
+import ForgotPassword from "./pages/ForgotPassword.tsx";
+import { UserProvider } from "./contexts/UserContext.tsx";
+import { ModalProvider } from "./contexts/GlobalContext.tsx";
+import IncomeGroupDetail from "./pages/IncomeGroupDetail.tsx";
+import { LoadingProvider } from "./contexts/LoadingContext.tsx";
+import ExpenseGroupDetail from "./pages/ExpenseGroupDetail.tsx";
+import { DarkModeProvider } from "./contexts/DarkModeContext.tsx";
+
+import "./index.css";
 
 const router = createBrowserRouter([
   {

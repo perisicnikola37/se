@@ -1,6 +1,7 @@
 import { useState } from "react";
-import { GetObjectInterface } from "../../interfaces/globalInterfaces";
+
 import { fetchObjectById } from "../../services/getObjectByIdService";
+import { GetObjectInterface } from "../../interfaces/globalInterfaces";
 
 const useGetObjectById = (objectId: number, objectType: string) => {
   const [object, setObject] = useState<GetObjectInterface | null>(null);

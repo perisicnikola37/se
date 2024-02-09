@@ -1,10 +1,11 @@
-import { useState, useEffect } from "react";
-import useMailchimpSubscribe from "../hooks/ThirdPartyServices/useMailchimpSubscribe";
-import { validateEmail } from "../utils/utils";
-import { useDarkMode } from "../contexts/DarkModeContext";
+import { useEffect, useState } from "react";
+
 import config from "../config/config.json";
+import { validateEmail } from "../utils/utils";
 import { Config } from "../types/TranslationTypes";
 import { useModal } from "../contexts/GlobalContext";
+import { useDarkMode } from "../contexts/DarkModeContext";
+import useMailchimpSubscribe from "../hooks/ThirdPartyServices/useMailchimpSubscribe";
 
 const Newsletter = () => {
   const { subscribeToMailchimp } = useMailchimpSubscribe();
@@ -74,9 +75,8 @@ const Newsletter = () => {
                     ></svg>
                   </div>
                   <input
-                    className={`block p-3 lg:pl-10 sm:pl-3 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 sm:rounded-none sm:rounded-l-lg outline-none ${
-                      isEmailValid ? "" : "border-red-500"
-                    }`}
+                    className={`block p-3 lg:pl-10 sm:pl-3 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 sm:rounded-none sm:rounded-l-lg outline-none ${isEmailValid ? "" : "border-red-500"
+                      }`}
                     placeholder={languageConfig.emailPlaceholder}
                     type="email"
                     id="email"

@@ -1,4 +1,5 @@
 import { useState } from "react";
+
 import { ExpenseSimplified } from "../../interfaces/globalInterfaces";
 import fetchLatestExpenses from "../../services/latestExpensesService";
 

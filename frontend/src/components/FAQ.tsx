@@ -1,9 +1,10 @@
 import { useState } from "react";
-import { useDarkMode } from "../contexts/DarkModeContext";
+
 import config from "../config/config.json";
+import { FaqItem } from "../types/globalTypes";
 import { Config } from "../types/TranslationTypes";
 import { useModal } from "../contexts/GlobalContext";
-import { FaqItem } from "../types/globalTypes";
+import { useDarkMode } from "../contexts/DarkModeContext";
 
 const FAQ = () => {
   const { language } = useModal();

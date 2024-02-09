@@ -1,10 +1,9 @@
-import axiosConfig from "../../config/axiosConfig";
 import { useState } from "react";
+
 import { useNavigate } from "react-router-dom";
-import {
-  RegistrationData,
-  RegistrationResponse,
-} from "../../interfaces/globalInterfaces";
+
+import axiosConfig from "../../config/axiosConfig";
+import { RegistrationData, RegistrationResponse } from "../../interfaces/globalInterfaces";
 
 interface ErrorResponse {
   response?: {

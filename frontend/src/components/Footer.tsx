@@ -1,6 +1,6 @@
 import logo from "../assets/logo.png";
-import CookieConsent from "./CookieConsent";
 import config from "../config/config.json";
+import CookieConsent from "./CookieConsent";
 import { Config } from "../types/TranslationTypes";
 import { useModal } from "../contexts/GlobalContext";
 

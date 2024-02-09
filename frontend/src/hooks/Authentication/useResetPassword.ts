@@ -1,7 +1,9 @@
 import { useState } from "react";
-import axiosConfig from "../../config/axiosConfig";
+
 import Swal from "sweetalert2";
 import { useLocation } from "react-router-dom";
+
+import axiosConfig from "../../config/axiosConfig";
 import { ResetPasswordHookInterface } from "../../interfaces/globalInterfaces";
 
 const useResetPassword = (): ResetPasswordHookInterface => {

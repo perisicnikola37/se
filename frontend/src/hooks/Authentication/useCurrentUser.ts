@@ -1,4 +1,5 @@
 import { useState } from "react";
+
 import { User } from "../../interfaces/globalInterfaces";
 import fetchCurrentUser from "../../services/currentUserService";
 

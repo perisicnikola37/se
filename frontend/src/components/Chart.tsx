@@ -1,16 +1,9 @@
 import { useEffect } from "react";
-import {
-  LineChart,
-  Line,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  Legend,
-  Label,
-} from "recharts";
-import useStatistics from "../hooks/Statistics/useStatistics";
+
+import { CartesianGrid, Label, Legend, Line, LineChart, Tooltip, XAxis, YAxis } from "recharts";
+
 import { useUser } from "../contexts/UserContext";
+import useStatistics from "../hooks/Statistics/useStatistics";
 import { generateData, generateLoremData } from "../utils/generateChartData";
 
 const Chart = () => {
@@ -18,9 +11,9 @@ const Chart = () => {
   const { isLoggedIn } = useUser();
   const data = isLoggedIn()
     ? generateData(
-        expenses.map((e) => e.amount),
-        incomes.map((i) => i.amount),
-      )
+      expenses.map((e) => e.amount),
+      incomes.map((i) => i.amount),
+    )
     : generateLoremData();
 
   useEffect(() => {

@@ -1,15 +1,7 @@
 import { useState } from "react";
-import {
-  TextField,
-  Button,
-  Typography,
-  Container,
-  Grid,
-  Link,
-  Box,
-  CssBaseline,
-  Alert,
-} from "@mui/material";
+
+import { Alert, Box, Button, Container, CssBaseline, Grid, Link, TextField, Typography } from "@mui/material";
+
 import useForgotPassword from "../hooks/Authentication/useForgotPassword";
 
 const ForgotPassword = () => {
