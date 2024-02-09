@@ -12,7 +12,11 @@ public class SeederManager
 		seeders =
 		[
 			new UserSeeder(),
-			// new BlogSeeder(),
+			new BlogSeeder(),
+			new IncomeGroupSeeder(),
+			new IncomeSeeder(),
+			new ExpenseGroupSeeder(),
+			new ExpenseSeeder()
 		];
 	}
 

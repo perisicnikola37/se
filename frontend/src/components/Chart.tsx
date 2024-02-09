@@ -7,6 +7,7 @@ import {
   CartesianGrid,
   Tooltip,
   Legend,
+  Label,
 } from "recharts";
 import useStatistics from "../hooks/Statistics/StatisticsHook";
 import { useUser } from "../contexts/UserContext";
@@ -17,9 +18,9 @@ const Chart = () => {
   const { isLoggedIn } = useUser();
   const data = isLoggedIn()
     ? generateData(
-        expenses.map((e) => e.amount),
-        incomes.map((i) => i.amount),
-      )
+      expenses.map((e) => e.amount),
+      incomes.map((i) => i.amount),
+    )
     : generateLoremData();
 
   useEffect(() => {
@@ -36,13 +37,15 @@ const Chart = () => {
         margin={{
           top: 5,
           right: 30,
-          left: 20,
-          bottom: 5,
         }}
       >
         <CartesianGrid strokeDasharray="3 3" />
-        <XAxis dataKey="name" />
-        <YAxis />
+        <XAxis dataKey="name">
+          <Label value="x axis - last 7 days" offset={-120} position="right" dy={20} />
+        </XAxis>
+        <YAxis>
+          <Label value="y axis - amount" angle={-90} position="insideLeft" />
+        </YAxis>
         <Tooltip />
         <Legend />
         <Line

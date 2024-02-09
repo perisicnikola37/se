@@ -1,23 +1,32 @@
+using Bogus;
 using Domain.Interfaces;
 using Domain.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace Infrastructure.Seeders;
-
-public class BlogSeeder : ISeeder
+namespace Infrastructure.Seeders
 {
-	public void Seed(ModelBuilder modelBuilder)
+	public class BlogSeeder : ISeeder
 	{
-		for (int i = 1; i <= 100; i++)
+		private readonly Faker<Blog> _blogFaker;
+
+		public BlogSeeder()
 		{
-			modelBuilder.Entity<Blog>().HasData(new Blog
+			_blogFaker = new Faker<Blog>()
+				.RuleFor(b => b.Description, f => f.Lorem.Sentence())
+				.RuleFor(b => b.Author, f => $"http://author{f.IndexVariable}.com")
+				.RuleFor(b => b.Text, f => f.Lorem.Paragraphs(3))
+				.RuleFor(b => b.UserId, 1);
+		}
+
+		public void Seed(ModelBuilder modelBuilder)
+		{
+			for (int i = 1; i <= 100; i++)
 			{
-				Id = i,
-				Description = $"Blog Description {i}",
-				Author = $"http://author{i}.com",
-				Text = $"Blog Text {i}",
-				UserId = 1
-			});
+				var blog = _blogFaker.Generate();
+				blog.Id = i;
+
+				modelBuilder.Entity<Blog>().HasData(blog);
+			}
 		}
 	}
 }

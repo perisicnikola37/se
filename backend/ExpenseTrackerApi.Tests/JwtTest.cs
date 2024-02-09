@@ -53,7 +53,7 @@ public class JwtTokenGeneratorTests
         Assert.NotNull(methodInfo);
 
         // Act
-        var token = (string)methodInfo.Invoke(authService, new object[] { user })!;
+        var token = (string)methodInfo.Invoke(authService, [user])!;
 
         // Assert
         Assert.NotNull(token);

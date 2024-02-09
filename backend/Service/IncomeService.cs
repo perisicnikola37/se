@@ -45,6 +45,7 @@ public class IncomeService(
 			var totalPages = (int)Math.Ceiling((double)totalRecords / validFilter.PageSize);
 
 			var pagedData = await query
+				.OrderByDescending(e => e.CreatedAt)
 				.Skip((validFilter.PageNumber - 1) * validFilter.PageSize)
 				.Take(validFilter.PageSize)
 				.Select(e => new IncomeResponseDto
@@ -65,7 +66,6 @@ public class IncomeService(
 						: null)!,
 					UserId = e.UserId
 				})
-				.OrderByDescending(e => e.CreatedAt)
 				.ToListAsync();
 
 			var baseUri = new Uri(httpContextAccessor.HttpContext.Request.Scheme + "://" + httpContextAccessor.HttpContext.Request.Host.Value);

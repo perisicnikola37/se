@@ -45,6 +45,7 @@ public class ExpenseService(
 			var totalPages = (int)Math.Ceiling((double)totalRecords / validFilter.PageSize);
 
 			var pagedData = await query
+			   .OrderByDescending(e => e.CreatedAt)
 			   .Skip((validFilter.PageNumber - 1) * validFilter.PageSize)
 			   .Take(validFilter.PageSize)
 			   .Select(e => new ExpenseResponseDto
@@ -65,7 +66,6 @@ public class ExpenseService(
 					   : null)!,
 				   UserId = e.UserId
 			   })
-			   .OrderByDescending(e => e.CreatedAt)
 			   .ToListAsync();
 
 
