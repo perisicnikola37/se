@@ -1,28 +1,21 @@
 import { useState } from "react";
-import axiosConfig from "../../config/axiosConfig";
 import { ObjectGroupInterface } from "../../interfaces/globalInterfaces";
+import fetchObjectGroups from "../../services/objectGroupsService";
 
 const useObjectGroups = (objectType: string) => {
   const [objectGroups, setObjectGroups] = useState<ObjectGroupInterface[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
-  const fetchObjectGroups = async () => {
-    setIsLoading(true);
-    setError(null);
+  const fetchObjectGroupsData = async () => {
+    const result = await fetchObjectGroups(objectType);
 
-    try {
-      const endpoint = `/api/${objectType}s/groups`;
-      const response = await axiosConfig.get<ObjectGroupInterface[]>(endpoint);
-      setObjectGroups(response.data);
-    } catch (err) {
-      setError(`An error occurred while fetching ${objectType} groups.`);
-    } finally {
-      setIsLoading(false);
-    }
+    setObjectGroups(result.objectGroups);
+    setIsLoading(result.isLoading);
+    setError(result.error);
   };
 
-  return { objectGroups, isLoading, error, fetchObjectGroups };
+  return { objectGroups, isLoading, error, fetchObjectGroups: fetchObjectGroupsData };
 };
 
 export default useObjectGroups;

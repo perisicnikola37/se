@@ -1,8 +1,8 @@
+namespace ExpenseTrackerApi.conf;
+
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
-
-namespace ExpenseTrackerApi.conf;
 
 public static class JwtConfig
 {
