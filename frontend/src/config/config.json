@@ -75,7 +75,7 @@
         "subscribedMessage": "Prijavljeni ste :)",
         "emailLabel": "Email adresa",
         "emailPlaceholder": "Unesite svoj email",
-        "subscribeButton": "Prijavi se",
+        "subscribeButton": "Posalji",
         "privacyPolicyText": "Brinemo o zaštiti vaših podataka. ",
         "privacyPolicyLinkText": "Pročitajte našu politiku privatnosti",
         "testimonials1": "ljudi su rekli koliko je dobar ExpenseTracker",
@@ -96,7 +96,8 @@
         "pricing12": "Pristupite paketu grafikona uključujući Linearni, Stubasti, Pita, Oblasti i još mnogo toga.",
         "unlimited": "Neograničeno",
         "subHeaderMessage": "Pokrenuli smo automatizovane tokove u našem GitLab repozitorijumu!",
-        "checkItOut": "Pogledaj"
+        "checkItOut": "Pogledaj",
+        "signIn": "Uloguj se"
     },
     "EN": {
         "info": {
@@ -195,6 +196,7 @@
         "pricing12": "Access a suite of charts including Linear, Bar, Pie, Area and more.",
         "unlimited": "Unlimited",
         "subHeaderMessage": "We have launched automated pipelines in our GitLab repository!",
-        "checkItOut": "Check it out"
+        "checkItOut": "Check it out",
+        "signIn": "Sign In"
     }
 }

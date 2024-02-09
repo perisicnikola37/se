@@ -11,8 +11,7 @@ public class AuthorizeCheckOperationFilter : IOperationFilter
         if (context.MethodInfo.DeclaringType is null)
             return;
 
-        var hasAuthorize = context.MethodInfo.DeclaringType.GetCustomAttributes(true).OfType<AuthorizeAttribute>().Any()
-                           || context.MethodInfo.GetCustomAttributes(true).OfType<AuthorizeAttribute>().Any();
+        var hasAuthorize = context.MethodInfo.DeclaringType.GetCustomAttributes(true).OfType<AuthorizeAttribute>().Any() || context.MethodInfo.GetCustomAttributes(true).OfType<AuthorizeAttribute>().Any();
 
         if (hasAuthorize)
         {

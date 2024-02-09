@@ -31,6 +31,7 @@ const NavBar = () => {
   const navigate = useNavigate();
   const { language } = useModal()
   const pagesData = (config as unknown as Config)[language];
+  const languageConfig = (config as unknown as Config)[language];
 
   const location = useLocation();
   const { modalState } = useModal();
@@ -229,7 +230,7 @@ const NavBar = () => {
                 className="text-white bg-blue-700 hover:bg-blue-800  font-medium rounded-md text-sm px-3 py-1.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
               >
                 <a href="/sign-in">
-                  Sign In
+                  {languageConfig.signIn}
                   <EastSharpIcon style={iconStyle} />
                 </a>
               </Button>

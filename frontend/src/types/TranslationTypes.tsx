@@ -61,6 +61,7 @@ export type LanguageConfig = {
   unlimited: string;
   subHeaderMessage: string;
   checkItOut: string;
+  signIn: string;
 };
 
 export type Config = {
