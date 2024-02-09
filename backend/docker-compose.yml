@@ -16,7 +16,7 @@ services:
   mysql:
     image: mysql:latest
     environment:
-      MYSQL_DATABASE: first_database
-      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: expense_tracker_database
+      MYSQL_ROOT_PASSWORD: Expense.tracker.password_2024!
     ports:
       - "3306:3306"
