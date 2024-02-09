@@ -10,7 +10,7 @@ import {
   CssBaseline,
   Alert,
 } from "@mui/material";
-import useForgotPassword from "../hooks/Authentication/ForgotPasswordHook";
+import useForgotPassword from "../hooks/Authentication/useForgotPassword";
 
 const ForgotPassword = () => {
   const { forgotPassword, isLoading } = useForgotPassword();

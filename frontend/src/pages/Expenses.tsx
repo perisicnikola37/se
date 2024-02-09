@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useModal } from "../contexts/GlobalContext";
-import useObjects from "../hooks/GlobalHooks/AllObjectsHook";
+import useObjects from "../hooks/GlobalHooks/useObjects";
 import EnhancedTable from "../components/Tables/ExpensesTable";
 import { ExpenseInterface } from "../interfaces/globalInterfaces";
 import { Helmet } from "react-helmet";

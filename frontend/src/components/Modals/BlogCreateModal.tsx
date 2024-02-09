@@ -9,7 +9,7 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import { Alert } from "@mui/material";
 import { useModal } from "../../contexts/GlobalContext";
-import useCreateBlog from "../../hooks/Blogs/CreateBlogHook";
+import useCreateBlog from "../../hooks/Blogs/useCreateBlog";
 
 const BlogCreateModal = () => {
   const { createBlog, isLoading } = useCreateBlog();

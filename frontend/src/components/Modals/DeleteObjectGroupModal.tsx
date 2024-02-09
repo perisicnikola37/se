@@ -2,7 +2,7 @@ import Swal from "sweetalert2";
 import { Delete } from "@mui/icons-material";
 import { Button } from "@mui/material";
 import { useModal } from "../../contexts/GlobalContext";
-import useDeleteObjectGroup from "../../hooks/GlobalHooks/DeleteObjectGroupHook";
+import useDeleteObjectGroup from "../../hooks/GlobalHooks/useDeleteObjectGroup";
 
 const DeleteObjectGroupModal = ({
   id,

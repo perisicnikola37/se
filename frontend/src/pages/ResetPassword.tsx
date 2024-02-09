@@ -12,7 +12,7 @@ import {
   InputAdornment,
   IconButton,
 } from "@mui/material";
-import useResetPassword from "../hooks/Authentication/ResetPasswordHook";
+import useResetPassword from "../hooks/Authentication/useResetPassword";
 import { validatePassword } from "../utils/utils";
 import { Helmet } from "react-helmet";
 import VisibilityIcon from "@mui/icons-material/Visibility";

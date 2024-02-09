@@ -9,7 +9,7 @@ import { useAuthenticationMiddleware } from "./middleware/authMiddleware";
 import ScrollToTopButton from "./components/ScrollToTopButton";
 import { getTheme } from "./config/themeConfiguration";
 import LoadingContainer from "./components/LoadingContainer";
-import useScrollToTop from "./hooks/scrollToTop";
+import useScrollToTop from "./hooks/useScrollToTop";
 
 function App() {
   const { loading, setLoadingState } = useLoading();

@@ -18,10 +18,10 @@ import Tooltip from "@mui/material/Tooltip";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { visuallyHidden } from "@mui/utils";
 import Skeleton from "@mui/material/Skeleton";
-import useObjectGroups from "../../hooks/GlobalHooks/GetObjectsHook";
+import useObjectGroups from "../../hooks/GlobalHooks/useObjectGroups";
 import { useModal } from "../../contexts/GlobalContext";
-import useDeleteAllObjects from "../../hooks/GlobalHooks/DeleteAllObjectsHook";
-import useObjects from "../../hooks/GlobalHooks/AllObjectsHook";
+import useDeleteAllObjects from "../../hooks/GlobalHooks/useDeleteAllObjects";
+import useObjects from "../../hooks/GlobalHooks/useObjects";
 import { Data, ObjectGroupInterface } from "../../interfaces/globalInterfaces";
 import IncomeGroupCreateModal from "../Modals/IncomeGroupCreateModal";
 import IncomeGroupEditModal from "../Modals/IncomeGroupEditModal";
@@ -356,40 +356,40 @@ function EnhancedTable({
             <TableBody>
               {loading
                 ? Array.from({
-                    length: rowsPerPage,
-                  }).map((_, index) => <LoadingTableRow key={index} />)
+                  length: rowsPerPage,
+                }).map((_, index) => <LoadingTableRow key={index} />)
                 : visibleRows.map((row) => (
-                    <TableRow
-                      hover
-                      role="checkbox"
-                      aria-checked={isSelected(row.id)}
-                      tabIndex={-1}
-                      key={row.id}
-                      selected={isSelected(row.id)}
-                      sx={{ cursor: "pointer" }}
-                    >
-                      <TableCell padding="checkbox"></TableCell>
-                      <TableCell component="th" scope="row" padding="none">
-                        {row.id}
-                      </TableCell>
-                      <TableCell align="right">
-                        <Link
-                          to={`${row.id}`}
-                          className="hover:text-[#2563EB] transition-colors duration-300"
-                        >
-                          {row.name}
-                        </Link>
-                      </TableCell>
-                      <TableCell align="right">{row.description}</TableCell>
-                      <TableCell align="right">
-                        <IncomeGroupEditModal id={row.id} objectType={""} />
-                        <DeleteObjectGroupModal
-                          id={row.id}
-                          objectType={"income"}
-                        />
-                      </TableCell>
-                    </TableRow>
-                  ))}
+                  <TableRow
+                    hover
+                    role="checkbox"
+                    aria-checked={isSelected(row.id)}
+                    tabIndex={-1}
+                    key={row.id}
+                    selected={isSelected(row.id)}
+                    sx={{ cursor: "pointer" }}
+                  >
+                    <TableCell padding="checkbox"></TableCell>
+                    <TableCell component="th" scope="row" padding="none">
+                      {row.id}
+                    </TableCell>
+                    <TableCell align="right">
+                      <Link
+                        to={`${row.id}`}
+                        className="hover:text-[#2563EB] transition-colors duration-300"
+                      >
+                        {row.name}
+                      </Link>
+                    </TableCell>
+                    <TableCell align="right">{row.description}</TableCell>
+                    <TableCell align="right">
+                      <IncomeGroupEditModal id={row.id} objectType={""} />
+                      <DeleteObjectGroupModal
+                        id={row.id}
+                        objectType={"income"}
+                      />
+                    </TableCell>
+                  </TableRow>
+                ))}
               <TableRow
                 style={{
                   height: (dense ? 33 : 53) * emptyRows,

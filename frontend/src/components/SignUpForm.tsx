@@ -21,7 +21,7 @@ import {
   InputAdornment,
   IconButton,
 } from "@mui/material";
-import useRegistration from "../hooks/Authentication/RegisterHook";
+import useRegistration from "../hooks/Authentication/useRegistration";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 

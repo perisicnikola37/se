@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import useMailchimpSubscribe from "../hooks/ThirdPartyServices/MailchimpSubscribeHook";
+import useMailchimpSubscribe from "../hooks/ThirdPartyServices/useMailchimpSubscribe";
 import { validateEmail } from "../utils/utils";
 import { useDarkMode } from "../contexts/DarkModeContext";
 import config from "../config/config.json";

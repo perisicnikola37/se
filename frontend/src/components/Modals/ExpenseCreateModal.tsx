@@ -7,9 +7,9 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import { Alert, Autocomplete } from "@mui/material";
-import useCreateObject from "../../hooks/GlobalHooks/CreateObjectHook";
+import useCreateObject from "../../hooks/GlobalHooks/useCreateObject";
 import { useModal } from "../../contexts/GlobalContext";
-import useObjectGroups from "../../hooks/GlobalHooks/GetObjectsHook";
+import useObjectGroups from "../../hooks/GlobalHooks/useObjectGroups";
 
 const ExpenseCreateModal = () => {
   const { fetchObjectGroups, objectGroups } = useObjectGroups("expense");

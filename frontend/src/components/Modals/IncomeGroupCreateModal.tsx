@@ -8,7 +8,7 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import { Alert } from "@mui/material";
 import { useModal } from "../../contexts/GlobalContext";
-import useCreateObjectGroup from "../../hooks/GlobalHooks/CreateObjectGroup";
+import useCreateObjectGroup from "../../hooks/GlobalHooks/useCreateObjectGroup";
 
 const IncomeGroupCreateModal = () => {
   const [open, setOpen] = useState(false);

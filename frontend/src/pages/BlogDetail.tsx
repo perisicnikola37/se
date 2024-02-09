@@ -1,7 +1,7 @@
 import { Link, useParams } from "react-router-dom";
 import { useEffect } from "react";
 import { motion } from "framer-motion";
-import useGetBlogById from "../hooks/Blogs/GetBlogHook";
+import useGetBlogById from "../hooks/Blogs/useGetBlogById";
 import { Breadcrumbs, Typography } from "@mui/material";
 import { Helmet } from "react-helmet";
 

@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
-import useGetObjectGroupById from "../hooks/GlobalHooks/GetObjectGroupHook";
+import useGetObjectGroupById from "../hooks/GlobalHooks/useGetObjectGroupById";
 import { Breadcrumbs, Typography } from "@mui/material";
 import { motion } from "framer-motion";
 

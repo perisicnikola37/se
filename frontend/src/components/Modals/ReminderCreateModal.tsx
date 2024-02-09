@@ -15,7 +15,7 @@ import {
   Checkbox,
 } from "@mui/material";
 import { useModal } from "../../contexts/GlobalContext";
-import useCreateReminder from "../../hooks/Reminders/CreateReminderHook";
+import useCreateReminder from "../../hooks/Reminders/useCreateReminder";
 
 const ReminderCreateModal = () => {
   const { createReminder, isLoading } = useCreateReminder();

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import useAllBlogs from "../hooks/Blogs/AllBlogsHook";
+import useAllBlogs from "../hooks/Blogs/useAllBlogs";
 import { truncateString } from "../utils/utils";
 import { Alert, Breadcrumbs, Skeleton, Typography } from "@mui/material";
 import { Helmet } from "react-helmet";

@@ -11,7 +11,7 @@ import {
   Legend,
 } from "recharts";
 import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
-import useLatestIncomes from "../hooks/Incomes/LatestIncomesHook";
+import useLatestIncomes from "../hooks/Incomes/useLatestIncomes";
 import { formatDate } from "../utils/utils";
 import { motion } from "framer-motion";
 

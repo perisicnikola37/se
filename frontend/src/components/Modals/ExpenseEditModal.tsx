@@ -8,9 +8,9 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import { Alert, Autocomplete } from "@mui/material";
 import { useModal } from "../../contexts/GlobalContext";
-import useObjectGroups from "../../hooks/GlobalHooks/GetObjectsHook";
-import useGetObjectById from "../../hooks/GlobalHooks/GetObjectHook";
-import useEditObject from "../../hooks/GlobalHooks/EditObjectHook";
+import useObjectGroups from "../../hooks/GlobalHooks/useObjectGroups";
+import useGetObjectById from "../../hooks/GlobalHooks/useGetObjectById";
+import useEditObject from "../../hooks/GlobalHooks/useEditObject";
 import Swal from "sweetalert2";
 
 const ExpenseEditModal = ({ id }: { id: number; objectType: string }) => {

@@ -9,7 +9,7 @@ import {
   Legend,
   Label,
 } from "recharts";
-import useStatistics from "../hooks/Statistics/StatisticsHook";
+import useStatistics from "../hooks/Statistics/useStatistics";
 import { useUser } from "../contexts/UserContext";
 import { generateData, generateLoremData } from "../utils/generateChartData";
 

@@ -21,15 +21,15 @@ import { visuallyHidden } from "@mui/utils";
 import Skeleton from "@mui/material/Skeleton";
 import DeleteModal from "../Modals/DeleteModal";
 import { Autocomplete, Button, Chip, Popover, TextField } from "@mui/material";
-import useObjectGroups from "../../hooks/GlobalHooks/GetObjectsHook";
+import useObjectGroups from "../../hooks/GlobalHooks/useObjectGroups";
 import { useModal } from "../../contexts/GlobalContext";
-import useDeleteAllObjects from "../../hooks/GlobalHooks/DeleteAllObjectsHook";
-import useObjects from "../../hooks/GlobalHooks/AllObjectsHook";
+import useDeleteAllObjects from "../../hooks/GlobalHooks/useDeleteAllObjects";
+import useObjects from "../../hooks/GlobalHooks/useObjects";
 import ExpenseCreateModal from "../Modals/ExpenseCreateModal";
 import ExpenseEditModal from "../Modals/ExpenseEditModal";
 import { ExpenseInterface } from "../../interfaces/globalInterfaces";
 import { motion } from "framer-motion";
-import useExportToEmail from "../../hooks/ThirdPartyServices/ExportToEmailHook";
+import useExportToEmail from "../../hooks/ThirdPartyServices/useExportToEmail";
 import Swal from "sweetalert2";
 import SendIcon from "@mui/icons-material/Send";
 import { Order } from "../../types/globalTypes";
@@ -569,20 +569,20 @@ function EnhancedTable({
             <TableBody>
               {loading
                 ? Array.from({
-                    length: rowsPerPage,
-                  }).map((_, index) => <LoadingTableRow key={index} />)
+                  length: rowsPerPage,
+                }).map((_, index) => <LoadingTableRow key={index} />)
                 : visibleRows.map((row) => (
-                    <TableRow
-                      hover
-                      role="checkbox"
-                      aria-checked={isSelected(row.id)}
-                      tabIndex={-1}
-                      key={row.id}
-                      selected={isSelected(row.id)}
-                      sx={{ cursor: "pointer" }}
-                    >
-                      <TableCell padding="checkbox">
-                        {/* <Checkbox
+                  <TableRow
+                    hover
+                    role="checkbox"
+                    aria-checked={isSelected(row.id)}
+                    tabIndex={-1}
+                    key={row.id}
+                    selected={isSelected(row.id)}
+                    sx={{ cursor: "pointer" }}
+                  >
+                    <TableCell padding="checkbox">
+                      {/* <Checkbox
                                                      color="primary"
                                                      checked={isSelected(
                                                          row.id
@@ -592,25 +592,25 @@ function EnhancedTable({
                                                              `enhanced-table-checkbox-${index}`,
                                                      }}
                                                  /> */}
-                      </TableCell>
-                      <TableCell component="th" scope="row" padding="none">
-                        {row.id}
-                      </TableCell>
-                      <TableCell align="right">{row.description}</TableCell>
-                      <TableCell align="right">
-                        <Chip
-                          size="small"
-                          label={`$${row.amount}`}
-                          sx={{ background: "#e1243e", color: "#fff" }}
-                        />
-                      </TableCell>
-                      <TableCell align="right">{row.expenseGroup}</TableCell>
-                      <TableCell align="right">
-                        <ExpenseEditModal id={row.id} objectType={""} />
-                        <DeleteModal id={row.id} objectType={"expense"} />
-                      </TableCell>
-                    </TableRow>
-                  ))}
+                    </TableCell>
+                    <TableCell component="th" scope="row" padding="none">
+                      {row.id}
+                    </TableCell>
+                    <TableCell align="right">{row.description}</TableCell>
+                    <TableCell align="right">
+                      <Chip
+                        size="small"
+                        label={`$${row.amount}`}
+                        sx={{ background: "#e1243e", color: "#fff" }}
+                      />
+                    </TableCell>
+                    <TableCell align="right">{row.expenseGroup}</TableCell>
+                    <TableCell align="right">
+                      <ExpenseEditModal id={row.id} objectType={""} />
+                      <DeleteModal id={row.id} objectType={"expense"} />
+                    </TableCell>
+                  </TableRow>
+                ))}
               <TableRow
                 style={{
                   height: (dense ? 33 : 53) * emptyRows,
