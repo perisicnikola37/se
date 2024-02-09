@@ -18,9 +18,9 @@ const Chart = () => {
   const { isLoggedIn } = useUser();
   const data = isLoggedIn()
     ? generateData(
-      expenses.map((e) => e.amount),
-      incomes.map((i) => i.amount),
-    )
+        expenses.map((e) => e.amount),
+        incomes.map((i) => i.amount),
+      )
     : generateLoremData();
 
   useEffect(() => {
@@ -41,7 +41,12 @@ const Chart = () => {
       >
         <CartesianGrid strokeDasharray="3 3" />
         <XAxis dataKey="name">
-          <Label value="x axis - last 7 days" offset={-120} position="right" dy={20} />
+          <Label
+            value="x axis - last 7 days"
+            offset={-120}
+            position="right"
+            dy={20}
+          />
         </XAxis>
         <YAxis>
           <Label value="y axis - amount" angle={-90} position="insideLeft" />

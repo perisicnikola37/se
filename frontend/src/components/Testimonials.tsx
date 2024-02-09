@@ -1,7 +1,7 @@
 import { useDarkMode } from "../contexts/DarkModeContext";
 import { useModal } from "../contexts/GlobalContext";
 import { Config } from "../types/TranslationTypes";
-import config from "../config/config.json"
+import config from "../config/config.json";
 
 export default function Testimonials() {
   const { language } = useModal();
@@ -14,7 +14,9 @@ export default function Testimonials() {
       <div className="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
         <div className="flex flex-col items-center">
           <div className="text-center">
-            <p className={`text-lg font-medium ${darkMode ? 'text-white' : 'text-gray-600'} font-pj`}>
+            <p
+              className={`text-lg font-medium ${darkMode ? "text-white" : "text-gray-600"} font-pj`}
+            >
               129+ {languageConfig.testimonials1}
             </p>
             <h2

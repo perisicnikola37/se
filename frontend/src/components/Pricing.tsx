@@ -1,7 +1,7 @@
 import { useDarkMode } from "../contexts/DarkModeContext";
 import { useModal } from "../contexts/GlobalContext";
 import { Config } from "../types/TranslationTypes";
-import config from "../config/config.json"
+import config from "../config/config.json";
 
 export default function Pricing() {
   const { language } = useModal();
@@ -14,7 +14,9 @@ export default function Pricing() {
       <section className={darkMode ? "bg-transparent" : "bg-white"}>
         <div className="py-8 px-4 mx-auto max-w-screen-xl lg:py-16 lg:px-6">
           <div className="mx-auto max-w-screen-md text-center mb-8 lg:mb-12">
-            <h2 className={`mb-4 text-4xl tracking-tight font-extrabold ${darkMode ? 'text-white' : 'text-gray-900'}`}>
+            <h2
+              className={`mb-4 text-4xl tracking-tight font-extrabold ${darkMode ? "text-white" : "text-gray-900"}`}
+            >
               {languageConfig.pricing1}
             </h2>
             <p className="mb-5 font-light text-gray-500 sm:text-xl dark:text-gray-400">
@@ -63,9 +65,7 @@ export default function Pricing() {
                       clipRule="evenodd"
                     ></path>
                   </svg>
-                  <span>
-                    {languageConfig.pricing7}
-                  </span>
+                  <span>{languageConfig.pricing7}</span>
                 </li>
                 <li className="flex items-center space-x-3">
                   <svg
@@ -154,9 +154,7 @@ export default function Pricing() {
                       clipRule="evenodd"
                     ></path>
                   </svg>
-                  <span>
-                    {languageConfig.pricing11}{" "}
-                  </span>
+                  <span>{languageConfig.pricing11} </span>
                 </li>
                 <li className="flex items-center space-x-3">
                   <svg
@@ -230,9 +228,7 @@ export default function Pricing() {
                       clipRule="evenodd"
                     ></path>
                   </svg>
-                  <span>
-                    {languageConfig.pricing12}
-                  </span>
+                  <span>{languageConfig.pricing12}</span>
                 </li>
                 <li className="flex items-center space-x-3">
                   <svg
@@ -247,9 +243,7 @@ export default function Pricing() {
                       clipRule="evenodd"
                     ></path>
                   </svg>
-                  <span>
-                    {languageConfig.pricing7}
-                  </span>
+                  <span>{languageConfig.pricing7}</span>
                 </li>
                 <li className="flex items-center space-x-3">
                   <svg
@@ -266,7 +260,9 @@ export default function Pricing() {
                   </svg>
                   <span>
                     {languageConfig.pricing8}{" "}
-                    <span className="font-semibold">{languageConfig.unlimited}</span>
+                    <span className="font-semibold">
+                      {languageConfig.unlimited}
+                    </span>
                   </span>
                 </li>
                 <li className="flex items-center space-x-3">

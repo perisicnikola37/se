@@ -3,7 +3,7 @@ import { DarkModeContextProps } from "../interfaces/contextsInterfaces";
 import { DarkModeProviderProps } from "../types/globalTypes";
 
 const DarkModeContext = createContext<DarkModeContextProps | undefined>(
-  undefined
+  undefined,
 );
 
 const DarkModeProvider = ({ children }: DarkModeProviderProps) => {

@@ -22,7 +22,13 @@ const useLatestIncomes = () => {
     }
   };
 
-  return { isLoading, incomes, error, highestIncome, loadLatestIncomes: loadLatestIncomesData };
+  return {
+    isLoading,
+    incomes,
+    error,
+    highestIncome,
+    loadLatestIncomes: loadLatestIncomesData,
+  };
 };
 
 export default useLatestIncomes;

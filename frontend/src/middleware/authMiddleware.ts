@@ -12,7 +12,12 @@ export const useAuthenticationMiddleware = () => {
       window.location.pathname.includes("reset-password");
 
     // Exclude "/" path and "reset-password" route from redirection
-    if (!isLoggedIn() && location.pathname !== "/" && location.pathname !== "/privacy-policy" && !isResetPasswordRoute) {
+    if (
+      !isLoggedIn() &&
+      location.pathname !== "/" &&
+      location.pathname !== "/privacy-policy" &&
+      !isResetPasswordRoute
+    ) {
       navigate("/sign-in");
     }
   };

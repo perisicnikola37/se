@@ -569,20 +569,20 @@ function EnhancedTable({
             <TableBody>
               {loading
                 ? Array.from({
-                  length: rowsPerPage,
-                }).map((_, index) => <LoadingTableRow key={index} />)
+                    length: rowsPerPage,
+                  }).map((_, index) => <LoadingTableRow key={index} />)
                 : visibleRows.map((row) => (
-                  <TableRow
-                    hover
-                    role="checkbox"
-                    aria-checked={isSelected(row.id)}
-                    tabIndex={-1}
-                    key={row.id}
-                    selected={isSelected(row.id)}
-                    sx={{ cursor: "pointer" }}
-                  >
-                    <TableCell padding="checkbox">
-                      {/* <Checkbox
+                    <TableRow
+                      hover
+                      role="checkbox"
+                      aria-checked={isSelected(row.id)}
+                      tabIndex={-1}
+                      key={row.id}
+                      selected={isSelected(row.id)}
+                      sx={{ cursor: "pointer" }}
+                    >
+                      <TableCell padding="checkbox">
+                        {/* <Checkbox
                                                      color="primary"
                                                      checked={isSelected(
                                                          row.id
@@ -592,25 +592,25 @@ function EnhancedTable({
                                                              `enhanced-table-checkbox-${index}`,
                                                      }}
                                                  /> */}
-                    </TableCell>
-                    <TableCell component="th" scope="row" padding="none">
-                      {row.id}
-                    </TableCell>
-                    <TableCell align="right">{row.description}</TableCell>
-                    <TableCell align="right">
-                      <Chip
-                        size="small"
-                        label={`$${row.amount}`}
-                        sx={{ background: "#e1243e", color: "#fff" }}
-                      />
-                    </TableCell>
-                    <TableCell align="right">{row.expenseGroup}</TableCell>
-                    <TableCell align="right">
-                      <ExpenseEditModal id={row.id} objectType={""} />
-                      <DeleteModal id={row.id} objectType={"expense"} />
-                    </TableCell>
-                  </TableRow>
-                ))}
+                      </TableCell>
+                      <TableCell component="th" scope="row" padding="none">
+                        {row.id}
+                      </TableCell>
+                      <TableCell align="right">{row.description}</TableCell>
+                      <TableCell align="right">
+                        <Chip
+                          size="small"
+                          label={`$${row.amount}`}
+                          sx={{ background: "#e1243e", color: "#fff" }}
+                        />
+                      </TableCell>
+                      <TableCell align="right">{row.expenseGroup}</TableCell>
+                      <TableCell align="right">
+                        <ExpenseEditModal id={row.id} objectType={""} />
+                        <DeleteModal id={row.id} objectType={"expense"} />
+                      </TableCell>
+                    </TableRow>
+                  ))}
               <TableRow
                 style={{
                   height: (dense ? 33 : 53) * emptyRows,

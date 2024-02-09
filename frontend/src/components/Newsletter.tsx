@@ -46,11 +46,15 @@ const Newsletter = () => {
           >
             {languageConfig.newsletterHeading}
           </h2>
-          <p className={`mx-auto mb-8 max-w-2xl font-light ${darkMode ? 'text-neutral-200' : 'text-gray-500'} md:mb-12 sm:text-xl`}>
+          <p
+            className={`mx-auto mb-8 max-w-2xl font-light ${darkMode ? "text-neutral-200" : "text-gray-500"} md:mb-12 sm:text-xl`}
+          >
             {languageConfig.newsletterText}
           </p>
           {isSubscribed ? (
-            <p className="text-[#4F65EB] font-bold">{languageConfig.subscribedMessage}</p>
+            <p className="text-[#4F65EB] font-bold">
+              {languageConfig.subscribedMessage}
+            </p>
           ) : (
             <form>
               <div className="flex items-center mx-auto mb-3 space-y-4 max-w-screen-sm sm:flex sm:space-y-0">
@@ -70,8 +74,9 @@ const Newsletter = () => {
                     ></svg>
                   </div>
                   <input
-                    className={`block p-3 lg:pl-10 sm:pl-3 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 sm:rounded-none sm:rounded-l-lg outline-none ${isEmailValid ? "" : "border-red-500"
-                      }`}
+                    className={`block p-3 lg:pl-10 sm:pl-3 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 sm:rounded-none sm:rounded-l-lg outline-none ${
+                      isEmailValid ? "" : "border-red-500"
+                    }`}
                     placeholder={languageConfig.emailPlaceholder}
                     type="email"
                     id="email"

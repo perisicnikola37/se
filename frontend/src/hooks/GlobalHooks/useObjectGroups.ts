@@ -15,7 +15,12 @@ const useObjectGroups = (objectType: string) => {
     setError(result.error);
   };
 
-  return { objectGroups, isLoading, error, fetchObjectGroups: fetchObjectGroupsData };
+  return {
+    objectGroups,
+    isLoading,
+    error,
+    fetchObjectGroups: fetchObjectGroupsData,
+  };
 };
 
 export default useObjectGroups;

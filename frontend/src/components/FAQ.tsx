@@ -21,7 +21,9 @@ const FAQ = () => {
   return (
     <div className="container mx-auto md:px-6 xl:px-24">
       <section className="mb-10 mt-10">
-        <h2 className="mb-6 pl-6 text-3xl font-bold">Frequently asked questions</h2>
+        <h2 className="mb-6 pl-6 text-3xl font-bold">
+          Frequently asked questions
+        </h2>
 
         <div id="accordionFlushExample">
           {faqData.map((item, index) => (
@@ -59,7 +61,11 @@ const FAQ = () => {
                 aria-labelledby={`flush-heading${index}`}
                 data-te-parent="#accordionFlushExample"
               >
-                <div className={`py-4 px-5 ${darkMode ? "text-neutral-200" : "text-neutral-500"}`}>{item.answer}</div>
+                <div
+                  className={`py-4 px-5 ${darkMode ? "text-neutral-200" : "text-neutral-500"}`}
+                >
+                  {item.answer}
+                </div>
               </div>
             </div>
           ))}

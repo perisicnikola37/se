@@ -68,8 +68,9 @@ const Reminders = () => {
               {reminders.map((reminder) => (
                 <li
                   key={reminder.id}
-                  className={`${!reminder.active ? "bg-[#FEE9EC]" : "bg-[#d1fff7]"
-                    } p-4 rounded-md shadow-md flex flex-col justify-between relative`}
+                  className={`${
+                    !reminder.active ? "bg-[#FEE9EC]" : "bg-[#d1fff7]"
+                  } p-4 rounded-md shadow-md flex flex-col justify-between relative`}
                 >
                   <div className="mb-3">
                     <h2 className="text-xl font-semibold mb-2">

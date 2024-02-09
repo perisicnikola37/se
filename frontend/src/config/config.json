@@ -1,202 +1,208 @@
 {
-    "ME": {
-        "info": {
-            "applicationName": "Tracking troškova",
-            "copyright": "Sva prava zadržana."
-        },
-        "pages": [{
-                "name": "Početna",
-                "url": "/"
-            },
-            {
-                "name": "Prihodi",
-                "url": "/incomes"
-            },
-            {
-                "name": "Rashodi",
-                "url": "/expenses"
-            },
-            {
-                "name": "Grupe prihoda",
-                "url": "/incomes/groups"
-            },
-            {
-                "name": "Grupe rashoda",
-                "url": "/expenses/groups"
-            }
-        ],
-        "footerLinks": [{
-                "name": "O nama",
-                "url": "/about"
-            },
-            {
-                "name": "Privatna polisa",
-                "url": "/privacy-policy"
-            },
-            {
-                "name": "Licenca",
-                "url": "/privacy-policy"
-            },
-            {
-                "name": "Kontakt",
-                "url": "/contact"
-            }
-        ],
-        "mainTextOnDashboard1": "Pratite troškove još brže uz",
-        "mainTextOnDashboard2": "našu potpuno novu aplikaciju za praćenje troškova ",
-        "textOnDashboard": "Iskoristite naše rešenje otvorenog koda, dizajnirano da pojednostavi i poboljša vaše iskustvo praćenja troškova. Zaronite u mnoštvo funkcija koje vam omogućavaju da lako upravljate svojim financijama.",
-        "getStarted": "Počni",
-        "exploreRepository": "Istraži repozitorijum",
-        "featuredIn": "Istaknuti",
-        "mailchimpText": "Unapredite svoje poslovne mogućnosti sa besprekornom integracijom usluga trećih strana. Naša platforma vam omogućava jednostavno povezivanje i saradnju sa različitim spoljnim alatima i aplikacijama. Optimizujte svoj radni tok, poboljšajte efikasnost i otkrijte nove mogućnosti za rast. Otkrijte pogodnosti integracije sa vodećim uslugama, sve na dohvat ruke sa vaše kontrolne table.",
-        "mailchimpHeading1": "Integracija",
-        "mailchimpHeading2": "sa uslugama trećih strana",
-        "emailExportText": "Export troškova i prihoda je lak uz našu platformu koja je jednostavna za korišćenje, pružajući besprekorno upravljanje finansijama. Bez napora optimizujte svoje finansijske procese korišćenjem naših intuitivnih alatki za brz i efikasan izvoz podataka. Preuzmite kontrolu nad svojim finansijskim podacima sa samo nekoliko klikova, obezbeđujući bezbrižno praćenje troškova i prihoda. Naša platforma vam omogućava da pojednostavite svoje finansijske tokove, pružajući sveobuhvatno rešenje za lako i efikasno izvođenje. Iskusite pogodnost i efikasnost izvoza troškova i prihoda, donošenje informisanih finansijskih odluka nikada nije bilo dostupnije.",
-        "emailExportHeading1": "Izvoz",
-        "emailExportHeading2": "troškova i prihoda jednostavno",
-        "policyText": "Mi koristimo kolačiće kako bismo poboljšali vaše iskustvo. Korišćenjem naše veb stranice, slažete se sa našim ",
-        "privacyPolicy": "Politika privatnosti",
-        "acceptButton": "Prihvati",
-        "faqData": [{
-                "question": "Kako dodati novi trošak u aplikaciji za praćenje troškova?",
-                "answer": "Da biste dodali novi trošak u aplikaciji za praćenje troškova, pratite ove korake: Idite na odeljak 'Dodaj trošak' unutar aplikacije. Unesite potrebne detalje, kao što su opis troška, iznos i kategorija. Kliknite na dugme 'Dodaj trošak' da biste zabeležili novi trošak."
-            },
-            {
-                "question": "Mogu li kategorizovati i pratiti svoje troškove po različitim kategorijama troškova?",
-                "answer": "Da, možete kategorizovati i pratiti svoje troškove po različitim kategorijama troškova. Prilikom dodavanja novog troška, odaberite odgovarajuću kategoriju iz dostupnih opcija. Ova funkcija vam pomaže da organizujete i analizirate svoje obrasce trošenja, pružajući vam dragocene uvide u vaše finansijske navike."
-            },
-            {
-                "question": "Kako mogu generisati izveštaje da vidim obrasce svog trošenja tokom vremena?",
-                "answer": "Da biste generisali izveštaje, pratite ove korake: Idite na stranicu 'Troškovi' ili 'Prihodi'. Kliknite na dugme 'Izvezi na e-mail'. Istražite vizualni prikaz svojih troškova i prihoda. Sticanjem uvida u to gde ide vaš novac, možete donositi informisane finansijske odluke na osnovu generisanog izveštaja."
-            }
-        ],
-        "newsletterHeading": "Prijavite se za naš bilten",
-        "newsletterText": "Budite u toku sa napretkom na putu, najavama i ekskluzivnim popustima. Slobodno se prijavite sa svojom email adresom.",
-        "subscribedMessage": "Prijavljeni ste :)",
-        "emailLabel": "Email adresa",
-        "emailPlaceholder": "Unesite svoj email",
-        "subscribeButton": "Posalji",
-        "privacyPolicyText": "Brinemo o zaštiti vaših podataka. ",
-        "privacyPolicyLinkText": "Pročitajte našu politiku privatnosti",
-        "testimonials1": "ljudi su rekli koliko je dobar ExpenseTracker",
-        "testimonials2": "Naši zadovoljni klijenti su rekli o nama",
-        "checkAll": "Provjeri sve",
-        "reviews:": "Recenzije:",
-        "pricing1": "Prilagođeni planovi za vaše finansijsko putovanje",
-        "pricing2": "Zaronite u naše pažljivo odabrane pakete dizajnirane posebno za vaše finansijske potrebe. U našoj aplikaciji za praćenje troškova usmeravamo tehnologiju, inovacije i finansijske uvide kako bismo osnažili vaše putovanje ka dugoročnoj finansijskoj stabilnosti i rastu.",
-        "pricing3": "Savršeno polazište za ličnu upotrebu i vaše predstojeće projekte.",
-        "pricing4": "Unapredite svoje lične projekte sa unapređenim funkcijama za optimalne performanse.",
-        "pricing5": "Oslobodite puni potencijal vaših projekata sa našim sveobuhvatnim profesionalnim paketom.",
-        "pricing6": "Jednostavni linearni grafikoni",
-        "pricing7": "Bez napora izvozite podatke na e-mail sa prilogom u PDF formatu.",
-        "pricing8": "Broj ukupnih prihoda/rashoda",
-        "pricing9": "Podrška:",
-        "pricing10": "Otključajte moć jednostavnih linearnih grafikona.",
-        "pricing11": "Bez napora izvozite podatke na e-mail sa prilogom u PDF formatu.",
-        "pricing12": "Pristupite paketu grafikona uključujući Linearni, Stubasti, Pita, Oblasti i još mnogo toga.",
-        "unlimited": "Neograničeno",
-        "subHeaderMessage": "Pokrenuli smo automatizovane tokove u našem GitLab repozitorijumu!",
-        "checkItOut": "Pogledaj",
-        "signIn": "Uloguj se"
+  "ME": {
+    "info": {
+      "applicationName": "Tracking troškova",
+      "copyright": "Sva prava zadržana."
     },
-    "EN": {
-        "info": {
-            "applicationName": "Expense Tracker",
-            "copyright": "All rights reserved."
-        },
-        "pages": [{
-                "name": "Dashboard",
-                "url": "/"
-            },
-            {
-                "name": "Incomes",
-                "url": "/incomes"
-            },
-            {
-                "name": "Expenses",
-                "url": "/expenses"
-            },
-            {
-                "name": "Income groups",
-                "url": "/incomes/groups"
-            },
-            {
-                "name": "Expense groups",
-                "url": "/expenses/groups"
-            }
-        ],
-        "footerLinks": [{
-                "name": "About",
-                "url": "/about"
-            },
-            {
-                "name": "Privacy Policy",
-                "url": "/privacy-policy"
-            },
-            {
-                "name": "Licensing",
-                "url": "/privacy-policy"
-            },
-            {
-                "name": "Contact",
-                "url": "/contact"
-            }
-        ],
-        "mainTextOnDashboard1": "Track expenses even faster with",
-        "mainTextOnDashboard2": "our brand new Expense Tracker application ",
-        "textOnDashboard": "Take advantage of our open-source solution, designed to streamline and enhance your expense tracking experience. Dive into a wealth of features and functionalities that empower you to manage your finances effortlessly.",
-        "getStarted": "Get started",
-        "exploreRepository": "Explore repository",
-        "featuredIn": "Featured in",
-        "mailchimpText": "Enhance your business capabilities with seamless integration of third-party services. Our platform empowers you to effortlessly connect and collaborate with a variety of external tools and applications. Streamline your workflow, improve efficiency, and unlock new possibilities for growth. Discover the convenience of integrating with industry-leading services, all within the reach of your dashboard.",
-        "mailchimpHeading1": "Integration",
-        "mailchimpHeading2": "with third party services",
-        "emailExportText": "Exporting expenses and incomes is a breeze with our user-friendly platform, offering seamless financial management. Effortlessly streamline your financial processes by utilizing our intuitive tools for quick and efficient data export. Take control of your financial data with just a few clicks, ensuring a hassle-free experience in tracking both expenses and incomes. Our platform empowers you to simplify your financial workflows, providing a comprehensive solution for easy and effective exportation. Experience the convenience and efficiency of exporting expenses and incomes, making informed financial decisions has never been more accessible.",
-        "emailExportHeading1": "Export",
-        "emailExportHeading2": "expenses & incomes easily",
-        "policyText": "We use cookies to enhance your experience. By using our website, you agree to our ",
-        "privacyPolicy": "Privacy Policy",
-        "acceptButton": "Accept",
-        "faqData": [{
-                "question": "How do I add a new expense in the Expense Tracker application?",
-                "answer": "To add a new expense in the Expense Tracker application, follow these steps: Navigate to the 'Add Expense' section within the application. Input the necessary details, such as the expense description, amount and category. Click 'Add Expense' button to record the new expense."
-            },
-            {
-                "question": "Can I categorize and track my expenses by different spending categories?",
-                "answer": "Yes, you can categorize and track your expenses by different spending categories. When adding a new expense, choose the appropriate category from the available options. This feature helps you organize and analyze your spending patterns, providing valuable insights into your financial habits."
-            },
-            {
-                "question": "How can I generate reports to view my spending patterns over time?",
-                "answer": "To generate reports, follow these steps: Navigate to the 'Expenses' or 'Incomes' page. Click on 'Export to email' button. Explore visual representation of your expenses and incomes. Gain insights into where your money is going and make informed financial decisions based on the generated report."
-            }
-        ],
-        "newsletterHeading": "Sign up for our newsletter",
-        "newsletterText": "Stay up to date with the roadmap progress, announcements, and exclusive discounts. Feel free to sign up with your email.",
-        "subscribedMessage": "Subscribed :)",
-        "emailLabel": "Email address",
-        "emailPlaceholder": "Enter your email",
-        "subscribeButton": "Subscribe",
-        "privacyPolicyText": "We care about the protection of your data. ",
-        "privacyPolicyLinkText": "Read our Privacy Policy",
-        "testimonials1": "people have said how good ExpenseTracker is",
-        "testimonials2": "Our happy clients said about us",
-        "checkAll": "Check all",
-        "reviews:": "Reviews:",
-        "pricing1": "Customized plans for your financial journey",
-        "pricing2": "Dive into our carefully curated packages designed specifically for your financial needs. At our Expense Tracker app, we channel technology, innovation, and financial insight to empower your journey towards long-term financial stability and growth.",
-        "pricing3": "The perfect starting point for personal use and your upcoming projects.",
-        "pricing4": "Elevate your personal projects with enhanced features for optimal performance.",
-        "pricing5": "Unleash the full potential of your projects with our comprehensive professional package.",
-        "pricing6": "Simple linear charts",
-        "pricing7": "Seamlessly export data to e-mail with PDF attachment.",
-        "pricing8": "Number of total incomes/expenses",
-        "pricing9": "Support:",
-        "pricing10": "Unlock the power of simple linear charts.",
-        "pricing11": "Effortlessly export data to e-mail with PDF attachment.",
-        "pricing12": "Access a suite of charts including Linear, Bar, Pie, Area and more.",
-        "unlimited": "Unlimited",
-        "subHeaderMessage": "We have launched automated pipelines in our GitLab repository!",
-        "checkItOut": "Check it out",
-        "signIn": "Sign In"
-    }
+    "pages": [
+      {
+        "name": "Početna",
+        "url": "/"
+      },
+      {
+        "name": "Prihodi",
+        "url": "/incomes"
+      },
+      {
+        "name": "Rashodi",
+        "url": "/expenses"
+      },
+      {
+        "name": "Grupe prihoda",
+        "url": "/incomes/groups"
+      },
+      {
+        "name": "Grupe rashoda",
+        "url": "/expenses/groups"
+      }
+    ],
+    "footerLinks": [
+      {
+        "name": "O nama",
+        "url": "/about"
+      },
+      {
+        "name": "Privatna polisa",
+        "url": "/privacy-policy"
+      },
+      {
+        "name": "Licenca",
+        "url": "/privacy-policy"
+      },
+      {
+        "name": "Kontakt",
+        "url": "/contact"
+      }
+    ],
+    "mainTextOnDashboard1": "Pratite troškove još brže uz",
+    "mainTextOnDashboard2": "našu potpuno novu aplikaciju za praćenje troškova ",
+    "textOnDashboard": "Iskoristite naše rešenje otvorenog koda, dizajnirano da pojednostavi i poboljša vaše iskustvo praćenja troškova. Zaronite u mnoštvo funkcija koje vam omogućavaju da lako upravljate svojim financijama.",
+    "getStarted": "Počni",
+    "exploreRepository": "Istraži repozitorijum",
+    "featuredIn": "Istaknuti",
+    "mailchimpText": "Unapredite svoje poslovne mogućnosti sa besprekornom integracijom usluga trećih strana. Naša platforma vam omogućava jednostavno povezivanje i saradnju sa različitim spoljnim alatima i aplikacijama. Optimizujte svoj radni tok, poboljšajte efikasnost i otkrijte nove mogućnosti za rast. Otkrijte pogodnosti integracije sa vodećim uslugama, sve na dohvat ruke sa vaše kontrolne table.",
+    "mailchimpHeading1": "Integracija",
+    "mailchimpHeading2": "sa uslugama trećih strana",
+    "emailExportText": "Export troškova i prihoda je lak uz našu platformu koja je jednostavna za korišćenje, pružajući besprekorno upravljanje finansijama. Bez napora optimizujte svoje finansijske procese korišćenjem naših intuitivnih alatki za brz i efikasan izvoz podataka. Preuzmite kontrolu nad svojim finansijskim podacima sa samo nekoliko klikova, obezbeđujući bezbrižno praćenje troškova i prihoda. Naša platforma vam omogućava da pojednostavite svoje finansijske tokove, pružajući sveobuhvatno rešenje za lako i efikasno izvođenje. Iskusite pogodnost i efikasnost izvoza troškova i prihoda, donošenje informisanih finansijskih odluka nikada nije bilo dostupnije.",
+    "emailExportHeading1": "Izvoz",
+    "emailExportHeading2": "troškova i prihoda jednostavno",
+    "policyText": "Mi koristimo kolačiće kako bismo poboljšali vaše iskustvo. Korišćenjem naše veb stranice, slažete se sa našim ",
+    "privacyPolicy": "Politika privatnosti",
+    "acceptButton": "Prihvati",
+    "faqData": [
+      {
+        "question": "Kako dodati novi trošak u aplikaciji za praćenje troškova?",
+        "answer": "Da biste dodali novi trošak u aplikaciji za praćenje troškova, pratite ove korake: Idite na odeljak 'Dodaj trošak' unutar aplikacije. Unesite potrebne detalje, kao što su opis troška, iznos i kategorija. Kliknite na dugme 'Dodaj trošak' da biste zabeležili novi trošak."
+      },
+      {
+        "question": "Mogu li kategorizovati i pratiti svoje troškove po različitim kategorijama troškova?",
+        "answer": "Da, možete kategorizovati i pratiti svoje troškove po različitim kategorijama troškova. Prilikom dodavanja novog troška, odaberite odgovarajuću kategoriju iz dostupnih opcija. Ova funkcija vam pomaže da organizujete i analizirate svoje obrasce trošenja, pružajući vam dragocene uvide u vaše finansijske navike."
+      },
+      {
+        "question": "Kako mogu generisati izveštaje da vidim obrasce svog trošenja tokom vremena?",
+        "answer": "Da biste generisali izveštaje, pratite ove korake: Idite na stranicu 'Troškovi' ili 'Prihodi'. Kliknite na dugme 'Izvezi na e-mail'. Istražite vizualni prikaz svojih troškova i prihoda. Sticanjem uvida u to gde ide vaš novac, možete donositi informisane finansijske odluke na osnovu generisanog izveštaja."
+      }
+    ],
+    "newsletterHeading": "Prijavite se za naš bilten",
+    "newsletterText": "Budite u toku sa napretkom na putu, najavama i ekskluzivnim popustima. Slobodno se prijavite sa svojom email adresom.",
+    "subscribedMessage": "Prijavljeni ste :)",
+    "emailLabel": "Email adresa",
+    "emailPlaceholder": "Unesite svoj email",
+    "subscribeButton": "Posalji",
+    "privacyPolicyText": "Brinemo o zaštiti vaših podataka. ",
+    "privacyPolicyLinkText": "Pročitajte našu politiku privatnosti",
+    "testimonials1": "ljudi su rekli koliko je dobar ExpenseTracker",
+    "testimonials2": "Naši zadovoljni klijenti su rekli o nama",
+    "checkAll": "Provjeri sve",
+    "reviews:": "Recenzije:",
+    "pricing1": "Prilagođeni planovi za vaše finansijsko putovanje",
+    "pricing2": "Zaronite u naše pažljivo odabrane pakete dizajnirane posebno za vaše finansijske potrebe. U našoj aplikaciji za praćenje troškova usmeravamo tehnologiju, inovacije i finansijske uvide kako bismo osnažili vaše putovanje ka dugoročnoj finansijskoj stabilnosti i rastu.",
+    "pricing3": "Savršeno polazište za ličnu upotrebu i vaše predstojeće projekte.",
+    "pricing4": "Unapredite svoje lične projekte sa unapređenim funkcijama za optimalne performanse.",
+    "pricing5": "Oslobodite puni potencijal vaših projekata sa našim sveobuhvatnim profesionalnim paketom.",
+    "pricing6": "Jednostavni linearni grafikoni",
+    "pricing7": "Bez napora izvozite podatke na e-mail sa prilogom u PDF formatu.",
+    "pricing8": "Broj ukupnih prihoda/rashoda",
+    "pricing9": "Podrška:",
+    "pricing10": "Otključajte moć jednostavnih linearnih grafikona.",
+    "pricing11": "Bez napora izvozite podatke na e-mail sa prilogom u PDF formatu.",
+    "pricing12": "Pristupite paketu grafikona uključujući Linearni, Stubasti, Pita, Oblasti i još mnogo toga.",
+    "unlimited": "Neograničeno",
+    "subHeaderMessage": "Pokrenuli smo automatizovane tokove u našem GitLab repozitorijumu!",
+    "checkItOut": "Pogledaj",
+    "signIn": "Uloguj se"
+  },
+  "EN": {
+    "info": {
+      "applicationName": "Expense Tracker",
+      "copyright": "All rights reserved."
+    },
+    "pages": [
+      {
+        "name": "Dashboard",
+        "url": "/"
+      },
+      {
+        "name": "Incomes",
+        "url": "/incomes"
+      },
+      {
+        "name": "Expenses",
+        "url": "/expenses"
+      },
+      {
+        "name": "Income groups",
+        "url": "/incomes/groups"
+      },
+      {
+        "name": "Expense groups",
+        "url": "/expenses/groups"
+      }
+    ],
+    "footerLinks": [
+      {
+        "name": "About",
+        "url": "/about"
+      },
+      {
+        "name": "Privacy Policy",
+        "url": "/privacy-policy"
+      },
+      {
+        "name": "Licensing",
+        "url": "/privacy-policy"
+      },
+      {
+        "name": "Contact",
+        "url": "/contact"
+      }
+    ],
+    "mainTextOnDashboard1": "Track expenses even faster with",
+    "mainTextOnDashboard2": "our brand new Expense Tracker application ",
+    "textOnDashboard": "Take advantage of our open-source solution, designed to streamline and enhance your expense tracking experience. Dive into a wealth of features and functionalities that empower you to manage your finances effortlessly.",
+    "getStarted": "Get started",
+    "exploreRepository": "Explore repository",
+    "featuredIn": "Featured in",
+    "mailchimpText": "Enhance your business capabilities with seamless integration of third-party services. Our platform empowers you to effortlessly connect and collaborate with a variety of external tools and applications. Streamline your workflow, improve efficiency, and unlock new possibilities for growth. Discover the convenience of integrating with industry-leading services, all within the reach of your dashboard.",
+    "mailchimpHeading1": "Integration",
+    "mailchimpHeading2": "with third party services",
+    "emailExportText": "Exporting expenses and incomes is a breeze with our user-friendly platform, offering seamless financial management. Effortlessly streamline your financial processes by utilizing our intuitive tools for quick and efficient data export. Take control of your financial data with just a few clicks, ensuring a hassle-free experience in tracking both expenses and incomes. Our platform empowers you to simplify your financial workflows, providing a comprehensive solution for easy and effective exportation. Experience the convenience and efficiency of exporting expenses and incomes, making informed financial decisions has never been more accessible.",
+    "emailExportHeading1": "Export",
+    "emailExportHeading2": "expenses & incomes easily",
+    "policyText": "We use cookies to enhance your experience. By using our website, you agree to our ",
+    "privacyPolicy": "Privacy Policy",
+    "acceptButton": "Accept",
+    "faqData": [
+      {
+        "question": "How do I add a new expense in the Expense Tracker application?",
+        "answer": "To add a new expense in the Expense Tracker application, follow these steps: Navigate to the 'Add Expense' section within the application. Input the necessary details, such as the expense description, amount and category. Click 'Add Expense' button to record the new expense."
+      },
+      {
+        "question": "Can I categorize and track my expenses by different spending categories?",
+        "answer": "Yes, you can categorize and track your expenses by different spending categories. When adding a new expense, choose the appropriate category from the available options. This feature helps you organize and analyze your spending patterns, providing valuable insights into your financial habits."
+      },
+      {
+        "question": "How can I generate reports to view my spending patterns over time?",
+        "answer": "To generate reports, follow these steps: Navigate to the 'Expenses' or 'Incomes' page. Click on 'Export to email' button. Explore visual representation of your expenses and incomes. Gain insights into where your money is going and make informed financial decisions based on the generated report."
+      }
+    ],
+    "newsletterHeading": "Sign up for our newsletter",
+    "newsletterText": "Stay up to date with the roadmap progress, announcements, and exclusive discounts. Feel free to sign up with your email.",
+    "subscribedMessage": "Subscribed :)",
+    "emailLabel": "Email address",
+    "emailPlaceholder": "Enter your email",
+    "subscribeButton": "Subscribe",
+    "privacyPolicyText": "We care about the protection of your data. ",
+    "privacyPolicyLinkText": "Read our Privacy Policy",
+    "testimonials1": "people have said how good ExpenseTracker is",
+    "testimonials2": "Our happy clients said about us",
+    "checkAll": "Check all",
+    "reviews:": "Reviews:",
+    "pricing1": "Customized plans for your financial journey",
+    "pricing2": "Dive into our carefully curated packages designed specifically for your financial needs. At our Expense Tracker app, we channel technology, innovation, and financial insight to empower your journey towards long-term financial stability and growth.",
+    "pricing3": "The perfect starting point for personal use and your upcoming projects.",
+    "pricing4": "Elevate your personal projects with enhanced features for optimal performance.",
+    "pricing5": "Unleash the full potential of your projects with our comprehensive professional package.",
+    "pricing6": "Simple linear charts",
+    "pricing7": "Seamlessly export data to e-mail with PDF attachment.",
+    "pricing8": "Number of total incomes/expenses",
+    "pricing9": "Support:",
+    "pricing10": "Unlock the power of simple linear charts.",
+    "pricing11": "Effortlessly export data to e-mail with PDF attachment.",
+    "pricing12": "Access a suite of charts including Linear, Bar, Pie, Area and more.",
+    "unlimited": "Unlimited",
+    "subHeaderMessage": "We have launched automated pipelines in our GitLab repository!",
+    "checkItOut": "Check it out",
+    "signIn": "Sign In"
+  }
 }
