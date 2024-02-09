@@ -184,15 +184,15 @@ public class AuthService(IDatabaseContext context, IConfiguration configuration,
         var tokenLength = 32;
         var randomBytes = new byte[tokenLength];
 
-        using (var rng = new RNGCryptoServiceProvider())
+        using (var rng = RandomNumberGenerator.Create())
         {
             rng.GetBytes(randomBytes);
         }
 
-        // Use URL-safe base64 encoding
         var base64Token = Convert.ToBase64String(randomBytes);
         var urlSafeToken = base64Token.Replace('+', '-').Replace('/', '_');
 
         return urlSafeToken;
     }
+
 }

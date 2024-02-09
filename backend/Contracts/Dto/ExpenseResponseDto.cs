@@ -7,7 +7,7 @@ public class ExpenseResponseDto
     public float Amount { get; set; }
     public DateTime CreatedAt { get; set; }
     public int? ExpenseGroupId { get; set; }
-    public ExpenseGroupDto ExpenseGroup { get; set; }
+    public ExpenseGroupDto ExpenseGroup { get; set; } = default!;
     public int UserId { get; set; }
-    public UserResponseDto User { get; set; }
+    public UserResponseDto User { get; set; } = default!;
 }
