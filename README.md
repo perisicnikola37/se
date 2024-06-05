@@ -198,4 +198,4 @@ Automatically register users who sign up for the newsletter to the connected Mai
 
 All rights reserved.
 <br/>
-Copyright &copy; 2023 
+Copyright &copy; 2024
