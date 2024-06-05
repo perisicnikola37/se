@@ -198,4 +198,4 @@ Registra automaticamente gli utenti che si iscrivono alla newsletter nell'audien
 
 Tutti i diritti riservati.
 <br/>
-Copyright &copy; 2023 
+Copyright &copy; 2024 
