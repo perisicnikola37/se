@@ -198,4 +198,4 @@ Registrar automáticamente a los usuarios que se suscriban al boletín en la aud
 
 Todos los derechos reservados.
 <br/>
-Copyright &copy; 2023 
+Copyright &copy; 2024
