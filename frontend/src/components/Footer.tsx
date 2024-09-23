@@ -37,7 +37,7 @@ const Footer = () => {
         <span className="block text-sm text-gray-500 sm:text-center dark:text-gray-400">
           &copy; {currentYear}{" "}
           <a
-            href="https://git.vegaitsourcing.rs/nikola.perisic/vega-internship-project"
+            href="https://github.com/perisicnikola37/expense-tracker"
             className="hover:underline"
           >
             {languageConfig.info.applicationName}™

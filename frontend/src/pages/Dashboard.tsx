@@ -90,7 +90,7 @@ const Dashboard = () => {
             >
               <ViewInArIcon style={{ fontSize: "14px" }} className="mr-2" />
               <a
-                href="https://git.vegaitsourcing.rs/nikola.perisic/vega-internship-project"
+                href="https://github.com/perisicnikola37/expense-tracker"
                 target="_blank"
               >
                 {languageConfig.exploreRepository}

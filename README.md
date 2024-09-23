@@ -174,9 +174,6 @@ Password: password
    - Body
    - Breadcrumb for easy navigation
 
-## Installation
-For installation guide visit our <a href="https://git.vegaitsourcing.rs/nikola.perisic/vega-internship-project/-/wikis/Project-setup-and-installation" target="_blank">Wiki</a>
-
 ## Additional integrations
 
 ### Pipeline status emails

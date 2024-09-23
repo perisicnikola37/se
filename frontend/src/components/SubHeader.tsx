@@ -34,7 +34,7 @@ const SubHeader = () => {
       <p>
         {languageConfig.subHeaderMessage}
         <a
-          href="https://git.vegaitsourcing.rs/nikola.perisic/vega-internship-project/-/pipelines"
+          href="https://github.com/perisicnikola37/expense-tracker"
           target="_blank"
           className="hover:underline ml-2"
         >

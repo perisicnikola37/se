@@ -174,9 +174,6 @@ Contraseña: password
     - Cuerpo
     - Miga de pan para una navegación fácil
 
-## Instalación
-Para la guía de instalación, visita nuestro <a href="https://git.vegaitsourcing.rs/nikola.perisic/vega-internship-project/-/wikis/Project-setup-and-installation" target="_blank">Wiki</a>
-
 ## Integraciones Adicionales
 
 ### Correos Electrónicos de Estado de la Pipeline
