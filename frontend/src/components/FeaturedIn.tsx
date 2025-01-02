@@ -1,7 +1,7 @@
 import config from "../config/config.json";
-import { Config } from "../types/TranslationTypes";
-import { useModal } from "../contexts/GlobalContext";
 import { useDarkMode } from "../contexts/DarkModeContext";
+import { useModal } from "../contexts/GlobalContext";
+import { Config } from "../types/TranslationTypes";
 
 const FeaturedInSection = () => {
   const { language } = useModal();
@@ -25,7 +25,7 @@ const FeaturedInSection = () => {
         <div className="flex flex-col items-center space-y-4 sm:flex-row sm:space-y-0 sm:space-x-4">
           <img
             width={100}
-            src="https://www.globalemancipation.ngo/wp-content/uploads/2017/09/github-logo.png"
+            src="https://pngimg.com/uploads/github/github_PNG23.png"
             alt="GitHub"
             title="GitHub"
             className="max-w-xs h-auto filter grayscale hover:filter-none transition-all duration-300"
