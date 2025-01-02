@@ -31,57 +31,6 @@ Email address: admin@gmail.com
 <br />
 Password: password
 
-## Functionalities
-
-1. **Dashboard**
-   - Display current amount
-   - Show last 5 expense changes
-   - Show last 5 income changes
-   - Buttons to navigate to expense and income group list pages
-   - Button to add expense/income through a popup
-
-2. **CRUD Operations**
-   - Create, Read, Update, and Delete expenses
-   - Create, Read, Update, and Delete incomes
-   - Create, Read, Update, and Delete income groups
-   - Create, Read, Update, and Delete expense groups
-
-## Database Models
-
-- **Expense Group**
-  - Name
-  - Description
-  - User ID
-  - [expenses]
-
-- **Expense**
-  - Description
-  - Amount
-  - Expense group ID
-  - User ID
-
-- **Income Group**
-  - Name
-  - Description
-  - User ID
-  - [incomes]
-
-- **Income**
-  - Description
-  - Amount
-  - Income group ID
-  - User ID
-
-- **Reminder** (Premium Feature)
-  - Reminder day
-  - Type
-  - Active(boolean)
-
-- **Blog** (Premium Feature)
-  - Description
-  - Text
-  - User ID
-
 ## User Interface - UI
 
 1. **Dashboard**
@@ -203,4 +152,4 @@ Automatically register users who sign up for the newsletter to the connected Mai
 
 All rights reserved.
 <br/>
-Copyright &copy; 2024
+Copyright &copy; 2025
