@@ -1,5 +1,6 @@
 version: 2
-updates: 
-  — package-ecosystem: “nuget”
-  directory: “/backend/ExpenseTrackerApi” 
-  interval: “daily"
+updates:
+  - package-ecosystem: "nuget" 
+    directory: "/backend/ExpenseTrackerApi" 
+    schedule:
+      interval: "daily"
