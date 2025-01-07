@@ -34,7 +34,7 @@
         <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="8.0.0-beta.2" />
         <PackageReference Include="Quartz" Version="3.8.0" />
         <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
-        <PackageReference Include="System.Security.Cryptography.Pkcs" Version="8.0.0" />
+        <PackageReference Include="System.Security.Cryptography.Pkcs" Version="9.0.0" />
     </ItemGroup>
 
     <ItemGroup>
